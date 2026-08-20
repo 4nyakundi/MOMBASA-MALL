@@ -5,44 +5,34 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>News & Events — Mombasa Mall</title>
   <link rel="stylesheet" href="./css/style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <header class="site-header">
-    <div class="logo">
-      <a href="./index.html" style="display:flex; align-items:center;">
-        <img src="./assets/Logo/Mall Logo/MOMBASA MALL2.0.png" alt="Mombasa Mall" style="height:48px; object-fit:contain;">
+<body class="relative custom-cursor-active">
+  <div class="cursor"></div>
+  <div class="ambient-light"></div>
+  <div class="ambient-light-bottom"></div>
+
+  <!-- Floating Navigation -->
+  <header class="fixed top-6 left-1/2 -translate-x-1/2 w-[92%] max-w-7xl z-50">
+    <nav class="nav-glass rounded-full px-8 py-4 flex items-center justify-between">
+      <a href="./index.html" class="font-display font-bold text-xl tracking-tight text-white flex items-center gap-2.5">
+        <span class="w-2.5 h-2.5 rounded-full bg-[#ff6b4a] shadow-[0_0_12px_#ff6b4a] animate-pulse"></span>
+        MOMBASA MALL
       </a>
-    </div>
-    <nav class="header-nav">
-      <a href="./index.html">Home</a>
-      <div class="nav-dropdown-wrapper">
-        <a href="./stores.html" class="dropdown-trigger">Stores <svg class="dropdown-arrow" width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-        <div class="nav-dropdown">
-          <div class="dropdown-grid">
-            <div class="dropdown-col">
-              <h5>Directory</h5>
-              <a href="./stores.html#store-directory">All Stores</a>
-              <a href="./stores.html#space-rental">Space Rental</a>
-              <a href="./stores.html#activations">Activations</a>
-            </div>
-            <div class="dropdown-col">
-              <h5>Floors</h5>
-              <a href="./stores.html#stores-basement-parking">Basement Parking</a>
-              <a href="./stores.html#stores-ground-floor">Ground Floor</a>
-              <a href="./stores.html#stores-first-floor">First Floor</a>
-              <a href="./stores.html#stores-second-floor">Second Floor</a>
-              <a href="./stores.html#stores-third-floor">Third Floor</a>
-            </div>
-          </div>
-        </div>
+
+      <div class="hidden md:flex items-center gap-8 font-mono text-xs uppercase tracking-widest text-slate-300">
+        <a href="./stores.html" class="hover:text-[#ff6b4a] transition-colors">Directory</a>
+        <a href="./play-on.html" class="hover:text-[#ff6b4a] transition-colors">Activations</a>
+        <a href="./led.html" class="hover:text-[#ff6b4a] transition-colors">LED Displays</a>
+        <a href="./news-events.html" class="hover:text-[#ff6b4a] transition-colors">Events</a>
+        <a href="./about-us.html" class="hover:text-[#ff6b4a] transition-colors">About Us</a>
       </div>
-      <a href="./news-events.html">Menu & Events</a>
-      <a href="./about-us.html">About Us</a>
-      <a href="./gallery.html">Gallery</a>
-      <a href="./play-on.html">Play On</a>
-      <a href="./led.html">LED Advertisement</a>
+
+      <a href="./stores.html" class="btn-flagship text-xs">
+        <span>Explore Mall</span>
+        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
     </nav>
-    <a class="header-btn" href="./about-us.html#contact">Visit</a>
   </header>
 
   <main class="main-content" style="padding:40px 56px;">

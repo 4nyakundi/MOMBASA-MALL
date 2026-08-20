@@ -1,233 +1,123 @@
-/**
- * Mombasa Mall — Master Motion Controller
- * Developed by Principal Creative Technologist & Lead UI/UX Architect
- * Integrates: ScrollSmoother, ScrollTrigger, SplitText, Flip, Draggable, MotionPath, ScrambleText
- */
+document.addEventListener('DOMContentLoaded', async () => {
+  // 1. Safe Plugin Registration
+  if (typeof gsap !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText, Flip, ScrambleTextPlugin);
 
-document.addEventListener("DOMContentLoaded", () => {
-  // 1. REGISTER THE GSAP STACK WITH FALLBACKS
-  registerGsapPlugins();
-
-  // 2. SMOOTH SCROLL INITIALIZATION
-  initSmoothScroll();
-
-  // 3. HERO VIDEO TIMELINE & TEXT STAGGER
-  initHeroTimeline();
-
-  // 4. WAYFINDING PATHING ANIMATION
-  initWayfindingPaths();
-
-  // 5. DRAGGABLE STAGE & INERTIA PREVIEW
-  initDraggableMap();
-
-  // 6. SCRAMBLE TEXT TICKERS
-  initScrambleCounters();
-});
-
-/**
- * Robust plugin registration. Since premium plugins (ScrollSmoother, SplitText, ScrambleText) 
- * might be restricted in standard CDNs, we provide fallbacks for all premium features.
- */
-function registerGsapPlugins() {
-  if (typeof gsap !== "undefined") {
-    const plugins = [];
-    if (typeof ScrollTrigger !== "undefined") plugins.push(ScrollTrigger);
-    if (typeof Draggable !== "undefined") plugins.push(Draggable);
-    if (typeof MotionPathPlugin !== "undefined") plugins.push(MotionPathPlugin);
-    
-    // Register whatever is loaded
-    gsap.registerPlugin(...plugins);
-  }
-}
-
-/**
- * Initializes ScrollSmoother globally on #smooth-wrapper and #smooth-content
- */
-function initSmoothScroll() {
-  if (typeof gsap !== "undefined" && typeof ScrollSmoother !== "undefined") {
-    ScrollSmoother.create({
-      wrapper: "#smooth-wrapper",
-      content: "#smooth-content",
-      smooth: 1.6,
-      effects: true,
-      normalizeScroll: false
-    });
-    console.log("GSAP ScrollSmoother initialized.");
-  } else {
-    // Fallback to standard scroll indicator progress
-    window.addEventListener("scroll", () => {
-      const bar = document.querySelector(".scroll-progress-bar");
-      if (bar) {
-        const pct = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
-        bar.style.width = pct + "%";
-      }
-    });
-  }
-}
-
-/**
- * Scrubbing timeline on full-bleed home.mp4 & stagger text reveals
- */
-function initHeroTimeline() {
-  const heroVideo = document.getElementById("hero-video");
-  const heroTitle = document.querySelector(".hero-title");
-  
-  if (typeof gsap !== "undefined") {
-    // Parallax compression on scroll
-    if (heroVideo) {
-      gsap.to(heroVideo, {
-        scale: 1.12,
-        opacity: 0.15,
-        yPercent: 12,
-        scrollTrigger: {
-          trigger: "#home",
-          start: "top top",
-          end: "bottom top",
-          scrub: true
-        }
+    // 2. Smooth Scrolling
+    if (typeof ScrollSmoother !== 'undefined') {
+      ScrollSmoother.create({
+        wrapper: '#smooth-wrapper',
+        content: '#smooth-content',
+        smooth: 1.5,
+        effects: true
       });
     }
 
-    // Kinetic reveal
-    if (heroTitle) {
-      // SplitText fallback
-      let chars;
-      if (typeof SplitText !== "undefined") {
-        const split = new SplitText(heroTitle, { type: "chars,words" });
-        chars = split.chars;
-      } else {
-        // Splitting manually
-        const text = heroTitle.textContent.trim();
-        heroTitle.innerHTML = text.split("").map(c => 
-          c === " " ? '<span style="display:inline-block;">&nbsp;</span>' : `<span class="char-reveal" style="display:inline-block;">${c}</span>`
-        ).join("");
-        chars = heroTitle.querySelectorAll(".char-reveal");
-      }
+    // 3. Hero SplitText Stagger
+    if (typeof SplitText !== 'undefined') {
+      const heroSplit = new SplitText('.hero-title', { type: 'words,chars' });
+      gsap.from(heroSplit.chars, {
+        y: 70,
+        opacity: 0,
+        rotateX: -45,
+        stagger: 0.018,
+        duration: 1.1,
+        ease: 'power4.out'
+      });
+    }
 
-      gsap.fromTo(chars,
-        { opacity: 0, y: 35, skewX: -10 },
-        {
-          opacity: 1,
-          y: 0,
-          skewX: 0,
-          duration: 0.8,
-          stagger: 0.02,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: heroTitle,
-            start: "top 85%"
-          }
+    // 4. Hero Video Parallax Scrubbing
+    gsap.to('.video-frame', {
+      scrollTrigger: {
+        trigger: '.video-frame',
+        start: 'top 75%',
+        end: 'bottom top',
+        scrub: 1
+      },
+      scale: 0.97,
+      borderRadius: '44px'
+    });
+
+    // 5. ScrambleText Metric Ticker
+    if (typeof ScrambleTextPlugin !== 'undefined') {
+      gsap.to('#statTicker', {
+        duration: 2,
+        scrambleText: {
+          text: '● 150,000+ DAILY FOOTFALL',
+          chars: '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+          speed: 0.4
+        },
+        scrollTrigger: {
+          trigger: '.video-frame',
+          start: 'top 80%'
         }
-      );
+      });
     }
   }
-}
 
-/**
- * Animates dynamic route lines inside the floor mapping directories
- */
-function initWayfindingPaths() {
-  const paths = document.querySelectorAll(".wayfinding-route-path");
-  if (typeof gsap === "undefined" || paths.length === 0) return;
+  // 6. Specular Cursor Glow on Bento Cards
+  const attachSpecularGlow = () => {
+    document.querySelectorAll('.bento-card').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+        card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+      });
+    });
+  };
+  attachSpecularGlow();
 
-  paths.forEach(path => {
-    // Calculate total path length
-    const pathLength = path.getTotalLength ? path.getTotalLength() : 800;
-    
-    // Set dash arrays
-    path.style.strokeDasharray = pathLength;
-    path.style.strokeDashoffset = pathLength;
-
-    gsap.fromTo(path,
-      { strokeDashoffset: pathLength },
-      {
-        strokeDashoffset: 0,
-        duration: 2.2,
-        ease: "power2.inOut",
-        scrollTrigger: {
-          trigger: path,
-          start: "top 80%",
-          toggleActions: "play none none reverse"
-        }
+  // 7. Load Stores Dynamically from stores.json
+  try {
+    const res = await fetch('./json/stores.json');
+    if (res.ok) {
+      const data = await res.json();
+      const container = document.getElementById('storesContainer');
+      if (data && data.floors && container) {
+        let html = '';
+        data.floors.forEach(floor => {
+          (floor.shops || []).slice(0, 2).forEach(shop => {
+            html += `
+              <div class="bento-card store-card" data-floor="${floor.name}">
+                <span class="font-mono text-xs text-[#e5c07b] uppercase">${floor.name} • ${shop.room || 'Store'}</span>
+                <h3 class="font-display text-2xl font-bold mt-2 mb-3">${shop.name}</h3>
+                <p class="text-slate-400 text-sm mb-6">${shop.description || 'Premium retail tenant.'}</p>
+                <a href="./stores.html" class="text-xs font-mono uppercase text-[#ff6b4a] font-semibold flex items-center gap-1.5">Explore Floor →</a>
+              </div>
+            `;
+          });
+        });
+        container.innerHTML = html;
+        attachSpecularGlow();
       }
-    );
-  });
-}
+    }
+  } catch (err) {
+    console.warn('Using fallback pre-rendered stores:', err);
+  }
+});
 
-/**
- * Allows maps to be dragged with Inertia throwing physics
- */
-function initDraggableMap() {
-  const container = document.querySelector(".draggable-map-container");
-  const stage = document.querySelector(".draggable-map-canvas");
+// 8. Global Floor Filtering Function with Flip Animation
+window.filterFloor = function (floor, btn) {
+  document.querySelectorAll('.floor-pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
 
-  if (typeof gsap === "undefined" || typeof Draggable === "undefined" || !container || !stage) return;
+  const cards = document.querySelectorAll('.store-card');
+  const state = Flip.getState(cards);
 
-  Draggable.create(stage, {
-    type: "x,y",
-    edgeResistance: 0.75,
-    bounds: container,
-    inertia: true, // throw effects
-    cursor: "none",
-    onDragStart: function() {
-      gsap.to(".cursor-follower", { scale: 1.5, borderColor: "#D4AF37", duration: 0.2 });
-    },
-    onDragEnd: function() {
-      gsap.to(".cursor-follower", { scale: 1.0, borderColor: "#FF6B4A", duration: 0.2 });
+  cards.forEach(card => {
+    if (floor === 'all' || card.dataset.floor === floor) {
+      card.style.display = 'block';
+    } else {
+      card.style.display = 'none';
     }
   });
-}
 
-/**
- * Custom scramble letter ticker fallback for B2B booking value counters
- */
-function initScrambleCounters() {
-  const scrambleEls = document.querySelectorAll(".scramble-text-value");
-  if (typeof gsap === "undefined" || scrambleEls.length === 0) return;
-
-  scrambleEls.forEach(el => {
-    const targetValue = el.getAttribute("data-value") || el.textContent;
-    const isNum = !isNaN(parseFloat(targetValue.replace(/,/g, "")));
-
-    ScrollTrigger.create({
-      trigger: el,
-      start: "top 90%",
-      onEnter: () => {
-        if (typeof ScrambleTextPlugin !== "undefined") {
-          // Premium scramble reveal
-          gsap.to(el, {
-            scrambleText: { text: targetValue, chars: "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", speed: 0.4 },
-            duration: 1.5
-          });
-        } else if (isNum) {
-          // Classic numeric rollup counter
-          const parsed = parseFloat(targetValue.replace(/,/g, ""));
-          let obj = { val: 0 };
-          gsap.to(obj, {
-            val: parsed,
-            duration: 1.8,
-            ease: "power2.out",
-            onUpdate: () => {
-              el.textContent = Math.floor(obj.val).toLocaleString();
-            }
-          });
-        } else {
-          // Custom character shuffle scramble effect
-          const chars = "XYZ0123456789#@$%";
-          let iterations = 0;
-          const interval = setInterval(() => {
-            el.textContent = targetValue.split("").map((c, idx) => {
-              if (idx < iterations) return targetValue[idx];
-              return chars[Math.floor(Math.random() * chars.length)];
-            }).join("");
-            
-            if (iterations >= targetValue.length) {
-              clearInterval(interval);
-            }
-            iterations += 0.5;
-          }, 35);
-        }
-      }
-    });
+  Flip.from(state, {
+    duration: 0.6,
+    ease: 'power3.inOut',
+    stagger: 0.03,
+    absolute: true,
+    onEnter: elements => gsap.fromTo(elements, { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.35 }),
+    onLeave: elements => gsap.to(elements, { opacity: 0, scale: 0.85, duration: 0.25 })
   });
-}
+};

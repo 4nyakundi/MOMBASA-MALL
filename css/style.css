@@ -1,73 +1,46 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Syne:wght@400;500;600;700;800&display=swap');
-@import url('https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700,900&f[]=clash-display@300,400,500,600,700&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=clash-display@200,400,500,600,700&f[]=satoshi@400,500,700,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 :root {
-  /* Coastal Luxury Design System Tokens */
-  --bg: #F8F5F0; /* Sandstone Warm Gray */
-  --bg-warm: #EFEAE2; /* Warm Sandstone */
-  --bg-deep: #E5DCD0; /* Deep Sandstone */
+  --bg-void: #04060a;
+  --bg-surface: #090d16;
+  --bg-elevated: #101623;
+  --surface-glass: rgba(9, 13, 22, 0.72);
+  --border-hairline: rgba(255, 255, 255, 0.08);
+  --border-bright: rgba(255, 255, 255, 0.18);
+  --border-active: rgba(255, 107, 74, 0.5);
+  --coral: #ff6b4a;
+  --coral-glow: rgba(255, 107, 74, 0.35);
+  --gold: #e5c07b;
+  --cyan: #00f0ff;
+  --text-main: #ffffff;
+  --text-muted: #94a3b8;
+  --font-display: 'Clash Display', -apple-system, sans-serif;
+  --font-body: 'Satoshi', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
   
-  --ink: #0A192F; /* Deep Indian Ocean Navy */
-  --ink-soft: #4B5966; /* Slate Muted */
-  
-  /* System colors */
-  --navy: #0A192F;
-  --navy-light: #112240;
-  --navy-deep: #020C1B;
-  
-  --sand: #F8F5F0;
-  --sand-warm: #EFEAE2;
-  --sand-deep: #E5DCD0;
-  
-  --coral: #FF6B4A; /* Sunset Coral Accent */
-  --coral-light: #FF8E75;
-  --coral-deep: #E04F2F;
-
-  --gold: #D4AF37; /* Champagne Gold Accent */
-  --gold-light: #F3E5AB;
-  --gold-deep: #AA7C11;
-  
-  --slate: #1A2530;
-  --slate-light: #2C3A47;
-  --slate-muted: #4B5966;
-  --slate-ice: #F0F4F8;
-
-  --mint: #c8ecc8;
-  --mint-light: #dcf5dc;
-  --mint-deep: #95c598;
-  
-  --yellow: #D4AF37; /* Map yellow accents to Champagne Gold for luxury branding */
-  --yellow-light: #F3E5AB;
-  --yellow-deep: #AA7C11;
-  
-  --purple: #dcd0ee;
-  --purple-light: #ece2f8;
-  --purple-deep: #ab9bd0;
-  
-  --black: #020C1B; /* Navy Deep */
-
-  /* Typography Scales */
-  --font-headings: 'Clash Display', 'Syne', sans-serif;
-  --font-body: 'Satoshi', 'Plus Jakarta Sans', sans-serif;
+  --bg: #04060a;
+  --surface: #090d16;
+  --surface-elevated: #101623;
+  --border: rgba(255, 255, 255, 0.08);
+  --yellow: #e5c07b;
+  --yellow-light: #f3e5ab;
+  --yellow-deep: #aa7c11;
 }
 
-* {
+*, *::before, *::after {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
-/* ScrollSmoother layout settings */
 html, body {
   width: 100%;
   height: 100%;
-  margin: 0;
-  padding: 0;
-  background: var(--bg);
-  color: var(--ink);
+  background-color: var(--bg-void);
+  color: var(--text-main);
   font-family: var(--font-body);
   overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
 }
 
 #smooth-wrapper {
@@ -85,6 +58,175 @@ html, body {
   overflow: visible;
   width: 100%;
 }
+
+/* Realevate Matrix Grid */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Ambient Radial Glow */
+.ambient-light {
+  position: fixed;
+  top: -15%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 75vw;
+  height: 60vh;
+  background: radial-gradient(ellipse at center, var(--coral-glow) 0%, transparent 65%);
+  filter: blur(90px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ambient-light-bottom {
+  position: fixed;
+  bottom: -20%;
+  right: 10%;
+  width: 50vw;
+  height: 50vh;
+  background: radial-gradient(ellipse at center, rgba(0, 240, 255, 0.08) 0%, transparent 70%);
+  filter: blur(100px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Typography Hierarchy */
+.font-display { font-family: var(--font-display); }
+.font-mono { font-family: var(--font-mono); }
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(3.2rem, 7.5vw + 1rem, 7.5rem);
+  font-weight: 700;
+  line-height: 0.93;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, #ffffff 40%, var(--coral) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Floating Navigation */
+.nav-glass {
+  background: var(--surface-glass);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--border-hairline);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.7);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Specular Bento Cards */
+.bento-card {
+  position: relative;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-hairline);
+  border-radius: 24px;
+  padding: 2.5rem;
+  overflow: hidden;
+  transition: border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bento-card:hover {
+  border-color: var(--border-bright);
+  transform: translateY(-5px);
+}
+
+.bento-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(650px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 107, 74, 0.09), transparent 45%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.bento-card:hover::before {
+  opacity: 1;
+}
+
+/* Video Frame */
+.video-frame {
+  position: relative;
+  border-radius: 32px;
+  overflow: hidden;
+  border: 1px solid var(--border-bright);
+  box-shadow: 0 30px 100px -20px rgba(0, 0, 0, 0.9), 0 0 50px -15px var(--coral-glow);
+  will-change: transform;
+}
+
+/* Flagship Buttons */
+.btn-flagship {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 2.2rem;
+  border-radius: 9999px;
+  font-family: var(--font-mono);
+  font-size: 0.825rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  background: #ffffff;
+  color: #04060a;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+  text-decoration: none;
+}
+
+.btn-flagship:hover {
+  transform: scale(1.035);
+  box-shadow: 0 0 35px var(--coral-glow);
+}
+
+.btn-flagship-outline {
+  background: var(--bg-elevated);
+  color: var(--text-main);
+  border: 1px solid var(--border-bright);
+}
+
+.btn-flagship-outline:hover {
+  border-color: var(--coral);
+}
+
+/* Floor Filter Pills */
+.floor-pill {
+  padding: 0.6rem 1.4rem;
+  border-radius: 9999px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border: 1px solid var(--border-hairline);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-muted);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.floor-pill.active, .floor-pill:hover {
+  background: var(--coral);
+  color: #fff;
+  border-color: var(--coral);
+  box-shadow: 0 0 20px var(--coral-glow);
+}
+
+
 
 
 /* Typography Scales & Families */
@@ -2391,11 +2533,11 @@ main.main-content {
 }
 
 .pricing-row strong {
-  color: var(--navy);
+  color: var(--text-main);
 }
 
 .pricing-row.total {
-  border-top: 1px dashed rgba(10, 29, 55, 0.15);
+  border-top: 1px dashed var(--border-hairline);
   margin-top: 8px;
   padding-top: 12px;
   font-size: 15px;
@@ -2405,9 +2547,89 @@ main.main-content {
 .pricing-row.grand-total {
   font-size: 20px;
   font-weight: 800;
-  color: var(--coral);
-  border-top: 1px solid rgba(10, 29, 55, 0.08);
+  color: var(--gold);
+  border-top: 1px solid var(--border-hairline);
   margin-top: 6px;
   padding-top: 12px;
 }
 
+/* Realevate Global Refined Dark Theme Patch for Subpages */
+main.main-content, .main-content {
+  background: var(--bg-void) !important;
+  color: var(--text-main) !important;
+  padding-top: 140px !important;
+}
+
+section {
+  background: transparent !important;
+  color: var(--text-main) !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-main) !important;
+  font-family: var(--font-display) !important;
+}
+
+p, span, blockquote, dd, dt, li, div {
+  color: var(--text-muted);
+}
+
+/* Preserve color tags like titles */
+.hero-title, .text-gradient, .simulator-title, .simulator-tag, .wayfinding-node, .nav-glass a {
+  color: inherit;
+}
+
+.nav-glass a {
+  color: var(--text-muted) !important;
+}
+
+.nav-glass a:hover {
+  color: var(--coral) !important;
+}
+
+/* Patch cards to be glassmorphic and dark */
+.glow-card, .spec-card, .playon-card, .playon-card-purple, .bento-card, .store-card, .testimonial-card {
+  background: var(--bg-surface) !important;
+  border: 1px solid var(--border-hairline) !important;
+  color: var(--text-main) !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
+}
+
+.glow-card:hover, .spec-card:hover, .playon-card:hover, .playon-card-purple:hover, .bento-card:hover, .store-card:hover {
+  border-color: var(--border-bright) !important;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.7), 0 0 30px var(--coral-glow) !important;
+}
+
+/* Patch buttons to match Realevate style */
+.cta-btn, .header-btn, .btn-realevate, .btn-flagship {
+  background: #ffffff !important;
+  color: #04060a !important;
+  border: none !important;
+  font-family: var(--font-mono) !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  border-radius: 9999px !important;
+}
+
+.cta-btn:hover, .header-btn:hover, .btn-flagship:hover, .btn-realevate:hover {
+  box-shadow: 0 0 25px var(--coral-glow) !important;
+  transform: scale(1.035) !important;
+}
+
+/* Inputs and textareas */
+input, select, textarea {
+  background: var(--bg-surface) !important;
+  border: 1px solid var(--border-hairline) !important;
+  color: white !important;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--border-active) !important;
+  outline: none !important;
+}
+
+/* Hide old header and footer decoration */
+.site-header {
+  display: none !important;
+}

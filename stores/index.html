@@ -75,8 +75,9 @@
     }
   </style>
 </head>
-<body class="custom-cursor-active">
+<body class="custom-cursor-active relative">
   <div class="cursor"></div>
+  <div class="ambient-light"></div>
 
   <!-- Header Section with Upgraded Mega Menus -->
   <header class="site-header glass-panel">
@@ -350,15 +351,16 @@
   </div>
 
   <!-- GSAP and ScrollTrigger -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Draggable.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollSmoother.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/SplitText.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Draggable.min.js"></script>
   
   <script src="../js/main.js"></script>
   <script src="../js/site-data-init.js"></script>
   <script src="../js/data-renderer.js"></script>
-  <script src="../js/gsap-motion.js"></script>
-  <script src="../js/animations/masterMotion.js"></script>
+  <script src="../js/motionEngine.js"></script>
   <script type="module" src="../js/firebase-config.js"></script>
 </body>
 </html>
