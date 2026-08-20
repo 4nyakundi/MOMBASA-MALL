@@ -1,0 +1,15 @@
+{
+  "siteName": "Mombasa Mall",
+  "domain": "mombasamall.co.ke",
+  "tagline": "For all your shopping needs",
+  "description": "Mombasa Mall is Mombasa's premier shopping, dining and entertainment destination. Shop, dine, and discover a curated mix of local and international brands.",
+  "address": "Mombasa Mall, Jomo Kenyatta Avenue, Mwembe Tayari, Mombasa, Kenya",
+  "phone": "+254 790 964 002",
+  "email": "info@mombasamall.co.ke",
+  "openingHours": "Open 24/7",
+  "social": {
+    "facebook": "https://facebook.com/mombasamall",
+    "instagram": "https://instagram.com/mombasamall",
+    "twitter": "https://twitter.com/mombasamall"
+  }
+}

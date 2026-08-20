@@ -1,0 +1,10 @@
+{
+  "clients": [
+    { "name": "Naivas", "logo": "./assets/Logo/Shops Logo/Naivasmain.jpeg" },
+    { "name": "NCBA", "logo": "./assets/Logo/Shops Logo/NCBA.png" },
+    { "name": "Jumia", "logo": "./assets/Logo/Shops Logo/JUMIA.jpg" },
+    { "name": "Payless", "logo": "./assets/Logo/Shops Logo/Payless.jpg" },
+    { "name": "West 11", "logo": "./assets/Logo/Shops Logo/West 11.jpg" },
+    { "name": "Lovisa", "logo": "./assets/Logo/Shops Logo/Lovisa.jpg" }
+  ]
+}

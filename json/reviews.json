@@ -1,0 +1,13 @@
+{
+  "testimonials": [
+    { "author": "Aisha Omar", "quote": "Mombasa Mall has completely transformed my shopping routine. Naivas on the ground floor is incredibly convenient, and NCBA bank is right next door.", "rating": 5 },
+    { "author": "Peter Mwangi", "quote": "Basement parking is spacious, safe, and secure. The automated entry ticketer is fast, and security guards are always helpful.", "rating": 4 },
+    { "author": "Joy Kerubo", "quote": "Westerwelle Startup Haus on the third floor is Mombasa's best coworking incubator! Superfast internet, quiet meeting rooms, and amazing tech events.", "rating": 5 },
+    { "author": "Ali Hassan", "quote": "The food court on the second floor offers a fantastic mix of local Swahili dishes and fast food. Play-On Kids Zone kept my children fully entertained while I shopped.", "rating": 5 }
+  ],
+  "customerFeedback": [
+    { "name": "Fatma", "comment": "Loved the weekend designer fashion pop-up markets! Got a beautiful local kaftan." },
+    { "name": "Kiprotich", "comment": "Convenient location in Mwembe Tayari. Very easy to access via public transport or private drive." },
+    { "name": "Emily", "comment": "Equity Afia Clinic on the ground floor offers quick and affordable checkups. So glad to have it in the mall." }
+  ]
+}

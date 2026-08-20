@@ -1,0 +1,7 @@
+node_modules/
+.firebase/
+firebase-debug.log
+ui-debug.log
+.gemini/
+.DS_Store
+Thumbs.db

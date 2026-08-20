@@ -1,0 +1,11 @@
+{
+  "upcoming": [
+    { "title": "Summer Family Day & Kids Carnival", "date": "2026-09-05", "summary": "Join us at the Play-On Kids Zone for free face painting, magic shows, bouncy castles, and local youth music performances." },
+    { "title": "East African Fashion Pop-up Weekend", "date": "2026-09-18", "summary": "Browse and buy collections from over 15 local and regional designers showcasing custom-made apparel, kaftans, and hand-woven bags." },
+    { "title": "Swahili Foodie & Spice Market", "date": "2026-10-02", "summary": "Savor authentic coastal dishes, spicy street food, and chef-led cooking demos in our main atrium and food court." }
+  ],
+  "past": [
+    { "title": "Back-to-School Mega Sale", "date": "2026-07-10", "summary": "Unbeatable discounts on books, stationery, and uniforms across major retail stores." },
+    { "title": "Mombasa Tech Innovation Night", "date": "2026-06-22", "summary": "Co-hosted by Westerwelle Startup Haus, bringing together over 120 tech developers and startup founders in Mombasa." }
+  ]
+}
