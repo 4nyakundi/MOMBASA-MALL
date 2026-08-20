@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Interactive Floor Directory — Mombasa Mall</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css">
+  <style>
+    /* Styling for the draggable map canvas */
+    .draggable-map-container {
+      width: 100%;
+      height: 380px;
+      background: rgba(10, 25, 47, 0.05);
+      border: 1px solid rgba(10, 25, 47, 0.08);
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+      margin-top: 16px;
+      cursor: grab;
+      box-shadow: inset 0 10px 30px rgba(0,0,0,0.03);
+    }
+    
+    .draggable-map-container:active {
+      cursor: grabbing;
+    }
+
+    .draggable-map-canvas {
+      width: 800px;
+      height: 500px;
+      position: absolute;
+      top: -60px;
+      left: -100px;
+      background: var(--bg-warm);
+      border-radius: 12px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(255,255,255,0.4);
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .map-grid-overlay {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(10, 25, 47, 0.08) 1.5px, transparent 1.5px);
+      background-size: 24px 24px;
+      pointer-events: none;
+    }
+
+    /* SVG Path Drawing */
+    .wayfinding-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .wayfinding-route-path {
+      stroke: var(--coral);
+      stroke-width: 4px;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      filter: drop-shadow(0 2px 8px rgba(255, 107, 74, 0.4));
+    }
+
+    .wayfinding-node {
+      fill: var(--coral);
+      stroke: white;
+      stroke-width: 2px;
+    }
+  </style>
+</head>
+<body class="custom-cursor-active">
+  <div class="cursor"></div>
+
+  <!-- Header Section with Upgraded Mega Menus -->
+  <header class="site-header glass-panel">
+    <div class="logo">
+      <a href="../index.html" style="display:flex; align-items:center;">
+        <img src="../assets/Logo/Mall Logo/MOMBASA MALL2.0.png" alt="Mombasa Mall" style="height:48px; object-fit:contain;">
+      </a>
+    </div>
+    <nav class="header-nav">
+      <a href="../index.html">Home</a>
+      
+      <!-- Stores Mega Menu Dropdown -->
+      <div class="nav-dropdown-wrapper">
+        <a href="../stores/index.html" class="dropdown-trigger">Stores <svg class="dropdown-arrow" width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <div class="nav-dropdown glass-panel">
+          <div class="dropdown-grid">
+            <div class="dropdown-col">
+              <h5>Directory</h5>
+              <a href="../stores/index.html#store-directory">All Stores</a>
+              <a href="../stores/index.html#space-rental">Space Rental</a>
+              <a href="../stores/index.html#activations">Activations</a>
+              <h5>Floors</h5>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:4px;">
+                <a href="../stores/index.html#stores-basement-parking">Basement</a>
+                <a href="../stores/index.html#stores-ground-floor">Ground</a>
+                <a href="../stores/index.html#stores-first-floor">1st Floor</a>
+                <a href="../stores/index.html#stores-second-floor">2nd Floor</a>
+                <a href="../stores/index.html#stores-third-floor">3rd Floor</a>
+              </div>
+            </div>
+            <div class="dropdown-col">
+              <div class="dropdown-preview-card">
+                <div>
+                  <div class="dropdown-preview-title">Floor Directory</div>
+                  <div class="dropdown-preview-desc">Explore over 120+ premium brands, services, and dining experiences across 5 levels.</div>
+                </div>
+                <img src="../assets/Logo/Mall Logo/MOMBASA MALL 1.0.png" alt="Stores Preview" style="object-fit:contain; border-radius:8px; height:80px; width:100%; margin-top:8px; background:rgba(10,29,55,0.04); padding:4px;">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- News & Events Mega Menu Dropdown -->
+      <div class="nav-dropdown-wrapper">
+        <a href="../news-events.html" class="dropdown-trigger">News & Events <svg class="dropdown-arrow" width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <div class="nav-dropdown glass-panel">
+          <div class="dropdown-grid">
+            <div class="dropdown-col">
+              <h5>Happening Now</h5>
+              <a href="../news-events.html#upcoming-events">Upcoming Events</a>
+              <a href="../news-events.html#latest-news">Latest News</a>
+              <a href="../blog.html">Mall Life Blog</a>
+            </div>
+            <div class="dropdown-col">
+              <div class="dropdown-preview-card">
+                <div>
+                  <div class="dropdown-preview-title">Coastal Vibe Events</div>
+                  <div class="dropdown-preview-desc">Check out our upcoming festivals, weekend craft markets, and special holiday store deals.</div>
+                </div>
+                <div style="background:var(--coral); color:white; padding:6px 10px; border-radius:6px; font-size:10px; font-weight:700; text-align:center; margin-top:8px;">LIVE MUSIC WEEKENDS</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- About Us Mega Menu Dropdown -->
+      <div class="nav-dropdown-wrapper">
+        <a href="../about-us.html" class="dropdown-trigger">About Us <svg class="dropdown-arrow" width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <div class="nav-dropdown glass-panel">
+          <div class="dropdown-grid">
+            <div class="dropdown-col">
+              <h5>The Mall</h5>
+              <a href="../about-us.html#our-vision">Vision & Mission</a>
+              <a href="../about-us.html#history">History & Architect</a>
+              <a href="../reviews.html">Customer Reviews</a>
+              <a href="../about-us.html#contact">Contact & Leasing</a>
+            </div>
+            <div class="dropdown-col">
+              <div class="dropdown-preview-card">
+                <div>
+                  <div class="dropdown-preview-title">Mombasa's Center</div>
+                  <div class="dropdown-preview-desc">Modern space, state-of-the-art office co-working space, medical facility and family hub.</div>
+                </div>
+                <img src="../assets/Logo/Mall Logo/MOMBASA MALL2.0.png" alt="About Preview" style="object-fit:contain; border-radius:8px; height:80px; width:100%; margin-top:8px; background:rgba(10,29,55,0.05); padding:4px;">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Gallery / Media Dropdown -->
+      <div class="nav-dropdown-wrapper">
+        <a href="../gallery.html" class="dropdown-trigger">Gallery <svg class="dropdown-arrow" width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <div class="nav-dropdown glass-panel">
+          <div class="dropdown-grid">
+            <div class="dropdown-col">
+              <h5>Explore Media</h5>
+              <a href="../gallery.html#photos">Photo Albums</a>
+              <a href="../gallery.html#videos">Videos</a>
+              <a href="../play-on.html">Play On Arena</a>
+            </div>
+            <div class="dropdown-col">
+              <div class="dropdown-preview-card">
+                <div>
+                  <div class="dropdown-preview-title">Visual Tour</div>
+                  <div class="dropdown-preview-desc">Browse photos of our stunning architecture, stores, and community spaces.</div>
+                </div>
+                <div style="font-size:10px; font-weight:700; color:var(--coral); text-align:center; padding:10px; border:1px dashed var(--coral); border-radius:8px; margin-top:8px;">📷 400+ PHOTOS</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <a href="../led-advertising/index.html">LED Advertisement</a>
+    </nav>
+    <a class="header-btn" href="../about-us.html#contact">Visit</a>
+  </header>
+
+  <!-- ScrollSmoother wrapper structure -->
+  <div id="smooth-wrapper">
+    <div id="smooth-content">
+      <main class="main-content" style="padding:140px 56px 60px;">
+        <section class="hero" style="min-height:240px; display:flex; align-items:center;">
+          <div>
+            <h1>Interactive Wayfinding & Store Directory</h1>
+            <p style="color:var(--ink-soft); max-width:560px; margin-top:10px;">Select a floor from the isometric panel to preview map positions and trace SVG wayfinding routes dynamically.</p>
+          </div>
+        </section>
+
+        <!-- Main Directory Area -->
+        <section id="store-directory" style="padding:24px 0; position:relative; overflow:hidden;">
+          <div class="floor-directory-grid">
+            
+            <!-- Left Pane: Stack selector & Draggable Map -->
+            <div>
+              <!-- 2.5D Isometric Stack -->
+              <div class="floor-selector-container" style="min-height:300px; padding:30px 0;">
+                <div class="isometric-stack" style="width:200px; height:240px;">
+                  <div class="floor-layer" data-floor="Third Floor" style="--layer-index: 4;">
+                    <div class="floor-layer-label">3rd Floor — Cinema</div>
+                    <div class="floor-layer-plate"></div>
+                  </div>
+                  <div class="floor-layer" data-floor="Second Floor" style="--layer-index: 3;">
+                    <div class="floor-layer-label">2nd Floor — Food Court</div>
+                    <div class="floor-layer-plate"></div>
+                  </div>
+                  <div class="floor-layer" data-floor="First Floor" style="--layer-index: 2;">
+                    <div class="floor-layer-label">1st Floor — Fashion</div>
+                    <div class="floor-layer-plate"></div>
+                  </div>
+                  <div class="floor-layer active" data-floor="Ground Floor" style="--layer-index: 1;">
+                    <div class="floor-layer-label">Ground Floor — Retail</div>
+                    <div class="floor-layer-plate"></div>
+                  </div>
+                  <div class="floor-layer" data-floor="Basement Parking" style="--layer-index: 0;">
+                    <div class="floor-layer-label">Basement — Valet</div>
+                    <div class="floor-layer-plate"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Inertia Draggable Map Canvas -->
+              <h3 style="margin-top:20px; font-size:16px;">Interactive Floor Plan (Drag to Pan)</h3>
+              <div class="draggable-map-container">
+                <div class="draggable-map-canvas">
+                  <div class="map-grid-overlay"></div>
+                  <!-- Simulated floor outlines and route line drawing -->
+                  <svg class="wayfinding-svg" viewBox="0 0 800 500">
+                    <!-- Entrance point node -->
+                    <circle cx="100" cy="400" r="10" class="wayfinding-node"></circle>
+                    <text x="120" y="405" fill="var(--navy)" font-size="12" font-weight="bold">MAIN MALL ENTRANCE</text>
+
+                    <!-- Target Store node -->
+                    <circle cx="580" cy="180" r="10" class="wayfinding-node"></circle>
+                    <text x="600" y="185" fill="var(--navy)" font-size="12" font-weight="bold">NAIVAS SUPERMARKET</text>
+
+                    <!-- Route path -->
+                    <path d="M 100 400 Q 250 420 380 300 T 580 180" class="wayfinding-route-path"></path>
+                  </svg>
+                  
+                  <!-- Virtual store layouts -->
+                  <div style="position:absolute; top:80px; left:120px; width:120px; height:80px; background:rgba(10,25,47,0.06); border:1px dashed var(--navy); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700;">
+                    Shop G05
+                  </div>
+                  <div style="position:absolute; top:280px; left:220px; width:140px; height:90px; background:rgba(10,25,47,0.06); border:1px dashed var(--navy); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700;">
+                    Shop G07
+                  </div>
+                  <div style="position:absolute; top:120px; right:100px; width:180px; height:120px; background:rgba(255,107,74,0.05); border:1.5px solid var(--coral); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:bold; color:var(--coral);">
+                    Naivas Supermarket
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Pane: Directory Explorer -->
+            <div>
+              <div class="directory-search-wrapper" style="margin-bottom: 24px; display:flex; gap:16px; flex-wrap:wrap; align-items:center; justify-content:space-between;">
+                <input type="text" id="directory-search" class="directory-search-input" placeholder="Search shops on this floor..." style="padding:14px 20px; border-radius:14px; border:1.5px solid rgba(10,29,55,0.08); background:rgba(255,255,255,0.6); font-size:14px; flex:1; max-width:400px; transition:all 0.3s ease;">
+                <div class="filter-tags" style="display:flex; gap:10px; flex-wrap:wrap;">
+                  <button class="filter-btn active" data-category="all" style="padding:10px 18px; border-radius:12px; border:1px solid rgba(10,29,55,0.08); background:white; font-size:12px; font-weight:700; text-transform:uppercase; cursor:none;">All</button>
+                  <button class="filter-btn" data-category="retail" style="padding:10px 18px; border-radius:12px; border:1px solid rgba(10,29,55,0.08); background:rgba(255,255,255,0.4); font-size:12px; font-weight:700; text-transform:uppercase; cursor:none;">Retail</button>
+                  <button class="filter-btn" data-category="food" style="padding:10px 18px; border-radius:12px; border:1px solid rgba(10,29,55,0.08); background:rgba(255,255,255,0.4); font-size:12px; font-weight:700; text-transform:uppercase; cursor:none;">Dining</button>
+                  <button class="filter-btn" data-category="services" style="padding:10px 18px; border-radius:12px; border:1px solid rgba(10,29,55,0.08); background:rgba(255,255,255,0.4); font-size:12px; font-weight:700; text-transform:uppercase; cursor:none;">Services</button>
+                </div>
+              </div>
+
+              <!-- Active Floor Badge -->
+              <div style="margin-bottom:16px; font-size:12px; font-weight:700; color:var(--coral); text-transform:uppercase; letter-spacing:0.06em;" id="active-floor-badge">
+                Current Floor: Ground Floor
+              </div>
+
+              <div id="store-list" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap:16px;">
+                <!-- Populated dynamically by JS -->
+              </div>
+            </div>
+            
+          </div>
+        </section>
+
+      </main>
+
+      <!-- Upscaled Footer -->
+      <footer class="site-footer" style="background:#111; color:#fff; border-top:1px solid rgba(255,255,255,0.08);">
+        <div class="footer-top" style="padding:80px 56px 40px;">
+          <div class="footer-brand">
+            <a href="../index.html" style="display:inline-flex; align-items:center; margin-bottom:20px; text-decoration:none;">
+              <img src="../assets/Logo/Mall Logo/MOMBASA MALL2.0.png" alt="Mombasa Mall" style="height:48px; object-fit:contain; filter:brightness(0) invert(1);">
+            </a>
+            <p style="color:rgba(255,255,255,0.6); font-size:14px; line-height:1.6;">Mombasa Mall is the premier shopping, dining, and lifestyle destination located in the heart of Mombasa, Mwembe Tayari along Jomo Kenyatta Avenue.</p>
+          </div>
+          <div class="footer-cols">
+            <div class="footer-col">
+              <h4 style="color:#fff; border-left:3px solid var(--yellow); padding-left:8px; font-size:14px; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:16px;">Directory</h4>
+              <a href="../stores/index.html" style="color:rgba(255,255,255,0.6);">Stores List</a>
+              <a href="../stores/index.html#stores-ground-floor" style="color:rgba(255,255,255,0.6);">Ground Floor</a>
+              <a href="../stores/index.html#stores-first-floor" style="color:rgba(255,255,255,0.6);">First Floor</a>
+            </div>
+            <div class="footer-col">
+              <h4 style="color:#fff; border-left:3px solid var(--yellow); padding-left:8px; font-size:14px; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:16px;">Leasing</h4>
+              <a href="../news-events.html#activations" style="color:rgba(255,255,255,0.6);">Vendor Space</a>
+              <a href="../led-advertising/index.html" style="color:rgba(255,255,255,0.6);">LED Billboard Ads</a>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom" style="padding:24px; text-align:center; border-top:1px solid rgba(255,255,255,0.06); color:rgba(255,255,255,0.4); font-size:13px;">
+          <p>© Mombasa Mall — All rights reserved.</p>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Shop Details Modal -->
+  <div id="shop-modal" class="shop-modal" style="display:none;">
+    <div class="shop-modal-backdrop" onclick="closeShopModal()"></div>
+    <div class="shop-modal-content glow-card">
+      <button class="shop-modal-close" onclick="closeShopModal()">×</button>
+      <div class="shop-modal-body">
+        <div class="shop-modal-header">
+          <img id="modal-shop-logo" src="../assets/Logo/Mall Logo/MOMBASA MALL 1.0.png" alt="Shop Logo">
+          <div>
+            <h3 id="modal-shop-name">Shop Name</h3>
+            <span id="modal-shop-location">Ground Floor, Shop G12</span>
+          </div>
+        </div>
+        <p id="modal-shop-desc">Shop description goes here...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- GSAP and ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Draggable.min.js"></script>
+  
+  <script src="../js/main.js"></script>
+  <script src="../js/site-data-init.js"></script>
+  <script src="../js/data-renderer.js"></script>
+  <script src="../js/gsap-motion.js"></script>
+  <script src="../js/animations/masterMotion.js"></script>
+  <script type="module" src="../js/firebase-config.js"></script>
+</body>
+</html>

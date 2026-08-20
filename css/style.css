@@ -2,26 +2,30 @@
 @import url('https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700,900&f[]=clash-display@300,400,500,600,700&display=swap');
 
 :root {
-  /* Coastal Modern Design System Tokens */
-  --bg: #F4F1EA; /* Coastal Sand */
-  --bg-warm: #E8E3D7; /* Warm Sand */
-  --bg-deep: #DDD6C5; /* Deep Sand */
+  /* Coastal Luxury Design System Tokens */
+  --bg: #F8F5F0; /* Sandstone Warm Gray */
+  --bg-warm: #EFEAE2; /* Warm Sandstone */
+  --bg-deep: #E5DCD0; /* Deep Sandstone */
   
-  --ink: #0A1D37; /* Deep Ocean Navy */
+  --ink: #0A192F; /* Deep Indian Ocean Navy */
   --ink-soft: #4B5966; /* Slate Muted */
   
-  /* Colors mapping for compatibility and system expansion */
-  --navy: #0A1D37;
-  --navy-light: #0E294B;
-  --navy-deep: #050F1D;
+  /* System colors */
+  --navy: #0A192F;
+  --navy-light: #112240;
+  --navy-deep: #020C1B;
   
-  --sand: #F4F1EA;
-  --sand-warm: #E8E3D7;
-  --sand-deep: #DDD6C5;
+  --sand: #F8F5F0;
+  --sand-warm: #EFEAE2;
+  --sand-deep: #E5DCD0;
   
-  --coral: #FF6F59; /* Coral Sunset Accent */
-  --coral-light: #FF8A75;
-  --coral-deep: #E25640;
+  --coral: #FF6B4A; /* Sunset Coral Accent */
+  --coral-light: #FF8E75;
+  --coral-deep: #E04F2F;
+
+  --gold: #D4AF37; /* Champagne Gold Accent */
+  --gold-light: #F3E5AB;
+  --gold-deep: #AA7C11;
   
   --slate: #1A2530;
   --slate-light: #2C3A47;
@@ -32,15 +36,15 @@
   --mint-light: #dcf5dc;
   --mint-deep: #95c598;
   
-  --yellow: #FF6F59; /* map yellow accents to coral for coastal modern look */
-  --yellow-light: #FF8A75;
-  --yellow-deep: #E25640;
+  --yellow: #D4AF37; /* Map yellow accents to Champagne Gold for luxury branding */
+  --yellow-light: #F3E5AB;
+  --yellow-deep: #AA7C11;
   
   --purple: #dcd0ee;
   --purple-light: #ece2f8;
   --purple-deep: #ab9bd0;
   
-  --black: #050F1D; /* Navy Deep */
+  --black: #020C1B; /* Navy Deep */
 
   /* Typography Scales */
   --font-headings: 'Clash Display', 'Syne', sans-serif;
@@ -52,19 +56,36 @@
   padding: 0;
   box-sizing: border-box;
 }
-html {
-  scroll-behavior: smooth;
-}
 
-body {
+/* ScrollSmoother layout settings */
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
   background: var(--bg);
-  font-family: var(--font-body);
   color: var(--ink);
+  font-family: var(--font-body);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
-  cursor: default;
-  line-height: 1.5;
 }
+
+#smooth-wrapper {
+  overflow: hidden;
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+#smooth-content {
+  overflow: visible;
+  width: 100%;
+}
+
 
 /* Typography Scales & Families */
 h1, h2, h3, h4, h5, h6 {

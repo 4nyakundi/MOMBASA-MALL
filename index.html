@@ -173,8 +173,10 @@
     <a class="header-btn" href="./about-us.html#contact">Visit</a>
   </header>
 
-  <main>
-    <section id="home" class="hero-fullscreen">
+  <div id="smooth-wrapper">
+    <div id="smooth-content">
+      <main>
+        <section id="home" class="hero-fullscreen">
       <video id="hero-video" class="hero-video" autoplay muted loop playsinline>
         <source src="./assets/home.mp4.mp4" type="video/mp4">
         Your browser does not support the video tag.
@@ -527,6 +529,7 @@
       <p>© Mombasa Mall — All rights reserved.</p>
     </div>
   </footer>
+  </div></div>
 
   <!-- Shop Details Modal -->
   <div id="shop-modal" class="shop-modal" style="display:none;">
@@ -565,6 +568,7 @@
   <script src="./js/site-data-init.js"></script>
   <script src="./js/data-renderer.js"></script>
   <script src="./js/gsap-motion.js"></script>
+  <script src="./js/animations/masterMotion.js"></script>
   <script type="module" src="./js/firebase-config.js"></script>
 </body>
 </html>
