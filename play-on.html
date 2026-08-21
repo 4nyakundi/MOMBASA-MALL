@@ -2,337 +2,142 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Play On — Mombasa Mall</title>
-  <link rel="stylesheet" href="./css/style.css">
-  <style>
-    /* Local play-on color palette overrides */
-    :root {
-      --playon-green: #00a54a;
-      --playon-yellow: #ffd700;
-      --playon-purple: #6c63ff;
-      --playon-yellow-deep: #d99c10;
-    }
-    
-    .playon-hero {
-      background: linear-gradient(135deg, rgba(0, 165, 74, 0.05) 0%, rgba(108, 99, 255, 0.05) 100%) !important;
-      border-left: 5px solid var(--playon-green) !important;
-      padding: 40px !important;
-      border-radius: 24px !important;
-      margin-bottom: 24px !important;
-      box-shadow: 0 10px 30px rgba(0, 165, 74, 0.02) !important;
-    }
-    
-    .playon-card {
-      border-top: 4px solid var(--playon-green) !important;
-      transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1) !important;
-    }
-    
-    .playon-card:hover {
-      transform: translateY(-8px) scale(1.015) !important;
-      border-top-color: var(--playon-yellow) !important;
-      box-shadow: 0 20px 40px rgba(0, 165, 74, 0.12) !important;
-    }
-    
-    .playon-card-purple {
-      border-top: 4px solid var(--playon-purple) !important;
-      transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1) !important;
-    }
-    
-    .playon-card-purple:hover {
-      transform: translateY(-8px) scale(1.015) !important;
-      border-top-color: var(--playon-yellow) !important;
-      box-shadow: 0 20px 40px rgba(108, 99, 255, 0.12) !important;
-    }
-    
-    .playon-badge {
-      background: rgba(0, 165, 74, 0.08) !important;
-      color: var(--playon-green) !important;
-      font-weight: 700 !important;
-      padding: 6px 12px !important;
-      border-radius: 20px !important;
-      font-size: 11px !important;
-      text-transform: uppercase !important;
-      letter-spacing: 0.05em !important;
-      display: inline-block !important;
-    }
-    
-    .playon-badge-purple {
-      background: rgba(108, 99, 255, 0.08) !important;
-      color: var(--playon-purple) !important;
-      font-weight: 700 !important;
-      padding: 6px 12px !important;
-      border-radius: 20px !important;
-      font-size: 11px !important;
-      text-transform: uppercase !important;
-      letter-spacing: 0.05em !important;
-      display: inline-block !important;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Play On Arena — Mombasa Mall</title>
+  <link rel="stylesheet" href="./css/style.css" />
 </head>
-<body class="relative custom-cursor-active">
-  <div class="cursor"></div>
-  <div class="ambient-light"></div>
-  <div class="ambient-light-bottom"></div>
+<body class="subpage">
 
-  <!-- Floating Navigation -->
-  <header class="fixed top-6 left-1/2 -translate-x-1/2 w-[92%] max-w-7xl z-50">
-    <nav class="nav-glass rounded-full px-8 py-4 flex items-center justify-between">
-      <a href="./index.html" class="font-display font-bold text-xl tracking-tight text-white flex items-center gap-2.5">
-        <span class="w-2.5 h-2.5 rounded-full bg-[#ff6b4a] shadow-[0_0_12px_#ff6b4a] animate-pulse"></span>
-        MOMBASA MALL
-      </a>
-
-      <div class="hidden md:flex items-center gap-8 font-mono text-xs uppercase tracking-widest text-slate-300">
-        <a href="./stores.html" class="hover:text-[#ff6b4a] transition-colors">Directory</a>
-        <a href="./play-on.html" class="hover:text-[#ff6b4a] transition-colors">Activations</a>
-        <a href="./led.html" class="hover:text-[#ff6b4a] transition-colors">LED Displays</a>
-        <a href="./news-events.html" class="hover:text-[#ff6b4a] transition-colors">Events</a>
-        <a href="./about-us.html" class="hover:text-[#ff6b4a] transition-colors">About Us</a>
+  <div id="selection-shell">
+    <nav id="selection-menu" aria-hidden="true" aria-label="Our floors">
+      <div class="selection-cards">
+        <a href="./stores.html" class="selection-card"><span class="selection-card__panel"><span class="selection-card__eyebrow">Floor G — Retail</span><span class="selection-card__title">Ground<br>Floor</span><span class="selection-card__desc">Anchor Retail, Banking<br>&amp; Essential Services</span></span><span class="selection-card__cover" aria-hidden="true"><img data-selection-cover="./assets/Logo/Shops Logo/Naivasmain.jpeg" alt="" decoding="async"></span></a>
+        <a href="./news-events.html" class="selection-card"><span class="selection-card__panel"><span class="selection-card__eyebrow">Floors 2 &amp; 3 — Dining</span><span class="selection-card__title">Food Court<br>&amp; Events</span><span class="selection-card__desc">Restaurants, Cafés<br>&amp; Live Entertainment</span></span><span class="selection-card__cover" aria-hidden="true"><img data-selection-cover="./assets/Logo/Shops Logo/Payless.jpg" alt="" decoding="async"></span></a>
+        <a href="./led.html" class="selection-card"><span class="selection-card__panel"><span class="selection-card__eyebrow">Media — Billboard</span><span class="selection-card__title">LED<br>Advertising</span><span class="selection-card__desc">Premium Digital<br>Screen Inventory</span></span><span class="selection-card__cover" aria-hidden="true"><img data-selection-cover="./assets/Logo/Mall Logo/MOMBASA MALL2.0.png" alt="" decoding="async"></span></a>
+        <a href="./play-on.html" class="selection-card"><span class="selection-card__panel"><span class="selection-card__eyebrow">Entertainment</span><span class="selection-card__title">Play On<br>Arena</span><span class="selection-card__desc">Family Fun, Kids Zone<br>&amp; Brand Activations</span></span><span class="selection-card__cover" aria-hidden="true"><img data-selection-cover="./assets/Logo/Shops Logo/West 11.jpg" alt="" decoding="async"></span></a>
       </div>
-
-      <a href="./stores.html" class="btn-flagship text-xs">
-        <span>Explore Mall</span>
-        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </a>
+      <button class="selection-close" id="selection-close" aria-label="Close"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M1.5 1.5L16.5 16.5M16.5 1.5L1.5 16.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     </nav>
-  </header>
-  <main class="main-content" style="padding:40px 56px;">
-    <!-- Ambient lighting floaters in Play-On colors -->
-    <div class="glow-orb" style="top:15%; right:-10%; background:radial-gradient(circle, rgba(0,165,74,0.08) 0%, transparent 70%);"></div>
-    <div class="glow-orb" style="bottom:15%; left:-10%; background:radial-gradient(circle, rgba(108,99,255,0.08) 0%, transparent 70%);"></div>
+  </div>
 
-    <section class="hero playon-hero" style="position:relative; z-index:1;">
-      <span class="playon-badge-purple">Mombasa Mall Entertainment</span>
-      <h1 style="font-family:'Plus Jakarta Sans',sans-serif; font-size:42px; font-weight:800; margin:12px 0 16px; letter-spacing:-0.02em;">Karibu Play-On</h1>
-      <p style="color:var(--ink-soft); max-width:600px; line-height:1.6; margin:0;">Experience fun like never before. Welcome to Mombasa's ultimate family entertainment destination, located on the 2nd Floor of Mombasa Mall.</p>
-    </section>
+  <div id="offcanvas-menu" class="offcanvas-menu" aria-hidden="true">
+    <button class="offcanvas-close" id="offcanvas-close" aria-label="Close menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1 1L15 15M15 1L1 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    <div class="offcanvas-logo"><img src="./assets/Logo/Mall Logo/MOMBASA MALL2.0.png" alt="Mombasa Mall" style="height:32px;filter:brightness(0) invert(1);"></div>
+    <nav class="offcanvas-nav">
+      <a href="./index.html">Home</a><a href="./stores.html">Store Directory</a><a href="./news-events.html">Events &amp; News</a><a href="./gallery.html">Gallery</a><a href="./play-on.html">Play On</a><a href="./led.html">LED Advertising</a><a href="./blog.html">Blog</a><a href="./reviews.html">Reviews</a><a href="./about-us.html">About Us</a>
+    </nav>
+    <div class="offcanvas-footer"><p>Mwembe Tayari, Mombasa</p><p>+254 790 964 002</p></div>
+  </div>
+  <div class="offcanvas-backdrop" id="offcanvas-backdrop"></div>
 
-    <!-- Why Kids Love Us Section -->
-    <section style="padding:24px 0; position:relative; z-index:1;">
-      <h2 style="font-family:'Plus Jakarta Sans',sans-serif; font-size:24px; font-weight:700; margin-bottom:20px;">Why Kids Love Us</h2>
-      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:24px;">
-        <div class="glow-card playon-card" style="padding:24px; border-radius:18px; text-align:left; background:rgba(255,255,255,0.45);">
-          <div style="font-size:24px; margin-bottom:12px;">🛡️</div>
-          <h4 style="margin:0 0 8px; font-size:17px; font-weight:700;">Safe & Supervised</h4>
-          <p style="color:var(--ink-soft); font-size:13.5px; line-height:1.5; margin:0;">All play zones are designed with safety as a priority and are under constant professional staff supervision.</p>
+  <div id="page-stage">
+    <div class="subpage-grid">
+      <nav class="subpage-nav site-nav" aria-label="Primary">
+        <header class="site-logo"><a href="./index.html"><img src="./assets/Logo/Mall Logo/MOMBASA MALL2.0.png" alt="Mombasa Mall" width="160" decoding="async"></a></header>
+        <a href="./about-us.html" class="site-nav__link link-underline">About</a>
+        <a href="./stores.html" class="site-nav__link link-underline">Stores</a>
+        <a href="./gallery.html" class="site-nav__link link-underline">Gallery</a>
+        <a href="./about-us.html#contact" class="site-nav__link link-underline">Contact</a>
+        <div class="site-nav__actions">
+          <button type="button" class="our-selection-btn" id="open-selection" aria-haspopup="true" aria-expanded="false" aria-controls="selection-menu">
+            <span>Our Floors</span>
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><rect width="4" height="4" fill="currentColor"/><rect x="9" width="4" height="4" fill="currentColor"/><rect y="9" width="4" height="4" fill="currentColor"/><rect x="9" y="9" width="4" height="4" fill="currentColor"/></svg>
+          </button>
+          <button type="button" class="menu-btn" id="hamburger" aria-label="Open menu" aria-expanded="false">
+            <svg width="22" height="12" viewBox="0 0 22 12" fill="none"><rect width="22" height="3" fill="currentColor"/><rect y="9" width="12" height="3" fill="currentColor"/></svg>
+          </button>
         </div>
-        <div class="glow-card playon-card" style="padding:24px; border-radius:18px; text-align:left; background:rgba(255,255,255,0.45);">
-          <div style="font-size:24px; margin-bottom:12px;">🌲</div>
-          <h4 style="margin:0 0 8px; font-size:17px; font-weight:700;">Forever Fun</h4>
-          <p style="color:var(--ink-soft); font-size:13.5px; line-height:1.5; margin:0;">Green-like surroundings and eco-friendly activities designed specifically for little explorers.</p>
-        </div>
-        <div class="glow-card playon-card" style="padding:24px; border-radius:18px; text-align:left; background:rgba(255,255,255,0.45);">
-          <div style="font-size:24px; margin-bottom:12px;">🎨</div>
-          <h4 style="margin:0 0 8px; font-size:17px; font-weight:700;">Creative Zones</h4>
-          <p style="color:var(--ink-soft); font-size:13.5px; line-height:1.5; margin:0;">Custom spaces for drawing, painting, building, and expressing wild imaginations.</p>
-        </div>
-      </div>
-    </section>
+      </nav>
 
-    <!-- Games Available for Kids Grid -->
-    <section style="padding:32px 0; position:relative; z-index:1;">
-      <h2 style="font-family:'Plus Jakarta Sans',sans-serif; font-size:24px; font-weight:700; margin-bottom:8px;">Games & Activities</h2>
-      <p style="color:var(--ink-soft); font-size:14px; margin-bottom:24px;">Explore our highly interactive zones designed for fun, strength, and brain training.</p>
-      
-      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:20px;">
-        <div class="spec-card glow-card playon-card" style="padding:20px; display:flex; flex-direction:column; gap:8px;">
-          <h4 style="margin:0; font-size:16px; color:var(--playon-purple);">Soft Play Area (1-3 Years)</h4>
-          <p style="font-size:13px; color:var(--ink-soft); line-height:1.4; margin:0;">Bounce, slide and laugh safely in our colorful soft ball play area.</p>
-        </div>
-        <div class="spec-card glow-card playon-card" style="padding:20px; display:flex; flex-direction:column; gap:8px;">
-          <h4 style="margin:0; font-size:16px; color:var(--playon-purple);">Trampoline (4-15 Years)</h4>
-          <p style="font-size:13px; color:var(--ink-soft); line-height:1.4; margin:0;">A trio of high-energy trampolines for kids to jump and play around.</p>
-        </div>
-        <div class="spec-card glow-card playon-card" style="padding:20px; display:flex; flex-direction:column; gap:8px;">
-          <h4 style="margin:0; font-size:16px; color:var(--playon-purple);">Go-Karting (6-15 Years)</h4>
-          <p style="font-size:13px; color:var(--ink-soft); line-height:1.4; margin:0;">A thrilling indoor go-karting track where kids race for fun and glory.</p>
-        </div>
-        <div class="spec-card glow-card playon-card" style="padding:20px; display:flex; flex-direction:column; gap:8px;">
-          <h4 style="margin:0; font-size:16px; color:var(--playon-purple);">Tap Wall (4-15 Years)</h4>
-          <p style="font-size:13px; color:var(--ink-soft); line-height:1.4; margin:0;">Perfect for brain activities, reaction timing and whole body movement.</p>
-        </div>
-        <div class="spec-card glow-card playon-card" style="padding:20px; display:flex; flex-direction:column; gap:8px;">
-          <h4 style="margin:0; font-size:16px; color:var(--playon-purple);">Ninja Course (4-15 Years)</h4>
-          <p style="font-size:13px; color:var(--ink-soft); line-height:1.4; margin:0;">Test agility, climbing strength, balance, and problem-solving skills.</p>
-        </div>
-        <div class="spec-card glow-card playon-card" style="padding:20px; display:flex; flex-direction:column; gap:8px;">
-          <h4 style="margin:0; font-size:16px; color:var(--playon-purple);">Ballpit & Slide (4-15 Years)</h4>
-          <p style="font-size:13px; color:var(--ink-soft); line-height:1.4; margin:0;">A massive ball pit with a fast spiral slide to dive, slide and play.</p>
-        </div>
-        <div class="spec-card glow-card playon-card" style="padding:20px; display:flex; flex-direction:column; gap:8px;">
-          <h4 style="margin:0; font-size:16px; color:var(--playon-purple);">Basketball Hoops (4-15 Years)</h4>
-          <p style="font-size:13px; color:var(--ink-soft); line-height:1.4; margin:0;">Practice hoops, jump shots, and challenge friends to shooting contests.</p>
-        </div>
-        <div class="spec-card glow-card playon-card" style="padding:20px; display:flex; flex-direction:column; gap:8px;">
-          <h4 style="margin:0; font-size:16px; color:var(--playon-purple);">Spider Wall (4-15 Years)</h4>
-          <p style="font-size:13px; color:var(--ink-soft); line-height:1.4; margin:0;">Stick to the wall in velcro suits and try to free yourself from the dungeon.</p>
-        </div>
-        <div class="spec-card glow-card playon-card" style="padding:20px; display:flex; flex-direction:column; gap:8px;">
-          <h4 style="margin:0; font-size:16px; color:var(--playon-purple);">Zip Lines (4-15 Years)</h4>
-          <p style="font-size:13px; color:var(--ink-soft); line-height:1.4; margin:0;">A thrilling indoor zip line experience letting kids glide through the air.</p>
-        </div>
-      </div>
-    </section>
+      <div class="subpage-content">
 
-    <!-- Sessions & Opening Hours Section -->
-    <section style="padding:32px 0; position:relative; z-index:1;">
-      <h2 style="font-family:'Plus Jakarta Sans',sans-serif; font-size:24px; font-weight:700; margin-bottom:8px;">Sessions & Opening Hours</h2>
-      <p style="color:var(--ink-soft); font-size:14px; margin-bottom:24px;">To guarantee security and quality play, play sessions are structured as follows. Free socks are provided on entry.</p>
-      
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:28px;">
-        <div class="glow-card playon-card" style="padding:28px; border-radius:20px; background:rgba(255,255,255,0.45); border:1px solid rgba(15,15,15,0.06);">
-          <h4 style="color:var(--playon-green); margin:0 0 16px; font-size:18px;">📅 Weekdays (Tuesday - Friday)</h4>
-          <div style="display:flex; flex-direction:column; gap:10px;">
-            <div style="display:flex; justify-content:space-between; font-size:14px; border-bottom:1px solid rgba(15,15,15,0.05); padding-bottom:6px;">
-              <span><strong>1st Session:</strong></span>
-              <span style="color:var(--playon-green); font-weight:700;">2:00 PM – 4:30 PM</span>
-            </div>
-            <div style="display:flex; justify-content:space-between; font-size:14px; padding-bottom:6px;">
-              <span><strong>2nd Session:</strong></span>
-              <span style="color:var(--playon-green); font-weight:700;">5:00 PM – 8:00 PM</span>
-            </div>
+        <div class="subpage-hero">
+          <span class="subpage-eyebrow">Family Entertainment · 2nd Floor</span>
+          <h1 class="subpage-h1">Play On<br>Arena</h1>
+          <p class="subpage-lead">Mombasa's ultimate family entertainment destination. A world of fun, creativity and safe adventure for children of all ages — and the adults who love them.</p>
+        </div>
+
+        <!-- ZONES -->
+        <div class="section-header"><h2 class="section-h2">Play Zones</h2></div>
+        <div class="grid-3" style="margin-bottom:52px;">
+          <div class="bento">
+            <span class="bento-eyebrow">Toddlers (Under 5)</span>
+            <h3 class="bento-title">Soft Play World</h3>
+            <p class="bento-text">Foam-padded soft-play area with ride-ons, ball pools and climbing frames. Parent seating with direct line of sight throughout.</p>
+          </div>
+          <div class="bento">
+            <span class="bento-eyebrow">Kids 6–14</span>
+            <h3 class="bento-title">Adventure Zone</h3>
+            <p class="bento-text">Obstacle courses, climbing walls, trampolines and team challenges. Structured sessions run every 90 minutes.</p>
+          </div>
+          <div class="bento">
+            <span class="bento-eyebrow">Digital Play</span>
+            <h3 class="bento-title">VR &amp; Gaming Arcade</h3>
+            <p class="bento-text">Console simulators, VR headsets, racing rigs and an esports lounge. Pay-per-play and session passes available.</p>
+          </div>
+          <div class="bento">
+            <span class="bento-eyebrow">Creative</span>
+            <h3 class="bento-title">Art &amp; Build Studio</h3>
+            <p class="bento-text">Drawing, painting, LEGO building and structured weekend workshops hosted by professional art educators.</p>
+          </div>
+          <div class="bento">
+            <span class="bento-eyebrow">Parties</span>
+            <h3 class="bento-title">Birthday Packages</h3>
+            <p class="bento-text">Full birthday party packages — venue, catering, entertainer, decorations and party bags. Minimum 15 guests. Advance booking required.</p>
+          </div>
+          <div class="bento" style="border-color:var(--coral);">
+            <span class="bento-eyebrow">Brands</span>
+            <h3 class="bento-title">Activation Zone</h3>
+            <p class="bento-text">1,200sqm open atrium space for brand activations, product launches and experiential marketing campaigns. Flexible rates.</p>
           </div>
         </div>
-        <div class="glow-card playon-card-purple" style="padding:28px; border-radius:20px; background:rgba(255,255,255,0.45); border:1px solid rgba(15,15,15,0.06);">
-          <h4 style="color:var(--playon-purple); margin:0 0 16px; font-size:18px;">🎉 Weekends & Holidays</h4>
-          <div style="display:flex; flex-direction:column; gap:10px;">
-            <div style="display:flex; justify-content:space-between; font-size:14px; border-bottom:1px solid rgba(15,15,15,0.05); padding-bottom:6px;">
-              <span><strong>1st Session:</strong></span>
-              <span style="color:var(--playon-purple); font-weight:700;">11:00 AM – 1:00 PM</span>
-            </div>
-            <div style="display:flex; justify-content:space-between; font-size:14px; border-bottom:1px solid rgba(15,15,15,0.05); padding-bottom:6px;">
-              <span><strong>2nd Session:</strong></span>
-              <span style="color:var(--playon-purple); font-weight:700;">2:00 PM – 4:00 PM</span>
-            </div>
-            <div style="display:flex; justify-content:space-between; font-size:14px; border-bottom:1px solid rgba(15,15,15,0.05); padding-bottom:6px;">
-              <span><strong>3rd Session:</strong></span>
-              <span style="color:var(--playon-purple); font-weight:700;">4:30 PM – 6:30 PM</span>
-            </div>
-            <div style="display:flex; justify-content:space-between; font-size:14px; padding-bottom:6px;">
-              <span><strong>4th Session:</strong></span>
-              <span style="color:var(--playon-purple); font-weight:700;">7:00 PM – 9:00 PM</span>
-            </div>
+
+        <!-- PRICING -->
+        <div class="section-header"><h2 class="section-h2">Pricing</h2></div>
+        <div class="grid-3" style="margin-bottom:52px;">
+          <div class="bento">
+            <span class="bento-eyebrow">General Entry · Per Child</span>
+            <h3 class="bento-title" style="font-size:40px;letter-spacing:-0.04em;">KES 300</h3>
+            <p class="bento-text">2-hour session. All play zones included. Accompanying adults enter free.</p>
+          </div>
+          <div class="bento">
+            <span class="bento-eyebrow">Monthly Pass</span>
+            <h3 class="bento-title" style="font-size:40px;letter-spacing:-0.04em;">KES 2,000</h3>
+            <p class="bento-text">Unlimited daily visits for the calendar month. Best value for regular visitors.</p>
+          </div>
+          <div class="bento">
+            <span class="bento-eyebrow">Birthday Package</span>
+            <h3 class="bento-title" style="font-size:40px;letter-spacing:-0.04em;">KES 15K</h3>
+            <p class="bento-text">Venue 2hrs, catering for 20 guests, entertainer, decorations and party bags. Additional guests KES 400 each.</p>
           </div>
         </div>
-      </div>
-    </section>
- 
-    <!-- Pricing & Bookings -->
-    <section style="padding:32px 0; position:relative; z-index:1;" id="booking">
-      <h2 style="font-family:'Plus Jakarta Sans',sans-serif; font-size:24px; font-weight:700; margin-bottom:8px;">Booking Packages & Contacts</h2>
-      <p style="color:var(--ink-soft); font-size:14px; margin-bottom:24px;">Special group discounts, birthday parties, and school package bookings can be made directly via our details.</p>
-      
-      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:24px; margin-bottom:32px;">
-        <div class="spec-card glow-card playon-card" style="padding:24px;">
-          <h4 style="color:var(--playon-green); margin:0 0 10px; font-size:16px;">1-Hour Pass</h4>
-          <div class="spec-value" style="color:var(--playon-green);">KES 500</div>
-          <p style="font-size:13px; color:var(--ink-soft); margin-top:10px; line-height:1.4;">Access to all standard soft plays, slides and ninja courses. Fully supervised.</p>
-        </div>
-        <div class="spec-card glow-card playon-card-purple" style="padding:24px;">
-          <h4 style="color:var(--playon-purple); margin:0 0 10px; font-size:16px;">Day Pass</h4>
-          <div class="spec-value" style="color:var(--playon-purple);">KES 1,200</div>
-          <p style="font-size:13px; color:var(--ink-soft); margin-top:10px; line-height:1.4;">All-day access to play zones plus a complimentary kids drink at our kiosk.</p>
-        </div>
-        <div class="spec-card glow-card playon-card" style="padding:24px;">
-          <h4 style="color:var(--playon-purple); margin:0 0 10px; font-size:16px;">Booking Contacts</h4>
-          <p style="font-size:14px; line-height:1.6; margin:0; text-align:left;">
-            📞 <strong>Call:</strong> +254 780 611 074<br>
-            ✉️ <strong>Email:</strong> playonkenya@gmail.com<br>
-            📍 <strong>Floor:</strong> 2nd Floor, Mombasa Mall
-          </p>
-        </div>
-      </div>
-    </section>
-  </main>
 
-  <!-- Upscaled Footer -->
-  <footer class="site-footer" style="background:#111; color:#fff; border-top:1px solid rgba(255,255,255,0.08);">
-    <div class="footer-top" style="padding:80px 56px 40px;">
-      <div class="footer-brand">
-        <a href="./index.html" style="display:inline-flex; align-items:center; margin-bottom:20px; text-decoration:none;">
-          <img src="./assets/Logo/Mall Logo/MOMBASA MALL2.0.png" alt="Mombasa Mall" style="height:48px; object-fit:contain; filter:brightness(0) invert(1);">
-        </a>
-        <p style="color:rgba(255,255,255,0.6); font-size:14px; line-height:1.6;">Mombasa Mall is the premier shopping, dining, and lifestyle destination located in the heart of Mombasa, Mwembe Tayari along Jomo Kenyatta Avenue.</p>
-        
-        <!-- Social Links with Glow Hover -->
-        <div class="footer-social-links">
-          <a class="social-btn" href="https://facebook.com/mombasamall" id="social-facebook" style="color:#fff; background:rgba(255,255,255,0.08); border-color:rgba(255,255,255,0.08);">
-            <svg viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
-          </a>
-          <a class="social-btn" href="https://instagram.com/mombasamall" id="social-instagram" style="color:#fff; background:rgba(255,255,255,0.08); border-color:rgba(255,255,255,0.08);">
-            <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-          </a>
-          <a class="social-btn" href="https://twitter.com/mombasamall" id="social-twitter" style="color:#fff; background:rgba(255,255,255,0.08); border-color:rgba(255,255,255,0.08);">
-            <svg viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg>
-          </a>
-        </div>
-      </div>
-      <div class="footer-cols">
-        <div class="footer-col">
-          <h4 style="color:#fff; border-left:3px solid var(--yellow); padding-left:8px; font-size:14px; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:16px;">Directory</h4>
-          <a href="./stores.html" style="color:rgba(255,255,255,0.6);">Stores List</a>
-          <a href="./stores.html#stores-ground-floor" style="color:rgba(255,255,255,0.6);">Ground Floor</a>
-          <a href="./stores.html#stores-first-floor" style="color:rgba(255,255,255,0.6);">First Floor</a>
-          <a href="./stores.html#stores-second-floor" style="color:rgba(255,255,255,0.6);">Food & Cinema</a>
-        </div>
-        <div class="footer-col">
-          <h4 style="color:#fff; border-left:3px solid var(--yellow); padding-left:8px; font-size:14px; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:16px;">Leasing</h4>
-          <a href="./news-events.html#activations" style="color:rgba(255,255,255,0.6);">Vendor Space</a>
-          <a href="./led.html" style="color:rgba(255,255,255,0.6);">LED Billboard Ads</a>
-          <a href="./stores.html#space-rental" style="color:rgba(255,255,255,0.6);">Short-Term Spots</a>
-        </div>
-        <div class="footer-col">
-          <h4 style="color:#fff; border-left:3px solid var(--yellow); padding-left:8px; font-size:14px; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:16px;">About</h4>
-          <a href="./about-us.html" style="color:rgba(255,255,255,0.6);">About Mombasa Mall</a>
-          <a href="./blog.html" style="color:rgba(255,255,255,0.6);">Mall Life Blog</a>
-          <a href="./reviews.html" style="color:rgba(255,255,255,0.6);">Customer Reviews</a>
-          <a href="./about-us.html#contact" style="color:rgba(255,255,255,0.6);">Contact Us</a>
-        </div>
-      </div>
-    </div>
-    
-    <div class="footer-bottom" style="padding:24px; text-align:center; border-top:1px solid rgba(255,255,255,0.06); color:rgba(255,255,255,0.4); font-size:13px;">
-      <p>© Mombasa Mall — All rights reserved.</p>
-    </div>
-  </footer>
-
-  <!-- Shop Details Modal -->
-  <div id="shop-modal" class="shop-modal" style="display:none;">
-    <div class="shop-modal-backdrop" onclick="closeShopModal()"></div>
-    <div class="shop-modal-content glow-card">
-      <button class="shop-modal-close" onclick="closeShopModal()">×</button>
-      <div class="shop-modal-body">
-        <div class="shop-modal-header">
-          <img id="modal-shop-logo" src="./assets/Logo/Mall Logo/MOMBASA MALL 1.0.png" alt="Shop Logo">
-          <div>
-            <h3 id="modal-shop-name">Shop Name</h3>
-            <span id="modal-shop-location">Ground Floor, Shop G12</span>
+        <!-- HOURS & BOOK -->
+        <div class="grid-2" style="margin-bottom:52px;">
+          <div class="bento">
+            <span class="bento-eyebrow">Opening Hours</span>
+            <h3 class="bento-title">We Are Open</h3>
+            <p class="bento-text" style="margin-bottom:8px;">Monday – Friday: 10AM – 8PM</p>
+            <p class="bento-text" style="margin-bottom:8px;">Saturday – Sunday: 9AM – 9PM</p>
+            <p class="bento-text">Public Holidays: 9AM – 10PM</p>
+          </div>
+          <div class="bento" style="border-color:var(--coral);">
+            <span class="bento-eyebrow">Reservations</span>
+            <h3 class="bento-title">Book a Visit</h3>
+            <p class="bento-text" style="margin-bottom:20px;">Call or WhatsApp to reserve birthday packages or group activations. Walk-ins welcome for general play.</p>
+            <p style="font-family:var(--font-mono);font-size:13px;color:var(--text-main);">📞 +254 790 964 002</p>
+            <p style="font-family:var(--font-mono);font-size:13px;color:var(--text-main);margin-top:8px;">✉ playon@mombasamall.co.ke</p>
           </div>
         </div>
-        <p id="modal-shop-desc">Shop description goes here...</p>
-        <div class="shop-modal-contact">
-          <div class="contact-item"><strong>📞 Phone:</strong> <span id="modal-shop-phone">+254 790 964 002</span></div>
-          <div class="contact-item"><strong>✉️ Email:</strong> <span id="modal-shop-email">info@shop.com</span></div>
-          <div class="contact-item"><strong>🌐 Socials:</strong> <span id="modal-shop-social">@shopname</span></div>
-        </div>
+
       </div>
     </div>
   </div>
 
-  <!-- GSAP and ScrollTrigger -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-  <!-- Lenis smooth scrolling -->
-  <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.31/bundled/lenis.min.js"></script>
-
+  <div class="ambient-light" aria-hidden="true"></div>
+  <div class="cursor"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="./js/selectionMenu.js"></script>
   <script src="./js/main.js"></script>
-  <script src="./js/lenis-init.js"></script>
-  <script src="./js/mesh-text.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
-  <script src="./js/carousel-init.js"></script>
-  <script src="./js/site-data-init.js"></script>
-  <script src="./js/data-renderer.js"></script>
-  <script type="module" src="./js/firebase-config.js"></script>
 </body>
 </html>
