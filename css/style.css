@@ -2679,10 +2679,10 @@ input:focus, select:focus, textarea:focus {
   display: flex;
   flex-direction: column;
   padding: 36px 28px;
-  border-right: 1px solid var(--border-hairline);
+  border-right: 1px solid rgba(163, 206, 241, 0.12);
   position: relative;
   z-index: 10;
-  background: var(--bg-void);
+  background: var(--dusk-blue);
 }
 
 .site-logo {
@@ -2708,7 +2708,7 @@ input:focus, select:focus, textarea:focus {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: var(--text-muted);
+  color: rgba(163, 206, 241, 0.62);
   text-decoration: none;
   margin-bottom: 20px;
   transition: color 0.25s ease;
@@ -2717,7 +2717,7 @@ input:focus, select:focus, textarea:focus {
 }
 
 .site-nav__link:hover {
-  color: var(--text-main);
+  color: var(--platinum);
 }
 
 /* Underline animation on hover */
@@ -2821,17 +2821,17 @@ input:focus, select:focus, textarea:focus {
   display: block;
 }
 
-/* Cinematic gradient over video */
+/* Cinematic blue gradient over video */
 .hero-visual::after {
   content: '';
   position: absolute;
   inset: 0;
   background: linear-gradient(
     to bottom,
-    rgba(4, 6, 10, 0.45) 0%,
-    transparent 30%,
-    transparent 55%,
-    rgba(4, 6, 10, 0.88) 100%
+    rgba(39, 76, 119, 0.42) 0%,
+    transparent 32%,
+    transparent 52%,
+    rgba(39, 76, 119, 0.88) 100%
   );
   pointer-events: none;
   z-index: 2;
@@ -2856,10 +2856,10 @@ input:focus, select:focus, textarea:focus {
   right: 0;
   z-index: 5;
   overflow: hidden;
-  border-bottom: 1px solid var(--border-hairline);
-  background: rgba(4, 6, 10, 0.55);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(163, 206, 241, 0.18);
+  background: rgba(39, 76, 119, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
 .marquee-reveal {
@@ -2884,15 +2884,15 @@ input:focus, select:focus, textarea:focus {
   font-size: 9px;
   text-transform: uppercase;
   letter-spacing: 0.18em;
-  color: var(--text-muted);
+  color: rgba(163, 206, 241, 0.75);
   padding: 0 32px;
 }
 
 .marquee-text::before {
   content: '—';
   margin-right: 32px;
-  color: var(--coral);
-  opacity: 0.8;
+  color: var(--platinum);
+  opacity: 0.5;
 }
 
 @keyframes marquee-run {
@@ -2934,11 +2934,11 @@ input:focus, select:focus, textarea:focus {
   grid-column: 2;
   grid-row: 2;
   padding: 0 52px;
-  border-top: 1px solid var(--border-hairline);
+  border-top: 1px solid rgba(163, 206, 241, 0.12);
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  background: var(--bg-void);
+  background: var(--dusk-blue);
 }
 
 [data-footer-copyright] {
@@ -2946,18 +2946,19 @@ input:focus, select:focus, textarea:focus {
   font-size: 9.5px;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: var(--text-muted);
+  color: rgba(163, 206, 241, 0.45);
 }
 
 /* ============================================================
    SITE PRELOADER
    ============================================================ */
 
+/* Preloader → dusk-blue */
 .site-preloader {
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: var(--bg-void);
+  background: var(--dusk-blue);
   display: grid;
   place-items: center;
   pointer-events: all;
@@ -3093,9 +3094,9 @@ input:focus, select:focus, textarea:focus {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  border-right: 1px solid var(--border-hairline);
+  border-right: 1px solid rgba(163, 206, 241, 0.1);
   transition: flex 0.55s cubic-bezier(0.4, 0, 0.2, 1);
-  background: var(--bg-void);
+  background: var(--dusk-blue);
   min-width: 0;
 }
 
@@ -3105,6 +3106,7 @@ input:focus, select:focus, textarea:focus {
 
 .selection-card:hover {
   flex: 2.2;
+  background: #1e3d61;
 }
 
 .selection-card__cover {
@@ -3134,7 +3136,7 @@ input:focus, select:focus, textarea:focus {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  background: linear-gradient(to top, rgba(4,6,10,0.9) 0%, transparent 100%);
+  background: linear-gradient(to top, rgba(39, 76, 119, 0.96) 0%, rgba(39, 76, 119, 0.3) 100%);
 }
 
 .selection-card__eyebrow {
@@ -3142,7 +3144,7 @@ input:focus, select:focus, textarea:focus {
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.16em;
-  color: var(--coral);
+  color: var(--icy-blue);
   opacity: 0.9;
 }
 
@@ -3150,7 +3152,7 @@ input:focus, select:focus, textarea:focus {
   font-family: var(--font-display);
   font-size: clamp(24px, 2.2vw, 38px);
   font-weight: 700;
-  color: var(--text-main);
+  color: var(--platinum);
   line-height: 1.1;
   text-transform: uppercase;
   letter-spacing: -0.02em;
@@ -3159,7 +3161,7 @@ input:focus, select:focus, textarea:focus {
 .selection-card__desc {
   font-family: var(--font-body);
   font-size: 13px;
-  color: var(--text-muted);
+  color: rgba(163, 206, 241, 0.62);
   line-height: 1.55;
 }
 
@@ -3196,8 +3198,8 @@ input:focus, select:focus, textarea:focus {
   right: 0;
   bottom: 0;
   width: min(380px, 90vw);
-  background: var(--bg-surface);
-  border-left: 1px solid var(--border-hairline);
+  background: var(--dusk-blue);
+  border-left: 1px solid rgba(163, 206, 241, 0.12);
   z-index: 700;
   padding: 64px 44px 44px;
   display: flex;
@@ -3217,11 +3219,11 @@ input:focus, select:focus, textarea:focus {
   top: 20px;
   right: 20px;
   background: transparent;
-  border: 1px solid var(--border-hairline);
+  border: 1px solid rgba(163, 206, 241, 0.2);
   border-radius: 50%;
   width: 38px;
   height: 38px;
-  color: var(--text-main);
+  color: rgba(163, 206, 241, 0.7);
   cursor: pointer;
   font-size: 14px;
   display: flex;
@@ -3231,8 +3233,8 @@ input:focus, select:focus, textarea:focus {
 }
 
 .offcanvas-close:hover {
-  border-color: var(--coral);
-  color: var(--coral);
+  border-color: var(--icy-blue);
+  color: var(--platinum);
 }
 
 .offcanvas-logo {
@@ -3248,17 +3250,17 @@ input:focus, select:focus, textarea:focus {
   font-family: var(--font-display);
   font-size: clamp(22px, 3vw, 30px);
   font-weight: 600;
-  color: var(--text-muted);
+  color: rgba(163, 206, 241, 0.5);
   text-decoration: none;
   padding: 12px 0;
-  border-bottom: 1px solid var(--border-hairline);
+  border-bottom: 1px solid rgba(163, 206, 241, 0.1);
   transition: color 0.2s ease;
   text-transform: uppercase;
   letter-spacing: -0.01em;
 }
 
 .offcanvas-nav a:hover {
-  color: var(--text-main);
+  color: var(--platinum);
 }
 
 .offcanvas-footer {
@@ -3272,7 +3274,7 @@ input:focus, select:focus, textarea:focus {
 .offcanvas-footer p {
   font-family: var(--font-mono);
   font-size: 11px;
-  color: var(--text-muted);
+  color: rgba(163, 206, 241, 0.38);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
@@ -3280,7 +3282,7 @@ input:focus, select:focus, textarea:focus {
 .offcanvas-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(4, 6, 10, 0.75);
+  background: rgba(39, 76, 119, 0.55);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   z-index: 699;
@@ -3319,8 +3321,8 @@ body.subpage #page-stage {
   display: flex;
   flex-direction: column;
   padding: 36px 28px;
-  border-right: 1px solid var(--border-hairline);
-  background: var(--bg-void);
+  border-right: 1px solid rgba(163, 206, 241, 0.12);
+  background: var(--dusk-blue);
   overflow-y: auto;
   height: 100%;
 }
@@ -3329,7 +3331,7 @@ body.subpage #page-stage {
   overflow-y: auto;
   height: 100%;
   padding: 64px 60px;
-  background: var(--bg-void);
+  background: var(--platinum);
   -webkit-overflow-scrolling: touch;
 }
 
@@ -3341,7 +3343,7 @@ body.subpage #page-stage {
   background: transparent;
 }
 .subpage-content::-webkit-scrollbar-thumb {
-  background: var(--border-hairline);
+  background: rgba(39, 76, 119, 0.2);
   border-radius: 2px;
 }
 
@@ -3361,7 +3363,7 @@ body.subpage #page-stage {
     grid-column: 1;
     grid-row: 1;
     border-right: none;
-    border-bottom: 1px solid var(--border-hairline);
+    border-bottom: 1px solid rgba(163, 206, 241, 0.12);
     flex-direction: row;
     align-items: center;
     padding: 0 20px;
@@ -3415,7 +3417,7 @@ body.subpage #page-stage {
     padding: 0 20px;
     height: 60px;
     border-right: none;
-    border-bottom: 1px solid var(--border-hairline);
+    border-bottom: 1px solid rgba(163, 206, 241, 0.12);
     overflow: visible;
   }
 
@@ -3460,7 +3462,7 @@ body.subpage #page-stage {
 
 .subpage-hero {
   padding-bottom: 52px;
-  border-bottom: 1px solid var(--border-hairline);
+  border-bottom: 1px solid rgba(39, 76, 119, 0.12);
   margin-bottom: 52px;
 }
 
@@ -3469,7 +3471,7 @@ body.subpage #page-stage {
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.16em;
-  color: var(--coral);
+  color: var(--steel-blue);
   margin-bottom: 16px;
   display: block;
 }
@@ -3481,7 +3483,7 @@ body.subpage #page-stage {
   line-height: 1.04;
   text-transform: uppercase;
   letter-spacing: -0.025em;
-  color: var(--text-main);
+  color: var(--dusk-blue);
   margin-bottom: 20px;
 }
 
@@ -3508,21 +3510,23 @@ body.subpage #page-stage {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: -0.02em;
-  color: var(--text-main);
+  color: var(--dusk-blue);
 }
 
-/* Dark bento card — used across all subpages */
+/* Refined bento card — white on platinum */
 .bento {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-hairline);
-  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid rgba(39, 76, 119, 0.1);
+  border-radius: 18px;
   padding: 32px;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 2px 12px rgba(39, 76, 119, 0.05);
 }
 
 .bento:hover {
-  border-color: var(--border-bright);
-  box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 30px rgba(255,107,74,0.06);
+  border-color: rgba(96, 150, 186, 0.35);
+  box-shadow: 0 8px 32px rgba(39, 76, 119, 0.1), 0 0 0 1px rgba(96, 150, 186, 0.18);
+  transform: translateY(-2px);
 }
 
 .bento-eyebrow {
@@ -3530,7 +3534,7 @@ body.subpage #page-stage {
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  color: var(--coral);
+  color: var(--steel-blue);
   margin-bottom: 12px;
   display: block;
 }
@@ -3539,7 +3543,7 @@ body.subpage #page-stage {
   font-family: var(--font-display);
   font-size: clamp(20px, 2vw, 28px);
   font-weight: 700;
-  color: var(--text-main);
+  color: var(--dusk-blue);
   text-transform: uppercase;
   letter-spacing: -0.01em;
   margin-bottom: 12px;
