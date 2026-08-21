@@ -2,30 +2,47 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 :root {
-  --bg-void: #04060a;
-  --bg-surface: #090d16;
-  --bg-elevated: #101623;
-  --surface-glass: rgba(9, 13, 22, 0.72);
-  --border-hairline: rgba(255, 255, 255, 0.08);
-  --border-bright: rgba(255, 255, 255, 0.18);
-  --border-active: rgba(255, 107, 74, 0.5);
-  --coral: #ff6b4a;
-  --coral-glow: rgba(255, 107, 74, 0.35);
-  --gold: #e5c07b;
-  --cyan: #00f0ff;
-  --text-main: #ffffff;
-  --text-muted: #94a3b8;
+  /* ── New Coastal Palette ──────────────────────── */
+  --platinum:   #e7ecef;
+  --dusk-blue:  #274c77;
+  --steel-blue: #6096ba;
+  --icy-blue:   #a3cef1;
+
+  /* ── Semantic Tokens ─────────────────────────── */
+  --bg-void:        #e7ecef;                       /* platinum — page bg    */
+  --bg-surface:     #dce4ea;                       /* slightly deeper       */
+  --bg-elevated:    #ffffff;                       /* card surfaces         */
+  --surface-glass:  rgba(231, 236, 239, 0.88);
+
+  --border-hairline: rgba(39, 76, 119, 0.12);      /* dusk-blue 12%         */
+  --border-bright:   rgba(39, 76, 119, 0.28);
+  --border-active:   rgba(96, 150, 186, 0.55);     /* steel-blue            */
+
+  /* Primary accent replaces coral → dusk-blue */
+  --coral:      #274c77;
+  --coral-glow: rgba(39, 76, 119, 0.12);
+
+  /* Secondary accent replaces gold → steel-blue */
+  --gold:  #6096ba;
+
+  /* Tertiary accent replaces cyan → icy-blue */
+  --cyan:  #a3cef1;
+
+  --text-main:  #274c77;                           /* dusk-blue — headings  */
+  --text-muted: #5a7fa0;                           /* mid blue-grey         */
+
   --font-display: 'Clash Display', -apple-system, sans-serif;
-  --font-body: 'Satoshi', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-  
-  --bg: #04060a;
-  --surface: #090d16;
-  --surface-elevated: #101623;
-  --border: rgba(255, 255, 255, 0.08);
-  --yellow: #e5c07b;
-  --yellow-light: #f3e5ab;
-  --yellow-deep: #aa7c11;
+  --font-body:    'Satoshi', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+
+  /* ── Legacy compat ───────────────────────────── */
+  --bg:              #e7ecef;
+  --surface:         #dce4ea;
+  --surface-elevated:#ffffff;
+  --border:          rgba(39, 76, 119, 0.12);
+  --yellow:          #6096ba;
+  --yellow-light:    #a3cef1;
+  --yellow-deep:     #274c77;
 }
 
 *, *::before, *::after {
@@ -56,20 +73,20 @@ html, body {
   width: 100%;
 }
 
-/* Realevate Matrix Grid */
+/* Coastal Matrix Grid — subtle dusk-blue lines on platinum */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-image:
+    linear-gradient(to right, rgba(39, 76, 119, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(39, 76, 119, 0.05) 1px, transparent 1px);
   background-size: 60px 60px;
   pointer-events: none;
   z-index: 1;
 }
 
-/* Ambient Radial Glow */
+/* Ambient Radial Glow — icy-blue + steel-blue */
 .ambient-light {
   position: fixed;
   top: -15%;
@@ -77,7 +94,7 @@ body::before {
   transform: translateX(-50%);
   width: 75vw;
   height: 60vh;
-  background: radial-gradient(ellipse at center, var(--coral-glow) 0%, transparent 65%);
+  background: radial-gradient(ellipse at center, rgba(163, 206, 241, 0.22) 0%, transparent 65%);
   filter: blur(90px);
   pointer-events: none;
   z-index: 0;
@@ -89,7 +106,7 @@ body::before {
   right: 10%;
   width: 50vw;
   height: 50vh;
-  background: radial-gradient(ellipse at center, rgba(0, 240, 255, 0.08) 0%, transparent 70%);
+  background: radial-gradient(ellipse at center, rgba(96, 150, 186, 0.1) 0%, transparent 70%);
   filter: blur(100px);
   pointer-events: none;
   z-index: 0;
@@ -109,7 +126,7 @@ body::before {
 }
 
 .text-gradient {
-  background: linear-gradient(135deg, #ffffff 40%, var(--coral) 100%);
+  background: linear-gradient(135deg, var(--platinum) 30%, var(--icy-blue) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -3546,4 +3563,423 @@ body.subpage #page-stage {
 /* Override legacy main-content padding */
 main.main-content, .main-content {
   padding-top: 0 !important;
+}
+
+
+/* ================================================================
+   COASTAL PALETTE REFINEMENT
+   Platinum · Dusk-Blue · Steel-Blue · Icy-Blue
+   ================================================================ */
+
+/* ---- Core layout backgrounds ---- */
+#page-stage {
+  background: var(--platinum);
+}
+
+/* Left nav → rich dusk-blue panel */
+.site-nav,
+.subpage-nav {
+  background: var(--dusk-blue) !important;
+  border-right-color: rgba(163, 206, 241, 0.12) !important;
+}
+
+/* Nav links → icy-blue muted, platinum on hover */
+.site-nav__link,
+.subpage-nav .site-nav__link {
+  color: rgba(163, 206, 241, 0.65) !important;
+}
+
+.site-nav__link:hover,
+.subpage-nav .site-nav__link:hover {
+  color: var(--platinum) !important;
+}
+
+.link-underline::after {
+  background: var(--icy-blue) !important;
+}
+
+/* Logo — force white/platinum on dark nav */
+.site-logo img {
+  filter: brightness(0) invert(1) !important;
+}
+
+/* "Our Floors" button on dark nav */
+.our-selection-btn {
+  border-color: rgba(163, 206, 241, 0.25) !important;
+  color: rgba(163, 206, 241, 0.8) !important;
+  background: transparent !important;
+}
+
+.our-selection-btn:hover {
+  border-color: var(--icy-blue) !important;
+  color: var(--platinum) !important;
+  background: rgba(163, 206, 241, 0.08) !important;
+}
+
+/* Hamburger button on dark nav */
+.menu-btn {
+  border-color: rgba(163, 206, 241, 0.25) !important;
+  color: rgba(163, 206, 241, 0.8) !important;
+}
+
+.menu-btn:hover {
+  border-color: var(--icy-blue) !important;
+  color: var(--platinum) !important;
+}
+
+/* Footer → dusk-blue strip */
+.site-footer {
+  background: var(--dusk-blue) !important;
+  border-top-color: rgba(163, 206, 241, 0.12) !important;
+}
+
+[data-footer-copyright] {
+  color: rgba(163, 206, 241, 0.5) !important;
+}
+
+/* ---- Hero section ---- */
+/* Cinematic gradient → blue-tinted fade instead of near-black */
+.hero-visual::after {
+  background: linear-gradient(
+    to bottom,
+    rgba(39, 76, 119, 0.35) 0%,
+    transparent 35%,
+    transparent 50%,
+    rgba(39, 76, 119, 0.85) 100%
+  ) !important;
+}
+
+/* Marquee → dusk-blue band with icy-blue text */
+.marquee {
+  background: rgba(39, 76, 119, 0.82) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border-bottom-color: rgba(163, 206, 241, 0.18) !important;
+}
+
+.marquee-text {
+  color: rgba(163, 206, 241, 0.75) !important;
+}
+
+.marquee-text::before {
+  color: var(--platinum) !important;
+  opacity: 0.6;
+}
+
+/* Hero text — platinum over video */
+.hero-h1 {
+  color: var(--platinum) !important;
+  text-shadow: 0 2px 20px rgba(39, 76, 119, 0.4);
+}
+
+.hero-sub {
+  color: rgba(163, 206, 241, 0.85) !important;
+}
+
+/* ---- Preloader → dusk-blue immersive screen ---- */
+.site-preloader {
+  background: var(--dusk-blue) !important;
+}
+
+.site-preloader__number {
+  color: var(--platinum) !important;
+}
+
+.preloader-label {
+  color: rgba(163, 206, 241, 0.55) !important;
+  letter-spacing: 0.3em;
+}
+
+.site-preloader__frame img {
+  filter: brightness(0.06) saturate(0) !important;
+}
+
+/* ---- Our Floors Overlay ---- */
+.selection-card {
+  background: var(--dusk-blue) !important;
+}
+
+/* Subtle dividers between cards */
+.selection-card {
+  border-right-color: rgba(163, 206, 241, 0.12) !important;
+}
+
+.selection-card__eyebrow {
+  color: var(--icy-blue) !important;
+  opacity: 1 !important;
+}
+
+.selection-card__title {
+  color: var(--platinum) !important;
+}
+
+.selection-card__desc {
+  color: rgba(163, 206, 241, 0.6) !important;
+}
+
+.selection-card__panel {
+  background: linear-gradient(to top, rgba(39, 76, 119, 0.97) 0%, rgba(39, 76, 119, 0.4) 100%) !important;
+}
+
+.selection-card:hover {
+  background: #1e3d61 !important;
+}
+
+.selection-card__cover img {
+  filter: brightness(0.18) saturate(0.4) !important;
+}
+
+.selection-card:hover .selection-card__cover img {
+  opacity: 1 !important;
+  filter: brightness(0.2) saturate(0.5) !important;
+}
+
+.selection-close {
+  background: var(--dusk-blue) !important;
+  border-color: rgba(163, 206, 241, 0.2) !important;
+  color: rgba(163, 206, 241, 0.7) !important;
+}
+
+.selection-close:hover {
+  border-color: var(--icy-blue) !important;
+  color: var(--platinum) !important;
+}
+
+/* ---- Off-canvas menu → dusk-blue ---- */
+.offcanvas-menu {
+  background: var(--dusk-blue) !important;
+  border-left-color: rgba(163, 206, 241, 0.12) !important;
+}
+
+.offcanvas-close {
+  border-color: rgba(163, 206, 241, 0.2) !important;
+  color: rgba(163, 206, 241, 0.7) !important;
+}
+
+.offcanvas-close:hover {
+  border-color: var(--icy-blue) !important;
+  color: var(--platinum) !important;
+}
+
+.offcanvas-nav a {
+  color: rgba(163, 206, 241, 0.55) !important;
+  border-bottom-color: rgba(163, 206, 241, 0.1) !important;
+}
+
+.offcanvas-nav a:hover {
+  color: var(--platinum) !important;
+}
+
+.offcanvas-footer p {
+  color: rgba(163, 206, 241, 0.4) !important;
+}
+
+.offcanvas-backdrop {
+  background: rgba(39, 76, 119, 0.6) !important;
+}
+
+/* ---- Subpage layout ---- */
+body.subpage {
+  background: var(--platinum);
+}
+
+.subpage-content {
+  background: var(--platinum) !important;
+}
+
+.subpage-content::-webkit-scrollbar-thumb {
+  background: rgba(39, 76, 119, 0.2) !important;
+}
+
+/* ---- Subpage hero text ---- */
+.subpage-h1 {
+  color: var(--dusk-blue) !important;
+}
+
+.subpage-eyebrow {
+  color: var(--steel-blue) !important;
+}
+
+.subpage-lead {
+  color: var(--text-muted) !important;
+}
+
+/* Subpage hero divider */
+.subpage-hero {
+  border-bottom-color: rgba(39, 76, 119, 0.12) !important;
+}
+
+/* ---- Section headers ---- */
+.section-h2 {
+  color: var(--dusk-blue) !important;
+}
+
+/* ---- Bento cards → refined white cards on platinum ---- */
+.bento {
+  background: #ffffff !important;
+  border-color: rgba(39, 76, 119, 0.1) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 2px 12px rgba(39, 76, 119, 0.06) !important;
+}
+
+.bento:hover {
+  border-color: rgba(96, 150, 186, 0.35) !important;
+  box-shadow:
+    0 8px 32px rgba(39, 76, 119, 0.1),
+    0 0 0 1px rgba(96, 150, 186, 0.2) !important;
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+.bento-eyebrow {
+  color: var(--steel-blue) !important;
+}
+
+.bento-title {
+  color: var(--dusk-blue) !important;
+}
+
+.bento-text {
+  color: var(--text-muted) !important;
+}
+
+/* Bento stat numbers (large) */
+.bento [style*="font-size:52px"],
+.bento [style*="font-size:48px"],
+.bento [style*="font-size:56px"],
+.bento [style*="font-size:40px"],
+.bento [style*="font-size:36px"] {
+  color: var(--dusk-blue) !important;
+}
+
+/* ---- Floor filter pills ---- */
+.floor-pill {
+  background: rgba(39, 76, 119, 0.06) !important;
+  border: 1px solid rgba(39, 76, 119, 0.18) !important;
+  color: var(--dusk-blue) !important;
+  border-radius: 9999px !important;
+  padding: 7px 18px !important;
+  font-family: var(--font-mono) !important;
+  font-size: 10px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.floor-pill:hover {
+  background: rgba(96, 150, 186, 0.12) !important;
+  border-color: rgba(96, 150, 186, 0.4) !important;
+}
+
+.floor-pill.active {
+  background: var(--dusk-blue) !important;
+  color: var(--platinum) !important;
+  border-color: var(--dusk-blue) !important;
+}
+
+/* ---- Buttons ---- */
+.btn-flagship {
+  background: var(--dusk-blue) !important;
+  color: var(--platinum) !important;
+  border-color: var(--dusk-blue) !important;
+}
+
+.btn-flagship:hover {
+  background: var(--steel-blue) !important;
+  border-color: var(--steel-blue) !important;
+}
+
+.btn-flagship-outline {
+  background: transparent !important;
+  color: var(--dusk-blue) !important;
+  border: 1px solid rgba(39, 76, 119, 0.3) !important;
+}
+
+.btn-flagship-outline:hover {
+  background: rgba(39, 76, 119, 0.06) !important;
+  border-color: var(--steel-blue) !important;
+}
+
+/* ---- Form elements ---- */
+input[type="text"],
+input[type="email"],
+select,
+textarea {
+  background: var(--bg-surface) !important;
+  border-color: rgba(39, 76, 119, 0.2) !important;
+  color: var(--dusk-blue) !important;
+}
+
+input::placeholder {
+  color: rgba(39, 76, 119, 0.35) !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--steel-blue) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(96, 150, 186, 0.15) !important;
+}
+
+/* ---- Inline stat numbers in bento (using style attr) ---- */
+/* Gold → steel-blue stat numbers */
+[style*="color:var(--gold)"],
+[style*="color:var(--coral)"] {
+  color: var(--steel-blue) !important;
+}
+
+/* ---- Mobile nav bar (collapsed) ---- */
+@media (max-width: 900px) {
+  .site-nav,
+  .subpage-nav {
+    height: 60px;
+  }
+}
+
+/* ---- Misc refinements ---- */
+
+/* Pricing tags in bento */
+p[style*="color:var(--gold)"] {
+  color: var(--dusk-blue) !important;
+  font-weight: 700 !important;
+}
+
+/* Review stars */
+p[style*="color:var(--gold)"] {
+  color: var(--steel-blue) !important;
+}
+
+/* Blog dates */
+.bento-eyebrow[style*="color:var(--gold)"] {
+  color: var(--steel-blue) !important;
+}
+
+/* Event date eyebrows */
+span.bento-eyebrow[style*="color:var(--gold)"] {
+  color: var(--steel-blue) !important;
+}
+
+/* Coral-bordered bentos → steel-blue border */
+.bento[style*="border-color:var(--coral)"] {
+  border-color: rgba(96, 150, 186, 0.45) !important;
+  background: rgba(163, 206, 241, 0.06) !important;
+}
+
+/* ---- Scrollbar — whole page ---- */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg-surface); }
+::-webkit-scrollbar-thumb {
+  background: rgba(39, 76, 119, 0.25);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--steel-blue);
+}
+
+/* ---- Selection highlight ---- */
+::selection {
+  background: rgba(163, 206, 241, 0.35);
+  color: var(--dusk-blue);
 }
