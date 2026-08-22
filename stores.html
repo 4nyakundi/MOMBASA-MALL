@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Store Directory — Mombasa Mall</title>
-  <meta name="description" content="Explore 120+ stores across 5 floors at Mombasa Mall — anchor supermarkets, banks, boutique fashion, rooftop dining, gaming and family entertainment.">
+  <title>Store Directory &amp; Floor Map — Mombasa Mall</title>
+  <meta name="description" content="Explore 120+ stores across 5 floors with our interactive floor map at Mombasa Mall — anchor supermarkets, banks, boutique fashion, rooftop dining, gaming and family entertainment.">
   <link rel="stylesheet" href="./css/style.css" />
 </head>
 <body class="subpage">
@@ -122,10 +122,108 @@
 
         <!-- HERO -->
         <div class="subpage-hero">
-          <span class="subpage-eyebrow">Mall Directory</span>
+          <span class="subpage-eyebrow">Mall Directory &amp; Floor Plan</span>
           <h1 class="subpage-h1">Store Directory</h1>
-          <p class="subpage-lead">Explore 120+ curated stores across 5 floors — from 24/7 anchor supermarkets and tier-1 banking to coastal fashion, gourmet rooftop dining, and esports gaming.</p>
+          <p class="subpage-lead">Explore 120+ curated stores across 5 floors. Use our architectural floor map blueprint to navigate units or browse the brand directory below.</p>
         </div>
+
+        <!-- ============================================
+             ARCHITECTURAL FLOOR MAP EXPLORER
+             ============================================ -->
+        <section class="floor-map-section" id="floorMapSection">
+          <div class="floor-map-header">
+            <div class="floor-map-title-wrap">
+              <span class="floor-map-subtitle">Interactive Blueprint</span>
+              <h3 id="currentMapFloorTitle">Ground Floor (Level G) — Retail &amp; Banking</h3>
+            </div>
+            <div class="map-floor-tabs" id="mapFloorTabs">
+              <button class="map-floor-tab" data-map-floor="Basement">Basement</button>
+              <button class="map-floor-tab active" data-map-floor="Ground Floor">Ground Floor</button>
+              <button class="map-floor-tab" data-map-floor="1st Floor">1st Floor</button>
+              <button class="map-floor-tab" data-map-floor="2nd Floor">2nd Floor</button>
+              <button class="map-floor-tab" data-map-floor="3rd Floor">3rd Floor</button>
+            </div>
+          </div>
+
+          <!-- SVG Architectural Floor Canvas -->
+          <div class="floor-map-canvas-wrap" id="mapCanvasContainer">
+            <svg class="floor-map-svg" viewBox="0 0 800 420" xmlns="http://www.w3.org/2000/svg" id="mallFloorSvg">
+              
+              <!-- Outer Mall Boundary -->
+              <rect x="20" y="20" width="760" height="380" rx="16" fill="#fdfbf7" stroke="#003049" stroke-width="2" stroke-dasharray="6 4" opacity="0.4"/>
+              
+              <!-- Corridor / Walkway Grid -->
+              <path d="M 60 210 L 740 210" stroke="#003049" stroke-width="32" stroke-linecap="round" opacity="0.08" />
+              <path d="M 400 50 L 400 370" stroke="#003049" stroke-width="32" stroke-linecap="round" opacity="0.08" />
+
+              <!-- Central Atrium Void -->
+              <rect x="330" y="150" width="140" height="120" rx="12" fill="#003049" opacity="0.06" stroke="#f77f00" stroke-width="1.5" stroke-dasharray="4 4"/>
+              <text x="400" y="205" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="#003049" opacity="0.8">CENTRAL ATRIUM VOID</text>
+              <text x="400" y="222" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="9" fill="#f77f00">ESCALATORS &amp; LIFTS</text>
+
+              <!-- Entrances / Exits -->
+              <rect x="360" y="8" width="80" height="14" rx="3" fill="#d62828"/>
+              <text x="400" y="18" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="8" font-weight="700" fill="#ffffff">MAIN ENTRANCE (JOMO KENYATTA AVE)</text>
+
+              <rect x="360" y="398" width="80" height="14" rx="3" fill="#003049"/>
+              <text x="400" y="408" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="8" font-weight="700" fill="#ffffff">SOUTH ENTRANCE &amp; TAXI BAY</text>
+
+              <!-- DYNAMIC FLOOR UNITS (Populated & updated via JS) -->
+              <g id="svgUnitsGroup">
+                <!-- Ground Floor Default Units -->
+                <g class="svg-store-zone" data-store-name="Naivas Supermarket" data-unit="G-01" onclick="triggerStoreByName('Naivas Supermarket')">
+                  <rect class="map-unit" x="50" y="50" width="250" height="130" rx="8"/>
+                  <text class="map-unit-text" x="175" y="110">G-01 · NAIVAS 24/7</text>
+                  <text x="175" y="130" text-anchor="middle" font-family="'Satoshi', sans-serif" font-size="10" fill="#3a586d">Anchor Hypermarket</text>
+                </g>
+
+                <g class="svg-store-zone" data-store-name="NCBA Bank" data-unit="G-05" onclick="triggerStoreByName('NCBA Bank')">
+                  <rect class="map-unit" x="50" y="240" width="120" height="130" rx="8"/>
+                  <text class="map-unit-text" x="110" y="300">G-05 · NCBA</text>
+                  <text x="110" y="320" text-anchor="middle" font-family="'Satoshi', sans-serif" font-size="9" fill="#3a586d">Branch &amp; ATM</text>
+                </g>
+
+                <g class="svg-store-zone" data-store-name="Equity Bank & Afia" data-unit="G-08" onclick="triggerStoreByName('Equity Bank & Afia')">
+                  <rect class="map-unit" x="180" y="240" width="120" height="130" rx="8"/>
+                  <text class="map-unit-text" x="240" y="300">G-08 · EQUITY</text>
+                  <text x="240" y="320" text-anchor="middle" font-family="'Satoshi', sans-serif" font-size="9" fill="#3a586d">Bank &amp; Medical</text>
+                </g>
+
+                <g class="svg-store-zone" data-store-name="Ident Smile & Telecom Agent" data-unit="G-12" onclick="triggerStoreByName('Ident Smile & Telecom Agent')">
+                  <rect class="map-unit" x="500" y="50" width="250" height="130" rx="8"/>
+                  <text class="map-unit-text" x="625" y="110">G-12 · IDENT SMILE</text>
+                  <text x="625" y="130" text-anchor="middle" font-family="'Satoshi', sans-serif" font-size="10" fill="#3a586d">Telecom &amp; Dental</text>
+                </g>
+
+                <g class="svg-store-zone" data-store-name="Basement Parking & Valet" data-unit="B-01" onclick="triggerStoreByName('Basement Parking & Valet')">
+                  <rect class="map-unit" x="500" y="240" width="250" height="130" rx="8"/>
+                  <text class="map-unit-text" x="625" y="300">G-15 · ESSENTIALS &amp; PARKING ACCESS</text>
+                  <text x="625" y="320" text-anchor="middle" font-family="'Satoshi', sans-serif" font-size="9" fill="#3a586d">EV Lift &amp; Valet Bay</text>
+                </g>
+              </g>
+
+            </svg>
+          </div>
+
+          <!-- Floor Map Legend -->
+          <div class="floor-map-legend">
+            <div class="map-legend-items">
+              <div class="map-legend-item">
+                <div class="legend-box retail"></div>
+                <span>Retail Stores &amp; Outlets</span>
+              </div>
+              <div class="map-legend-item">
+                <div class="legend-box selected"></div>
+                <span>Interactive Unit (Click to View Store)</span>
+              </div>
+              <div class="map-legend-item">
+                <div class="legend-box facility"></div>
+                <span>Atrium / Corridors</span>
+              </div>
+            </div>
+            <div>💡 Click any floor or map unit to inspect store details</div>
+          </div>
+        </section>
 
         <!-- SEARCH BAR -->
         <div class="store-search-wrap">
@@ -173,14 +271,29 @@
         <!-- RESULT COUNT BAR -->
         <div class="store-count-bar">
           <span id="storesCount">Showing 20 stores</span>
-          <span id="activeFilterLabel" style="color:var(--steel-blue);">All Floors · All Categories</span>
+          <span id="activeFilterLabel" style="color:var(--tangerine); font-weight:700;">All Floors · All Categories</span>
         </div>
 
-        <!-- STORES GRID -->
+        <!-- ============================================
+             STORES GRID (3-Column Logo on Phone, Bento on Desktop)
+             ============================================ -->
         <div class="grid-auto" id="storesContainer" style="margin-bottom:52px;">
 
           <!-- 1. NAIVAS -->
-          <div class="bento store-card" data-floor="Ground Floor" data-category="Supermarket" data-name="Naivas Supermarket" data-unit="G-01">
+          <div class="bento store-card"
+               data-floor="Ground Floor"
+               data-category="Supermarket"
+               data-name="Naivas Supermarket"
+               data-unit="G-01"
+               data-logo="./assets/Logo/Shops Logo/Naivasmain.jpeg"
+               data-hero="./assets/Logo/Random pics/fruits and vegetabls.jpeg"
+               data-hours="Open 24 Hours · 7 Days"
+               data-phone="+254 790 964 002"
+               data-email="customercare@naivas.co.ke"
+               data-social-ig="https://instagram.com/naivas_supermarket"
+               data-social-wa="https://wa.me/254790964002"
+               data-social-web="https://naivas.co.ke"
+               data-desc="Mombasa's flagship 24/7 hypermarket offering fresh bakery, organic coastal produce, butchery, international pharmacy, electronics, and household goods under one roof.">
             <div class="store-card-header">
               <div class="store-logo-box">
                 <img src="./assets/Logo/Shops Logo/Naivasmain.jpeg" alt="Naivas Supermarket" loading="lazy">
@@ -191,12 +304,25 @@
                 <span class="store-category-tag">Supermarket &amp; Groceries</span>
               </div>
             </div>
-            <p class="bento-text">24/7 flagship hypermarket featuring fresh bakery, organic produce, butchery, pharmacy, liquor store and electronics under one roof.</p>
+            <p class="bento-text">24/7 flagship hypermarket featuring fresh bakery, organic produce, butchery, pharmacy, liquor store and electronics.</p>
             <div class="store-hours-badge twentyfour">Open 24 Hours · 7 Days</div>
           </div>
 
           <!-- 2. NCBA BANK -->
-          <div class="bento store-card" data-floor="Ground Floor" data-category="Banking" data-name="NCBA Bank" data-unit="G-05">
+          <div class="bento store-card"
+               data-floor="Ground Floor"
+               data-category="Banking"
+               data-name="NCBA Bank"
+               data-unit="G-05"
+               data-logo="./assets/Logo/Shops Logo/NCBA.png"
+               data-hero="./assets/Logo/Shops Logo/NCBA.png"
+               data-hours="Mon – Sat: 8:30 AM – 5:00 PM"
+               data-phone="+254 711 056 444"
+               data-email="contact@ncbagroup.com"
+               data-social-ig="https://instagram.com/ncbabankkenya"
+               data-social-wa="https://wa.me/254711056444"
+               data-social-web="https://ncbagroup.com"
+               data-desc="Full-service corporate and retail banking branch. 24/7 intelligent ATM, asset financing, forex exchange, diaspora banking, and prestige wealth management services.">
             <div class="store-card-header">
               <div class="store-logo-box">
                 <img src="./assets/Logo/Shops Logo/NCBA.png" alt="NCBA Bank" loading="lazy">
@@ -207,12 +333,25 @@
                 <span class="store-category-tag">Banking &amp; Wealth</span>
               </div>
             </div>
-            <p class="bento-text">Full-service corporate and retail banking branch. 24/7 intelligent ATM, asset financing, forex exchange, and prestige private banking.</p>
+            <p class="bento-text">Full-service corporate and retail banking branch. 24/7 intelligent ATM, asset financing, forex exchange, and private banking.</p>
             <div class="store-hours-badge">Mon – Sat: 8:30 AM – 5:00 PM</div>
           </div>
 
           <!-- 3. EQUITY AFIA / BANK -->
-          <div class="bento store-card" data-floor="Ground Floor" data-category="Banking" data-name="Equity Bank & Afia" data-unit="G-08">
+          <div class="bento store-card"
+               data-floor="Ground Floor"
+               data-category="Banking"
+               data-name="Equity Bank & Afia"
+               data-unit="G-08"
+               data-logo="./assets/Logo/Shops Logo/equity afria.png"
+               data-hero="./assets/Logo/Shops Logo/equityafia.jpeg"
+               data-hours="Mon – Sat: 8:00 AM – 6:00 PM"
+               data-phone="+254 763 063 000"
+               data-email="info@equityafia.co.ke"
+               data-social-ig="https://instagram.com/equitybankkenya"
+               data-social-wa="https://wa.me/254763063000"
+               data-social-web="https://equitygroupholdings.com"
+               data-desc="Commercial retail banking hub, M-Pesa Super-Agent, Equitel customer service and Equity Afia comprehensive outpatient medical clinic with modern pharmacy and lab.">
             <div class="store-card-header">
               <div class="store-logo-box">
                 <img src="./assets/Logo/Shops Logo/equity afria.png" alt="Equity Bank" loading="lazy">
@@ -227,8 +366,21 @@
             <div class="store-hours-badge">Mon – Sat: 8:00 AM – 6:00 PM</div>
           </div>
 
-          <!-- 4. AIRTEL MONEY / IDENT SMILE -->
-          <div class="bento store-card" data-floor="Ground Floor" data-category="Banking" data-name="Ident Smile & Telecom Agent" data-unit="G-12">
+          <!-- 4. IDENT SMILE / TELECOM -->
+          <div class="bento store-card"
+               data-floor="Ground Floor"
+               data-category="Banking"
+               data-name="Ident Smile & Telecom Agent"
+               data-unit="G-12"
+               data-logo="./assets/Logo/Shops Logo/Ident Smile.jpg"
+               data-hero="./assets/Logo/Shops Logo/Ident Smile.jpg"
+               data-hours="Mon – Sun: 9:00 AM – 8:00 PM"
+               data-phone="+254 790 964 002"
+               data-email="services@mombasamall.co.ke"
+               data-social-ig="https://instagram.com/mombasamall"
+               data-social-wa="https://wa.me/254790964002"
+               data-social-web="https://mombasamall.co.ke"
+               data-desc="Multi-network mobile money agency (M-Pesa, Airtel Money, T-Kash), digital device accessories, SIM registration, and cosmetic dental & teeth whitening clinic.">
             <div class="store-card-header">
               <div class="store-logo-box">
                 <img src="./assets/Logo/Shops Logo/Ident Smile.jpg" alt="Ident Smile" loading="lazy">
@@ -244,7 +396,20 @@
           </div>
 
           <!-- 5. LOVISA -->
-          <div class="bento store-card" data-floor="1st Floor" data-category="Fashion" data-name="Lovisa" data-unit="F-03">
+          <div class="bento store-card"
+               data-floor="1st Floor"
+               data-category="Fashion"
+               data-name="Lovisa"
+               data-unit="F-03"
+               data-logo="./assets/Logo/Shops Logo/Lovisa.jpg"
+               data-hero="./assets/Logo/Shops Logo/Lovisa.jpeg"
+               data-hours="Mon – Sun: 9:30 AM – 8:30 PM"
+               data-phone="+254 790 964 002"
+               data-email="customerservice@lovisa.com"
+               data-social-ig="https://instagram.com/lovisajewellery"
+               data-social-wa="https://wa.me/254790964002"
+               data-social-web="https://lovisa.com"
+               data-desc="Global on-trend fashion jewellery destination. Sterling silver, gold-plated statement pieces, bridal accessories, and state-of-the-art ear piercing studio.">
             <div class="store-card-header">
               <div class="store-logo-box">
                 <img src="./assets/Logo/Shops Logo/Lovisa.jpg" alt="Lovisa" loading="lazy">
@@ -260,7 +425,20 @@
           </div>
 
           <!-- 6. PAYLESS SHOES -->
-          <div class="bento store-card" data-floor="1st Floor" data-category="Fashion" data-name="Payless Shoes" data-unit="F-07">
+          <div class="bento store-card"
+               data-floor="1st Floor"
+               data-category="Fashion"
+               data-name="Payless Shoes"
+               data-unit="F-07"
+               data-logo="./assets/Logo/Shops Logo/Payless.jpg"
+               data-hero="./assets/Logo/Shops Logo/Payless.jpg"
+               data-hours="Mon – Sun: 9:00 AM – 8:30 PM"
+               data-phone="+254 790 964 002"
+               data-email="support@payless.co.ke"
+               data-social-ig="https://instagram.com/paylesskenya"
+               data-social-wa="https://wa.me/254790964002"
+               data-social-web="https://payless.com"
+               data-desc="Accessible family footwear brand offering comfortable athletic sneakers, formal leather shoes, beach sandals, and durable children's school wear.">
             <div class="store-card-header">
               <div class="store-logo-box">
                 <img src="./assets/Logo/Shops Logo/Payless.jpg" alt="Payless Shoes" loading="lazy">
@@ -276,7 +454,20 @@
           </div>
 
           <!-- 7. DENRI -->
-          <div class="bento store-card" data-floor="1st Floor" data-category="Fashion" data-name="Denri Bags" data-unit="F-09">
+          <div class="bento store-card"
+               data-floor="1st Floor"
+               data-category="Fashion"
+               data-name="Denri Bags"
+               data-unit="F-09"
+               data-logo="./assets/Logo/Shops Logo/denri _400x400.jpg"
+               data-hero="./assets/Logo/Shops Logo/denri _400x400.jpg"
+               data-hours="Mon – Sun: 9:00 AM – 8:00 PM"
+               data-phone="+254 712 345 678"
+               data-email="sales@denri.co.ke"
+               data-social-ig="https://instagram.com/denri_africa"
+               data-social-wa="https://wa.me/254712345678"
+               data-social-web="https://denri.co.ke"
+               data-desc="Handcrafted Kenyan lifestyle brand specializing in designer backpacks, tote bags, cross-body pouches, genuine leather wallets, and travel luggage.">
             <div class="store-card-header">
               <div class="store-logo-box">
                 <img src="./assets/Logo/Shops Logo/denri _400x400.jpg" alt="Denri Bags" loading="lazy">
@@ -292,7 +483,20 @@
           </div>
 
           <!-- 8. 7DAYS MENSWEAR -->
-          <div class="bento store-card" data-floor="1st Floor" data-category="Fashion" data-name="7days Menswear" data-unit="F-11">
+          <div class="bento store-card"
+               data-floor="1st Floor"
+               data-category="Fashion"
+               data-name="7days Menswear"
+               data-unit="F-11"
+               data-logo="./assets/Logo/Shops Logo/7days mensware.jpg"
+               data-hero="./assets/Logo/Shops Logo/7days mensware.jpg"
+               data-hours="Mon – Sun: 9:00 AM – 8:30 PM"
+               data-phone="+254 790 964 002"
+               data-email="info@7daysmenswear.com"
+               data-social-ig="https://instagram.com/7daysmenswear"
+               data-social-wa="https://wa.me/254790964002"
+               data-social-web="https://7daysmenswear.com"
+               data-desc="Modern gentleman's wardrobe hub — bespoke suits, linen shirts, casual polo tees, slim-fit trousers, and genuine leather accessories.">
             <div class="store-card-header">
               <div class="store-logo-box">
                 <img src="./assets/Logo/Shops Logo/7days mensware.jpg" alt="7days Menswear" loading="lazy">
@@ -308,7 +512,20 @@
           </div>
 
           <!-- 9. GAMERS VAULT -->
-          <div class="bento store-card" data-floor="1st Floor" data-category="Tech" data-name="Gamers Vault" data-unit="F-14">
+          <div class="bento store-card"
+               data-floor="1st Floor"
+               data-category="Tech"
+               data-name="Gamers Vault"
+               data-unit="F-14"
+               data-logo="./assets/Logo/Shops Logo/Gamers-Vault-Tag-2 - Copy.PNG"
+               data-hero="./assets/Logo/Shops Logo/Gamers-Vault-Tag-2 - Copy.PNG"
+               data-hours="Daily: 10:00 AM – 10:00 PM"
+               data-phone="+254 790 964 002"
+               data-email="arena@gamersvault.co.ke"
+               data-social-ig="https://instagram.com/gamersvault_ke"
+               data-social-wa="https://wa.me/254790964002"
+               data-social-web="https://gamersvault.co.ke"
+               data-desc="Next-gen gaming arena with PlayStation 5 pods, Xbox Series X rigs, ultra-high refresh rate PC gaming stations, VR racing rigs, and regional esports tournaments.">
             <div class="store-card-header">
               <div class="store-logo-box">
                 <img src="./assets/Logo/Shops Logo/Gamers-Vault-Tag-2 - Copy.PNG" alt="Gamers Vault" loading="lazy">
@@ -324,7 +541,20 @@
           </div>
 
           <!-- 10. GRAND COMPUTER & TAWALA -->
-          <div class="bento store-card" data-floor="1st Floor" data-category="Tech" data-name="Grand Computer & Tawala ICT" data-unit="F-17">
+          <div class="bento store-card"
+               data-floor="1st Floor"
+               data-category="Tech"
+               data-name="Grand Computer & Tawala ICT"
+               data-unit="F-17"
+               data-logo="./assets/Logo/Shops Logo/Grand Computer.jpg"
+               data-hero="./assets/Logo/Shops Logo/Tawala ICT.jpg"
+               data-hours="Mon – Sat: 9:00 AM – 8:00 PM"
+               data-phone="+254 790 964 002"
+               data-email="tech@tawalaict.com"
+               data-social-ig="https://instagram.com/grandcomputer"
+               data-social-wa="https://wa.me/254790964002"
+               data-social-web="https://tawalaict.com"
+               data-desc="Certified laptop dealership (Apple MacBook, HP, Dell, Lenovo), express smartphone repair, software licensing, printers, and commercial CCTV networking.">
             <div class="store-card-header">
               <div class="store-logo-box">
                 <img src="./assets/Logo/Shops Logo/Grand Computer.jpg" alt="Grand Computer" loading="lazy">
@@ -340,7 +570,20 @@
           </div>
 
           <!-- 11. JUMIA -->
-          <div class="bento store-card" data-floor="1st Floor" data-category="Tech" data-name="Jumia Pick-Up Station" data-unit="F-19">
+          <div class="bento store-card"
+               data-floor="1st Floor"
+               data-category="Tech"
+               data-name="Jumia Pick-Up Station"
+               data-unit="F-19"
+               data-logo="./assets/Logo/Shops Logo/JUMIA.jpg"
+               data-hero="./assets/Logo/Shops Logo/JUMIA.jpg"
+               data-hours="Mon – Sat: 8:30 AM – 7:30 PM"
+               data-phone="+254 700 000 000"
+               data-email="support@jumia.co.ke"
+               data-social-ig="https://instagram.com/jumiakenya"
+               data-social-wa="https://wa.me/254700000000"
+               data-social-web="https://jumia.co.ke"
+               data-desc="Official Jumia Kenya regional hub. Fast delivery collection, merchant fulfillment point, easy customer returns, and package drop-offs.">
             <div class="store-card-header">
               <div class="store-logo-box">
                 <img src="./assets/Logo/Shops Logo/JUMIA.jpg" alt="Jumia" loading="lazy">
@@ -356,7 +599,20 @@
           </div>
 
           <!-- 12. FAKRI TIMEZONE -->
-          <div class="bento store-card" data-floor="1st Floor" data-category="Fashion" data-name="Fakri Timezone" data-unit="F-22">
+          <div class="bento store-card"
+               data-floor="1st Floor"
+               data-category="Fashion"
+               data-name="Fakri Timezone"
+               data-unit="F-22"
+               data-logo="./assets/Logo/Shops Logo/Fakri Timezone.jpg"
+               data-hero="./assets/Logo/Shops Logo/Fakri Timezone.jpg"
+               data-hours="Mon – Sun: 9:30 AM – 8:00 PM"
+               data-phone="+254 790 964 002"
+               data-email="info@fakritimezone.com"
+               data-social-ig="https://instagram.com/fakritimezone"
+               data-social-wa="https://wa.me/254790964002"
+               data-social-web="https://fakritimezone.com"
+               data-desc="Authorized dealer for world-renowned timepieces: Casio, Seiko, Tissot, Fossil, Citizen and G-Shock with international warranty certificates and master watchmaking service.">
             <div class="store-card-header">
               <div class="store-logo-box">
                 <img src="./assets/Logo/Shops Logo/Fakri Timezone.jpg" alt="Fakri Timezone" loading="lazy">
@@ -372,7 +628,20 @@
           </div>
 
           <!-- 13. PLAY ON ARENA -->
-          <div class="bento store-card" data-floor="2nd Floor" data-category="Entertainment" data-name="Play On Arena" data-unit="S-04">
+          <div class="bento store-card"
+               data-floor="2nd Floor"
+               data-category="Entertainment"
+               data-name="Play On Arena"
+               data-unit="S-04"
+               data-logo="./assets/Logo/Mall Logo/MOMBASA MALL 1.0.png"
+               data-hero="./assets/Logo/Random pics/events - Copy.jpeg"
+               data-hours="Daily: 9:00 AM – 9:00 PM"
+               data-phone="+254 790 964 002"
+               data-email="playon@mombasamall.co.ke"
+               data-social-ig="https://instagram.com/mombasamall"
+               data-social-wa="https://wa.me/254790964002"
+               data-social-web="./play-on.html"
+               data-desc="1,200sqm state-of-the-art family entertainment zone featuring multi-level soft play, trampoline park, VR simulators, arcade games, and custom private party suites.">
             <div class="store-card-header">
               <div class="store-logo-box">
                 <img src="./assets/Logo/Mall Logo/MOMBASA MALL 1.0.png" alt="Play On Arena" loading="lazy">
@@ -388,7 +657,20 @@
           </div>
 
           <!-- 14. NOVUM BEAUTY PARLOUR -->
-          <div class="bento store-card" data-floor="2nd Floor" data-category="Beauty" data-name="Novum Beauty Parlour" data-unit="S-08">
+          <div class="bento store-card"
+               data-floor="2nd Floor"
+               data-category="Beauty"
+               data-name="Novum Beauty Parlour"
+               data-unit="S-08"
+               data-logo="./assets/Logo/Shops Logo/NOVUM.jpg"
+               data-hero="./assets/Logo/Shops Logo/NOVUM.jpg"
+               data-hours="Daily: 8:00 AM – 9:00 PM"
+               data-phone="+254 790 964 002"
+               data-email="appointments@novumwellness.co.ke"
+               data-social-ig="https://instagram.com/novumbeauty_ke"
+               data-social-wa="https://wa.me/254790964002"
+               data-social-web="https://novumwellness.co.ke"
+               data-desc="Luxury coastal wellness spa offering bridal hair artistry, bespoke nail studio, organic skincare treatments, Swedish massage, and executive gentlemen's grooming.">
             <div class="store-card-header">
               <div class="store-logo-box">
                 <img src="./assets/Logo/Shops Logo/NOVUM.jpg" alt="Novum Beauty" loading="lazy">
@@ -404,7 +686,20 @@
           </div>
 
           <!-- 15. TICKLES & GIGGLES -->
-          <div class="bento store-card" data-floor="2nd Floor" data-category="Fashion" data-name="Tickles & Giggles" data-unit="S-11">
+          <div class="bento store-card"
+               data-floor="2nd Floor"
+               data-category="Fashion"
+               data-name="Tickles & Giggles"
+               data-unit="S-11"
+               data-logo="./assets/Logo/Shops Logo/Tickles and Giggles .jpg"
+               data-hero="./assets/Logo/Shops Logo/Tickles and Giggles .jpg"
+               data-hours="Mon – Sun: 9:00 AM – 8:00 PM"
+               data-phone="+254 790 964 002"
+               data-email="orders@ticklesandgiggles.co.ke"
+               data-social-ig="https://instagram.com/ticklesandgiggles"
+               data-social-wa="https://wa.me/254790964002"
+               data-social-web="https://ticklesandgiggles.co.ke"
+               data-desc="Premier baby and children's boutique stocking certified organic cotton infant wear, European strollers, Montessori learning toys, and maternity care essentials.">
             <div class="store-card-header">
               <div class="store-logo-box">
                 <img src="./assets/Logo/Shops Logo/Tickles and Giggles .jpg" alt="Tickles & Giggles" loading="lazy">
@@ -420,7 +715,20 @@
           </div>
 
           <!-- 16. CHICKEN INN / PIZZA INN -->
-          <div class="bento store-card" data-floor="3rd Floor" data-category="Dining" data-name="Chicken Inn & Pizza Inn" data-unit="T-01">
+          <div class="bento store-card"
+               data-floor="3rd Floor"
+               data-category="Dining"
+               data-name="Chicken Inn & Pizza Inn"
+               data-unit="T-01"
+               data-logo="./assets/Logo/Shops Logo/chicken inn - Copy.jpeg"
+               data-hero="./assets/Logo/Shops Logo/pizza inn.jpeg"
+               data-hours="Daily: 9:00 AM – 10:30 PM"
+               data-phone="+254 700 323 323"
+               data-email="orders@simbisa.co.ke"
+               data-social-ig="https://instagram.com/chickeninnke"
+               data-social-wa="https://wa.me/254700323323"
+               data-social-web="https://pizzainn.co.ke"
+               data-desc="Classic fast food favourite serving signature crispy pressure-fried chicken, fresh stone-baked thin-crust pizza, creamy sundaes, and family combo platters.">
             <div class="store-card-header">
               <div class="store-logo-box">
                 <img src="./assets/Logo/Shops Logo/chicken inn - Copy.jpeg" alt="Chicken Inn" loading="lazy">
@@ -436,7 +744,20 @@
           </div>
 
           <!-- 17. WEST 11 RESTAURANT -->
-          <div class="bento store-card" data-floor="3rd Floor" data-category="Dining" data-name="West 11 Restaurant" data-unit="T-07">
+          <div class="bento store-card"
+               data-floor="3rd Floor"
+               data-category="Dining"
+               data-name="West 11 Restaurant"
+               data-unit="T-07"
+               data-logo="./assets/Logo/Shops Logo/West 11.jpg"
+               data-hero="./assets/Logo/Shops Logo/West 11.jpg"
+               data-hours="Daily: 11:00 AM – 11:30 PM"
+               data-phone="+254 790 964 002"
+               data-email="reservations@west11.co.ke"
+               data-social-ig="https://instagram.com/west11restaurant"
+               data-social-wa="https://wa.me/254790964002"
+               data-social-web="https://west11.co.ke"
+               data-desc="Rooftop fine dining venue offering 360-degree views of Mombasa city. Swahili coastal seafood fusion, continental steaks, craft mocktails, and live weekend jazz.">
             <div class="store-card-header">
               <div class="store-logo-box">
                 <img src="./assets/Logo/Shops Logo/West 11.jpg" alt="West 11" loading="lazy">
@@ -452,7 +773,20 @@
           </div>
 
           <!-- 18. CORN CRAZE & DESSERT -->
-          <div class="bento store-card" data-floor="3rd Floor" data-category="Dining" data-name="Corn Craze & Creamery" data-unit="T-09">
+          <div class="bento store-card"
+               data-floor="3rd Floor"
+               data-category="Dining"
+               data-name="Corn Craze & Creamery"
+               data-unit="T-09"
+               data-logo="./assets/Logo/Shops Logo/corn craze - Copy.jpg"
+               data-hero="./assets/Logo/Shops Logo/corn craze - Copy.jpg"
+               data-hours="Daily: 10:00 AM – 10:00 PM"
+               data-phone="+254 790 964 002"
+               data-email="info@corncraze.co.ke"
+               data-social-ig="https://instagram.com/corncraze"
+               data-social-wa="https://wa.me/254790964002"
+               data-social-web="https://corncraze.co.ke"
+               data-desc="Sweet buttered corn cups seasoned with savory spices, authentic Italian gelato, chilled bubble teas, milkshakes, and fresh fruit parfaits.">
             <div class="store-card-header">
               <div class="store-logo-box">
                 <img src="./assets/Logo/Shops Logo/corn craze - Copy.jpg" alt="Corn Craze" loading="lazy">
@@ -468,7 +802,20 @@
           </div>
 
           <!-- 19. SILVERBIRD CINEMAS -->
-          <div class="bento store-card" data-floor="3rd Floor" data-category="Entertainment" data-name="Silverbird Cinemas" data-unit="T-11">
+          <div class="bento store-card"
+               data-floor="3rd Floor"
+               data-category="Entertainment"
+               data-name="Silverbird Cinemas"
+               data-unit="T-11"
+               data-logo="./assets/Logo/Mall Logo/MOMBASA MALL2.0.png"
+               data-hero="./assets/Logo/Random pics/MOMBASA MALL.jpg"
+               data-hours="Daily: 11:00 AM – Midnight"
+               data-phone="+254 790 964 002"
+               data-email="cinema@mombasamall.co.ke"
+               data-social-ig="https://instagram.com/silverbirdcinemas"
+               data-social-wa="https://wa.me/254790964002"
+               data-social-web="https://silverbirdcinemas.com"
+               data-desc="Ultra-modern 3-screen multiplex cinema featuring Dolby Atmos 7.1 surround sound, crystal-clear 4K laser projection, VIP leather recliners, and fresh gourmet popcorn bar.">
             <div class="store-card-header">
               <div class="store-logo-box">
                 <img src="./assets/Logo/Mall Logo/MOMBASA MALL2.0.png" alt="Silverbird Cinemas" loading="lazy">
@@ -484,7 +831,20 @@
           </div>
 
           <!-- 20. VALET & PARKING -->
-          <div class="bento store-card" data-floor="Basement" data-category="Banking" data-name="Basement Parking & Valet" data-unit="B-01">
+          <div class="bento store-card"
+               data-floor="Basement"
+               data-category="Banking"
+               data-name="Basement Parking & Valet"
+               data-unit="B-01"
+               data-logo="./assets/Logo/Mall Logo/MOMBASA MALL 1.0.png"
+               data-hero="./assets/Logo/Random pics/Rounder about.jpeg"
+               data-hours="Open 24/7 · Monitored CCTV"
+               data-phone="+254 790 964 002"
+               data-email="parking@mombasamall.co.ke"
+               data-social-ig="https://instagram.com/mombasamall"
+               data-social-wa="https://wa.me/254790964002"
+               data-social-web="https://mombasamall.co.ke"
+               data-desc="400+ vehicle underground parking with automated number plate recognition, 8 fast EV charging stations, professional car wash, and valet concierge service.">
             <div class="store-card-header">
               <div class="store-logo-box">
                 <img src="./assets/Logo/Mall Logo/MOMBASA MALL 1.0.png" alt="Parking & Valet" loading="lazy">
@@ -501,7 +861,7 @@
 
         </div>
 
-        <!-- EMPTY STATE (Hidden by default) -->
+        <!-- EMPTY STATE -->
         <div id="emptyStoresState" class="empty-stores-state" style="display:none;">
           <h3>No stores found</h3>
           <p>We couldn't find any stores matching your current search or filters.</p>
@@ -512,19 +872,361 @@
     </div>
   </div>
 
+  <!-- ============================================
+       STORE DETAIL POP-UP MODAL
+       ============================================ -->
+  <div id="storeModalBackdrop" class="store-modal-backdrop" aria-hidden="true">
+    <div class="store-modal-card" id="storeModalCard">
+      
+      <!-- Top Picture Header -->
+      <div class="store-modal-hero">
+        <img id="modalHeroImg" class="store-modal-hero-img" src="./assets/Logo/Random pics/MOMBASA MALL.jpg" alt="Store Cover">
+        <div class="store-modal-hero-overlay"></div>
+        <button id="modalCloseBtn" class="store-modal-close-btn" aria-label="Close store details">&times;</button>
+        
+        <div class="store-modal-logo-badge">
+          <img id="modalLogoImg" src="./assets/Logo/Shops Logo/Naivasmain.jpeg" alt="Logo">
+        </div>
+      </div>
+
+      <!-- Body Information -->
+      <div class="store-modal-body">
+        
+        <div class="store-modal-top-row">
+          <div>
+            <h2 id="modalTitle" class="store-modal-title">Naivas Supermarket</h2>
+            <div id="modalUnit" class="store-modal-unit">Ground Floor · Unit G-01</div>
+          </div>
+        </div>
+
+        <div class="store-modal-pills">
+          <span id="modalCatPill" class="store-modal-pill cat">Supermarket &amp; Groceries</span>
+          <span id="modalFloorPill" class="store-modal-pill floor">Ground Floor</span>
+          <span id="modalHoursPill" class="store-modal-pill status twentyfour">Open 24 Hours</span>
+        </div>
+
+        <p id="modalDesc" class="store-modal-desc">
+          24/7 anchor hypermarket featuring fresh bakery, organic produce, butchery, pharmacy, liquor store and electronics under one roof.
+        </p>
+
+        <div class="store-modal-info-grid">
+          <div class="store-modal-info-item">
+            <span class="store-modal-info-label">Operating Hours</span>
+            <span id="modalHoursVal" class="store-modal-info-val">Open 24 Hours · 7 Days</span>
+          </div>
+          <div class="store-modal-info-item">
+            <span class="store-modal-info-label">Direct Contact</span>
+            <span id="modalPhoneVal" class="store-modal-info-val">+254 790 964 002</span>
+          </div>
+          <div class="store-modal-info-item">
+            <span class="store-modal-info-label">Store Email</span>
+            <span id="modalEmailVal" class="store-modal-info-val">customercare@naivas.co.ke</span>
+          </div>
+          <div class="store-modal-info-item">
+            <span class="store-modal-info-label">Mall Location</span>
+            <span id="modalLocVal" class="store-modal-info-val">Unit G-01, Level G</span>
+          </div>
+        </div>
+
+        <!-- Social Media & Actions -->
+        <div class="store-modal-actions">
+          <div class="store-modal-socials">
+            <a id="modalSocialWa" href="#" target="_blank" rel="noopener" class="store-modal-social-btn" aria-label="WhatsApp">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.275.072.376-.044c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.099.824zm-3.423-14.416c-6.627 0-12 5.373-12 12 0 2.159.57 4.185 1.564 5.938l-1.564 5.714 5.861-1.538c1.706.924 3.655 1.458 5.726 1.458 6.627 0 12-5.373 12-12s-5.373-12-12-12z"/></svg>
+            </a>
+            <a id="modalSocialIg" href="#" target="_blank" rel="noopener" class="store-modal-social-btn" aria-label="Instagram">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </a>
+            <a id="modalSocialWeb" href="#" target="_blank" rel="noopener" class="store-modal-social-btn" aria-label="Website">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+            </a>
+          </div>
+
+          <a id="modalCallBtn" href="tel:+254790964002" class="store-modal-call-btn">
+            📞 Call Store
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
   <div class="ambient-light" aria-hidden="true"></div>
   <div class="cursor"></div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="./js/selectionMenu.js"></script>
   <script src="./js/main.js"></script>
+
   <script>
     (function () {
+      /* ==========================================================
+         STORE DATA & MODAL SYSTEM
+         ========================================================== */
+      const storeCards = document.querySelectorAll('.store-card');
+      const modalBackdrop = document.getElementById('storeModalBackdrop');
+      const modalCloseBtn = document.getElementById('modalCloseBtn');
+      const modalHeroImg = document.getElementById('modalHeroImg');
+      const modalLogoImg = document.getElementById('modalLogoImg');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalUnit = document.getElementById('modalUnit');
+      const modalCatPill = document.getElementById('modalCatPill');
+      const modalFloorPill = document.getElementById('modalFloorPill');
+      const modalHoursPill = document.getElementById('modalHoursPill');
+      const modalDesc = document.getElementById('modalDesc');
+      const modalHoursVal = document.getElementById('modalHoursVal');
+      const modalPhoneVal = document.getElementById('modalPhoneVal');
+      const modalEmailVal = document.getElementById('modalEmailVal');
+      const modalLocVal = document.getElementById('modalLocVal');
+      const modalSocialWa = document.getElementById('modalSocialWa');
+      const modalSocialIg = document.getElementById('modalSocialIg');
+      const modalSocialWeb = document.getElementById('modalSocialWeb');
+      const modalCallBtn = document.getElementById('modalCallBtn');
+
+      function openStoreModalFromCard(card) {
+        const name = card.getAttribute('data-name') || 'Store Name';
+        const unit = card.getAttribute('data-unit') || 'Unit';
+        const floor = card.getAttribute('data-floor') || 'Floor';
+        const cat = card.getAttribute('data-category') || 'Category';
+        const logo = card.getAttribute('data-logo') || './assets/Logo/Mall Logo/MOMBASA MALL 1.0.png';
+        const hero = card.getAttribute('data-hero') || logo;
+        const hours = card.getAttribute('data-hours') || 'Open Daily 9 AM - 9 PM';
+        const phone = card.getAttribute('data-phone') || '+254 790 964 002';
+        const email = card.getAttribute('data-email') || 'info@mombasamall.co.ke';
+        const desc = card.getAttribute('data-desc') || card.querySelector('.bento-text').textContent;
+        const socialIg = card.getAttribute('data-social-ig') || '#';
+        const socialWa = card.getAttribute('data-social-wa') || '#';
+        const socialWeb = card.getAttribute('data-social-web') || '#';
+
+        modalTitle.textContent = name;
+        modalUnit.textContent = `${floor} · Unit ${unit}`;
+        modalCatPill.textContent = cat;
+        modalFloorPill.textContent = floor;
+        modalHoursPill.textContent = hours.includes('24') ? 'Open 24 Hours' : 'Open Today';
+        modalHoursPill.className = 'store-modal-pill status' + (hours.includes('24') ? ' twentyfour' : '');
+        modalDesc.textContent = desc;
+        modalHoursVal.textContent = hours;
+        modalPhoneVal.textContent = phone;
+        modalEmailVal.textContent = email;
+        modalLocVal.textContent = `Unit ${unit}, ${floor}`;
+
+        modalHeroImg.src = hero;
+        modalLogoImg.src = logo;
+
+        modalSocialWa.href = socialWa;
+        modalSocialIg.href = socialIg;
+        modalSocialWeb.href = socialWeb;
+        modalCallBtn.href = `tel:${phone.replace(/\\s+/g, '')}`;
+
+        modalBackdrop.classList.add('is-open');
+        modalBackdrop.setAttribute('aria-hidden', 'false');
+      }
+
+      window.triggerStoreByName = function (storeName) {
+        storeCards.forEach(card => {
+          if (card.getAttribute('data-name') === storeName) {
+            openStoreModalFromCard(card);
+          }
+        });
+      };
+
+      storeCards.forEach(card => {
+        card.addEventListener('click', function () {
+          openStoreModalFromCard(card);
+        });
+      });
+
+      function closeStoreModal() {
+        modalBackdrop.classList.remove('is-open');
+        modalBackdrop.setAttribute('aria-hidden', 'true');
+      }
+
+      if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeStoreModal);
+      if (modalBackdrop) {
+        modalBackdrop.addEventListener('click', function (e) {
+          if (e.target === modalBackdrop) closeStoreModal();
+        });
+      }
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeStoreModal();
+      });
+
+      /* ==========================================================
+         INTERACTIVE ARCHITECTURAL FLOOR MAP BLUEPRINT ENGINE
+         ========================================================== */
+      const mapFloorTabs = document.querySelectorAll('.map-floor-tab');
+      const currentMapFloorTitle = document.getElementById('currentMapFloorTitle');
+      const svgUnitsGroup = document.getElementById('svgUnitsGroup');
+
+      const floorBlueprints = {
+        'Basement': {
+          title: 'Basement Level (B1) — Parking, EV Hub & Valet',
+          svg: `
+            <g class="svg-store-zone" data-store-name="Basement Parking & Valet" onclick="triggerStoreByName('Basement Parking & Valet')">
+              <rect class="map-unit" x="50" y="50" width="340" height="320" rx="12"/>
+              <text class="map-unit-text" x="220" y="190">B-01 · 400+ SECURE PARKING BAYS</text>
+              <text x="220" y="215" text-anchor="middle" font-family="'Satoshi', sans-serif" font-size="11" fill="#3a586d">Automated ANPR &amp; Valet Concierge</text>
+            </g>
+            <g class="svg-store-zone" data-store-name="Basement Parking & Valet" onclick="triggerStoreByName('Basement Parking & Valet')">
+              <rect class="map-unit" x="420" y="50" width="330" height="320" rx="12"/>
+              <text class="map-unit-text" x="585" y="190">B-02 · 8× HIGH-SPEED EV CHARGERS</text>
+              <text x="585" y="215" text-anchor="middle" font-family="'Satoshi', sans-serif" font-size="11" fill="#3a586d">Direct High-Speed Lift Lobby Access</text>
+            </g>
+          `
+        },
+        'Ground Floor': {
+          title: 'Ground Floor (Level G) — Retail, Supermarket & Banking',
+          svg: `
+            <g class="svg-store-zone" data-store-name="Naivas Supermarket" onclick="triggerStoreByName('Naivas Supermarket')">
+              <rect class="map-unit" x="50" y="50" width="250" height="130" rx="8"/>
+              <text class="map-unit-text" x="175" y="110">G-01 · NAIVAS 24/7</text>
+              <text x="175" y="130" text-anchor="middle" font-family="'Satoshi', sans-serif" font-size="10" fill="#3a586d">Anchor Hypermarket</text>
+            </g>
+            <g class="svg-store-zone" data-store-name="NCBA Bank" onclick="triggerStoreByName('NCBA Bank')">
+              <rect class="map-unit" x="50" y="240" width="120" height="130" rx="8"/>
+              <text class="map-unit-text" x="110" y="300">G-05 · NCBA</text>
+              <text x="110" y="320" text-anchor="middle" font-family="'Satoshi', sans-serif" font-size="9" fill="#3a586d">Branch &amp; ATM</text>
+            </g>
+            <g class="svg-store-zone" data-store-name="Equity Bank & Afia" onclick="triggerStoreByName('Equity Bank & Afia')">
+              <rect class="map-unit" x="180" y="240" width="120" height="130" rx="8"/>
+              <text class="map-unit-text" x="240" y="300">G-08 · EQUITY</text>
+              <text x="240" y="320" text-anchor="middle" font-family="'Satoshi', sans-serif" font-size="9" fill="#3a586d">Bank &amp; Medical</text>
+            </g>
+            <g class="svg-store-zone" data-store-name="Ident Smile & Telecom Agent" onclick="triggerStoreByName('Ident Smile & Telecom Agent')">
+              <rect class="map-unit" x="500" y="50" width="250" height="130" rx="8"/>
+              <text class="map-unit-text" x="625" y="110">G-12 · IDENT SMILE</text>
+              <text x="625" y="130" text-anchor="middle" font-family="'Satoshi', sans-serif" font-size="10" fill="#3a586d">Telecom &amp; Dental</text>
+            </g>
+            <g class="svg-store-zone" data-store-name="Basement Parking & Valet" onclick="triggerStoreByName('Basement Parking & Valet')">
+              <rect class="map-unit" x="500" y="240" width="250" height="130" rx="8"/>
+              <text class="map-unit-text" x="625" y="300">G-15 · ESSENTIALS &amp; PARKING ACCESS</text>
+              <text x="625" y="320" text-anchor="middle" font-family="'Satoshi', sans-serif" font-size="9" fill="#3a586d">EV Lift &amp; Valet Bay</text>
+            </g>
+          `
+        },
+        '1st Floor': {
+          title: '1st Floor (Level 1) — Fashion, Shoes, Tech & Esports',
+          svg: `
+            <g class="svg-store-zone" data-store-name="Lovisa" onclick="triggerStoreByName('Lovisa')">
+              <rect class="map-unit" x="50" y="50" width="130" height="130" rx="8"/>
+              <text class="map-unit-text" x="115" y="110">F-03 · LOVISA</text>
+              <text x="115" y="130" text-anchor="middle" font-family="'Satoshi', sans-serif" font-size="9" fill="#3a586d">Fashion Jewellery</text>
+            </g>
+            <g class="svg-store-zone" data-store-name="Payless Shoes" onclick="triggerStoreByName('Payless Shoes')">
+              <rect class="map-unit" x="190" y="50" width="130" height="130" rx="8"/>
+              <text class="map-unit-text" x="255" y="110">F-07 · PAYLESS</text>
+              <text x="255" y="130" text-anchor="middle" font-family="'Satoshi', sans-serif" font-size="9" fill="#3a586d">Footwear</text>
+            </g>
+            <g class="svg-store-zone" data-store-name="Denri Bags" onclick="triggerStoreByName('Denri Bags')">
+              <rect class="map-unit" x="50" y="240" width="130" height="130" rx="8"/>
+              <text class="map-unit-text" x="115" y="300">F-09 · DENRI</text>
+              <text x="115" y="320" text-anchor="middle" font-family="'Satoshi', sans-serif" font-size="9" fill="#3a586d">Designer Bags</text>
+            </g>
+            <g class="svg-store-zone" data-store-name="7days Menswear" onclick="triggerStoreByName('7days Menswear')">
+              <rect class="map-unit" x="190" y="240" width="130" height="130" rx="8"/>
+              <text class="map-unit-text" x="255" y="300">F-11 · 7DAYS</text>
+              <text x="255" y="320" text-anchor="middle" font-family="'Satoshi', sans-serif" font-size="9" fill="#3a586d">Menswear</text>
+            </g>
+            <g class="svg-store-zone" data-store-name="Gamers Vault" onclick="triggerStoreByName('Gamers Vault')">
+              <rect class="map-unit" x="490" y="50" width="260" height="130" rx="8"/>
+              <text class="map-unit-text" x="620" y="110">F-14 · GAMERS VAULT</text>
+              <text x="620" y="130" text-anchor="middle" font-family="'Satoshi', sans-serif" font-size="10" fill="#3a586d">PS5 / PC Esports Lounge</text>
+            </g>
+            <g class="svg-store-zone" data-store-name="Grand Computer & Tawala ICT" onclick="triggerStoreByName('Grand Computer & Tawala ICT')">
+              <rect class="map-unit" x="490" y="240" width="125" height="130" rx="8"/>
+              <text class="map-unit-text" x="552" y="300">F-17 · GRAND ICT</text>
+              <text x="552" y="320" text-anchor="middle" font-family="'Satoshi', sans-serif" font-size="9" fill="#3a586d">Laptops &amp; Repair</text>
+            </g>
+            <g class="svg-store-zone" data-store-name="Jumia Pick-Up Station" onclick="triggerStoreByName('Jumia Pick-Up Station')">
+              <rect class="map-unit" x="625" y="240" width="125" height="130" rx="8"/>
+              <text class="map-unit-text" x="687" y="300">F-19 · JUMIA</text>
+              <text x="687" y="320" text-anchor="middle" font-family="'Satoshi', sans-serif" font-size="9" fill="#3a586d">Pick-Up Station</text>
+            </g>
+          `
+        },
+        '2nd Floor': {
+          title: '2nd Floor (Level 2) — Play On Arena, Beauty & Kids',
+          svg: `
+            <g class="svg-store-zone" data-store-name="Play On Arena" onclick="triggerStoreByName('Play On Arena')">
+              <rect class="map-unit" x="50" y="50" width="400" height="320" rx="12"/>
+              <text class="map-unit-text" x="250" y="190">S-04 · PLAY ON ARENA (1,200 SQM)</text>
+              <text x="250" y="215" text-anchor="middle" font-family="'Satoshi', sans-serif" font-size="11" fill="#3a586d">VR Motion · Soft Play · Kids Zone · Parties</text>
+            </g>
+            <g class="svg-store-zone" data-store-name="Novum Beauty Parlour" onclick="triggerStoreByName('Novum Beauty Parlour')">
+              <rect class="map-unit" x="480" y="50" width="270" height="150" rx="8"/>
+              <text class="map-unit-text" x="615" y="115">S-08 · NOVUM BEAUTY &amp; SPA</text>
+              <text x="615" y="140" text-anchor="middle" font-family="'Satoshi', sans-serif" font-size="10" fill="#3a586d">Salon, Aesthetics &amp; Wellness</text>
+            </g>
+            <g class="svg-store-zone" data-store-name="Tickles & Giggles" onclick="triggerStoreByName('Tickles & Giggles')">
+              <rect class="map-unit" x="480" y="220" width="270" height="150" rx="8"/>
+              <text class="map-unit-text" x="615" y="285">S-11 · TICKLES &amp; GIGGLES</text>
+              <text x="615" y="310" text-anchor="middle" font-family="'Satoshi', sans-serif" font-size="10" fill="#3a586d">Baby Care, Toys &amp; Fashion</text>
+            </g>
+          `
+        },
+        '3rd Floor': {
+          title: '3rd Floor (Level 3) — Rooftop Dining, Food Court & Multiplex Cinema',
+          svg: `
+            <g class="svg-store-zone" data-store-name="West 11 Restaurant" onclick="triggerStoreByName('West 11 Restaurant')">
+              <rect class="map-unit" x="50" y="50" width="320" height="150" rx="8"/>
+              <text class="map-unit-text" x="210" y="115">T-07 · WEST 11 ROOFTOP DINING</text>
+              <text x="210" y="140" text-anchor="middle" font-family="'Satoshi', sans-serif" font-size="10" fill="#3a586d">Panoramic Ocean View Terrace &amp; Grill</text>
+            </g>
+            <g class="svg-store-zone" data-store-name="Chicken Inn & Pizza Inn" onclick="triggerStoreByName('Chicken Inn & Pizza Inn')">
+              <rect class="map-unit" x="50" y="220" width="155" height="150" rx="8"/>
+              <text class="map-unit-text" x="127" y="285">T-01 · CHICKEN INN</text>
+              <text x="127" y="310" text-anchor="middle" font-family="'Satoshi', sans-serif" font-size="9" fill="#3a586d">Food Court</text>
+            </g>
+            <g class="svg-store-zone" data-store-name="Corn Craze & Creamery" onclick="triggerStoreByName('Corn Craze & Creamery')">
+              <rect class="map-unit" x="215" y="220" width="155" height="150" rx="8"/>
+              <text class="map-unit-text" x="292" y="285">T-09 · CORN CRAZE</text>
+              <text x="292" y="310" text-anchor="middle" font-family="'Satoshi', sans-serif" font-size="9" fill="#3a586d">Gelato &amp; Snacks</text>
+            </g>
+            <g class="svg-store-zone" data-store-name="Silverbird Cinemas" onclick="triggerStoreByName('Silverbird Cinemas')">
+              <rect class="map-unit" x="410" y="50" width="340" height="320" rx="12"/>
+              <text class="map-unit-text" x="580" y="190">T-11 · SILVERBIRD CINEMAS (3 SCREENS)</text>
+              <text x="580" y="215" text-anchor="middle" font-family="'Satoshi', sans-serif" font-size="11" fill="#3a586d">Dolby Atmos · 4K Laser · VIP Recliners</text>
+            </g>
+          `
+        }
+      };
+
+      function switchMapFloor(floorKey) {
+        const data = floorBlueprints[floorKey];
+        if (!data) return;
+
+        currentMapFloorTitle.textContent = data.title;
+        svgUnitsGroup.innerHTML = data.svg;
+
+        // Re-highlight floor filter pills below to keep them in sync
+        const floorPills = document.querySelectorAll('.floor-pill');
+        floorPills.forEach(pill => {
+          pill.classList.toggle('active', pill.getAttribute('data-floor') === floorKey);
+        });
+
+        // Trigger store filtering
+        currentFloor = floorKey;
+        filterStores();
+      }
+
+      mapFloorTabs.forEach(tab => {
+        tab.addEventListener('click', function () {
+          mapFloorTabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          const floorKey = tab.getAttribute('data-map-floor');
+          switchMapFloor(floorKey);
+        });
+      });
+
+      /* ==========================================================
+         STORE SEARCH & FILTER CONTROLLER
+         ========================================================== */
       const searchInput = document.getElementById('storeSearchInput');
       const searchClear = document.getElementById('storeSearchClear');
       const floorButtons = document.querySelectorAll('.floor-pill');
       const categoryButtons = document.querySelectorAll('.category-pill');
-      const storeCards = document.querySelectorAll('.store-card');
       const countEl = document.getElementById('storesCount');
       const filterLabelEl = document.getElementById('activeFilterLabel');
       const emptyState = document.getElementById('emptyStoresState');
@@ -556,20 +1258,17 @@
           }
         });
 
-        // Update count & label
         countEl.textContent = `Showing ${visibleCount} of ${storeCards.length} stores`;
         const floorText = currentFloor === 'all' ? 'All Floors' : currentFloor;
         const catText = currentCategory === 'all' ? 'All Categories' : currentCategory;
         filterLabelEl.textContent = `${floorText} · ${catText}${searchQuery ? ' · "' + searchQuery + '"' : ''}`;
 
-        // Toggle empty state
         if (visibleCount === 0) {
           emptyState.style.display = 'block';
         } else {
           emptyState.style.display = 'none';
         }
 
-        // Toggle search clear button
         if (searchQuery.length > 0) {
           searchClear.classList.add('is-visible');
         } else {
@@ -577,13 +1276,11 @@
         }
       }
 
-      // Search input listener
       searchInput.addEventListener('input', function (e) {
         searchQuery = e.target.value.trim().toLowerCase();
         filterStores();
       });
 
-      // Search clear button
       searchClear.addEventListener('click', function () {
         searchInput.value = '';
         searchQuery = '';
@@ -591,17 +1288,25 @@
         filterStores();
       });
 
-      // Floor filter pills
       floorButtons.forEach(btn => {
         btn.addEventListener('click', function () {
           floorButtons.forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
           currentFloor = btn.getAttribute('data-floor');
+
+          // Sync with Floor Map Blueprint Tabs if applicable
+          mapFloorTabs.forEach(t => {
+            if (t.getAttribute('data-map-floor') === currentFloor) {
+              mapFloorTabs.forEach(tab => tab.classList.remove('active'));
+              t.classList.add('active');
+              switchMapFloor(currentFloor);
+            }
+          });
+
           filterStores();
         });
       });
 
-      // Category filter pills
       categoryButtons.forEach(btn => {
         btn.addEventListener('click', function () {
           categoryButtons.forEach(b => b.classList.remove('active'));
@@ -611,7 +1316,6 @@
         });
       });
 
-      // Reset button
       resetBtn.addEventListener('click', function () {
         currentFloor = 'all';
         currentCategory = 'all';
@@ -620,11 +1324,12 @@
 
         floorButtons.forEach(b => b.classList.toggle('active', b.getAttribute('data-floor') === 'all'));
         categoryButtons.forEach(b => b.classList.toggle('active', b.getAttribute('data-category') === 'all'));
+        mapFloorTabs.forEach(t => t.classList.toggle('active', t.getAttribute('data-map-floor') === 'Ground Floor'));
+        switchMapFloor('Ground Floor');
 
         filterStores();
       });
 
-      // Initial filter run
       filterStores();
     })();
   </script>
