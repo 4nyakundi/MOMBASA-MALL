@@ -1,40 +1,44 @@
 /**
  * preloader.js — Mombasa Mall
- * Animated counter 00 → 99 with category image flash, then hero reveal.
- * Mirrors the Realevate Agency preloader pattern.
+ * Reconstructed cinematic counter & visual preloader engine.
+ * Deep Space Blue (#003049) · Sunflower Gold (#fcbf49) · Vivid Tangerine (#f77f00)
  */
+
 (function () {
   'use strict';
 
   var preloader = document.getElementById('site-preloader');
   if (!preloader) return;
 
-  var frames   = preloader.querySelectorAll('.site-preloader__frame');
-  var tensEl   = preloader.querySelector('.site-preloader__digit--tens .site-preloader__digit-inner');
-  var onesEl   = preloader.querySelector('.site-preloader__digit--ones .site-preloader__digit-inner');
+  var frames       = preloader.querySelectorAll('.site-preloader__frame');
+  var tensEl       = document.getElementById('preloaderTens');
+  var onesEl       = document.getElementById('preloaderOnes');
+  var progressFill = document.getElementById('preloaderProgressFill');
+  var statusText   = document.getElementById('preloaderStatusText');
 
   if (!tensEl || !onesEl) {
     finish();
     return;
   }
 
-  // Measure digit height dynamically from first number span
-  var sampleNum = preloader.querySelector('.site-preloader__number');
-  var digitH = sampleNum ? sampleNum.getBoundingClientRect().height : 140;
+  // Smooth CSS transitions on inner stacks (10 digits each = 10% step)
+  tensEl.style.transition = 'transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1)';
+  onesEl.style.transition = 'transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1)';
 
-  // Give the inner columns a quick transition
-  tensEl.style.transition = 'transform 0.12s cubic-bezier(0.4, 0, 0.2, 1)';
-  onesEl.style.transition = 'transform 0.12s cubic-bezier(0.4, 0, 0.2, 1)';
-
-  var count        = 0;
-  var frameCount   = frames.length;
+  var frameCount = frames.length;
   var currentFrame = -1;
 
-  // How many counter ticks per image frame
-  var ticksPerFrame = frameCount > 0 ? Math.floor(99 / frameCount) : 99;
+  var statusMessages = [
+    '01 / INITIALIZING 5 FLOORS · MWEMBE TAYARI',
+    '02 / CURATING 120+ RETAIL & LUXURY BRANDS',
+    '03 / LOADING 4K LED BILLBOARD NETWORK',
+    '04 / PREPARING COASTAL ROOFTOP DINING',
+    '05 / LAUNCHING MOMBASA LUXURY CANVAS'
+  ];
 
-  function setDigit(el, index) {
-    el.style.transform = 'translateY(-' + (index * digitH) + 'px)';
+  function setDigits(tens, ones) {
+    tensEl.style.transform = 'translateY(-' + (tens * 10) + '%)';
+    onesEl.style.transform = 'translateY(-' + (ones * 10) + '%)';
   }
 
   function showFrame(index) {
@@ -44,38 +48,76 @@
   }
 
   function finish() {
-    preloader.classList.add('is-done');
-    document.body.classList.add('is-ready');
-    // Remove from DOM after transition
-    preloader.addEventListener('transitionend', function onEnd() {
-      preloader.removeEventListener('transitionend', onEnd);
-      preloader.remove();
-    });
+    if (typeof gsap !== 'undefined') {
+      gsap.to(preloader, {
+        y: '-100%',
+        duration: 0.85,
+        ease: 'power4.inOut',
+        onComplete: function () {
+          preloader.classList.add('is-done');
+          document.body.classList.add('is-ready');
+          document.documentElement.classList.remove('site-preloader-pending');
+          preloader.remove();
+        }
+      });
+    } else {
+      preloader.classList.add('is-done');
+      document.body.classList.add('is-ready');
+      document.documentElement.classList.remove('site-preloader-pending');
+      setTimeout(function () { preloader.remove(); }, 600);
+    }
   }
 
-  // Kick off immediately so first frame shows right away
+  // Show first frame right away
   showFrame(0);
   currentFrame = 0;
+  setDigits(0, 0);
 
-  var interval = setInterval(function () {
-    count++;
+  var startTime = performance.now();
+  var duration = 2200; // total duration ~2.2s
+
+  function tick(now) {
+    var elapsed = now - startTime;
+    var progress = Math.min(elapsed / duration, 1);
+
+    // Easing: fast rise through 0-75, smooth deceleration into 99
+    var easeProgress = Math.pow(progress, 0.85);
+    var count = Math.min(Math.floor(easeProgress * 99), 99);
 
     var tens = Math.floor(count / 10);
     var ones = count % 10;
-    setDigit(tensEl, tens);
-    setDigit(onesEl, ones);
+    setDigits(tens, ones);
+
+    // Update progress bar fill
+    if (progressFill) {
+      progressFill.style.width = (count * 1.01) + '%';
+    }
 
     // Switch image frame
-    var frameIndex = Math.min(Math.floor(count / ticksPerFrame), frameCount - 1);
+    var frameIndex = Math.min(Math.floor((count / 100) * frameCount), frameCount - 1);
     if (frameIndex !== currentFrame) {
       currentFrame = frameIndex;
       showFrame(frameIndex);
     }
 
-    if (count >= 99) {
-      clearInterval(interval);
-      // Small pause at 99 for drama, then reveal
-      setTimeout(finish, 420);
+    // Update status text
+    if (statusText) {
+      var msgIndex = Math.min(Math.floor((count / 100) * statusMessages.length), statusMessages.length - 1);
+      statusText.textContent = statusMessages[msgIndex];
     }
-  }, 22); // ~22ms ≈ 45fps, reaches 99 in ~2.2s
+
+    if (progress < 1) {
+      requestAnimationFrame(tick);
+    } else {
+      setDigits(9, 9);
+      if (progressFill) progressFill.style.width = '100%';
+      if (statusText) statusText.textContent = '05 / WELCOME TO MOMBASA MALL';
+
+      // Dramatic hold at 99%, then wipe open
+      setTimeout(finish, 380);
+    }
+  }
+
+  requestAnimationFrame(tick);
+
 })();

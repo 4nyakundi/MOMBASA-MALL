@@ -25,32 +25,51 @@
 <body>
 
   <!-- ============================
-       SITE PRELOADER
+       RECONSTRUCTED CINEMATIC PRELOADER
        ============================ -->
   <div id="site-preloader" class="site-preloader" aria-hidden="true">
+    
+    <!-- Top Metadata Strip -->
+    <div class="preloader-top-bar">
+      <div class="preloader-brand">
+        <span class="preloader-dot"></span>
+        <span>MOMBASA MALL</span>
+      </div>
+      <div class="preloader-tag">COASTAL LUXURY FLAGSHIP · 2026</div>
+    </div>
+
+    <!-- Background Flashing Visual Frames -->
     <div class="site-preloader__frames" aria-hidden="true">
       <div class="site-preloader__frame" data-index="0">
-        <img src="./assets/Logo/Shops Logo/Naivasmain.jpeg" alt="" decoding="async" fetchpriority="high">
+        <img src="./assets/Logo/Random pics/MOMBASA MALL.jpg" alt="" decoding="async" fetchpriority="high">
       </div>
       <div class="site-preloader__frame" data-index="1">
-        <img src="./assets/Logo/Shops Logo/NCBA.png" alt="" decoding="async">
+        <img src="./assets/Logo/Shops Logo/Naivasmain.jpeg" alt="" decoding="async">
       </div>
       <div class="site-preloader__frame" data-index="2">
-        <img src="./assets/Logo/Shops Logo/West 11.jpg" alt="" decoding="async">
+        <img src="./assets/Logo/Shops Logo/NCBA.png" alt="" decoding="async">
       </div>
       <div class="site-preloader__frame" data-index="3">
-        <img src="./assets/Logo/Shops Logo/Lovisa.jpg" alt="" decoding="async">
+        <img src="./assets/Logo/Shops Logo/West 11.jpg" alt="" decoding="async">
       </div>
       <div class="site-preloader__frame" data-index="4">
+        <img src="./assets/Logo/Shops Logo/Lovisa.jpg" alt="" decoding="async">
+      </div>
+      <div class="site-preloader__frame" data-index="5">
         <img src="./assets/Logo/Mall Logo/MOMBASA MALL2.0.png" alt="" decoding="async">
       </div>
     </div>
+
+    <!-- Center Stage Counter -->
     <div class="site-preloader__stage">
+      
       <div class="site-preloader__counter" aria-hidden="true">
         <div class="site-preloader__counter-mask">
           <div class="site-preloader__number-wrapper">
+            
+            <!-- Tens column (0-9) -->
             <div class="site-preloader__digit site-preloader__digit--tens">
-              <div class="site-preloader__digit-inner">
+              <div class="site-preloader__digit-inner" id="preloaderTens">
                 <span class="site-preloader__number">0</span>
                 <span class="site-preloader__number">1</span>
                 <span class="site-preloader__number">2</span>
@@ -63,8 +82,10 @@
                 <span class="site-preloader__number">9</span>
               </div>
             </div>
+
+            <!-- Ones column (0-9) -->
             <div class="site-preloader__digit site-preloader__digit--ones">
-              <div class="site-preloader__digit-inner">
+              <div class="site-preloader__digit-inner" id="preloaderOnes">
                 <span class="site-preloader__number">0</span>
                 <span class="site-preloader__number">1</span>
                 <span class="site-preloader__number">2</span>
@@ -77,11 +98,31 @@
                 <span class="site-preloader__number">9</span>
               </div>
             </div>
+
+            <span class="preloader-percent-symbol">%</span>
+
           </div>
         </div>
       </div>
-      <div class="preloader-label">Mombasa Mall</div>
+
+      <!-- Precision Progress Bar -->
+      <div class="preloader-progress-track">
+        <div class="preloader-progress-fill" id="preloaderProgressFill"></div>
+      </div>
+
+      <!-- Dynamic Status Label -->
+      <div class="preloader-status-wrap">
+        <span class="preloader-status-text" id="preloaderStatusText">INITIALIZING 5 FLOORS · MWEMBE TAYARI</span>
+      </div>
+
     </div>
+
+    <!-- Bottom Coordinates Strip -->
+    <div class="preloader-bottom-bar">
+      <span>04°03'S · 39°40'E</span>
+      <span>MOMBASA CBD · KENYA</span>
+    </div>
+
   </div>
 
   <!-- ============================
