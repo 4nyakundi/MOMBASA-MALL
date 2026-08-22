@@ -56,22 +56,22 @@
         el.dataset.cursorBound = 'true';
 
         el.addEventListener('mouseenter', () => {
-          gsap.to(cursor, { width: 5, height: 5, backgroundColor: '#274c77', duration: 0.2 });
+          gsap.to(cursor, { width: 5, height: 5, backgroundColor: '#d62828', duration: 0.2 });
           gsap.to(follower, {
             width: 44,
             height: 44,
-            borderColor: '#6096ba',
-            backgroundColor: 'rgba(163, 206, 241, 0.15)',
+            borderColor: '#f77f00',
+            backgroundColor: 'rgba(252, 191, 73, 0.18)',
             duration: 0.25
           });
         });
 
         el.addEventListener('mouseleave', () => {
-          gsap.to(cursor, { width: 8, height: 8, backgroundColor: '#6096ba', duration: 0.2 });
+          gsap.to(cursor, { width: 8, height: 8, backgroundColor: '#f77f00', duration: 0.2 });
           gsap.to(follower, {
             width: 28,
             height: 28,
-            borderColor: 'rgba(96, 150, 186, 0.4)',
+            borderColor: 'rgba(247, 127, 0, 0.45)',
             backgroundColor: 'transparent',
             duration: 0.25
           });
