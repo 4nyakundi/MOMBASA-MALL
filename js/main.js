@@ -177,11 +177,84 @@
   });
 
   /* ============================================================
+     SUBPAGE CINEMATIC HERO SPLIT-PAN & PARALLAX ENGINE
+     ============================================================ */
+  function initCinematicSubpageHero() {
+    const hero = document.querySelector('.subpage-cinematic-hero');
+    if (!hero) return;
+
+    const bgImg = hero.querySelector('.subpage-hero-bg-img');
+    const splitLeft = hero.querySelector('.split-left');
+    const splitRight = hero.querySelector('.split-right');
+    const bottomFlow = hero.querySelector('.subpage-hero-bottom-flow');
+    const scrollContainer = document.querySelector('.subpage-content') || window;
+
+    // Initial entrance animation on load
+    if (typeof gsap !== 'undefined') {
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+      if (bgImg) {
+        tl.fromTo(bgImg, { scale: 1.25, opacity: 0 }, { scale: 1.12, opacity: 1, duration: 1.2 }, 0);
+      }
+      if (splitLeft) {
+        tl.fromTo(splitLeft, { x: -80, opacity: 0 }, { x: 0, opacity: 1, duration: 1 }, 0.2);
+      }
+      if (splitRight) {
+        tl.fromTo(splitRight, { x: 80, opacity: 0 }, { x: 0, opacity: 1, duration: 1 }, 0.2);
+      }
+      if (bottomFlow) {
+        tl.fromTo(bottomFlow, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9 }, 0.4);
+      }
+    }
+
+    // Scroll listener for dynamic continuous parallax & sideways parting
+    function onSubpageScroll() {
+      const scrollTop = scrollContainer === window ? window.scrollY : scrollContainer.scrollTop;
+      const progress = Math.min(scrollTop / 350, 1);
+
+      if (bgImg) {
+        // Image scales inward smoothly
+        const scaleVal = 1.12 - (progress * 0.08); // 1.12 -> 1.04
+        const yVal = progress * 35;
+        bgImg.style.transform = `scale(${scaleVal}) translateY(${yVal}px)`;
+      }
+
+      if (splitLeft) {
+        // Left word pans outward to the left
+        const xLeft = -(progress * 120);
+        splitLeft.style.transform = `translateX(${xLeft}px)`;
+        splitLeft.style.opacity = Math.max(0.3, 1 - progress * 0.65);
+      }
+
+      if (splitRight) {
+        // Right word pans outward to the right
+        const xRight = (progress * 120);
+        splitRight.style.transform = `translateX(${xRight}px)`;
+        splitRight.style.opacity = Math.max(0.3, 1 - progress * 0.65);
+      }
+
+      if (bottomFlow) {
+        // Bottom text flows smoothly
+        const yFlow = -(progress * 12);
+        bottomFlow.style.transform = `translateY(${yFlow}px)`;
+      }
+    }
+
+    if (scrollContainer === window) {
+      window.addEventListener('scroll', onSubpageScroll, { passive: true });
+    } else {
+      scrollContainer.addEventListener('scroll', onSubpageScroll, { passive: true });
+      window.addEventListener('scroll', onSubpageScroll, { passive: true });
+    }
+  }
+
+  /* ============================================================
      INIT ON DOM READY
      ============================================================ */
   document.addEventListener('DOMContentLoaded', () => {
     highlightActiveNav();
     init3DTilt();
+    initCinematicSubpageHero();
   });
 
   window.addEventListener('load', () => {
@@ -191,3 +264,4 @@
   });
 
 })();
+
