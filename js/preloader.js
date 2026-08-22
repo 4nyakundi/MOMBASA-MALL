@@ -1,6 +1,6 @@
 /**
  * preloader.js — Mombasa Mall
- * Reconstructed cinematic counter & visual preloader engine.
+ * Bulletproof cinematic counter & visual preloader engine.
  * Deep Space Blue (#003049) · Sunflower Gold (#fcbf49) · Vivid Tangerine (#f77f00)
  */
 
@@ -8,13 +8,50 @@
   'use strict';
 
   var preloader = document.getElementById('site-preloader');
-  if (!preloader) return;
+  if (!preloader) {
+    document.documentElement.classList.remove('site-preloader-pending');
+    if (document.body) document.body.classList.add('is-ready');
+    return;
+  }
 
   var frames       = preloader.querySelectorAll('.site-preloader__frame');
   var tensEl       = document.getElementById('preloaderTens');
   var onesEl       = document.getElementById('preloaderOnes');
   var progressFill = document.getElementById('preloaderProgressFill');
   var statusText   = document.getElementById('preloaderStatusText');
+
+  var isFinished = false;
+  function finish() {
+    if (isFinished) return;
+    isFinished = true;
+
+    document.documentElement.classList.remove('site-preloader-pending');
+    if (document.body) {
+      document.body.classList.add('is-ready');
+      // Dispatch custom event for selectionMenu.js
+      document.body.dispatchEvent(new CustomEvent('is-ready'));
+    }
+
+    if (typeof gsap !== 'undefined') {
+      gsap.to(preloader, {
+        y: '-100%',
+        duration: 0.75,
+        ease: 'power4.inOut',
+        onComplete: function () {
+          preloader.classList.add('is-done');
+          try { preloader.remove(); } catch (e) {}
+        }
+      });
+    } else {
+      preloader.classList.add('is-done');
+      setTimeout(function () {
+        try { preloader.remove(); } catch (e) {}
+      }, 400);
+    }
+  }
+
+  // Safety fallback timeout: under NO circumstances can the preloader hang longer than 2.6s
+  setTimeout(finish, 2600);
 
   if (!tensEl || !onesEl) {
     finish();
@@ -37,8 +74,8 @@
   ];
 
   function setDigits(tens, ones) {
-    tensEl.style.transform = 'translateY(-' + (tens * 10) + '%)';
-    onesEl.style.transform = 'translateY(-' + (ones * 10) + '%)';
+    if (tensEl) tensEl.style.transform = 'translateY(-' + (tens * 10) + '%)';
+    if (onesEl) onesEl.style.transform = 'translateY(-' + (ones * 10) + '%)';
   }
 
   function showFrame(index) {
@@ -47,36 +84,17 @@
     });
   }
 
-  function finish() {
-    if (typeof gsap !== 'undefined') {
-      gsap.to(preloader, {
-        y: '-100%',
-        duration: 0.85,
-        ease: 'power4.inOut',
-        onComplete: function () {
-          preloader.classList.add('is-done');
-          document.body.classList.add('is-ready');
-          document.documentElement.classList.remove('site-preloader-pending');
-          preloader.remove();
-        }
-      });
-    } else {
-      preloader.classList.add('is-done');
-      document.body.classList.add('is-ready');
-      document.documentElement.classList.remove('site-preloader-pending');
-      setTimeout(function () { preloader.remove(); }, 600);
-    }
-  }
-
   // Show first frame right away
   showFrame(0);
   currentFrame = 0;
   setDigits(0, 0);
 
   var startTime = performance.now();
-  var duration = 2200; // total duration ~2.2s
+  var duration = 2000; // total duration ~2.0s
 
   function tick(now) {
+    if (isFinished) return;
+
     var elapsed = now - startTime;
     var progress = Math.min(elapsed / duration, 1);
 
@@ -114,7 +132,7 @@
       if (statusText) statusText.textContent = '05 / WELCOME TO MOMBASA MALL';
 
       // Dramatic hold at 99%, then wipe open
-      setTimeout(finish, 380);
+      setTimeout(finish, 320);
     }
   }
 

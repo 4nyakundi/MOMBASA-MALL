@@ -328,11 +328,24 @@
 
   <!-- Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/SplitText.min.js"></script>
   <script src="./js/preloader.js"></script>
   <script src="./js/selectionMenu.js"></script>
   <script src="./js/main.js"></script>
   <script type="module" src="./js/firebase-config.js"></script>
+
+  <!-- Auto Safety Unlock Handler -->
+  <script>
+    (function () {
+      setTimeout(function () {
+        document.documentElement.classList.remove('site-preloader-pending');
+        if (document.body && !document.body.classList.contains('is-ready')) {
+          document.body.classList.add('is-ready');
+          var p = document.getElementById('site-preloader');
+          if (p) p.classList.add('is-done');
+        }
+      }, 2500);
+    })();
+  </script>
 
 </body>
 </html>
