@@ -110,41 +110,51 @@
           <div class="bento"><span class="bento-eyebrow">Formats</span><h3 class="bento-title">MP4 / MOV / JPEG</h3><p class="bento-text">Static images or video up to 60fps. Remote content upload and scheduling available.</p></div>
         </div>
 
-        <!-- BOOKING FORM -->
+        <!-- BOOKING FORM WITH LIVE ESTIMATOR -->
         <div class="section-header"><h2 class="section-h2">Book Your Campaign</h2></div>
         <div class="bento" style="max-width:640px;margin-bottom:52px;">
-          <form id="led-form" onsubmit="event.preventDefault();this.querySelector('button').textContent='✓ Submitted — We\'ll contact you within 24h';this.querySelector('button').disabled=true;">
+          <form id="led-form">
             <div class="grid-2" style="margin-bottom:20px;">
               <div style="display:flex;flex-direction:column;gap:6px;">
                 <label style="font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-muted);">Brand / Campaign Name</label>
-                <input type="text" required placeholder="e.g. Samsung Galaxy Launch" style="padding:13px 16px;border-radius:10px;border:1px solid var(--border-hairline);background:var(--bg-elevated);color:white;font-size:13px;outline:none;">
+                <input type="text" required placeholder="e.g. Samsung Galaxy Launch" style="padding:13px 16px;border-radius:10px;font-size:13px;">
               </div>
               <div style="display:flex;flex-direction:column;gap:6px;">
                 <label style="font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-muted);">Contact Email</label>
-                <input type="email" required placeholder="marketing@brand.com" style="padding:13px 16px;border-radius:10px;border:1px solid var(--border-hairline);background:var(--bg-elevated);color:white;font-size:13px;outline:none;">
+                <input type="email" required placeholder="marketing@brand.com" style="padding:13px 16px;border-radius:10px;font-size:13px;">
               </div>
             </div>
             <div class="grid-2" style="margin-bottom:24px;">
               <div style="display:flex;flex-direction:column;gap:6px;">
                 <label style="font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-muted);">Preferred Screen</label>
-                <select style="padding:13px 16px;border-radius:10px;border:1px solid var(--border-hairline);background:var(--bg-elevated);color:white;font-size:13px;outline:none;">
-                  <option>Atrium Spotlight (KES 40K/mo)</option>
-                  <option>Food Court Screen (KES 65K/mo)</option>
-                  <option>Dual Screen Combo (KES 95K/mo)</option>
-                  <option>Facade Billboard (KES 120K/mo)</option>
+                <select id="screenSelect" style="padding:13px 16px;border-radius:10px;font-size:13px;">
+                  <option value="40000">Atrium Spotlight (KES 40,000/mo)</option>
+                  <option value="65000">Food Court Screen (KES 65,000/mo)</option>
+                  <option value="95000">Dual Screen Combo (KES 95,000/mo)</option>
+                  <option value="120000">Facade Billboard (KES 120,000/mo)</option>
                 </select>
               </div>
               <div style="display:flex;flex-direction:column;gap:6px;">
                 <label style="font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-muted);">Duration</label>
-                <select style="padding:13px 16px;border-radius:10px;border:1px solid var(--border-hairline);background:var(--bg-elevated);color:white;font-size:13px;outline:none;">
-                  <option>1 Month</option>
-                  <option>3 Months (10% off)</option>
-                  <option>6 Months (15% off)</option>
-                  <option>12 Months (20% off)</option>
+                <select id="durationSelect" style="padding:13px 16px;border-radius:10px;font-size:13px;">
+                  <option value="1" data-discount="0">1 Month</option>
+                  <option value="3" data-discount="0.10">3 Months (10% off)</option>
+                  <option value="6" data-discount="0.15">6 Months (15% off)</option>
+                  <option value="12" data-discount="0.20">12 Months (20% off)</option>
                 </select>
               </div>
             </div>
-            <button type="submit" style="display:inline-flex;align-items:center;gap:8px;background:white;color:#04060a;border:none;padding:14px 32px;border-radius:9999px;font-family:var(--font-mono);font-size:11px;text-transform:uppercase;letter-spacing:0.1em;font-weight:700;cursor:pointer;transition:opacity 0.2s ease;">Send Enquiry →</button>
+
+            <!-- LIVE PRICE DISPLAY -->
+            <div class="calc-price-display">
+              <div>
+                <div style="font-family:var(--font-mono); font-size:10px; text-transform:uppercase; letter-spacing:0.1em; color:var(--steel-blue);">Estimated Total</div>
+                <div style="font-size:11px; color:var(--text-muted);" id="calcSubtext">1 Month · Standard Rate</div>
+              </div>
+              <div class="calc-price-val" id="calcPriceVal">KES 40,000</div>
+            </div>
+
+            <button type="submit" class="btn-flagship" style="padding:14px 32px; border-radius:9999px; font-size:11px;">Submit Campaign Enquiry &rarr;</button>
           </form>
         </div>
 
@@ -157,5 +167,43 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="./js/selectionMenu.js"></script>
   <script src="./js/main.js"></script>
+  <script>
+    (function () {
+      const screenSelect = document.getElementById('screenSelect');
+      const durationSelect = document.getElementById('durationSelect');
+      const priceVal = document.getElementById('calcPriceVal');
+      const subtext = document.getElementById('calcSubtext');
+      const form = document.getElementById('led-form');
+
+      function updateEstimate() {
+        const baseMonthly = parseInt(screenSelect.value, 10) || 40000;
+        const months = parseInt(durationSelect.value, 10) || 1;
+        const opt = durationSelect.selectedOptions[0];
+        const discount = parseFloat(opt.getAttribute('data-discount')) || 0;
+
+        const rawTotal = baseMonthly * months;
+        const finalTotal = Math.round(rawTotal * (1 - discount));
+
+        priceVal.textContent = 'KES ' + finalTotal.toLocaleString();
+        if (discount > 0) {
+          subtext.textContent = `${months} Months · ${(discount * 100)}% Discount Applied (Saved KES ${(rawTotal - finalTotal).toLocaleString()})`;
+        } else {
+          subtext.textContent = `1 Month · Standard Rate`;
+        }
+      }
+
+      screenSelect.addEventListener('change', updateEstimate);
+      durationSelect.addEventListener('change', updateEstimate);
+      updateEstimate();
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const btn = form.querySelector('button[type="submit"]');
+        btn.textContent = '✓ Enquiry Sent — Our Media Team Will Contact You Within 24h';
+        btn.disabled = true;
+        btn.style.opacity = '0.85';
+      });
+    })();
+  </script>
 </body>
 </html>

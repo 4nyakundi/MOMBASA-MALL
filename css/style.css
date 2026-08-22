@@ -3987,3 +3987,332 @@ span.bento-eyebrow[style*="color:var(--gold)"] {
   background: rgba(163, 206, 241, 0.35);
   color: var(--dusk-blue);
 }
+
+/* ================================================================
+   STORE DIRECTORY & COMPONENT ENHANCEMENTS
+   ================================================================ */
+
+/* Active link indicator in left nav */
+.site-nav__link.is-active,
+.subpage-nav .site-nav__link.is-active {
+  color: var(--platinum) !important;
+  font-weight: 700;
+}
+
+.site-nav__link.is-active::after,
+.subpage-nav .site-nav__link.is-active::after {
+  width: 100% !important;
+  background: var(--icy-blue) !important;
+}
+
+/* Store search input */
+.store-search-wrap {
+  position: relative;
+  margin-bottom: 24px;
+  max-width: 600px;
+}
+
+.store-search-input {
+  width: 100%;
+  padding: 16px 20px 16px 48px !important;
+  border-radius: 9999px !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(39, 76, 119, 0.16) !important;
+  color: var(--dusk-blue) !important;
+  font-family: var(--font-body) !important;
+  font-size: 14px !important;
+  box-shadow: 0 4px 16px rgba(39, 76, 119, 0.05);
+  transition: all 0.25s ease;
+}
+
+.store-search-input:focus {
+  border-color: var(--steel-blue) !important;
+  box-shadow: 0 6px 24px rgba(39, 76, 119, 0.1), 0 0 0 3px rgba(163, 206, 241, 0.35) !important;
+}
+
+.store-search-icon {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--steel-blue);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.store-search-clear {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(39, 76, 119, 0.08);
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--dusk-blue);
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+}
+
+.store-search-clear.is-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.store-search-clear:hover {
+  background: var(--dusk-blue);
+  color: var(--platinum);
+}
+
+/* Category filter row */
+.category-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.category-pill {
+  padding: 6px 14px;
+  border-radius: 9999px;
+  background: rgba(39, 76, 119, 0.05);
+  border: 1px solid rgba(39, 76, 119, 0.12);
+  color: var(--dusk-blue);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.category-pill:hover {
+  background: rgba(96, 150, 186, 0.15);
+  border-color: rgba(96, 150, 186, 0.35);
+}
+
+.category-pill.active {
+  background: var(--steel-blue);
+  border-color: var(--steel-blue);
+  color: #ffffff;
+}
+
+/* Store card enhancements */
+.store-card {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+  padding: 24px;
+}
+
+.store-card-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.store-logo-box {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid rgba(39, 76, 119, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  flex-shrink: 0;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(39, 76, 119, 0.04);
+}
+
+.store-logo-box img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.store-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.store-unit-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--steel-blue);
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.store-name {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--dusk-blue);
+  line-height: 1.2;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.store-category-tag {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(163, 206, 241, 0.25);
+  color: var(--dusk-blue);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 4px;
+  font-weight: 600;
+}
+
+.store-hours-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: #2e7d32;
+  margin-top: 12px;
+  font-weight: 600;
+}
+
+.store-hours-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #2e7d32;
+}
+
+.store-hours-badge.twentyfour {
+  color: var(--dusk-blue);
+}
+.store-hours-badge.twentyfour::before {
+  background: var(--steel-blue);
+}
+
+.store-count-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Empty search state */
+.empty-stores-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px dashed rgba(39, 76, 119, 0.2);
+}
+
+.empty-stores-state h3 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  color: var(--dusk-blue);
+  margin-bottom: 8px;
+}
+
+.empty-stores-state p {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 18px;
+}
+
+/* Lightbox Modal */
+.lightbox-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(39, 76, 119, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.lightbox-modal.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.lightbox-img-wrap {
+  position: relative;
+  max-width: 90vw;
+  max-height: 85vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-img-wrap img {
+  max-width: 100%;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.lightbox-close-btn {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  background: transparent;
+  border: none;
+  color: var(--platinum);
+  font-size: 28px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+/* Live Calculator Box for LED page */
+.calc-price-display {
+  background: rgba(163, 206, 241, 0.15);
+  border: 1px solid rgba(96, 150, 186, 0.3);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.calc-price-val {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--dusk-blue);
+}
+

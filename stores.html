@@ -4,10 +4,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Store Directory — Mombasa Mall</title>
+  <meta name="description" content="Explore 120+ stores across 5 floors at Mombasa Mall — anchor supermarkets, banks, boutique fashion, rooftop dining, gaming and family entertainment.">
   <link rel="stylesheet" href="./css/style.css" />
 </head>
 <body class="subpage">
 
+  <!-- OUR FLOORS OVERLAY -->
   <div id="selection-shell">
     <nav id="selection-menu" aria-hidden="true" aria-label="Our floors">
       <div class="selection-cards">
@@ -58,6 +60,7 @@
     </nav>
   </div>
 
+  <!-- OFF-CANVAS -->
   <div id="offcanvas-menu" class="offcanvas-menu" aria-hidden="true">
     <button class="offcanvas-close" id="offcanvas-close" aria-label="Close menu">
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1 1L15 15M15 1L1 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
@@ -83,9 +86,11 @@
   </div>
   <div class="offcanvas-backdrop" id="offcanvas-backdrop"></div>
 
+  <!-- PAGE STAGE -->
   <div id="page-stage">
     <div class="subpage-grid">
 
+      <!-- LEFT NAV -->
       <nav class="subpage-nav site-nav" aria-label="Primary">
         <header class="site-logo">
           <a href="./index.html" aria-label="Mombasa Mall — Home">
@@ -93,7 +98,7 @@
           </a>
         </header>
         <a href="./about-us.html" class="site-nav__link link-underline">About</a>
-        <a href="./stores.html" class="site-nav__link link-underline" style="color:var(--text-main);">Stores</a>
+        <a href="./stores.html" class="site-nav__link link-underline is-active">Stores</a>
         <a href="./gallery.html" class="site-nav__link link-underline">Gallery</a>
         <a href="./about-us.html#contact" class="site-nav__link link-underline">Contact</a>
         <div class="site-nav__actions">
@@ -112,119 +117,395 @@
         </div>
       </nav>
 
+      <!-- RIGHT SCROLLABLE CONTENT -->
       <div class="subpage-content">
 
+        <!-- HERO -->
         <div class="subpage-hero">
           <span class="subpage-eyebrow">Mall Directory</span>
           <h1 class="subpage-h1">Store Directory</h1>
-          <p class="subpage-lead">Explore 120+ premium stores across 5 floors — from anchor supermarkets to boutique fashion, banking, dining, and family entertainment.</p>
+          <p class="subpage-lead">Explore 120+ curated stores across 5 floors — from 24/7 anchor supermarkets and tier-1 banking to coastal fashion, gourmet rooftop dining, and esports gaming.</p>
+        </div>
+
+        <!-- SEARCH BAR -->
+        <div class="store-search-wrap">
+          <div class="store-search-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </div>
+          <input
+            type="text"
+            id="storeSearchInput"
+            class="store-search-input"
+            placeholder="Search stores, brands, categories or units (e.g. Naivas, Banking, Shoes)..."
+            autocomplete="off"
+          />
+          <button id="storeSearchClear" class="store-search-clear" aria-label="Clear search">&times;</button>
         </div>
 
         <!-- FLOOR FILTERS -->
-        <div class="section-header" style="margin-bottom:24px;">
-          <h2 class="section-h2">Browse by Floor</h2>
+        <div class="section-header" style="margin-bottom:14px;">
+          <h2 class="section-h2" style="font-size:20px;">Filter by Floor</h2>
           <div id="floorFilters" style="display:flex;flex-wrap:wrap;gap:8px;">
-            <button class="floor-pill active" onclick="filterFloor('all',this)">All Floors</button>
-            <button class="floor-pill" onclick="filterFloor('Basement Parking',this)">Basement</button>
-            <button class="floor-pill" onclick="filterFloor('Ground Floor',this)">Ground</button>
-            <button class="floor-pill" onclick="filterFloor('1st Floor',this)">1st Floor</button>
-            <button class="floor-pill" onclick="filterFloor('2nd Floor',this)">2nd Floor</button>
-            <button class="floor-pill" onclick="filterFloor('3rd Floor',this)">3rd Floor</button>
+            <button class="floor-pill active" data-floor="all">All Floors</button>
+            <button class="floor-pill" data-floor="Basement">Basement</button>
+            <button class="floor-pill" data-floor="Ground Floor">Ground</button>
+            <button class="floor-pill" data-floor="1st Floor">1st Floor</button>
+            <button class="floor-pill" data-floor="2nd Floor">2nd Floor</button>
+            <button class="floor-pill" data-floor="3rd Floor">3rd Floor</button>
           </div>
         </div>
 
+        <!-- CATEGORY PILLS -->
+        <div class="category-pills" id="categoryFilters">
+          <button class="category-pill active" data-category="all">All Categories</button>
+          <button class="category-pill" data-category="Supermarket">Supermarket</button>
+          <button class="category-pill" data-category="Banking">Banking &amp; Forex</button>
+          <button class="category-pill" data-category="Fashion">Fashion &amp; Shoes</button>
+          <button class="category-pill" data-category="Dining">Dining &amp; Cafés</button>
+          <button class="category-pill" data-category="Tech">Tech &amp; Gaming</button>
+          <button class="category-pill" data-category="Beauty">Beauty &amp; Wellness</button>
+          <button class="category-pill" data-category="Entertainment">Entertainment</button>
+        </div>
+
+        <!-- RESULT COUNT BAR -->
+        <div class="store-count-bar">
+          <span id="storesCount">Showing 20 stores</span>
+          <span id="activeFilterLabel" style="color:var(--steel-blue);">All Floors · All Categories</span>
+        </div>
+
+        <!-- STORES GRID -->
         <div class="grid-auto" id="storesContainer" style="margin-bottom:52px;">
 
-          <div class="bento store-card" data-floor="Ground Floor">
-            <span class="bento-eyebrow">Ground Floor · G-01</span>
-            <h3 class="bento-title">Naivas Supermarket</h3>
-            <p class="bento-text">24/7 anchor hypermarket — grocery, bakery, fresh produce, pharmacy and electronics. Open round the clock.</p>
+          <!-- 1. NAIVAS -->
+          <div class="bento store-card" data-floor="Ground Floor" data-category="Supermarket" data-name="Naivas Supermarket" data-unit="G-01">
+            <div class="store-card-header">
+              <div class="store-logo-box">
+                <img src="./assets/Logo/Shops Logo/Naivasmain.jpeg" alt="Naivas Supermarket" loading="lazy">
+              </div>
+              <div class="store-meta">
+                <span class="store-unit-badge">Ground Floor · G-01</span>
+                <h3 class="store-name">Naivas Supermarket</h3>
+                <span class="store-category-tag">Supermarket &amp; Groceries</span>
+              </div>
+            </div>
+            <p class="bento-text">24/7 flagship hypermarket featuring fresh bakery, organic produce, butchery, pharmacy, liquor store and electronics under one roof.</p>
+            <div class="store-hours-badge twentyfour">Open 24 Hours · 7 Days</div>
           </div>
 
-          <div class="bento store-card" data-floor="Ground Floor">
-            <span class="bento-eyebrow">Ground Floor · G-05</span>
-            <h3 class="bento-title">NCBA Bank</h3>
-            <p class="bento-text">Full-service banking branch with ATM, lending advisory, credit cards and wealth management services.</p>
+          <!-- 2. NCBA BANK -->
+          <div class="bento store-card" data-floor="Ground Floor" data-category="Banking" data-name="NCBA Bank" data-unit="G-05">
+            <div class="store-card-header">
+              <div class="store-logo-box">
+                <img src="./assets/Logo/Shops Logo/NCBA.png" alt="NCBA Bank" loading="lazy">
+              </div>
+              <div class="store-meta">
+                <span class="store-unit-badge">Ground Floor · G-05</span>
+                <h3 class="store-name">NCBA Bank</h3>
+                <span class="store-category-tag">Banking &amp; Wealth</span>
+              </div>
+            </div>
+            <p class="bento-text">Full-service corporate and retail banking branch. 24/7 intelligent ATM, asset financing, forex exchange, and prestige private banking.</p>
+            <div class="store-hours-badge">Mon – Sat: 8:30 AM – 5:00 PM</div>
           </div>
 
-          <div class="bento store-card" data-floor="Ground Floor">
-            <span class="bento-eyebrow">Ground Floor · G-08</span>
-            <h3 class="bento-title">Equity Bank</h3>
-            <p class="bento-text">Retail banking, Equitel mobile services, savings accounts and business banking hub for coast region traders.</p>
+          <!-- 3. EQUITY AFIA / BANK -->
+          <div class="bento store-card" data-floor="Ground Floor" data-category="Banking" data-name="Equity Bank & Afia" data-unit="G-08">
+            <div class="store-card-header">
+              <div class="store-logo-box">
+                <img src="./assets/Logo/Shops Logo/equity afria.png" alt="Equity Bank" loading="lazy">
+              </div>
+              <div class="store-meta">
+                <span class="store-unit-badge">Ground Floor · G-08</span>
+                <h3 class="store-name">Equity Bank &amp; Health</h3>
+                <span class="store-category-tag">Banking &amp; Medical</span>
+              </div>
+            </div>
+            <p class="bento-text">Commercial banking hub, M-Pesa agents, Equitel point and Equity Afia comprehensive outpatient medical clinic.</p>
+            <div class="store-hours-badge">Mon – Sat: 8:00 AM – 6:00 PM</div>
           </div>
 
-          <div class="bento store-card" data-floor="Ground Floor">
-            <span class="bento-eyebrow">Ground Floor · G-12</span>
-            <h3 class="bento-title">Airtel Money Agent</h3>
-            <p class="bento-text">Mobile money deposits, withdrawals, airtime top-up and bill payment. Open 7 days a week.</p>
+          <!-- 4. AIRTEL MONEY / IDENT SMILE -->
+          <div class="bento store-card" data-floor="Ground Floor" data-category="Banking" data-name="Ident Smile & Telecom Agent" data-unit="G-12">
+            <div class="store-card-header">
+              <div class="store-logo-box">
+                <img src="./assets/Logo/Shops Logo/Ident Smile.jpg" alt="Ident Smile" loading="lazy">
+              </div>
+              <div class="store-meta">
+                <span class="store-unit-badge">Ground Floor · G-12</span>
+                <h3 class="store-name">Ident Smile &amp; Telecom</h3>
+                <span class="store-category-tag">Telecom &amp; Services</span>
+              </div>
+            </div>
+            <p class="bento-text">Mobile money deposits, SIM registration, digital accessories and professional teeth whitening/dental care.</p>
+            <div class="store-hours-badge">Mon – Sun: 9:00 AM – 8:00 PM</div>
           </div>
 
-          <div class="bento store-card" data-floor="1st Floor">
-            <span class="bento-eyebrow">1st Floor · F-03</span>
-            <h3 class="bento-title">Lovisa</h3>
-            <p class="bento-text">Trendy fashion jewellery and accessories — statement earrings, necklaces and bracelets at accessible prices.</p>
+          <!-- 5. LOVISA -->
+          <div class="bento store-card" data-floor="1st Floor" data-category="Fashion" data-name="Lovisa" data-unit="F-03">
+            <div class="store-card-header">
+              <div class="store-logo-box">
+                <img src="./assets/Logo/Shops Logo/Lovisa.jpg" alt="Lovisa" loading="lazy">
+              </div>
+              <div class="store-meta">
+                <span class="store-unit-badge">1st Floor · F-03</span>
+                <h3 class="store-name">Lovisa</h3>
+                <span class="store-category-tag">Fashion Jewellery</span>
+              </div>
+            </div>
+            <p class="bento-text">On-trend fashion jewellery, sterling silver accessories, bridal collections, and certified piercing studio.</p>
+            <div class="store-hours-badge">Mon – Sun: 9:30 AM – 8:30 PM</div>
           </div>
 
-          <div class="bento store-card" data-floor="1st Floor">
-            <span class="bento-eyebrow">1st Floor · F-07</span>
-            <h3 class="bento-title">Payless Shoes</h3>
-            <p class="bento-text">Family footwear brand — quality shoes, sandals and accessories at everyday prices for all ages.</p>
+          <!-- 6. PAYLESS SHOES -->
+          <div class="bento store-card" data-floor="1st Floor" data-category="Fashion" data-name="Payless Shoes" data-unit="F-07">
+            <div class="store-card-header">
+              <div class="store-logo-box">
+                <img src="./assets/Logo/Shops Logo/Payless.jpg" alt="Payless Shoes" loading="lazy">
+              </div>
+              <div class="store-meta">
+                <span class="store-unit-badge">1st Floor · F-07</span>
+                <h3 class="store-name">Payless Shoes</h3>
+                <span class="store-category-tag">Footwear &amp; Bags</span>
+              </div>
+            </div>
+            <p class="bento-text">Family footwear brand offering comfortable athletic shoes, formal leather wear, sandals, and kids' back-to-school shoes.</p>
+            <div class="store-hours-badge">Mon – Sun: 9:00 AM – 8:30 PM</div>
           </div>
 
-          <div class="bento store-card" data-floor="1st Floor">
-            <span class="bento-eyebrow">1st Floor · F-14</span>
-            <h3 class="bento-title">Gamers Vault</h3>
-            <p class="bento-text">Next-gen console gaming lounge, esports hub, and PC gaming arena. Daily and monthly memberships available.</p>
+          <!-- 7. DENRI -->
+          <div class="bento store-card" data-floor="1st Floor" data-category="Fashion" data-name="Denri Bags" data-unit="F-09">
+            <div class="store-card-header">
+              <div class="store-logo-box">
+                <img src="./assets/Logo/Shops Logo/denri _400x400.jpg" alt="Denri Bags" loading="lazy">
+              </div>
+              <div class="store-meta">
+                <span class="store-unit-badge">1st Floor · F-09</span>
+                <h3 class="store-name">Denri Handbags</h3>
+                <span class="store-category-tag">Leather &amp; Travel</span>
+              </div>
+            </div>
+            <p class="bento-text">Handcrafted Kenyan designer backpacks, tote bags, cross-body pouches, wallets, and premium travel luggage.</p>
+            <div class="store-hours-badge">Mon – Sun: 9:00 AM – 8:00 PM</div>
           </div>
 
-          <div class="bento store-card" data-floor="1st Floor">
-            <span class="bento-eyebrow">1st Floor · F-19</span>
-            <h3 class="bento-title">Jumia Pick-Up Station</h3>
-            <p class="bento-text">Official Jumia Kenya collection point. Fast, convenient pick-up for all your online orders.</p>
+          <!-- 8. 7DAYS MENSWEAR -->
+          <div class="bento store-card" data-floor="1st Floor" data-category="Fashion" data-name="7days Menswear" data-unit="F-11">
+            <div class="store-card-header">
+              <div class="store-logo-box">
+                <img src="./assets/Logo/Shops Logo/7days mensware.jpg" alt="7days Menswear" loading="lazy">
+              </div>
+              <div class="store-meta">
+                <span class="store-unit-badge">1st Floor · F-11</span>
+                <h3 class="store-name">7days Menswear</h3>
+                <span class="store-category-tag">Men's Apparel</span>
+              </div>
+            </div>
+            <p class="bento-text">Contemporary menswear, sharp tailoring, casual linen shirts, polo tees, denim and gentlemen's accessories.</p>
+            <div class="store-hours-badge">Mon – Sun: 9:00 AM – 8:30 PM</div>
           </div>
 
-          <div class="bento store-card" data-floor="2nd Floor">
-            <span class="bento-eyebrow">2nd Floor · S-04</span>
-            <h3 class="bento-title">Play On Arena</h3>
-            <p class="bento-text">Mombasa's premier family entertainment zone — VR gaming, kids soft play, racing simulators and party packages.</p>
+          <!-- 9. GAMERS VAULT -->
+          <div class="bento store-card" data-floor="1st Floor" data-category="Tech" data-name="Gamers Vault" data-unit="F-14">
+            <div class="store-card-header">
+              <div class="store-logo-box">
+                <img src="./assets/Logo/Shops Logo/Gamers-Vault-Tag-2 - Copy.PNG" alt="Gamers Vault" loading="lazy">
+              </div>
+              <div class="store-meta">
+                <span class="store-unit-badge">1st Floor · F-14</span>
+                <h3 class="store-name">Gamers Vault</h3>
+                <span class="store-category-tag">Esports &amp; Gaming Hub</span>
+              </div>
+            </div>
+            <p class="bento-text">Next-gen PS5 / Xbox Series X pods, high-refresh rate PC rigs, VR racing rigs, tournaments and gaming gear sales.</p>
+            <div class="store-hours-badge">Daily: 10:00 AM – 10:00 PM</div>
           </div>
 
-          <div class="bento store-card" data-floor="2nd Floor">
-            <span class="bento-eyebrow">2nd Floor · S-08</span>
-            <h3 class="bento-title">Novum Beauty Parlour</h3>
-            <p class="bento-text">Luxury coastal wellness — salon, aesthetics, nail studio and professional grooming for all genders.</p>
+          <!-- 10. GRAND COMPUTER & TAWALA -->
+          <div class="bento store-card" data-floor="1st Floor" data-category="Tech" data-name="Grand Computer & Tawala ICT" data-unit="F-17">
+            <div class="store-card-header">
+              <div class="store-logo-box">
+                <img src="./assets/Logo/Shops Logo/Grand Computer.jpg" alt="Grand Computer" loading="lazy">
+              </div>
+              <div class="store-meta">
+                <span class="store-unit-badge">1st Floor · F-17</span>
+                <h3 class="store-name">Grand Computer &amp; ICT</h3>
+                <span class="store-category-tag">Laptops &amp; Repair</span>
+              </div>
+            </div>
+            <p class="bento-text">Certified Apple &amp; Windows laptop sales, phone repair, software solutions, printers, and networking equipment.</p>
+            <div class="store-hours-badge">Mon – Sat: 9:00 AM – 8:00 PM</div>
           </div>
 
-          <div class="bento store-card" data-floor="2nd Floor">
-            <span class="bento-eyebrow">2nd Floor · S-15</span>
-            <h3 class="bento-title">Café Bahari</h3>
-            <p class="bento-text">Artisan coffee, coastal teas, light bites and smoothies. Sea-view terrace seating available for up to 60 guests.</p>
+          <!-- 11. JUMIA -->
+          <div class="bento store-card" data-floor="1st Floor" data-category="Tech" data-name="Jumia Pick-Up Station" data-unit="F-19">
+            <div class="store-card-header">
+              <div class="store-logo-box">
+                <img src="./assets/Logo/Shops Logo/JUMIA.jpg" alt="Jumia" loading="lazy">
+              </div>
+              <div class="store-meta">
+                <span class="store-unit-badge">1st Floor · F-19</span>
+                <h3 class="store-name">Jumia Pick-Up Hub</h3>
+                <span class="store-category-tag">E-Commerce &amp; Logistics</span>
+              </div>
+            </div>
+            <p class="bento-text">Official Jumia Kenya regional hub. Fast pickup, customer returns, parcel drop-off and merchant fulfillment point.</p>
+            <div class="store-hours-badge">Mon – Sat: 8:30 AM – 7:30 PM</div>
           </div>
 
-          <div class="bento store-card" data-floor="3rd Floor">
-            <span class="bento-eyebrow">3rd Floor · T-01</span>
-            <h3 class="bento-title">Food Court</h3>
-            <p class="bento-text">12-stall international food court — Swahili, Indian, Chinese, grills and fast food. Open daily 10AM–10PM.</p>
+          <!-- 12. FAKRI TIMEZONE -->
+          <div class="bento store-card" data-floor="1st Floor" data-category="Fashion" data-name="Fakri Timezone" data-unit="F-22">
+            <div class="store-card-header">
+              <div class="store-logo-box">
+                <img src="./assets/Logo/Shops Logo/Fakri Timezone.jpg" alt="Fakri Timezone" loading="lazy">
+              </div>
+              <div class="store-meta">
+                <span class="store-unit-badge">1st Floor · F-22</span>
+                <h3 class="store-name">Fakri Timezone</h3>
+                <span class="store-category-tag">Watches &amp; Clocks</span>
+              </div>
+            </div>
+            <p class="bento-text">Authentic designer watches from Casio, Seiko, Tissot, Fossil and Citizen with manufacturer warranties and battery servicing.</p>
+            <div class="store-hours-badge">Mon – Sun: 9:30 AM – 8:00 PM</div>
           </div>
 
-          <div class="bento store-card" data-floor="3rd Floor">
-            <span class="bento-eyebrow">3rd Floor · T-07</span>
-            <h3 class="bento-title">West 11 Restaurant</h3>
-            <p class="bento-text">Panoramic rooftop dining with coastal views. Swahili cuisine meets continental flavours. Reservations recommended.</p>
+          <!-- 13. PLAY ON ARENA -->
+          <div class="bento store-card" data-floor="2nd Floor" data-category="Entertainment" data-name="Play On Arena" data-unit="S-04">
+            <div class="store-card-header">
+              <div class="store-logo-box">
+                <img src="./assets/Logo/Mall Logo/MOMBASA MALL 1.0.png" alt="Play On Arena" loading="lazy">
+              </div>
+              <div class="store-meta">
+                <span class="store-unit-badge">2nd Floor · S-04</span>
+                <h3 class="store-name">Play On Arena</h3>
+                <span class="store-category-tag">Family Entertainment</span>
+              </div>
+            </div>
+            <p class="bento-text">Over 1,200sqm of kids' adventure — foam soft-play, trampoline arena, VR motion pods, and private birthday party suites.</p>
+            <div class="store-hours-badge">Daily: 9:00 AM – 9:00 PM</div>
           </div>
 
-          <div class="bento store-card" data-floor="3rd Floor">
-            <span class="bento-eyebrow">3rd Floor · T-11</span>
-            <h3 class="bento-title">Silverbird Cinemas</h3>
-            <p class="bento-text">3-screen modern cinema with Dolby Digital sound. Blockbusters, local films and private screening events.</p>
+          <!-- 14. NOVUM BEAUTY PARLOUR -->
+          <div class="bento store-card" data-floor="2nd Floor" data-category="Beauty" data-name="Novum Beauty Parlour" data-unit="S-08">
+            <div class="store-card-header">
+              <div class="store-logo-box">
+                <img src="./assets/Logo/Shops Logo/NOVUM.jpg" alt="Novum Beauty" loading="lazy">
+              </div>
+              <div class="store-meta">
+                <span class="store-unit-badge">2nd Floor · S-08</span>
+                <h3 class="store-name">Novum Beauty Parlour</h3>
+                <span class="store-category-tag">Salon &amp; Spa</span>
+              </div>
+            </div>
+            <p class="bento-text">Luxury coastal beauty retreat — bridal hairstyling, nail bar, organic facials, massage therapy, and men's executive grooming.</p>
+            <div class="store-hours-badge">Daily: 8:00 AM – 9:00 PM</div>
           </div>
 
-          <div class="bento store-card" data-floor="Basement Parking">
-            <span class="bento-eyebrow">Basement · B-01</span>
-            <h3 class="bento-title">Parking &amp; Valet</h3>
-            <p class="bento-text">400+ vehicle capacity with 24/7 security, 8 EV charging bays, valet service and direct lift access to all floors.</p>
+          <!-- 15. TICKLES & GIGGLES -->
+          <div class="bento store-card" data-floor="2nd Floor" data-category="Fashion" data-name="Tickles & Giggles" data-unit="S-11">
+            <div class="store-card-header">
+              <div class="store-logo-box">
+                <img src="./assets/Logo/Shops Logo/Tickles and Giggles .jpg" alt="Tickles & Giggles" loading="lazy">
+              </div>
+              <div class="store-meta">
+                <span class="store-unit-badge">2nd Floor · S-11</span>
+                <h3 class="store-name">Tickles &amp; Giggles</h3>
+                <span class="store-category-tag">Baby &amp; Kids Store</span>
+              </div>
+            </div>
+            <p class="bento-text">Children's fashion, newborn essentials, educational toys, strollers, nursery furniture, and maternity wear.</p>
+            <div class="store-hours-badge">Mon – Sun: 9:00 AM – 8:00 PM</div>
           </div>
 
+          <!-- 16. CHICKEN INN / PIZZA INN -->
+          <div class="bento store-card" data-floor="3rd Floor" data-category="Dining" data-name="Chicken Inn & Pizza Inn" data-unit="T-01">
+            <div class="store-card-header">
+              <div class="store-logo-box">
+                <img src="./assets/Logo/Shops Logo/chicken inn - Copy.jpeg" alt="Chicken Inn" loading="lazy">
+              </div>
+              <div class="store-meta">
+                <span class="store-unit-badge">3rd Floor · T-01</span>
+                <h3 class="store-name">Chicken Inn &amp; Pizza Inn</h3>
+                <span class="store-category-tag">Fast Food &amp; Pizza</span>
+              </div>
+            </div>
+            <p class="bento-text">Crispy fried chicken, freshly baked thin-crust pizza, creamy soft-serve desserts and family meal combos in the food court.</p>
+            <div class="store-hours-badge">Daily: 9:00 AM – 10:30 PM</div>
+          </div>
+
+          <!-- 17. WEST 11 RESTAURANT -->
+          <div class="bento store-card" data-floor="3rd Floor" data-category="Dining" data-name="West 11 Restaurant" data-unit="T-07">
+            <div class="store-card-header">
+              <div class="store-logo-box">
+                <img src="./assets/Logo/Shops Logo/West 11.jpg" alt="West 11" loading="lazy">
+              </div>
+              <div class="store-meta">
+                <span class="store-unit-badge">3rd Floor · T-07</span>
+                <h3 class="store-name">West 11 Restaurant</h3>
+                <span class="store-category-tag">Fine Dining &amp; Lounge</span>
+              </div>
+            </div>
+            <p class="bento-text">Rooftop panoramic dining with sweeping ocean breezes. Signature Swahili fusion seafood, continental steaks, mocktails and live jazz.</p>
+            <div class="store-hours-badge">Daily: 11:00 AM – 11:30 PM</div>
+          </div>
+
+          <!-- 18. CORN CRAZE & DESSERT -->
+          <div class="bento store-card" data-floor="3rd Floor" data-category="Dining" data-name="Corn Craze & Creamery" data-unit="T-09">
+            <div class="store-card-header">
+              <div class="store-logo-box">
+                <img src="./assets/Logo/Shops Logo/corn craze - Copy.jpg" alt="Corn Craze" loading="lazy">
+              </div>
+              <div class="store-meta">
+                <span class="store-unit-badge">3rd Floor · T-09</span>
+                <h3 class="store-name">Corn Craze &amp; Gelato</h3>
+                <span class="store-category-tag">Snacks &amp; Desserts</span>
+              </div>
+            </div>
+            <p class="bento-text">Sweet buttered corn cups with gourmet seasonings, Italian artisanal gelato, fruit parfaits, milkshakes, and bubble tea.</p>
+            <div class="store-hours-badge">Daily: 10:00 AM – 10:00 PM</div>
+          </div>
+
+          <!-- 19. SILVERBIRD CINEMAS -->
+          <div class="bento store-card" data-floor="3rd Floor" data-category="Entertainment" data-name="Silverbird Cinemas" data-unit="T-11">
+            <div class="store-card-header">
+              <div class="store-logo-box">
+                <img src="./assets/Logo/Mall Logo/MOMBASA MALL2.0.png" alt="Silverbird Cinemas" loading="lazy">
+              </div>
+              <div class="store-meta">
+                <span class="store-unit-badge">3rd Floor · T-11</span>
+                <h3 class="store-name">Silverbird Cinemas</h3>
+                <span class="store-category-tag">Cinema Multiplex</span>
+              </div>
+            </div>
+            <p class="bento-text">3-screen modern cinema equipped with immersive Dolby Digital 7.1 surround sound, 3D laser projection and VIP recliners.</p>
+            <div class="store-hours-badge">Daily: 11:00 AM – Midnight</div>
+          </div>
+
+          <!-- 20. VALET & PARKING -->
+          <div class="bento store-card" data-floor="Basement" data-category="Banking" data-name="Basement Parking & Valet" data-unit="B-01">
+            <div class="store-card-header">
+              <div class="store-logo-box">
+                <img src="./assets/Logo/Mall Logo/MOMBASA MALL 1.0.png" alt="Parking & Valet" loading="lazy">
+              </div>
+              <div class="store-meta">
+                <span class="store-unit-badge">Basement · B-01</span>
+                <h3 class="store-name">Basement Parking &amp; Valet</h3>
+                <span class="store-category-tag">Parking &amp; EV Bays</span>
+              </div>
+            </div>
+            <p class="bento-text">400+ vehicle capacity with automated ticketing, license plate recognition, 8 high-speed EV chargers, car wash and valet drop-off.</p>
+            <div class="store-hours-badge twentyfour">Open 24/7 · Monitored CCTV</div>
+          </div>
+
+        </div>
+
+        <!-- EMPTY STATE (Hidden by default) -->
+        <div id="emptyStoresState" class="empty-stores-state" style="display:none;">
+          <h3>No stores found</h3>
+          <p>We couldn't find any stores matching your current search or filters.</p>
+          <button class="btn-flagship" id="resetFiltersBtn" style="padding:10px 24px; font-size:11px;">Reset All Filters</button>
         </div>
 
       </div>
@@ -238,13 +519,114 @@
   <script src="./js/selectionMenu.js"></script>
   <script src="./js/main.js"></script>
   <script>
-    function filterFloor(floor, btn) {
-      document.querySelectorAll('.floor-pill').forEach(function(b){ b.classList.remove('active'); });
-      btn.classList.add('active');
-      document.querySelectorAll('.store-card').forEach(function(card){
-        card.style.display = (floor === 'all' || card.dataset.floor === floor) ? '' : 'none';
+    (function () {
+      const searchInput = document.getElementById('storeSearchInput');
+      const searchClear = document.getElementById('storeSearchClear');
+      const floorButtons = document.querySelectorAll('.floor-pill');
+      const categoryButtons = document.querySelectorAll('.category-pill');
+      const storeCards = document.querySelectorAll('.store-card');
+      const countEl = document.getElementById('storesCount');
+      const filterLabelEl = document.getElementById('activeFilterLabel');
+      const emptyState = document.getElementById('emptyStoresState');
+      const resetBtn = document.getElementById('resetFiltersBtn');
+
+      let currentFloor = 'all';
+      let currentCategory = 'all';
+      let searchQuery = '';
+
+      function filterStores() {
+        let visibleCount = 0;
+
+        storeCards.forEach(card => {
+          const cardFloor = card.getAttribute('data-floor') || '';
+          const cardCategory = card.getAttribute('data-category') || '';
+          const cardName = (card.getAttribute('data-name') || '').toLowerCase();
+          const cardUnit = (card.getAttribute('data-unit') || '').toLowerCase();
+          const cardText = card.textContent.toLowerCase();
+
+          const matchesFloor = (currentFloor === 'all') || (cardFloor === currentFloor);
+          const matchesCategory = (currentCategory === 'all') || (cardCategory.toLowerCase() === currentCategory.toLowerCase());
+          const matchesSearch = !searchQuery || cardName.includes(searchQuery) || cardUnit.includes(searchQuery) || cardText.includes(searchQuery);
+
+          if (matchesFloor && matchesCategory && matchesSearch) {
+            card.style.display = 'flex';
+            visibleCount++;
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        // Update count & label
+        countEl.textContent = `Showing ${visibleCount} of ${storeCards.length} stores`;
+        const floorText = currentFloor === 'all' ? 'All Floors' : currentFloor;
+        const catText = currentCategory === 'all' ? 'All Categories' : currentCategory;
+        filterLabelEl.textContent = `${floorText} · ${catText}${searchQuery ? ' · "' + searchQuery + '"' : ''}`;
+
+        // Toggle empty state
+        if (visibleCount === 0) {
+          emptyState.style.display = 'block';
+        } else {
+          emptyState.style.display = 'none';
+        }
+
+        // Toggle search clear button
+        if (searchQuery.length > 0) {
+          searchClear.classList.add('is-visible');
+        } else {
+          searchClear.classList.remove('is-visible');
+        }
+      }
+
+      // Search input listener
+      searchInput.addEventListener('input', function (e) {
+        searchQuery = e.target.value.trim().toLowerCase();
+        filterStores();
       });
-    }
+
+      // Search clear button
+      searchClear.addEventListener('click', function () {
+        searchInput.value = '';
+        searchQuery = '';
+        searchInput.focus();
+        filterStores();
+      });
+
+      // Floor filter pills
+      floorButtons.forEach(btn => {
+        btn.addEventListener('click', function () {
+          floorButtons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentFloor = btn.getAttribute('data-floor');
+          filterStores();
+        });
+      });
+
+      // Category filter pills
+      categoryButtons.forEach(btn => {
+        btn.addEventListener('click', function () {
+          categoryButtons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentCategory = btn.getAttribute('data-category');
+          filterStores();
+        });
+      });
+
+      // Reset button
+      resetBtn.addEventListener('click', function () {
+        currentFloor = 'all';
+        currentCategory = 'all';
+        searchQuery = '';
+        searchInput.value = '';
+
+        floorButtons.forEach(b => b.classList.toggle('active', b.getAttribute('data-floor') === 'all'));
+        categoryButtons.forEach(b => b.classList.toggle('active', b.getAttribute('data-category') === 'all'));
+
+        filterStores();
+      });
+
+      // Initial filter run
+      filterStores();
+    })();
   </script>
 </body>
 </html>
