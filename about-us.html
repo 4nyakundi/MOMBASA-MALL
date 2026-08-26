@@ -407,11 +407,15 @@
               <textarea id="contact-message" rows="4" required placeholder="Please describe your store concept, required floor space, or general inquiry..." style="width:100%; padding:12px 16px; border-radius:10px; border:1px solid rgba(10,29,55,0.12); background:rgba(255,255,255,0.8); font-size:14px; box-sizing:border-box;"></textarea>
             </div>
             <div id="contact-form-success" style="display:none; margin-bottom:16px; padding:14px 18px; border-radius:10px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); color:#065f46; font-size:14px;">
-              <strong>✅ Thank you!</strong> Your message has been delivered to mall management. We will respond promptly.
+              <strong>✅ Thank you!</strong> Your message has been delivered to mall management. We will respond within 24 hours.
+            </div>
+            <div id="contact-form-error" style="display:none; margin-bottom:16px; padding:14px 18px; border-radius:10px; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); color:#991b1b; font-size:14px;">
+              ⚠️ Sorry, something went wrong. Please try again or call us directly.
             </div>
             <button type="submit" class="cta-btn" style="border:none; cursor:pointer; font-size:14px; font-weight:700;">
               Send Inquiry <span class="cta-arrow">→</span>
             </button>
+
           </form>
         </div>
 
@@ -461,7 +465,7 @@
   <script src="./js/selectionMenu.js"></script>
   <script src="./js/main.js"></script>
   <script src="./js/site-data-init.js"></script>
-  <script src="./js/data-renderer.js"></script>
+  <script type="module" src="./js/data-renderer.js"></script>
 
   <script type="module">
     import { db } from './js/firebase-config.js';
@@ -474,26 +478,36 @@
       e.preventDefault();
       const submitBtn = contactForm.querySelector('button[type="submit"]');
       submitBtn.disabled = true;
-      submitBtn.innerHTML = 'Sending... <span class="cta-arrow">⏳</span>';
+      submitBtn.innerHTML = 'Sending… <span class="cta-arrow">⏳</span>';
+
+      const errorMsg = document.getElementById('contact-form-error');
 
       const leadData = {
-        name: document.getElementById('contact-name').value.trim(),
-        email: document.getElementById('contact-email-input').value.trim(),
-        phone: document.getElementById('contact-phone-input').value.trim(),
-        subject: document.getElementById('contact-subject').value,
-        message: document.getElementById('contact-message').value.trim(),
-        status: 'new',
+        name:        document.getElementById('contact-name').value.trim(),
+        email:       document.getElementById('contact-email-input').value.trim(),
+        phone:       document.getElementById('contact-phone-input').value.trim(),
+        subject:     document.getElementById('contact-subject').value,
+        message:     document.getElementById('contact-message').value.trim(),
+        status:      'new',
         submittedAt: new Date().toISOString()
       };
 
       try {
         await addDoc(collection(db, 'contactLeads'), leadData);
-        if (successMsg) successMsg.style.display = 'block';
+        if (successMsg) {
+          successMsg.style.display = 'block';
+          successMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        if (errorMsg) errorMsg.style.display = 'none';
         contactForm.reset();
+        setTimeout(() => { if (successMsg) successMsg.style.display = 'none'; }, 7000);
       } catch (err) {
         console.warn('Contact lead save error:', err);
-        if (successMsg) successMsg.style.display = 'block';
-        contactForm.reset();
+        if (errorMsg) {
+          errorMsg.textContent = '⚠️ Sorry, something went wrong. Please try again or call us directly.';
+          errorMsg.style.display = 'block';
+          errorMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
       } finally {
         submitBtn.disabled = false;
         submitBtn.innerHTML = 'Send Inquiry <span class="cta-arrow">→</span>';

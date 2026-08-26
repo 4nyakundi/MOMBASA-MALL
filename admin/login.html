@@ -186,6 +186,11 @@
         />
       </div>
 
+      <div class="form-group" style="flex-direction:row; align-items:center; gap:10px; margin-bottom:16px;">
+        <input type="checkbox" id="keepSignedIn" checked style="accent-color:var(--coral, #FF6F59); width:16px; height:16px; cursor:pointer;" />
+        <label for="keepSignedIn" style="margin:0; text-transform:none; letter-spacing:0; font-size:13px; cursor:pointer; color:rgba(255,255,255,0.85);">Keep me signed in on this device</label>
+      </div>
+
       <button type="submit" id="loginBtn" class="login-btn">
         <span id="loginBtnText">Sign In to Dashboard</span>
       </button>
@@ -207,12 +212,16 @@
     import { 
       signInWithEmailAndPassword, 
       createUserWithEmailAndPassword, 
-      onAuthStateChanged 
+      onAuthStateChanged,
+      setPersistence,
+      browserLocalPersistence,
+      browserSessionPersistence
     } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
 
     const form = document.getElementById('loginForm');
     const emailInput = document.getElementById('adminEmail');
     const passwordInput = document.getElementById('adminPassword');
+    const keepSignedInInput = document.getElementById('keepSignedIn');
     const errorBox = document.getElementById('loginError');
     const submitBtn = document.getElementById('loginBtn');
     const submitBtnText = document.getElementById('loginBtnText');
@@ -232,8 +241,10 @@
 
       const email = emailInput.value.trim();
       const password = passwordInput.value;
+      const keepSignedIn = keepSignedInInput ? keepSignedInInput.checked : true;
 
       try {
+        await setPersistence(auth, keepSignedIn ? browserLocalPersistence : browserSessionPersistence);
         await signInWithEmailAndPassword(auth, email, password);
         window.location.replace('./index.html');
       } catch (err) {

@@ -263,11 +263,15 @@
               <textarea id="act-message" rows="4" required placeholder="Detail your activation setup, expected sound/power needs, promotional giveaways, and branding elements..." style="width:100%; padding:12px 16px; border-radius:10px; border:1px solid rgba(10,29,55,0.12); background:rgba(255,255,255,0.8); font-size:14px; box-sizing:border-box;"></textarea>
             </div>
             <div id="act-form-success" style="display:none; margin-bottom:16px; padding:14px 18px; border-radius:10px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); color:#065f46; font-size:14px;">
-              <strong>✅ Application received!</strong> Our events and activations coordinator will review your proposal and respond with rate packages and calendar availability.
+              <strong>✅ Application received!</strong> Our events and activations coordinator will review your proposal and respond within 48 hours with rate packages and calendar availability.
+            </div>
+            <div id="act-form-error" style="display:none; margin-bottom:16px; padding:14px 18px; border-radius:10px; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); color:#991b1b; font-size:14px;">
+              ⚠️ Something went wrong. Please try again or contact us at <strong>+254 790 964 002</strong>.
             </div>
             <button type="submit" class="cta-btn" style="border:none; cursor:pointer; font-size:14px; font-weight:700;">
               Submit Activation Application <span class="cta-arrow">→</span>
             </button>
+
           </form>
         </div>
 
@@ -329,28 +333,37 @@
       e.preventDefault();
       const submitBtn = actForm.querySelector('button[type="submit"]');
       submitBtn.disabled = true;
-      submitBtn.innerHTML = 'Submitting Application... <span class="cta-arrow">⏳</span>';
+      submitBtn.innerHTML = 'Submitting Application… <span class="cta-arrow">⏳</span>';
+
+      const errorBox = document.getElementById('act-form-error');
 
       const leadData = {
         applicantName: document.getElementById('act-applicant').value.trim(),
-        businessName: document.getElementById('act-brand').value.trim(),
-        email: document.getElementById('act-email').value.trim(),
-        phone: document.getElementById('act-phone').value.trim(),
+        businessName:  document.getElementById('act-brand').value.trim(),
+        email:         document.getElementById('act-email').value.trim(),
+        phone:         document.getElementById('act-phone').value.trim(),
         activationType: document.getElementById('act-type').value,
         proposedDates: document.getElementById('act-dates').value.trim(),
-        message: document.getElementById('act-message').value.trim(),
-        status: 'new',
-        submittedAt: new Date().toISOString()
+        message:       document.getElementById('act-message').value.trim(),
+        status:        'new',
+        submittedAt:   new Date().toISOString()
       };
 
       try {
         await addDoc(collection(db, 'activationLeads'), leadData);
-        if (successBox) successBox.style.display = 'block';
+        if (successBox) {
+          successBox.style.display = 'block';
+          successBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        if (errorBox) errorBox.style.display = 'none';
         actForm.reset();
+        setTimeout(() => { if (successBox) successBox.style.display = 'none'; }, 8000);
       } catch (err) {
         console.warn('Activation lead save error:', err);
-        if (successBox) successBox.style.display = 'block';
-        actForm.reset();
+        if (errorBox) {
+          errorBox.style.display = 'block';
+          errorBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
       } finally {
         submitBtn.disabled = false;
         submitBtn.innerHTML = 'Submit Activation Application <span class="cta-arrow">→</span>';
@@ -359,3 +372,4 @@
   </script>
 </body>
 </html>
+

@@ -96,28 +96,37 @@ document.addEventListener('DOMContentLoaded', async () => {
           card.style.padding = '16px 20px';
           card.style.borderRadius = '16px';
           card.style.cursor = 'pointer';
-          
+          card.setAttribute('role', 'button');
+          card.setAttribute('tabindex', '0');
+
+          const logoSrc = s.logoUrl || s.logo || './assets/Logo/Mall Logo/MOMBASA MALL 1.0.png';
+          const desc = (s.description || '').slice(0, 65) + ((s.description || '').length > 65 ? '…' : '');
           card.innerHTML = `
-            <img src="${s.logoUrl || s.logo || './assets/Logo/Mall Logo/MOMBASA MALL 1.0.png'}" alt="${s.name}" class="store-card-logo" style="width:44px; height:44px; border-radius:8px; object-fit:contain; background:white; border:1px solid rgba(15,15,15,0.08); padding:3px;">
-            <div class="store-card-info" style="display:flex; flex-direction:column; gap:2px; text-align:left; flex:1;">
-              <span style="font-size:10px; color:var(--coral, #FF6F59); font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">${s.room || 'Unit'}</span>
-              <strong style="font-size:14px; font-weight:700; color:var(--navy, #0A1D37);">${s.name}</strong>
-              <span style="font-size:11px; color:var(--ink-soft, #4B5966);">${(s.description || '').slice(0, 60)}${(s.description || '').length > 60 ? '...' : ''}</span>
+            <img src="${logoSrc}" alt="${s.name}" class="store-card-logo"
+              style="width:44px;height:44px;border-radius:8px;object-fit:contain;background:#fff;border:1px solid rgba(15,15,15,0.08);padding:3px;flex-shrink:0;"
+              onerror="this.src='./assets/Logo/Mall Logo/MOMBASA MALL 1.0.png'">
+            <div class="store-card-info" style="display:flex;flex-direction:column;gap:2px;text-align:left;flex:1;min-width:0;">
+              <span style="font-size:10px;color:var(--coral,#FF6F59);font-weight:700;text-transform:uppercase;letter-spacing:0.04em;">${s.room || 'Unit'} · ${s.floor || ''}</span>
+              <strong style="font-size:14px;font-weight:700;color:var(--navy,#0A1D37);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${s.name}</strong>
+              <span style="font-size:11px;color:var(--ink-soft,#4B5966);">${desc}</span>
             </div>
           `;
-          
-          card.addEventListener('click', () => {
+
+          const handleClick = () => {
             if (typeof openShopModal === 'function') {
-              openShopModal(s.name);
+              openShopModal(s.name, s);
             }
-          });
-          
+          };
+          card.addEventListener('click', handleClick);
+          card.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') handleClick(); });
+
           list.appendChild(card);
         });
       });
-      
+
       if (list.children.length === 0) {
         list.innerHTML = `
+
           <div style="grid-column: 1 / -1; text-align:center; padding:48px; color:var(--ink-soft, #4B5966);">
             <h3 style="font-size:18px; font-weight:700; color:var(--navy, #0A1D37);">No matching stores found</h3>
             <p style="font-size:14px; margin-top:8px;">Try searching for a different keyword or checking another category.</p>
@@ -203,17 +212,40 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   const upEl = document.getElementById('events-upcoming');
-  if (upEl && eventsData.upcoming) {
-    upEl.innerHTML = eventsData.upcoming
-      .map(e => `<article class="event"><h3>${e.title}</h3><time>${e.date}</time><p>${e.summary || ''}</p></article>`)
-      .join('');
+  if (upEl && eventsData.upcoming && eventsData.upcoming.length > 0) {
+    upEl.innerHTML = eventsData.upcoming.map(e => `
+      <article class="event-card glass-glow-card" style="padding:24px 28px;border-radius:16px;display:flex;flex-direction:column;gap:10px;">
+        <time class="event-date" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--coral,#FF6F59);">${formatEventDate(e.date)}</time>
+        <h3 class="event-title" style="margin:0;font-size:18px;font-family:'Clash Display',sans-serif;font-weight:700;color:var(--navy,#0A1D37);">${e.title}</h3>
+        <p class="event-summary" style="margin:0;font-size:14px;line-height:1.6;color:var(--ink-soft,#4B5966);">${e.summary || ''}</p>
+        <span class="event-badge" style="display:inline-block;background:rgba(255,111,89,0.1);color:var(--coral,#FF6F59);border:1px solid rgba(255,111,89,0.25);padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;align-self:flex-start;">Upcoming</span>
+      </article>
+    `).join('');
+  } else if (upEl) {
+    upEl.innerHTML = `<p style="color:var(--ink-soft,#4B5966);font-size:14px;padding:20px 0;">No upcoming events scheduled. Check back soon!</p>`;
   }
+
   const pastEl = document.getElementById('events-past');
-  if (pastEl && eventsData.past) {
-    pastEl.innerHTML = eventsData.past
-      .map(e => `<div class="past"><strong>${e.title}</strong> <span>${e.date}</span></div>`)
-      .join('');
+  if (pastEl && eventsData.past && eventsData.past.length > 0) {
+    pastEl.innerHTML = eventsData.past.map(e => `
+      <div class="past-event-row" style="display:flex;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid rgba(10,29,55,0.08);">
+        <span style="font-size:11px;font-weight:700;color:var(--ink-soft,#4B5966);white-space:nowrap;min-width:80px;">${formatEventDate(e.date)}</span>
+        <strong style="font-size:14px;color:var(--navy,#0A1D37);">${e.title}</strong>
+      </div>
+    `).join('');
+  } else if (pastEl) {
+    pastEl.innerHTML = `<p style="color:var(--ink-soft,#4B5966);font-size:14px;padding:20px 0;">No past events yet.</p>`;
   }
+
+  function formatEventDate(dateStr) {
+    if (!dateStr) return 'TBD';
+    try {
+      const d = new Date(dateStr);
+      if (isNaN(d.getTime())) return dateStr;
+      return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    } catch { return dateStr; }
+  }
+
 
   // ----------------------------------------------------
   // 3. POPULATE BLOG / JOURNAL

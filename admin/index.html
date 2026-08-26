@@ -4,65 +4,78 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Dashboard — Mombasa Mall</title>
+  <meta name="robots" content="noindex, nofollow" />
   <link rel="stylesheet" href="../css/style.css" />
   <link rel="stylesheet" href="./admin.css" />
 </head>
 <body class="admin-body">
 
-  <!-- SIDEBAR NAVIGATION -->
-  <aside class="admin-sidebar">
+  <!-- ══════════════════════════════════════════
+       SIDEBAR NAVIGATION
+       ══════════════════════════════════════════ -->
+  <aside class="admin-sidebar" id="adminSidebar">
     <div class="admin-sidebar-header">
-      <a href="../index.html">
+      <a href="../index.html" title="View public site">
         <img src="../assets/Logo/Mall Logo/MOMBASA MALL2.0.png" alt="Mombasa Mall">
       </a>
-      <span class="admin-badge">Admin</span>
+      <span class="sidebar-label">Mall Admin</span>
     </div>
 
-    <nav class="admin-nav">
+    <nav class="admin-nav" aria-label="Admin navigation">
       <div class="nav-section-title">Overview</div>
-      <button class="admin-nav-item is-active" data-tab="overview">
-        <span>📊</span> <span>Dashboard</span>
+      <button class="admin-nav-item is-active" data-tab="overview" title="Dashboard">
+        <span class="nav-icon">📊</span>
+        <span class="nav-label">Dashboard</span>
       </button>
 
       <div class="nav-section-title">Directory &amp; Media</div>
-      <button class="admin-nav-item" data-tab="shops">
-        <span>🏪</span> <span>Stores &amp; Units</span>
+      <button class="admin-nav-item" data-tab="shops" title="Stores & Units">
+        <span class="nav-icon">🏪</span>
+        <span class="nav-label">Stores &amp; Units</span>
         <span class="nav-count" id="shopsCountBadge">0</span>
       </button>
-      <button class="admin-nav-item" data-tab="gallery">
-        <span>🖼️</span> <span>Photo Gallery</span>
+      <button class="admin-nav-item" data-tab="gallery" title="Photo Gallery">
+        <span class="nav-icon">🖼️</span>
+        <span class="nav-label">Photo Gallery</span>
         <span class="nav-count" id="galleryCountBadge">0</span>
       </button>
 
       <div class="nav-section-title">Leads &amp; Inquiries</div>
-      <button class="admin-nav-item" data-tab="ledLeads">
-        <span>💡</span> <span>LED Billboard Leads</span>
+      <button class="admin-nav-item" data-tab="ledLeads" title="LED Billboard Leads">
+        <span class="nav-icon">💡</span>
+        <span class="nav-label">LED Billboard Leads</span>
         <span class="nav-count" id="ledLeadsCountBadge">0</span>
       </button>
-      <button class="admin-nav-item" data-tab="activationLeads">
-        <span>🎪</span> <span>Activation Leads</span>
+      <button class="admin-nav-item" data-tab="activationLeads" title="Activation Leads">
+        <span class="nav-icon">🎪</span>
+        <span class="nav-label">Activation Leads</span>
         <span class="nav-count" id="activationLeadsCountBadge">0</span>
       </button>
-      <button class="admin-nav-item" data-tab="contactLeads">
-        <span>✉️</span> <span>Contact &amp; Leasing</span>
+      <button class="admin-nav-item" data-tab="contactLeads" title="Contact & Leasing">
+        <span class="nav-icon">✉️</span>
+        <span class="nav-label">Contact &amp; Leasing</span>
         <span class="nav-count" id="contactLeadsCountBadge">0</span>
       </button>
 
       <div class="nav-section-title">Content &amp; Editorial</div>
-      <button class="admin-nav-item" data-tab="events">
-        <span>📅</span> <span>Events &amp; News</span>
+      <button class="admin-nav-item" data-tab="events" title="Events & News">
+        <span class="nav-icon">📅</span>
+        <span class="nav-label">Events &amp; News</span>
         <span class="nav-count" id="eventsCountBadge">0</span>
       </button>
-      <button class="admin-nav-item" data-tab="blogPosts">
-        <span>📝</span> <span>Journal &amp; Blog</span>
+      <button class="admin-nav-item" data-tab="blogPosts" title="Journal & Blog">
+        <span class="nav-icon">📝</span>
+        <span class="nav-label">Journal &amp; Blog</span>
         <span class="nav-count" id="blogCountBadge">0</span>
       </button>
-      <button class="admin-nav-item" data-tab="reviews">
-        <span>⭐</span> <span>Reviews Moderation</span>
+      <button class="admin-nav-item" data-tab="reviews" title="Reviews Moderation">
+        <span class="nav-icon">⭐</span>
+        <span class="nav-label">Reviews Moderation</span>
         <span class="nav-count" id="reviewsCountBadge">0</span>
       </button>
-      <button class="admin-nav-item" data-tab="siteContent">
-        <span>⚙️</span> <span>Homepage Content</span>
+      <button class="admin-nav-item" data-tab="siteContent" title="Homepage Content">
+        <span class="nav-icon">⚙️</span>
+        <span class="nav-label">Homepage Content</span>
       </button>
     </nav>
 
@@ -71,82 +84,126 @@
         <span class="admin-user-email" id="adminEmailDisplay">mombasamall01@gmail.com</span>
         <span class="admin-user-role">Administrator</span>
       </div>
-      <div style="display:flex; gap:8px;">
-        <button id="openChangePasswordBtn" class="btn-secondary btn-sm" style="flex:1;">Change Pwd</button>
+      <div class="sidebar-action-row">
+        <button id="openChangePasswordBtn" class="btn-cancel btn-sm" style="flex:1;">🔑 Password</button>
         <button id="logoutBtn" class="btn-danger btn-sm" style="flex:1;">Sign Out</button>
       </div>
     </div>
   </aside>
 
-  <!-- MAIN VIEWPORT -->
+  <!-- ══════════════════════════════════════════
+       MAIN VIEWPORT
+       ══════════════════════════════════════════ -->
   <main class="admin-main">
-    
+
     <!-- TOPBAR -->
     <header class="admin-topbar">
-      <div class="admin-topbar-title" id="topbarTitle">
-        Dashboard Overview
+      <div class="admin-topbar-left">
+        <button class="sidebar-toggle-btn" id="sidebarToggle" aria-label="Toggle sidebar">
+          <svg width="18" height="14" viewBox="0 0 18 14" fill="none">
+            <rect width="18" height="2.5" rx="1.25" fill="currentColor"/>
+            <rect y="5.75" width="12" height="2.5" rx="1.25" fill="currentColor"/>
+            <rect y="11.5" width="18" height="2.5" rx="1.25" fill="currentColor"/>
+          </svg>
+        </button>
+        <div class="admin-topbar-title" id="topbarTitle">Dashboard</div>
       </div>
       <div class="admin-topbar-actions">
-        <a href="../index.html" target="_blank" class="btn-secondary btn-sm">
-          <span>🌐</span> View Public Site
+        <a href="../index.html" target="_blank" rel="noopener" class="btn-secondary btn-sm">
+          🌐 View Site
         </a>
       </div>
     </header>
 
     <div class="admin-content">
 
-      <!-- ============================================
+      <!-- ══════════════════════════════════════
            TAB 1: OVERVIEW DASHBOARD
-           ============================================ -->
+           ══════════════════════════════════════ -->
       <section class="tab-panel is-active" id="tab-overview">
+
+        <!-- Metrics -->
         <div class="metrics-grid">
-          <div class="metric-card">
+          <div class="metric-card accent-coral">
+            <div class="metric-icon">🏪</div>
             <span class="metric-title">Total Active Stores</span>
-            <span class="metric-value" id="metricTotalShops">0</span>
+            <span class="metric-value" id="metricTotalShops">—</span>
             <span class="metric-foot">Across 5 mall levels</span>
           </div>
-          <div class="metric-card">
+          <div class="metric-card accent-blue">
+            <div class="metric-icon">📥</div>
             <span class="metric-title">Total Leads Received</span>
-            <span class="metric-value" id="metricTotalLeads">0</span>
+            <span class="metric-value" id="metricTotalLeads">—</span>
             <span class="metric-foot">LED, Activations &amp; Leasing</span>
           </div>
-          <div class="metric-card">
+          <div class="metric-card accent-green">
+            <div class="metric-icon">📅</div>
             <span class="metric-title">Upcoming Events</span>
-            <span class="metric-value" id="metricUpcomingEvents">0</span>
+            <span class="metric-value" id="metricUpcomingEvents">—</span>
             <span class="metric-foot">Scheduled on public calendar</span>
           </div>
-          <div class="metric-card">
+          <div class="metric-card accent-gold">
+            <div class="metric-icon">⭐</div>
             <span class="metric-title">Pending Reviews</span>
-            <span class="metric-value" id="metricPendingReviews">0</span>
-            <span class="metric-foot">Awaiting moderation</span>
+            <span class="metric-value" id="metricPendingReviews">—</span>
+            <span class="metric-foot">Awaiting your moderation</span>
           </div>
         </div>
 
-        <!-- Quick Seeder Card -->
-        <div class="table-card" style="padding: 24px; margin-bottom: 32px; background: radial-gradient(circle at top right, rgba(255,111,89,0.1), rgba(14,41,75,0.7));">
-          <h3 style="font-family:'Clash Display', sans-serif; font-size:18px; margin:0 0 8px; color:#fff;">
-            🔄 Firestore Database Synchronization &amp; Seeder
-          </h3>
-          <p style="font-size:14px; color:var(--admin-text-muted); margin:0 0 20px; line-height:1.6; max-width:700px;">
-            Seed or re-sync all 51 stores, events, blog posts, reviews, and site content from JSON files directly into live Firestore collections. Run this once on initial deployment or whenever static JSON is updated.
+        <!-- Quick Actions -->
+        <h3 class="section-heading" style="margin-bottom:14px;">Quick Actions</h3>
+        <div class="quick-actions-grid" style="margin-bottom:28px;">
+          <button class="quick-action-btn" data-goto-tab="shops">
+            <span class="qa-icon">🏪</span> Manage Stores
+          </button>
+          <button class="quick-action-btn" data-goto-tab="gallery">
+            <span class="qa-icon">🖼️</span> Upload Photos
+          </button>
+          <button class="quick-action-btn" data-goto-tab="ledLeads">
+            <span class="qa-icon">💡</span> LED Leads Inbox
+          </button>
+          <button class="quick-action-btn" data-goto-tab="activationLeads">
+            <span class="qa-icon">🎪</span> Activation Applications
+          </button>
+          <button class="quick-action-btn" data-goto-tab="contactLeads">
+            <span class="qa-icon">✉️</span> Contact Enquiries
+          </button>
+          <button class="quick-action-btn" data-goto-tab="events">
+            <span class="qa-icon">📅</span> Manage Events
+          </button>
+          <button class="quick-action-btn" data-goto-tab="blogPosts">
+            <span class="qa-icon">📝</span> Write Article
+          </button>
+          <button class="quick-action-btn" data-goto-tab="reviews">
+            <span class="qa-icon">⭐</span> Moderate Reviews
+          </button>
+          <button class="quick-action-btn" data-goto-tab="siteContent">
+            <span class="qa-icon">⚙️</span> Edit Homepage
+          </button>
+        </div>
+
+        <!-- Seeder Card -->
+        <div class="seeder-card">
+          <h3>🔄 Firestore Database Synchronization &amp; Seeder</h3>
+          <p>
+            Seed or re-sync all 51 stores, events, blog posts, reviews, and site content from the authoritative JSON files
+            directly into live Firestore collections. Run this once on initial deployment or whenever static JSON is updated.
           </p>
           <button id="seedDatabaseBtn" class="btn-primary">
             <span>⚡</span> Seed All Collections to Firestore
           </button>
-
-          <div id="seedProgressLog" style="display:none; margin-top:20px; padding:16px; background:#050F1D; border:1px solid var(--admin-border); border-radius:10px; font-family:'JetBrains Mono', monospace; font-size:12px; color:#94A3B8; max-height:180px; overflow-y:auto; line-height:1.5;">
-          </div>
+          <div id="seedProgressLog" class="seed-log"></div>
         </div>
       </section>
 
-      <!-- ============================================
+      <!-- ══════════════════════════════════════
            TAB 2: SHOPS MANAGEMENT
-           ============================================ -->
+           ══════════════════════════════════════ -->
       <section class="tab-panel" id="tab-shops">
         <div class="section-toolbar">
-          <div style="display:flex; gap:12px; flex-wrap:wrap; flex:1;">
+          <div class="toolbar-left">
             <div class="search-input-wrap">
-              <input type="text" id="shopSearchInput" class="search-input" placeholder="Search store name, room, description...">
+              <input type="text" id="shopSearchInput" class="search-input" placeholder="Search store, unit, description…">
             </div>
             <select id="shopFloorFilter" class="filter-select">
               <option value="all">All Floors</option>
@@ -161,6 +218,9 @@
               <option value="retail">Retail</option>
               <option value="food">Dining / Food</option>
               <option value="services">Services / Banking</option>
+              <option value="tech">Tech &amp; Gaming</option>
+              <option value="beauty">Beauty &amp; Wellness</option>
+              <option value="fashion">Fashion &amp; Shoes</option>
             </select>
           </div>
           <button id="openAddShopBtn" class="btn-primary">
@@ -172,45 +232,52 @@
           <table class="admin-table">
             <thead>
               <tr>
-                <th style="width:60px;">Logo</th>
+                <th style="width:56px;">Logo</th>
                 <th>Store &amp; Contact</th>
                 <th>Unit</th>
                 <th>Floor</th>
                 <th>Category</th>
                 <th>Status</th>
-                <th style="width:140px;">Actions</th>
+                <th style="width:150px;">Actions</th>
               </tr>
             </thead>
             <tbody id="shopsTableBody">
-              <!-- Populated via JS -->
+              <tr class="skeleton-row">
+                <td><span class="skeleton skeleton-cell xs" style="width:38px;height:38px;border-radius:8px;"></span></td>
+                <td><span class="skeleton skeleton-cell"></span></td>
+                <td><span class="skeleton skeleton-cell xs"></span></td>
+                <td><span class="skeleton skeleton-cell sm"></span></td>
+                <td><span class="skeleton skeleton-cell sm"></span></td>
+                <td><span class="skeleton skeleton-cell xs"></span></td>
+                <td><span class="skeleton skeleton-cell sm"></span></td>
+              </tr>
             </tbody>
           </table>
         </div>
       </section>
 
-      <!-- ============================================
+      <!-- ══════════════════════════════════════
            TAB 3: GALLERY MANAGEMENT
-           ============================================ -->
+           ══════════════════════════════════════ -->
       <section class="tab-panel" id="tab-gallery">
         <div class="section-toolbar">
-          <h3 style="font-family:'Clash Display', sans-serif; font-size:18px; margin:0; color:#fff;">Photo Albums &amp; Architecture</h3>
+          <h3 class="section-heading">Photo Albums &amp; Architecture</h3>
           <button id="openAddGalleryBtn" class="btn-primary">
             <span>+</span> Upload Photo
           </button>
         </div>
-
-        <div class="metrics-grid" id="galleryGridContainer">
+        <div class="gallery-grid" id="galleryGridContainer">
           <!-- Populated via JS -->
         </div>
       </section>
 
-      <!-- ============================================
+      <!-- ══════════════════════════════════════
            TAB 4: LED BILLBOARD LEADS
-           ============================================ -->
+           ══════════════════════════════════════ -->
       <section class="tab-panel" id="tab-ledLeads">
         <div class="section-toolbar">
-          <div style="display:flex; gap:12px; align-items:center;">
-            <span style="font-size:13px; color:var(--admin-text-muted);">Status Filter:</span>
+          <div class="toolbar-left">
+            <span style="font-size:13px;color:var(--admin-text-muted);white-space:nowrap;">Filter by status:</span>
             <select id="ledStatusFilter" class="filter-select">
               <option value="all">All Inquiries</option>
               <option value="new">New (Uncontacted)</option>
@@ -220,43 +287,41 @@
             </select>
           </div>
         </div>
-
         <div class="table-card">
           <table class="admin-table">
             <thead>
               <tr>
                 <th>Brand / Business</th>
                 <th>Contact</th>
-                <th>Package &amp; Est.</th>
+                <th>Package &amp; Est. Cost</th>
                 <th>Notes / Schedule</th>
                 <th>Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody id="ledLeadsTableBody">
-              <!-- Populated via JS -->
+              <tr class="skeleton-row"><td colspan="6"><span class="skeleton skeleton-cell"></span></td></tr>
             </tbody>
           </table>
         </div>
       </section>
 
-      <!-- ============================================
+      <!-- ══════════════════════════════════════
            TAB 5: ACTIVATION LEADS
-           ============================================ -->
+           ══════════════════════════════════════ -->
       <section class="tab-panel" id="tab-activationLeads">
         <div class="section-toolbar">
-          <div style="display:flex; gap:12px; align-items:center;">
-            <span style="font-size:13px; color:var(--admin-text-muted);">Status Filter:</span>
+          <div class="toolbar-left">
+            <span style="font-size:13px;color:var(--admin-text-muted);white-space:nowrap;">Filter by status:</span>
             <select id="activationStatusFilter" class="filter-select">
               <option value="all">All Applications</option>
               <option value="new">New</option>
               <option value="contacted">Contacted</option>
-              <option value="won">Approved</option>
+              <option value="won">Approved / Booked</option>
               <option value="lost">Declined</option>
             </select>
           </div>
         </div>
-
         <div class="table-card">
           <table class="admin-table">
             <thead>
@@ -270,19 +335,19 @@
               </tr>
             </thead>
             <tbody id="activationLeadsTableBody">
-              <!-- Populated via JS -->
+              <tr class="skeleton-row"><td colspan="6"><span class="skeleton skeleton-cell"></span></td></tr>
             </tbody>
           </table>
         </div>
       </section>
 
-      <!-- ============================================
+      <!-- ══════════════════════════════════════
            TAB 6: CONTACT & LEASING LEADS
-           ============================================ -->
+           ══════════════════════════════════════ -->
       <section class="tab-panel" id="tab-contactLeads">
         <div class="section-toolbar">
-          <div style="display:flex; gap:12px; align-items:center;">
-            <span style="font-size:13px; color:var(--admin-text-muted);">Status Filter:</span>
+          <div class="toolbar-left">
+            <span style="font-size:13px;color:var(--admin-text-muted);white-space:nowrap;">Filter by status:</span>
             <select id="contactStatusFilter" class="filter-select">
               <option value="all">All Enquiries</option>
               <option value="new">New</option>
@@ -291,7 +356,6 @@
             </select>
           </div>
         </div>
-
         <div class="table-card">
           <table class="admin-table">
             <thead>
@@ -305,23 +369,22 @@
               </tr>
             </thead>
             <tbody id="contactLeadsTableBody">
-              <!-- Populated via JS -->
+              <tr class="skeleton-row"><td colspan="6"><span class="skeleton skeleton-cell"></span></td></tr>
             </tbody>
           </table>
         </div>
       </section>
 
-      <!-- ============================================
+      <!-- ══════════════════════════════════════
            TAB 7: EVENTS & NEWS
-           ============================================ -->
+           ══════════════════════════════════════ -->
       <section class="tab-panel" id="tab-events">
         <div class="section-toolbar">
-          <h3 style="font-family:'Clash Display', sans-serif; font-size:18px; margin:0; color:#fff;">Upcoming &amp; Past Events</h3>
+          <h3 class="section-heading">Upcoming &amp; Past Events</h3>
           <button id="openAddEventBtn" class="btn-primary">
             <span>+</span> Add Event
           </button>
         </div>
-
         <div class="table-card">
           <table class="admin-table">
             <thead>
@@ -330,27 +393,26 @@
                 <th>Date</th>
                 <th>Type</th>
                 <th>Summary</th>
-                <th>Actions</th>
+                <th style="width:160px;">Actions</th>
               </tr>
             </thead>
             <tbody id="eventsTableBody">
-              <!-- Populated via JS -->
+              <tr class="skeleton-row"><td colspan="5"><span class="skeleton skeleton-cell"></span></td></tr>
             </tbody>
           </table>
         </div>
       </section>
 
-      <!-- ============================================
+      <!-- ══════════════════════════════════════
            TAB 8: BLOG / JOURNAL
-           ============================================ -->
+           ══════════════════════════════════════ -->
       <section class="tab-panel" id="tab-blogPosts">
         <div class="section-toolbar">
-          <h3 style="font-family:'Clash Display', sans-serif; font-size:18px; margin:0; color:#fff;">Mall Journal &amp; Articles</h3>
+          <h3 class="section-heading">Mall Journal &amp; Articles</h3>
           <button id="openAddBlogBtn" class="btn-primary">
             <span>+</span> Write Article
           </button>
         </div>
-
         <div class="table-card">
           <table class="admin-table">
             <thead>
@@ -359,24 +421,23 @@
                 <th>Date</th>
                 <th>Slug</th>
                 <th>Excerpt</th>
-                <th>Actions</th>
+                <th style="width:160px;">Actions</th>
               </tr>
             </thead>
             <tbody id="blogTableBody">
-              <!-- Populated via JS -->
+              <tr class="skeleton-row"><td colspan="5"><span class="skeleton skeleton-cell"></span></td></tr>
             </tbody>
           </table>
         </div>
       </section>
 
-      <!-- ============================================
+      <!-- ══════════════════════════════════════
            TAB 9: REVIEWS MODERATION
-           ============================================ -->
+           ══════════════════════════════════════ -->
       <section class="tab-panel" id="tab-reviews">
         <div class="section-toolbar">
-          <h3 style="font-family:'Clash Display', sans-serif; font-size:18px; margin:0; color:#fff;">Customer Testimonials &amp; Feedback Queue</h3>
+          <h3 class="section-heading">Customer Testimonials &amp; Feedback Queue</h3>
         </div>
-
         <div class="table-card">
           <table class="admin-table">
             <thead>
@@ -386,61 +447,63 @@
                 <th>Type</th>
                 <th>Quote / Comment</th>
                 <th>Visibility</th>
-                <th>Moderation</th>
+                <th style="width:180px;">Moderation</th>
               </tr>
             </thead>
             <tbody id="reviewsTableBody">
-              <!-- Populated via JS -->
+              <tr class="skeleton-row"><td colspan="6"><span class="skeleton skeleton-cell"></span></td></tr>
             </tbody>
           </table>
         </div>
       </section>
 
-      <!-- ============================================
+      <!-- ══════════════════════════════════════
            TAB 10: HOMEPAGE SITE CONTENT
-           ============================================ -->
+           ══════════════════════════════════════ -->
       <section class="tab-panel" id="tab-siteContent">
-        <div class="table-card" style="padding:28px; max-width:800px;">
-          <h3 style="font-family:'Clash Display', sans-serif; font-size:20px; margin:0 0 18px; color:#fff;">
-            Homepage &amp; Branding Singleton Editor
-          </h3>
+        <div class="table-card" style="padding:28px;max-width:800px;">
+          <h3 class="section-heading" style="margin-bottom:20px;">Homepage &amp; Branding Singleton Editor</h3>
+          <p style="font-size:13px;color:var(--admin-text-muted);margin:0 0 22px;line-height:1.65;">
+            Changes here update the live public homepage instantly. Content is read from
+            <code style="color:var(--coral);font-size:11px;">siteContent/homepage</code> in Firestore.
+          </p>
           <form id="siteContentForm">
             <div class="form-grid">
               <div class="form-group">
                 <label for="siteNameInput">Site / Mall Name</label>
-                <input type="text" id="siteNameInput" class="form-control" required>
+                <input type="text" id="siteNameInput" class="form-control" placeholder="Mombasa Mall" required>
               </div>
               <div class="form-group">
                 <label for="siteTaglineInput">Tagline / Headline</label>
-                <input type="text" id="siteTaglineInput" class="form-control" required>
+                <input type="text" id="siteTaglineInput" class="form-control" placeholder="The Coastal Lifestyle Destination" required>
               </div>
               <div class="form-group col-2">
                 <label for="heroHeadingInput">Hero Main Heading</label>
-                <input type="text" id="heroHeadingInput" class="form-control" required>
+                <input type="text" id="heroHeadingInput" class="form-control" placeholder="Welcome to Mombasa Mall" required>
               </div>
               <div class="form-group col-2">
                 <label for="heroSubInput">Hero Subtitle</label>
-                <input type="text" id="heroSubInput" class="form-control" required>
+                <input type="text" id="heroSubInput" class="form-control" placeholder="120+ stores, dining and entertainment" required>
               </div>
               <div class="form-group col-2">
                 <label for="marqueeItemsInput">Marquee Ticker Items (comma-separated)</label>
-                <input type="text" id="marqueeItemsInput" class="form-control" required>
+                <input type="text" id="marqueeItemsInput" class="form-control" placeholder="The Coastal Lifestyle, Premium Shopping, 120+ Brands">
               </div>
               <div class="form-group">
                 <label for="contactPhoneInput">Contact Phone</label>
-                <input type="text" id="contactPhoneInput" class="form-control" required>
+                <input type="tel" id="contactPhoneInput" class="form-control" placeholder="+254 790 964 002" required>
               </div>
               <div class="form-group">
                 <label for="contactEmailInput">Contact Email</label>
-                <input type="email" id="contactEmailInput" class="form-control" required>
+                <input type="email" id="contactEmailInput" class="form-control" placeholder="info@mombasamall.co.ke" required>
               </div>
               <div class="form-group col-2">
                 <label for="contactAddressInput">Physical Address</label>
-                <input type="text" id="contactAddressInput" class="form-control" required>
+                <input type="text" id="contactAddressInput" class="form-control" placeholder="Mwembe Tayari, Jomo Kenyatta Avenue, Mombasa" required>
               </div>
             </div>
-            <button type="submit" id="saveSiteContentBtn" class="btn-primary" style="margin-top:16px;">
-              Save Homepage Content Live
+            <button type="submit" id="saveSiteContentBtn" class="btn-primary" style="margin-top:6px;">
+              💾 Save Homepage Content
             </button>
           </form>
         </div>
@@ -449,25 +512,25 @@
     </div><!-- /.admin-content -->
   </main>
 
-  <!-- ============================================
+  <!-- ══════════════════════════════════════════
        MODAL: ADD / EDIT STORE
-       ============================================ -->
+       ══════════════════════════════════════════ -->
   <div id="shopModal" class="modal-backdrop" aria-hidden="true">
     <div class="modal-card">
       <div class="modal-header">
-        <h3 id="shopModalTitle">Add Store</h3>
-        <button id="closeShopModalBtn" class="modal-close">&times;</button>
+        <h3 id="shopModalTitle">Add New Store</h3>
+        <button id="closeShopModalBtn" class="modal-close" aria-label="Close">&times;</button>
       </div>
       <form id="shopForm">
         <input type="hidden" id="shopDocId">
         <div class="modal-body">
           <div class="form-grid">
             <div class="form-group col-2">
-              <label for="shopNameInput">Store / Brand Name</label>
+              <label for="shopNameInput">Store / Brand Name *</label>
               <input type="text" id="shopNameInput" class="form-control" required placeholder="e.g. Naivas Supermarket">
             </div>
             <div class="form-group">
-              <label for="shopFloorInput">Floor Level</label>
+              <label for="shopFloorInput">Floor Level *</label>
               <select id="shopFloorInput" class="form-control" required>
                 <option value="Ground Floor">Ground Floor</option>
                 <option value="First Floor">First Floor</option>
@@ -477,11 +540,11 @@
               </select>
             </div>
             <div class="form-group">
-              <label for="shopRoomInput">Room / Unit Code</label>
+              <label for="shopRoomInput">Room / Unit Code *</label>
               <input type="text" id="shopRoomInput" class="form-control" required placeholder="e.g. G-01">
             </div>
             <div class="form-group">
-              <label for="shopCategoryInput">Category</label>
+              <label for="shopCategoryInput">Category *</label>
               <select id="shopCategoryInput" class="form-control" required>
                 <option value="retail">Retail</option>
                 <option value="food">Dining &amp; Cafes</option>
@@ -493,18 +556,18 @@
             </div>
             <div class="form-group">
               <label for="shopPhoneInput">Phone Number</label>
-              <input type="text" id="shopPhoneInput" class="form-control" placeholder="+254 700 111 000">
+              <input type="tel" id="shopPhoneInput" class="form-control" placeholder="+254 700 111 000">
             </div>
             <div class="form-group">
               <label for="shopEmailInput">Store Email</label>
-              <input type="email" id="shopEmailInput" class="form-control" placeholder="store@mombasamall.co.ke">
+              <input type="email" id="shopEmailInput" class="form-control" placeholder="store@example.com">
             </div>
             <div class="form-group">
               <label for="shopSocialInput">Social Handle / Instagram</label>
               <input type="text" id="shopSocialInput" class="form-control" placeholder="@brand_ke">
             </div>
             <div class="form-group col-2">
-              <label for="shopLogoFileInput">Logo Upload (Firebase Storage)</label>
+              <label for="shopLogoFileInput">Upload Logo (Firebase Storage)</label>
               <input type="file" id="shopLogoFileInput" class="form-control" accept="image/*">
             </div>
             <div class="form-group col-2">
@@ -513,44 +576,47 @@
             </div>
             <div class="form-group col-2">
               <label for="shopDescInput">Store Description</label>
-              <textarea id="shopDescInput" class="form-control" placeholder="Describe the offerings, products, and services..."></textarea>
+              <textarea id="shopDescInput" class="form-control" placeholder="Describe the offerings, products, and services…"></textarea>
             </div>
-            <div class="form-group col-2" style="flex-direction:row; align-items:center; gap:8px;">
-              <input type="checkbox" id="shopIsActiveInput" checked style="width:18px; height:18px;">
-              <label for="shopIsActiveInput" style="margin:0; text-transform:none; cursor:pointer;">Visible on public website</label>
+            <div class="form-group col-2">
+              <div class="checkbox-row">
+                <input type="checkbox" id="shopIsActiveInput" checked>
+                <label for="shopIsActiveInput">Visible on public website</label>
+              </div>
             </div>
           </div>
         </div>
         <div class="modal-footer">
+          <button type="button" id="cancelShopBtn" class="btn-cancel">Cancel</button>
           <button type="submit" id="saveShopBtn" class="btn-primary">Save Store</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- ============================================
+  <!-- ══════════════════════════════════════════
        MODAL: ADD GALLERY PHOTO
-       ============================================ -->
+       ══════════════════════════════════════════ -->
   <div id="galleryModal" class="modal-backdrop" aria-hidden="true">
     <div class="modal-card">
       <div class="modal-header">
         <h3>Upload Photo to Gallery</h3>
-        <button id="closeGalleryModalBtn" class="modal-close">&times;</button>
+        <button id="closeGalleryModalBtn" class="modal-close" aria-label="Close">&times;</button>
       </div>
       <form id="galleryForm">
         <div class="modal-body">
           <div class="form-grid full">
             <div class="form-group">
-              <label for="galleryFile">Choose Image File (Uploads to Storage)</label>
+              <label for="galleryFile">Choose Image File (uploads to Firebase Storage)</label>
               <input type="file" id="galleryFile" class="form-control" accept="image/*">
             </div>
             <div class="form-group">
               <label for="galleryUrlInput">Or Existing Image URL</label>
-              <input type="text" id="galleryUrlInput" class="form-control" placeholder="./assets/Logo/Random pics/...">
+              <input type="text" id="galleryUrlInput" class="form-control" placeholder="./assets/Logo/Random pics/…">
             </div>
             <div class="form-group">
-              <label for="galleryCaption">Caption / Title</label>
-              <input type="text" id="galleryCaption" class="form-control" required placeholder="e.g. Central Atrium Events">
+              <label for="galleryCaption">Caption / Title *</label>
+              <input type="text" id="galleryCaption" class="form-control" required placeholder="e.g. Central Atrium — Grand Opening">
             </div>
             <div class="form-group">
               <label for="galleryCategory">Category Tag</label>
@@ -563,35 +629,36 @@
             </div>
             <div class="form-group">
               <label for="galleryOrder">Sort Order Priority (1 = first)</label>
-              <input type="number" id="galleryOrder" class="form-control" value="1" min="1">
+              <input type="number" id="galleryOrder" class="form-control" value="1" min="1" max="999">
             </div>
           </div>
         </div>
         <div class="modal-footer">
+          <button type="button" id="cancelGalleryBtn" class="btn-cancel">Cancel</button>
           <button type="submit" id="saveGalleryBtn" class="btn-primary">Upload to Gallery</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- ============================================
-       MODAL: ADD EVENT
-       ============================================ -->
+  <!-- ══════════════════════════════════════════
+       MODAL: ADD / EDIT EVENT
+       ══════════════════════════════════════════ -->
   <div id="eventModal" class="modal-backdrop" aria-hidden="true">
     <div class="modal-card">
       <div class="modal-header">
-        <h3>Create Event / News</h3>
-        <button id="closeEventModalBtn" class="modal-close">&times;</button>
+        <h3 id="eventModalTitle">Create Event / News</h3>
+        <button id="closeEventModalBtn" class="modal-close" aria-label="Close">&times;</button>
       </div>
       <form id="eventForm">
         <div class="modal-body">
           <div class="form-grid full">
             <div class="form-group">
-              <label for="eventTitle">Event Title</label>
+              <label for="eventTitle">Event Title *</label>
               <input type="text" id="eventTitle" class="form-control" required placeholder="e.g. Coastal Fashion Pop-up Weekend">
             </div>
             <div class="form-group">
-              <label for="eventDate">Date</label>
+              <label for="eventDate">Date *</label>
               <input type="date" id="eventDate" class="form-control" required>
             </div>
             <div class="form-group">
@@ -602,80 +669,83 @@
               </select>
             </div>
             <div class="form-group">
-              <label for="eventSummary">Event Summary / Details</label>
-              <textarea id="eventSummary" class="form-control" required placeholder="Details, activities, location inside mall..."></textarea>
+              <label for="eventSummary">Event Summary / Details *</label>
+              <textarea id="eventSummary" class="form-control" required placeholder="Details, activities, location inside mall…"></textarea>
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn-primary">Save Event</button>
+          <button type="button" id="cancelEventBtn" class="btn-cancel">Cancel</button>
+          <button type="submit" id="saveEventBtn" class="btn-primary">Save Event</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- ============================================
-       MODAL: WRITE BLOG POST
-       ============================================ -->
+  <!-- ══════════════════════════════════════════
+       MODAL: WRITE / EDIT BLOG POST
+       ══════════════════════════════════════════ -->
   <div id="blogModal" class="modal-backdrop" aria-hidden="true">
-    <div class="modal-card">
+    <div class="modal-card" style="max-width:700px;">
       <div class="modal-header">
-        <h3>Publish Journal Article</h3>
-        <button id="closeBlogModalBtn" class="modal-close">&times;</button>
+        <h3 id="blogModalTitle">Publish Journal Article</h3>
+        <button id="closeBlogModalBtn" class="modal-close" aria-label="Close">&times;</button>
       </div>
       <form id="blogForm">
         <div class="modal-body">
           <div class="form-grid full">
             <div class="form-group">
-              <label for="blogTitleInput">Article Title</label>
-              <input type="text" id="blogTitleInput" class="form-control" required placeholder="e.g. Welcome to Westerwelle Startup Haus">
+              <label for="blogTitleInput">Article Title *</label>
+              <input type="text" id="blogTitleInput" class="form-control" required placeholder="e.g. Top 5 Dining Experiences at Mombasa Mall">
             </div>
             <div class="form-group">
-              <label for="blogSlugInput">URL Slug (Auto-generated)</label>
-              <input type="text" id="blogSlugInput" class="form-control" required placeholder="westerwelle-startup-haus">
+              <label for="blogSlugInput">URL Slug (auto-generated)</label>
+              <input type="text" id="blogSlugInput" class="form-control" placeholder="top-5-dining-experiences">
             </div>
             <div class="form-group">
               <label for="blogDateInput">Publication Date</label>
               <input type="date" id="blogDateInput" class="form-control">
             </div>
             <div class="form-group">
-              <label for="blogExcerptInput">Short Excerpt</label>
-              <textarea id="blogExcerptInput" class="form-control" style="min-height:60px;" required placeholder="Brief summary of the article..."></textarea>
+              <label for="blogExcerptInput">Short Excerpt *</label>
+              <textarea id="blogExcerptInput" class="form-control" style="min-height:64px;" required placeholder="Brief summary of the article…"></textarea>
             </div>
             <div class="form-group">
               <label for="blogContentInput">Full Article Body</label>
-              <textarea id="blogContentInput" class="form-control" style="min-height:120px;" placeholder="Full article content..."></textarea>
+              <textarea id="blogContentInput" class="form-control" style="min-height:130px;" placeholder="Full article content…"></textarea>
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn-primary">Publish Article</button>
+          <button type="button" id="cancelBlogBtn" class="btn-cancel">Cancel</button>
+          <button type="submit" id="saveBlogBtn" class="btn-primary">Publish Article</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- ============================================
+  <!-- ══════════════════════════════════════════
        MODAL: CHANGE PASSWORD
-       ============================================ -->
+       ══════════════════════════════════════════ -->
   <div id="changePasswordModal" class="modal-backdrop" aria-hidden="true">
     <div class="modal-card" style="max-width:420px;">
       <div class="modal-header">
         <h3>Change Staff Password</h3>
-        <button id="closeChangePasswordBtn" class="modal-close">&times;</button>
+        <button id="closeChangePasswordBtn" class="modal-close" aria-label="Close">&times;</button>
       </div>
       <form id="changePasswordForm">
         <div class="modal-body">
           <div class="form-group">
-            <label for="newPassword">New Password (min 6 chars)</label>
-            <input type="password" id="newPassword" class="form-control" required minlength="6">
+            <label for="newPassword">New Password (min 6 characters)</label>
+            <input type="password" id="newPassword" class="form-control" required minlength="6" placeholder="New secure password">
           </div>
           <div class="form-group">
             <label for="confirmPassword">Confirm New Password</label>
-            <input type="password" id="confirmPassword" class="form-control" required minlength="6">
+            <input type="password" id="confirmPassword" class="form-control" required minlength="6" placeholder="Re-enter password">
           </div>
         </div>
         <div class="modal-footer">
+          <button type="button" id="cancelChangePasswordBtn" class="btn-cancel">Cancel</button>
           <button type="submit" class="btn-primary">Update Password</button>
         </div>
       </form>
@@ -683,7 +753,7 @@
   </div>
 
   <!-- TOAST CONTAINER -->
-  <div id="toastContainer" class="toast-container"></div>
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
 
   <!-- Scripts -->
   <script type="module" src="./admin.js"></script>

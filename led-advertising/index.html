@@ -245,9 +245,12 @@
                   
                   <div id="led-submit-success" style="display:none; margin-top:16px; padding:16px; border-radius:12px; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.3); color:#065f46; font-size:14px; line-height:1.5;">
                     <strong>✅ Campaign schedule request received!</strong><br>
-                    Our media operations desk has logged your request and will reach out to you shortly with ad review approvals.
+                    Our media operations desk has logged your request and will reach out within 24 hours with ad review approvals.
                   </div>
-                  
+                  <div id="led-submit-error" style="display:none; margin-top:16px; padding:16px; border-radius:12px; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); color:#991b1b; font-size:14px; line-height:1.5;">
+                    ⚠️ Something went wrong submitting your request. Please try again or contact us at <strong>+254 790 964 002</strong>.
+                  </div>
+
                   <!-- Real-Time Cost Estimator Breakdown -->
                   <div class="pricing-summary-card">
                     <h4 style="font-family:var(--font-headings); font-size:14px; font-weight:700; color:var(--navy); margin-bottom:12px; border-bottom:1px solid rgba(10,29,55,0.06); padding-bottom:6px;">Estimator Details (Dynamic)</h4>
@@ -329,7 +332,7 @@
   
   <script src="../js/main.js"></script>
   <script src="../js/site-data-init.js"></script>
-  <script src="../js/data-renderer.js"></script>
+  <script type="module" src="../js/data-renderer.js"></script>
   <script src="../js/motionEngine.js"></script>
   <script type="module" src="../js/firebase-config.js"></script>
   
@@ -431,24 +434,25 @@
       e.preventDefault();
       const submitBtn = form.querySelector('button[type="submit"]');
       submitBtn.disabled = true;
-      submitBtn.innerHTML = 'Submitting Request... <span class="cta-arrow">⏳</span>';
+      submitBtn.innerHTML = 'Submitting… <span class="cta-arrow">⏳</span>';
 
       const pkgSelect = document.getElementById('led-package');
       const selectedOpt = pkgSelect.options[pkgSelect.selectedIndex];
+      const errorBox = document.getElementById('led-submit-error');
 
       const leadData = {
-        businessName: document.getElementById('led-brand').value.trim(),
-        contactName: document.getElementById('led-contact-name').value.trim(),
-        email: document.getElementById('led-contact').value.trim(),
-        phone: document.getElementById('led-phone').value.trim(),
+        businessName:  document.getElementById('led-brand').value.trim(),
+        contactName:   document.getElementById('led-contact-name').value.trim(),
+        email:         document.getElementById('led-contact').value.trim(),
+        phone:         document.getElementById('led-phone').value.trim(),
         packageRequested: selectedOpt.getAttribute('data-name') || selectedOpt.textContent,
         durationMonths: parseInt(document.getElementById('led-duration').value) || 1,
-        slotLength: `${document.getElementById('led-slot').value}s`,
+        slotLength:    `${document.getElementById('led-slot').value}s`,
         loopFrequency: `Once every ${document.getElementById('led-frequency').value}m`,
         estimatedCost: document.getElementById('price-grand-total').textContent,
-        message: document.getElementById('led-notes').value.trim(),
-        status: 'new',
-        submittedAt: new Date().toISOString()
+        message:       document.getElementById('led-notes').value.trim(),
+        status:        'new',
+        submittedAt:   new Date().toISOString()
       };
 
       try {
@@ -457,19 +461,22 @@
           successBox.style.display = 'block';
           successBox.scrollIntoView({ behavior: 'smooth' });
         }
+        if (errorBox) errorBox.style.display = 'none';
         form.reset();
         setupEstimator();
+        setTimeout(() => { if (successBox) successBox.style.display = 'none'; }, 8000);
       } catch (err) {
         console.warn('LED lead Firestore save error:', err);
-        alert('Thank you! Your estimate request has been logged and our operations desk has been notified.');
-        if (successBox) successBox.style.display = 'block';
-        form.reset();
-        setupEstimator();
+        if (errorBox) {
+          errorBox.style.display = 'block';
+          errorBox.scrollIntoView({ behavior: 'smooth' });
+        }
       } finally {
         submitBtn.disabled = false;
         submitBtn.innerHTML = 'Secure Ad Schedule Space <span class="cta-arrow">→</span>';
       }
     });
+
 
     document.addEventListener('DOMContentLoaded', setupEstimator);
   </script>

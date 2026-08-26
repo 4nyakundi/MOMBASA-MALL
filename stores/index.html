@@ -333,22 +333,103 @@
   </div>
 
   <!-- Shop Details Modal -->
-  <div id="shop-modal" class="shop-modal" style="display:none;">
+  <div id="shop-modal" class="shop-modal" style="display:none;" aria-hidden="true" role="dialog">
     <div class="shop-modal-backdrop" onclick="closeShopModal()"></div>
     <div class="shop-modal-content glow-card">
-      <button class="shop-modal-close" onclick="closeShopModal()">×</button>
+      <button class="shop-modal-close" onclick="closeShopModal()" aria-label="Close modal">×</button>
       <div class="shop-modal-body">
         <div class="shop-modal-header">
           <img id="modal-shop-logo" src="../assets/Logo/Mall Logo/MOMBASA MALL 1.0.png" alt="Shop Logo">
           <div>
             <h3 id="modal-shop-name">Shop Name</h3>
-            <span id="modal-shop-location">Ground Floor, Shop G12</span>
+            <span id="modal-shop-location">Ground Floor · Shop G12</span>
           </div>
         </div>
         <p id="modal-shop-desc">Shop description goes here...</p>
+        <div class="shop-modal-contact" id="modal-shop-contact">
+          <div class="contact-item" id="modal-shop-phone-row" style="display:none;"><strong>Phone:</strong> <span id="modal-shop-phone"></span></div>
+          <div class="contact-item" id="modal-shop-email-row" style="display:none;"><strong>Email:</strong> <span id="modal-shop-email"></span></div>
+          <div class="contact-item" id="modal-shop-social-row" style="display:none;"><strong>Social:</strong> <span id="modal-shop-social"></span></div>
+        </div>
       </div>
     </div>
   </div>
+
+  <script>
+    function openShopModal(shopName, shopData) {
+      const modal = document.getElementById('shop-modal');
+      if (!modal) return;
+
+      if (!shopData && window.storesDataGlobal && window.storesDataGlobal.floors) {
+        for (const floor of window.storesDataGlobal.floors) {
+          const match = (floor.shops || []).find(s => s.name === shopName);
+          if (match) { shopData = match; break; }
+        }
+      }
+
+      const nameEl    = document.getElementById('modal-shop-name');
+      const locEl     = document.getElementById('modal-shop-location');
+      const descEl    = document.getElementById('modal-shop-desc');
+      const logoEl    = document.getElementById('modal-shop-logo');
+      const phoneEl   = document.getElementById('modal-shop-phone');
+      const phoneRow  = document.getElementById('modal-shop-phone-row');
+      const emailEl   = document.getElementById('modal-shop-email');
+      const emailRow  = document.getElementById('modal-shop-email-row');
+      const socialEl  = document.getElementById('modal-shop-social');
+      const socialRow = document.getElementById('modal-shop-social-row');
+
+      if (nameEl) nameEl.textContent = shopName || (shopData ? shopData.name : 'Store');
+      if (locEl)  locEl.textContent  = shopData ? `${shopData.floor || 'Ground Floor'} · ${shopData.room || 'Unit'}` : 'Mombasa Mall';
+      if (descEl) descEl.textContent = (shopData && shopData.description) ? shopData.description : 'Welcome to Mombasa Mall. Visit us for quality products and services.';
+      if (logoEl) {
+        logoEl.src = (shopData && (shopData.logoUrl || shopData.logo)) ? (shopData.logoUrl || shopData.logo) : '../assets/Logo/Mall Logo/MOMBASA MALL 1.0.png';
+        logoEl.alt = shopName || 'Store Logo';
+      }
+
+      if (phoneRow && phoneEl) {
+        if (shopData && shopData.phone) {
+          phoneEl.textContent = shopData.phone;
+          phoneRow.style.display = 'flex';
+        } else {
+          phoneRow.style.display = 'none';
+        }
+      }
+      if (emailRow && emailEl) {
+        if (shopData && shopData.email) {
+          emailEl.textContent = shopData.email;
+          emailRow.style.display = 'flex';
+        } else {
+          emailRow.style.display = 'none';
+        }
+      }
+      if (socialRow && socialEl) {
+        if (shopData && shopData.socialHandle) {
+          socialEl.textContent = shopData.socialHandle;
+          socialRow.style.display = 'flex';
+        } else {
+          socialRow.style.display = 'none';
+        }
+      }
+
+      modal.style.display = 'flex';
+      modal.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeShopModal() {
+      const modal = document.getElementById('shop-modal');
+      if (modal) {
+        modal.style.display = 'none';
+        modal.setAttribute('aria-hidden', 'true');
+      }
+    }
+
+    window.openShopModal  = openShopModal;
+    window.closeShopModal = closeShopModal;
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeShopModal();
+    });
+  </script>
 
   <!-- GSAP and ScrollTrigger -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -359,7 +440,7 @@
   
   <script src="../js/main.js"></script>
   <script src="../js/site-data-init.js"></script>
-  <script src="../js/data-renderer.js"></script>
+  <script type="module" src="../js/data-renderer.js"></script>
   <script src="../js/motionEngine.js"></script>
   <script type="module" src="../js/firebase-config.js"></script>
 </body>

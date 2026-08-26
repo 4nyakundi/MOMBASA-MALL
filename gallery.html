@@ -231,21 +231,30 @@
 
         <!-- VIDEO SECTION -->
         <div id="videos" class="section-header"><h2 class="section-h2">Videos &amp; Drone Tour</h2></div>
-        <div class="bento" style="padding:0;overflow:hidden;margin-bottom:48px;aspect-ratio:16/9;">
-          <video autoplay muted loop playsinline controls style="width:100%;height:100%;object-fit:cover;">
-            <source src="./assets/home.mp4.mp4" type="video/mp4">
+        <div class="bento" style="padding:0;overflow:hidden;margin-bottom:48px;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;background:rgba(10,29,55,0.06);border-radius:16px;">
+          <video autoplay muted loop playsinline controls style="width:100%;height:100%;object-fit:cover;display:none;" id="galleryVideo">
+            <!-- Video file will be added when available -->
           </video>
+          <div id="galleryVideoPlaceholder" style="text-align:center;padding:48px;">
+            <span style="font-size:40px;display:block;margin-bottom:12px;">🎬</span>
+            <p style="font-family:'Clash Display',sans-serif;font-size:18px;font-weight:700;color:var(--dusk-blue,#0A1D37);margin:0 0 6px;">Drone Tour &amp; Walkthrough</p>
+            <p style="font-size:13px;color:var(--text-muted,#4B5966);margin:0;">Video content coming soon</p>
+          </div>
         </div>
+
 
       </div><!-- /.subpage-content -->
     </div><!-- /.subpage-grid -->
   </div><!-- /#page-stage -->
 
   <!-- LIGHTBOX MODAL -->
-  <div id="lightboxModal" class="lightbox-modal" aria-hidden="true" onclick="closeLightbox()">
-    <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
-    <img id="lightboxImg" class="lightbox-img" src="" alt="Enlarged view">
+  <div id="lightboxModal" class="lightbox-modal" aria-hidden="true" role="dialog" aria-modal="true" onclick="closeLightbox()">
+    <div class="lightbox-img-wrap" onclick="event.stopPropagation()">
+      <button class="lightbox-close-btn" onclick="closeLightbox()" aria-label="Close image">&times;</button>
+      <img id="lightboxImg" src="" alt="Enlarged view" loading="lazy">
+    </div>
   </div>
+
 
   <!-- FOOTER -->
   <footer class="site-footer" style="background:#071527; color:#fff; border-top:1px solid rgba(255,255,255,0.08); padding:60px 48px 32px;">
@@ -296,14 +305,24 @@
       const img = document.getElementById('lightboxImg');
       if (modal && img) {
         img.src = src;
-        modal.classList.add('is-active');
+        modal.classList.add('is-open', 'is-active');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
       }
     };
     window.closeLightbox = function() {
       const modal = document.getElementById('lightboxModal');
-      if (modal) modal.classList.remove('is-active');
+      if (modal) {
+        modal.classList.remove('is-open', 'is-active');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
     };
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeLightbox();
+    });
   </script>
+
 
   <!-- Live Firestore Gallery Populator -->
   <script type="module">
