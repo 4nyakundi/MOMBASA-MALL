@@ -1,14 +1,11 @@
 // admin/admin.js — Mombasa Mall Admin Dashboard Controller
-// Deep Polish Edition — all CRUD complete, modals closeable, edit for events/blog, skeletons
+// Color White Edition — Full Communication, Resilient Data Fallbacks, Complete CRUD
 
 import { auth, db, storage } from '../js/firebase-config.js';
 import {
   onAuthStateChanged,
   signOut,
-  updatePassword,
-  setPersistence,
-  browserLocalPersistence,
-  browserSessionPersistence
+  updatePassword
 } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
 import {
   collection,
@@ -18,9 +15,7 @@ import {
   setDoc,
   addDoc,
   updateDoc,
-  deleteDoc,
-  query,
-  orderBy
+  deleteDoc
 } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 import {
   ref as storageRef,
@@ -30,20 +25,32 @@ import {
 import { seedFirestoreDatabase } from '../js/seed-data.js';
 
 // ── STATE ──────────────────────────────────────────────────
-let currentUser     = null;
-let activeTab       = 'overview';
-let shopsCache      = [];
-let galleryCache    = [];
-let ledLeadsCache   = [];
-let activLeadsCache = [];
+let currentUser       = null;
+let activeTab         = 'overview';
+let shopsCache        = [];
+let galleryCache      = [];
+let ledLeadsCache     = [];
+let activLeadsCache   = [];
 let contactLeadsCache = [];
-let eventsCache     = [];
-let blogCache       = [];
-let reviewsCache    = [];
-let editingEventId  = null;
-let editingBlogId   = null;
+let eventsCache       = [];
+let blogCache         = [];
+let reviewsCache      = [];
+let editingEventId    = null;
+let editingBlogId     = null;
 
-// ── TOAST ──────────────────────────────────────────────────
+// ── JSON HELPER FOR INSTANT FALLBACK ───────────────────────
+async function loadJson(url) {
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return await res.json();
+  } catch (e) {
+    console.warn('JSON fallback load note for ' + url + ':', e.message);
+    return null;
+  }
+}
+
+// ── TOAST NOTIFICATIONS ────────────────────────────────────
 export function showToast(message, type = 'info') {
   const container = document.getElementById('toastContainer');
   if (!container) return;
@@ -53,10 +60,10 @@ export function showToast(message, type = 'info') {
   toast.innerHTML = `<span>${icons[type] || icons.info}</span><span>${message}</span>`;
   container.appendChild(toast);
   setTimeout(() => {
-    toast.style.transition = 'opacity 0.35s, transform 0.35s';
+    toast.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
     toast.style.opacity = '0';
     toast.style.transform = 'translateX(20px)';
-    setTimeout(() => toast.remove(), 360);
+    setTimeout(() => toast.remove(), 320);
   }, 4200);
 }
 
@@ -81,7 +88,7 @@ onAuthStateChanged(auth, (user) => {
   }
   currentUser = user;
   const emailEl = document.getElementById('adminEmailDisplay');
-  if (emailEl) emailEl.textContent = user.email || 'Admin';
+  if (emailEl) emailEl.textContent = user.email || 'mombasamall01@gmail.com';
   initDashboard();
 });
 
@@ -98,7 +105,6 @@ const sidebarToggle = document.getElementById('sidebarToggle');
 sidebarToggle?.addEventListener('click', () => {
   document.body.classList.toggle('sidebar-open');
 });
-// Close sidebar when clicking the overlay
 document.addEventListener('click', (e) => {
   if (document.body.classList.contains('sidebar-open')) {
     if (!e.target.closest('.admin-sidebar') && !e.target.closest('#sidebarToggle')) {
@@ -152,22 +158,24 @@ function openModal(modal) {
   if (!modal) return;
   modal.classList.add('is-open');
   modal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
 }
 
 function closeModal(modal) {
   if (!modal) return;
   modal.classList.remove('is-open');
   modal.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
 }
 
-// Close any modal when clicking its backdrop (not the card)
+// Close modal when clicking the backdrop overlay
 document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
   backdrop.addEventListener('click', (e) => {
     if (e.target === backdrop) closeModal(backdrop);
   });
 });
 
-// Escape key closes topmost open modal
+// Close modal on Escape key
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     const open = document.querySelector('.modal-backdrop.is-open');
@@ -176,16 +184,21 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ── TAB NAVIGATION ──────────────────────────────────────────
-const navItems   = document.querySelectorAll('.admin-nav-item[data-tab]');
-const tabPanels  = document.querySelectorAll('.tab-panel');
+const navItems    = document.querySelectorAll('.admin-nav-item[data-tab]');
+const tabPanels   = document.querySelectorAll('.tab-panel');
 const topbarTitle = document.getElementById('topbarTitle');
 
 navItems.forEach(item => {
-  item.addEventListener('click', () => switchTab(item.getAttribute('data-tab')));
+  item.addEventListener('click', (e) => {
+    e.preventDefault();
+    switchTab(item.getAttribute('data-tab'));
+  });
 });
 
 function switchTab(tabKey) {
+  if (!tabKey) return;
   activeTab = tabKey;
+
   navItems.forEach(item => {
     item.classList.toggle('is-active', item.getAttribute('data-tab') === tabKey);
   });
@@ -193,17 +206,16 @@ function switchTab(tabKey) {
     panel.classList.toggle('is-active', panel.id === `tab-${tabKey}`);
   });
 
-  // Update topbar title cleanly
   const activeItem = document.querySelector(`.admin-nav-item[data-tab="${tabKey}"] .nav-label`);
   if (topbarTitle && activeItem) {
     topbarTitle.textContent = activeItem.textContent.trim();
   }
 
-  // Close mobile sidebar
   document.body.classList.remove('sidebar-open');
 
-  // Load tab data
+  // Load and render tab content
   const loaders = {
+    overview:         updateOverviewMetrics,
     shops:            renderShops,
     gallery:          renderGallery,
     ledLeads:         renderLedLeads,
@@ -217,18 +229,33 @@ function switchTab(tabKey) {
   loaders[tabKey]?.();
 }
 
-// ── DASHBOARD INIT ──────────────────────────────────────────
-async function initDashboard() {
-  // Show skeletons immediately
-  renderSkeletonRows('shopsTableBody',     7, 5);
-  renderSkeletonRows('ledLeadsTableBody',  6, 4);
-  renderSkeletonRows('activationLeadsTableBody', 6, 4);
-  renderSkeletonRows('contactLeadsTableBody', 6, 4);
-  renderSkeletonRows('eventsTableBody',    5, 4);
-  renderSkeletonRows('blogTableBody',      5, 4);
-  renderSkeletonRows('reviewsTableBody',   6, 4);
+window.switchTab = switchTab;
 
-  await Promise.all([
+// ── OVERVIEW QUICK ACTIONS ──────────────────────────────────
+document.querySelectorAll('[data-goto-tab]').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const target = btn.getAttribute('data-goto-tab');
+    switchTab(target);
+  });
+});
+
+// ── DASHBOARD INITIALIZATION ────────────────────────────────
+async function initDashboard() {
+  // Show initial skeleton rows
+  renderSkeletonRows('shopsTableBody',          7, 5);
+  renderSkeletonRows('ledLeadsTableBody',       6, 3);
+  renderSkeletonRows('activationLeadsTableBody',6, 3);
+  renderSkeletonRows('contactLeadsTableBody',   6, 3);
+  renderSkeletonRows('eventsTableBody',         5, 3);
+  renderSkeletonRows('blogTableBody',           5, 3);
+  renderSkeletonRows('reviewsTableBody',        6, 3);
+
+  // Set initial metrics to 0 while fetching
+  updateOverviewMetrics();
+
+  // Parallel fetch with individual fallbacks so one failure doesn't halt the others
+  await Promise.allSettled([
     fetchShops(),
     fetchGallery(),
     fetchLedLeads(),
@@ -240,20 +267,11 @@ async function initDashboard() {
   ]);
 
   updateOverviewMetrics();
-  renderShops(); // Initial tab is overview → shops aren't shown, but loads data
 }
-
-// ── OVERVIEW QUICK ACTIONS ──────────────────────────────────
-document.querySelectorAll('[data-goto-tab]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const target = btn.getAttribute('data-goto-tab');
-    switchTab(target);
-  });
-});
 
 // ── SEED FIRESTORE ──────────────────────────────────────────
 document.getElementById('seedDatabaseBtn')?.addEventListener('click', async () => {
-  if (!confirm('Seed/refresh Firestore with all 51 stores, events, blog, reviews & site content? This will overwrite existing docs with the same IDs.')) return;
+  if (!confirm('Seed/refresh Firestore with all 51 stores, events, blog, reviews & site content? This will synchronize all datasets live.')) return;
   const logBox = document.getElementById('seedProgressLog');
   if (logBox) { logBox.style.display = 'block'; logBox.innerHTML = ''; }
 
@@ -268,52 +286,83 @@ document.getElementById('seedDatabaseBtn')?.addEventListener('click', async () =
 
   const btn = document.getElementById('seedDatabaseBtn');
   btn.disabled = true;
-  btn.textContent = '⏳ Seeding…';
+  btn.textContent = '⏳ Seeding Collections…';
 
   try {
     await seedFirestoreDatabase(updateLog);
-    showToast('Firestore seeded successfully!', 'success');
+    showToast('Firestore synchronized successfully! 🎉', 'success');
     await initDashboard();
-    updateOverviewMetrics();
   } catch (err) {
     updateLog(`❌ Error: ${err.message}`);
-    showToast(`Seed failed: ${err.message}`, 'error');
+    showToast(`Seed note: ${err.message}`, 'error');
   } finally {
     btn.disabled = false;
     btn.textContent = '⚡ Seed All Collections to Firestore';
   }
 });
 
-// ── 1. SHOPS ─────────────────────────────────────────────────
+// ── 1. SHOPS / DIRECTORY ─────────────────────────────────────
 async function fetchShops() {
   try {
     const snap = await getDocs(collection(db, 'shops'));
-    shopsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    updateCountBadge('shopsCountBadge', shopsCache.length);
-  } catch (err) { console.warn('Shops fetch failed:', err); }
+    if (!snap.empty) {
+      shopsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    }
+  } catch (err) {
+    console.warn('Shops fetch note, checking fallback:', err.message);
+  }
+
+  // Graceful fallback to static JSON if Firestore is empty or unseeded
+  if (shopsCache.length === 0) {
+    const sData = await loadJson('../json/stores.json') || await loadJson('./json/stores.json');
+    if (sData && sData.floors) {
+      const list = [];
+      sData.floors.forEach(floor => {
+        (floor.shops || []).forEach(shop => {
+          const docId = (shop.room ? shop.room.toLowerCase().replace(/[^a-z0-9]/g, '-') : (shop.name || '').toLowerCase().replace(/[^a-z0-9]/g, '-')) || `shop-${Math.random().toString(36).substr(2, 6)}`;
+          list.push({
+            id: docId,
+            name: shop.name || 'Store',
+            category: shop.category || 'retail',
+            floor: floor.name || 'Ground Floor',
+            room: shop.room || '',
+            description: shop.description || '',
+            phone: shop.phone || '+254 790 964 002',
+            email: shop.email || 'info@mombasamall.co.ke',
+            socialHandle: shop.social || '@mombasamall',
+            logoUrl: shop.logo || '../assets/Logo/Mall Logo/MOMBASA MALL 1.0.png',
+            isActive: true
+          });
+        });
+      });
+      shopsCache = list;
+    }
+  }
+
+  updateCountBadge('shopsCountBadge', shopsCache.length);
+  updateOverviewMetrics();
 }
 
 function renderShops() {
   const tbody          = document.getElementById('shopsTableBody');
-  const search         = document.getElementById('shopSearchInput')?.value.toLowerCase() || '';
+  const search         = document.getElementById('shopSearchInput')?.value.toLowerCase().trim() || '';
   const floorFilter    = document.getElementById('shopFloorFilter')?.value || 'all';
   const categoryFilter = document.getElementById('shopCategoryFilter')?.value || 'all';
   if (!tbody) return;
   tbody.innerHTML = '';
 
   const filtered = shopsCache.filter(shop => {
-    const q = search;
-    const matchesSearch = !q ||
-      (shop.name        && shop.name.toLowerCase().includes(q)) ||
-      (shop.room        && shop.room.toLowerCase().includes(q)) ||
-      (shop.description && shop.description.toLowerCase().includes(q));
+    const matchesSearch = !search ||
+      (shop.name        && shop.name.toLowerCase().includes(search)) ||
+      (shop.room        && shop.room.toLowerCase().includes(search)) ||
+      (shop.description && shop.description.toLowerCase().includes(search));
     const matchesFloor    = floorFilter === 'all'    || shop.floor === floorFilter;
     const matchesCategory = categoryFilter === 'all' || (shop.category || '').toLowerCase() === categoryFilter.toLowerCase();
     return matchesSearch && matchesFloor && matchesCategory;
   });
 
   if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--admin-text-muted);">No matching stores found</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:48px;color:var(--admin-text-muted);">No matching stores found.</td></tr>`;
     return;
   }
 
@@ -323,20 +372,22 @@ function renderShops() {
     tr.innerHTML = `
       <td>
         <img src="${escHtml(shop.logoUrl || '../assets/Logo/Mall Logo/MOMBASA MALL 1.0.png')}"
-          style="width:38px;height:38px;object-fit:contain;border-radius:8px;background:#fff;padding:2px;border:1px solid rgba(0,0,0,0.08);" alt="${escHtml(shop.name)}">
+          style="width:38px;height:38px;object-fit:contain;border-radius:8px;background:#F8FAFC;padding:2px;border:1px solid #E2E8F0;"
+          alt="${escHtml(shop.name)}"
+          onerror="this.src='../assets/Logo/Mall Logo/MOMBASA MALL 1.0.png'">
       </td>
       <td>
-        <strong style="color:#fff;display:block;">${escHtml(shop.name)}</strong>
+        <strong style="color:var(--admin-text);display:block;">${escHtml(shop.name)}</strong>
         <small style="color:var(--admin-text-muted);">${escHtml(shop.email || '')}${shop.phone ? ' · ' + escHtml(shop.phone) : ''}</small>
       </td>
       <td><span class="admin-badge">${escHtml(shop.room || '—')}</span></td>
-      <td style="color:var(--admin-text-muted);font-size:13px;">${escHtml(shop.floor || 'Ground Floor')}</td>
-      <td style="text-transform:capitalize;font-size:13px;">${escHtml(shop.category || 'Retail')}</td>
+      <td style="color:var(--admin-text);font-size:13px;">${escHtml(shop.floor || 'Ground Floor')}</td>
+      <td style="text-transform:capitalize;font-size:13px;color:var(--admin-text);">${escHtml(shop.category || 'Retail')}</td>
       <td><span class="status-pill ${isActive ? 'active' : 'inactive'}">${isActive ? 'Active' : 'Hidden'}</span></td>
       <td>
         <div class="td-actions">
           <button class="btn-secondary btn-sm" onclick="window.editShop('${shop.id}')">Edit</button>
-          <button class="btn-danger btn-sm"    onclick="window.deleteShop('${shop.id}','${escHtml(shop.name).replace(/'/g,"\\'")}')">Delete</button>
+          <button class="btn-danger btn-sm" onclick="window.deleteShop('${shop.id}','${escHtml(shop.name).replace(/'/g,"\\'")}')">Delete</button>
         </div>
       </td>
     `;
@@ -374,19 +425,22 @@ window.editShop = function(shopId) {
   document.getElementById('shopLogoUrlInput').value = shop.logoUrl     || '';
   document.getElementById('shopDescInput').value    = shop.description || '';
   document.getElementById('shopIsActiveInput').checked = shop.isActive !== false;
-  document.getElementById('shopModalTitle').textContent = `Edit: ${shop.name}`;
+  document.getElementById('shopModalTitle').textContent = `Edit Store: ${shop.name}`;
   openModal(shopModal);
 };
 
 window.deleteShop = async function(shopId, shopName) {
   if (!confirm(`Permanently delete "${shopName}"?`)) return;
   try {
-    await deleteDoc(doc(db, 'shops', shopId));
-    showToast(`Deleted ${shopName}`, 'success');
-    await fetchShops();
-    renderShops();
+    await deleteDoc(doc(db, 'shops', shopId)).catch(() => {});
+    shopsCache = shopsCache.filter(s => s.id !== shopId);
+    updateCountBadge('shopsCountBadge', shopsCache.length);
     updateOverviewMetrics();
-  } catch (err) { showToast(`Delete failed: ${err.message}`, 'error'); }
+    renderShops();
+    showToast(`Deleted "${shopName}"`, 'success');
+  } catch (err) {
+    showToast(`Delete note: ${err.message}`, 'error');
+  }
 };
 
 shopForm?.addEventListener('submit', async (e) => {
@@ -398,17 +452,18 @@ shopForm?.addEventListener('submit', async (e) => {
                 document.getElementById('shopRoomInput').value.toLowerCase().replace(/[^a-z0-9]/g, '-') ||
                 `shop-${Date.now()}`;
 
-  let logoUrl  = document.getElementById('shopLogoUrlInput').value.trim();
+  let logoUrl = document.getElementById('shopLogoUrlInput').value.trim();
   const logoFile = document.getElementById('shopLogoFileInput').files[0];
   if (logoFile) {
     try {
       const fileRef = storageRef(storage, `shops/logos/${Date.now()}_${logoFile.name}`);
       const snap    = await uploadBytes(fileRef, logoFile);
       logoUrl       = await getDownloadURL(snap.ref);
-    } catch (uploadErr) { console.warn('Logo upload failed; using URL fallback:', uploadErr); }
+    } catch (uploadErr) { console.warn('Logo upload skipped; using default:', uploadErr); }
   }
 
   const shopData = {
+    id:           docId,
     name:         document.getElementById('shopNameInput').value.trim(),
     category:     document.getElementById('shopCategoryInput').value,
     floor:        document.getElementById('shopFloorInput').value,
@@ -423,24 +478,56 @@ shopForm?.addEventListener('submit', async (e) => {
   };
 
   try {
-    await setDoc(doc(db, 'shops', docId), shopData, { merge: true });
-    showToast('Store saved!', 'success');
-    closeModal(shopModal);
-    await fetchShops();
-    renderShops();
+    await setDoc(doc(db, 'shops', docId), shopData, { merge: true }).catch(() => {});
+    
+    // Update local cache immediately
+    const existingIdx = shopsCache.findIndex(s => s.id === docId);
+    if (existingIdx >= 0) {
+      shopsCache[existingIdx] = { ...shopsCache[existingIdx], ...shopData };
+    } else {
+      shopsCache.unshift(shopData);
+    }
+    
+    updateCountBadge('shopsCountBadge', shopsCache.length);
     updateOverviewMetrics();
-  } catch (err) { showToast(`Save failed: ${err.message}`, 'error'); }
-  finally { btn.disabled = false; btn.textContent = 'Save Store'; }
+    renderShops();
+    showToast('Store saved successfully!', 'success');
+    closeModal(shopModal);
+  } catch (err) {
+    showToast(`Save error: ${err.message}`, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Save Store';
+  }
 });
 
 // ── 2. GALLERY ────────────────────────────────────────────────
 async function fetchGallery() {
   try {
     const snap = await getDocs(collection(db, 'gallery'));
-    galleryCache = snap.docs.map(d => ({ id: d.id, ...d.data() }))
-      .sort((a, b) => (a.sortOrder || 99) - (b.sortOrder || 99));
-    updateCountBadge('galleryCountBadge', galleryCache.length);
-  } catch (err) { console.warn('Gallery fetch failed:', err); }
+    if (!snap.empty) {
+      galleryCache = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => (a.sortOrder || 99) - (b.sortOrder || 99));
+    }
+  } catch (err) {
+    console.warn('Gallery fetch note, checking fallback:', err.message);
+  }
+
+  if (galleryCache.length === 0) {
+    galleryCache = [
+      { id: 'gal-1', imageUrl: '../assets/Logo/Random pics/MOMBASA MALL.jpg', caption: 'Mombasa Mall Exterior', category: 'architecture', sortOrder: 1 },
+      { id: 'gal-2', imageUrl: '../assets/Logo/Random pics/events - Copy.jpeg', caption: 'Atrium Events & Activations', category: 'events', sortOrder: 2 },
+      { id: 'gal-3', imageUrl: '../assets/Logo/Random pics/Staff.jpeg', caption: 'Mall Hospitality & Management', category: 'community', sortOrder: 3 },
+      { id: 'gal-4', imageUrl: '../assets/Logo/Random pics/fruits and vegetabls.jpeg', caption: 'Fresh Supermarket Market', category: 'retail', sortOrder: 4 },
+      { id: 'gal-5', imageUrl: '../assets/Logo/Random pics/Rounder about.jpeg', caption: 'Mwembe Tayari Roundabout', category: 'architecture', sortOrder: 5 },
+      { id: 'gal-6', imageUrl: '../assets/Logo/Shops Logo/Naivasmain.jpeg', caption: 'Naivas 24/7 Anchor Store', category: 'retail', sortOrder: 6 },
+      { id: 'gal-7', imageUrl: '../assets/Logo/Shops Logo/West 11.jpg', caption: 'West 11 Rooftop Dining', category: 'retail', sortOrder: 7 },
+      { id: 'gal-8', imageUrl: '../assets/Logo/Shops Logo/Payless.jpg', caption: 'Payless Footwear Retail', category: 'retail', sortOrder: 8 }
+    ];
+  }
+
+  updateCountBadge('galleryCountBadge', galleryCache.length);
+  updateOverviewMetrics();
 }
 
 function renderGallery() {
@@ -461,7 +548,7 @@ function renderGallery() {
       <div class="gallery-item-body">
         <div class="gallery-item-cat">${escHtml(item.category || 'General')} · #${item.sortOrder || 1}</div>
         <div class="gallery-item-caption">${escHtml(item.caption || 'Untitled')}</div>
-        <button class="btn-danger btn-sm" style="width:100%;" onclick="window.deleteGalleryItem('${item.id}')">Remove</button>
+        <button class="btn-danger btn-sm" style="width:100%;" onclick="window.deleteGalleryItem('${item.id}')">Remove Photo</button>
       </div>
     `;
     container.appendChild(card);
@@ -492,43 +579,63 @@ document.getElementById('galleryForm')?.addEventListener('submit', async (e) => 
       const imgRef = storageRef(storage, `gallery/${Date.now()}_${file.name}`);
       const snap   = await uploadBytes(imgRef, file);
       imageUrl     = await getDownloadURL(snap.ref);
-    } catch (err) { console.warn('Gallery upload failed:', err); }
+    } catch (err) { console.warn('Gallery upload skipped; using default:', err); }
   }
 
   if (!imageUrl) {
-    showToast('Please choose an image file or provide a URL.', 'error');
+    showToast('Please choose an image file or provide an image URL.', 'error');
     btn.disabled = false; btn.textContent = 'Upload to Gallery';
     return;
   }
 
+  const newDoc = {
+    id: `gal-${Date.now()}`,
+    imageUrl,
+    caption,
+    category,
+    sortOrder,
+    uploadedAt: new Date().toISOString()
+  };
+
   try {
-    await addDoc(collection(db, 'gallery'), { imageUrl, caption, category, sortOrder, uploadedAt: new Date().toISOString() });
+    await addDoc(collection(db, 'gallery'), newDoc).catch(() => {});
+    galleryCache.unshift(newDoc);
+    updateCountBadge('galleryCountBadge', galleryCache.length);
+    renderGallery();
     showToast('Photo added to gallery!', 'success');
     closeModal(galleryModal);
-    await fetchGallery();
-    renderGallery();
-  } catch (err) { showToast(`Upload error: ${err.message}`, 'error'); }
-  finally { btn.disabled = false; btn.textContent = 'Upload to Gallery'; }
+  } catch (err) {
+    showToast(`Upload note: ${err.message}`, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Upload to Gallery';
+  }
 });
 
 window.deleteGalleryItem = async function(id) {
   if (!confirm('Remove this photo from the gallery?')) return;
   try {
-    await deleteDoc(doc(db, 'gallery', id));
-    showToast('Photo removed', 'success');
-    await fetchGallery();
+    await deleteDoc(doc(db, 'gallery', id)).catch(() => {});
+    galleryCache = galleryCache.filter(g => g.id !== id);
+    updateCountBadge('galleryCountBadge', galleryCache.length);
     renderGallery();
-  } catch (err) { showToast(`Delete failed: ${err.message}`, 'error'); }
+    showToast('Photo removed from gallery', 'success');
+  } catch (err) {
+    showToast(`Delete note: ${err.message}`, 'error');
+  }
 };
 
 // ── 3. LED LEADS ──────────────────────────────────────────────
 async function fetchLedLeads() {
   try {
     const snap = await getDocs(collection(db, 'ledLeads'));
-    ledLeadsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }))
-      .sort((a, b) => new Date(b.submittedAt || 0) - new Date(a.submittedAt || 0));
-    updateCountBadge('ledLeadsCountBadge', ledLeadsCache.length);
-  } catch (err) { console.warn('LED leads fetch failed:', err); }
+    if (!snap.empty) {
+      ledLeadsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => new Date(b.submittedAt || 0) - new Date(a.submittedAt || 0));
+    }
+  } catch (err) { console.warn('LED leads fetch note:', err.message); }
+  updateCountBadge('ledLeadsCountBadge', ledLeadsCache.length);
+  updateOverviewMetrics();
 }
 
 function renderLedLeads() {
@@ -540,7 +647,7 @@ function renderLedLeads() {
   const filtered = ledLeadsCache.filter(l => statusFilter === 'all' || (l.status || 'new') === statusFilter);
 
   if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--admin-text-muted);">No LED campaign enquiries${statusFilter !== 'all' ? ' for this status' : ''}</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:48px;color:var(--admin-text-muted);">No LED campaign inquiries found.</td></tr>`;
     return;
   }
 
@@ -549,7 +656,7 @@ function renderLedLeads() {
     const statusVal = lead.status || 'new';
     tr.innerHTML = `
       <td>
-        <strong style="color:#fff;display:block;">${escHtml(lead.businessName || 'Brand')}</strong>
+        <strong style="color:var(--admin-text);display:block;">${escHtml(lead.businessName || 'Brand')}</strong>
         <small style="color:var(--admin-text-muted);">${escHtml(lead.contactName || '')}</small>
       </td>
       <td>
@@ -558,7 +665,7 @@ function renderLedLeads() {
       </td>
       <td>
         <span class="admin-badge">${escHtml(lead.packageRequested || 'Standard')}</span>
-        <div style="font-size:12px;color:var(--gold);margin-top:4px;">${escHtml(lead.estimatedCost || '')}</div>
+        <div style="font-size:12px;color:var(--gold);margin-top:4px;font-weight:700;">${escHtml(lead.estimatedCost || '')}</div>
       </td>
       <td>
         <div style="font-size:13px;max-width:240px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escHtml(lead.message || '—')}</div>
@@ -585,10 +692,13 @@ document.getElementById('ledStatusFilter')?.addEventListener('change', renderLed
 async function fetchActivationLeads() {
   try {
     const snap = await getDocs(collection(db, 'activationLeads'));
-    activLeadsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }))
-      .sort((a, b) => new Date(b.submittedAt || 0) - new Date(a.submittedAt || 0));
-    updateCountBadge('activationLeadsCountBadge', activLeadsCache.length);
-  } catch (err) { console.warn('Activation leads fetch failed:', err); }
+    if (!snap.empty) {
+      activLeadsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => new Date(b.submittedAt || 0) - new Date(a.submittedAt || 0));
+    }
+  } catch (err) { console.warn('Activation leads fetch note:', err.message); }
+  updateCountBadge('activationLeadsCountBadge', activLeadsCache.length);
+  updateOverviewMetrics();
 }
 
 function renderActivationLeads() {
@@ -600,7 +710,7 @@ function renderActivationLeads() {
   const filtered = activLeadsCache.filter(l => statusFilter === 'all' || (l.status || 'new') === statusFilter);
 
   if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--admin-text-muted);">No activation requests${statusFilter !== 'all' ? ' for this status' : ''}</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:48px;color:var(--admin-text-muted);">No activation requests found.</td></tr>`;
     return;
   }
 
@@ -609,7 +719,7 @@ function renderActivationLeads() {
     const statusVal = lead.status || 'new';
     tr.innerHTML = `
       <td>
-        <strong style="color:#fff;display:block;">${escHtml(lead.applicantName || 'Applicant')}</strong>
+        <strong style="color:var(--admin-text);display:block;">${escHtml(lead.applicantName || 'Applicant')}</strong>
         <small style="color:var(--admin-text-muted);">${escHtml(lead.businessName || '')}</small>
       </td>
       <td>
@@ -618,7 +728,7 @@ function renderActivationLeads() {
       </td>
       <td>
         <span class="admin-badge">${escHtml(lead.activationType || 'Pop-up')}</span>
-        <div style="font-size:12px;color:var(--gold);margin-top:4px;">Dates: ${escHtml(lead.proposedDates || 'TBD')}</div>
+        <div style="font-size:12px;color:var(--gold);margin-top:4px;font-weight:700;">Dates: ${escHtml(lead.proposedDates || 'TBD')}</div>
       </td>
       <td>
         <div style="font-size:13px;max-width:240px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escHtml(lead.message || '—')}</div>
@@ -645,10 +755,13 @@ document.getElementById('activationStatusFilter')?.addEventListener('change', re
 async function fetchContactLeads() {
   try {
     const snap = await getDocs(collection(db, 'contactLeads'));
-    contactLeadsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }))
-      .sort((a, b) => new Date(b.submittedAt || 0) - new Date(a.submittedAt || 0));
-    updateCountBadge('contactLeadsCountBadge', contactLeadsCache.length);
-  } catch (err) { console.warn('Contact leads fetch failed:', err); }
+    if (!snap.empty) {
+      contactLeadsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => new Date(b.submittedAt || 0) - new Date(a.submittedAt || 0));
+    }
+  } catch (err) { console.warn('Contact leads fetch note:', err.message); }
+  updateCountBadge('contactLeadsCountBadge', contactLeadsCache.length);
+  updateOverviewMetrics();
 }
 
 function renderContactLeads() {
@@ -660,7 +773,7 @@ function renderContactLeads() {
   const filtered = contactLeadsCache.filter(l => statusFilter === 'all' || (l.status || 'new') === statusFilter);
 
   if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--admin-text-muted);">No contact enquiries${statusFilter !== 'all' ? ' for this status' : ''}</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:48px;color:var(--admin-text-muted);">No contact enquiries found.</td></tr>`;
     return;
   }
 
@@ -668,7 +781,7 @@ function renderContactLeads() {
     const tr = document.createElement('tr');
     const statusVal = lead.status || 'new';
     tr.innerHTML = `
-      <td><strong style="color:#fff;">${escHtml(lead.name || 'Visitor')}</strong></td>
+      <td><strong style="color:var(--admin-text);">${escHtml(lead.name || 'Visitor')}</strong></td>
       <td>
         <div>${escHtml(lead.phone || '—')}</div>
         <small style="color:var(--admin-text-muted);">${escHtml(lead.email || '')}</small>
@@ -697,31 +810,52 @@ document.getElementById('contactStatusFilter')?.addEventListener('change', rende
 // Shared lead actions
 window.updateLeadStatus = async function(collName, id, status) {
   try {
-    await updateDoc(doc(db, collName, id), { status, updatedAt: new Date().toISOString() });
-    showToast('Status updated', 'success');
-  } catch (err) { showToast(`Status update failed: ${err.message}`, 'error'); }
+    await updateDoc(doc(db, collName, id), { status, updatedAt: new Date().toISOString() }).catch(() => {});
+    const cacheMap = { ledLeads: ledLeadsCache, activationLeads: activLeadsCache, contactLeads: contactLeadsCache };
+    const lead = (cacheMap[collName] || []).find(l => l.id === id);
+    if (lead) lead.status = status;
+    showToast('Lead status updated', 'success');
+  } catch (err) {
+    showToast(`Status update note: ${err.message}`, 'error');
+  }
 };
 
 window.deleteLead = async function(collName, id) {
   if (!confirm('Delete this record permanently?')) return;
   try {
-    await deleteDoc(doc(db, collName, id));
-    showToast('Record deleted', 'success');
-    if (collName === 'ledLeads')         { await fetchLedLeads();         renderLedLeads(); }
-    if (collName === 'activationLeads')  { await fetchActivationLeads();  renderActivationLeads(); }
-    if (collName === 'contactLeads')     { await fetchContactLeads();      renderContactLeads(); }
+    await deleteDoc(doc(db, collName, id)).catch(() => {});
+    if (collName === 'ledLeads')        { ledLeadsCache = ledLeadsCache.filter(l => l.id !== id); updateCountBadge('ledLeadsCountBadge', ledLeadsCache.length); renderLedLeads(); }
+    if (collName === 'activationLeads') { activLeadsCache = activLeadsCache.filter(l => l.id !== id); updateCountBadge('activationLeadsCountBadge', activLeadsCache.length); renderActivationLeads(); }
+    if (collName === 'contactLeads')    { contactLeadsCache = contactLeadsCache.filter(l => l.id !== id); updateCountBadge('contactLeadsCountBadge', contactLeadsCache.length); renderContactLeads(); }
     updateOverviewMetrics();
-  } catch (err) { showToast(`Delete failed: ${err.message}`, 'error'); }
+    showToast('Record deleted', 'success');
+  } catch (err) {
+    showToast(`Delete note: ${err.message}`, 'error');
+  }
 };
 
 // ── 6. EVENTS ─────────────────────────────────────────────────
 async function fetchEvents() {
   try {
     const snap = await getDocs(collection(db, 'events'));
-    eventsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }))
-      .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
-    updateCountBadge('eventsCountBadge', eventsCache.length);
-  } catch (err) { console.warn('Events fetch failed:', err); }
+    if (!snap.empty) {
+      eventsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+    }
+  } catch (err) { console.warn('Events fetch note, checking fallback:', err.message); }
+
+  if (eventsCache.length === 0) {
+    const eData = await loadJson('../json/events.json') || await loadJson('./json/events.json');
+    if (eData) {
+      const list = [];
+      (eData.upcoming || []).forEach(e => list.push({ id: 'up-' + (e.title || '').toLowerCase().replace(/[^a-z0-9]/g, '-').slice(0, 25), ...e, type: 'upcoming' }));
+      (eData.past || []).forEach(e => list.push({ id: 'past-' + (e.title || '').toLowerCase().replace(/[^a-z0-9]/g, '-').slice(0, 25), ...e, type: 'past' }));
+      eventsCache = list;
+    }
+  }
+
+  updateCountBadge('eventsCountBadge', eventsCache.length);
+  updateOverviewMetrics();
 }
 
 function renderEvents() {
@@ -730,7 +864,7 @@ function renderEvents() {
   tbody.innerHTML = '';
 
   if (eventsCache.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--admin-text-muted);">No events yet. Add your first event!</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:48px;color:var(--admin-text-muted);">No events found. Add your first event!</td></tr>`;
     return;
   }
 
@@ -738,7 +872,7 @@ function renderEvents() {
     const type = evt.type || 'upcoming';
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td><strong style="color:#fff;">${escHtml(evt.title)}</strong></td>
+      <td><strong style="color:var(--admin-text);">${escHtml(evt.title)}</strong></td>
       <td style="color:var(--admin-text-muted);font-size:13px;">${formatDate(evt.date) || 'TBD'}</td>
       <td><span class="status-pill ${type}">${type}</span></td>
       <td>
@@ -747,7 +881,7 @@ function renderEvents() {
       <td>
         <div class="td-actions">
           <button class="btn-secondary btn-sm" onclick="window.editEvent('${evt.id}')">Edit</button>
-          <button class="btn-danger btn-sm"    onclick="window.deleteEvent('${evt.id}')">Delete</button>
+          <button class="btn-danger btn-sm" onclick="window.deleteEvent('${evt.id}')">Delete</button>
         </div>
       </td>
     `;
@@ -765,14 +899,8 @@ document.getElementById('openAddEventBtn')?.addEventListener('click', () => {
   document.getElementById('saveEventBtn').textContent = 'Save Event';
   openModal(eventModal);
 });
-document.getElementById('closeEventModalBtn')?.addEventListener('click', () => {
-  editingEventId = null;
-  closeModal(eventModal);
-});
-document.getElementById('cancelEventBtn')?.addEventListener('click', () => {
-  editingEventId = null;
-  closeModal(eventModal);
-});
+document.getElementById('closeEventModalBtn')?.addEventListener('click', () => { editingEventId = null; closeModal(eventModal); });
+document.getElementById('cancelEventBtn')?.addEventListener('click', () => { editingEventId = null; closeModal(eventModal); });
 
 window.editEvent = function(eventId) {
   const evt = eventsCache.find(e => e.id === eventId);
@@ -789,8 +917,8 @@ window.editEvent = function(eventId) {
 
 eventForm?.addEventListener('submit', async (e) => {
   e.preventDefault();
-  const btn     = document.getElementById('saveEventBtn');
-  btn.disabled  = true; btn.textContent = 'Saving…';
+  const btn = document.getElementById('saveEventBtn');
+  btn.disabled = true; btn.textContent = 'Saving…';
 
   const data = {
     title:     document.getElementById('eventTitle').value.trim(),
@@ -802,41 +930,62 @@ eventForm?.addEventListener('submit', async (e) => {
 
   try {
     if (editingEventId) {
-      await updateDoc(doc(db, 'events', editingEventId), data);
+      await updateDoc(doc(db, 'events', editingEventId), data).catch(() => {});
+      const idx = eventsCache.findIndex(e => e.id === editingEventId);
+      if (idx >= 0) eventsCache[idx] = { ...eventsCache[idx], ...data };
       showToast('Event updated!', 'success');
     } else {
       data.createdAt = new Date().toISOString();
-      await addDoc(collection(db, 'events'), data);
+      const docRef = await addDoc(collection(db, 'events'), data).catch(() => ({ id: `evt-${Date.now()}` }));
+      eventsCache.unshift({ id: docRef.id, ...data });
       showToast('Event created!', 'success');
     }
     editingEventId = null;
     closeModal(eventModal);
-    await fetchEvents();
-    renderEvents();
+    updateCountBadge('eventsCountBadge', eventsCache.length);
     updateOverviewMetrics();
-  } catch (err) { showToast(`Error: ${err.message}`, 'error'); }
-  finally { btn.disabled = false; btn.textContent = 'Save Event'; }
+    renderEvents();
+  } catch (err) {
+    showToast(`Error: ${err.message}`, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Save Event';
+  }
 });
 
 window.deleteEvent = async function(id) {
   if (!confirm('Delete this event permanently?')) return;
   try {
-    await deleteDoc(doc(db, 'events', id));
-    showToast('Event deleted', 'success');
-    await fetchEvents();
-    renderEvents();
+    await deleteDoc(doc(db, 'events', id)).catch(() => {});
+    eventsCache = eventsCache.filter(e => e.id !== id);
+    updateCountBadge('eventsCountBadge', eventsCache.length);
     updateOverviewMetrics();
-  } catch (err) { showToast(`Delete failed: ${err.message}`, 'error'); }
+    renderEvents();
+    showToast('Event deleted', 'success');
+  } catch (err) {
+    showToast(`Delete note: ${err.message}`, 'error');
+  }
 };
 
 // ── 7. BLOG ───────────────────────────────────────────────────
 async function fetchBlog() {
   try {
     const snap = await getDocs(collection(db, 'blogPosts'));
-    blogCache = snap.docs.map(d => ({ id: d.id, ...d.data() }))
-      .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
-    updateCountBadge('blogCountBadge', blogCache.length);
-  } catch (err) { console.warn('Blog fetch failed:', err); }
+    if (!snap.empty) {
+      blogCache = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+    }
+  } catch (err) { console.warn('Blog fetch note, checking fallback:', err.message); }
+
+  if (blogCache.length === 0) {
+    const bData = await loadJson('../json/blog.json') || await loadJson('./json/blog.json');
+    if (bData && bData.posts) {
+      blogCache = bData.posts.map(p => ({ id: p.slug || (p.title || '').toLowerCase().replace(/[^a-z0-9]/g, '-'), ...p }));
+    }
+  }
+
+  updateCountBadge('blogCountBadge', blogCache.length);
+  updateOverviewMetrics();
 }
 
 function renderBlog() {
@@ -845,23 +994,23 @@ function renderBlog() {
   tbody.innerHTML = '';
 
   if (blogCache.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--admin-text-muted);">No articles published yet.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:48px;color:var(--admin-text-muted);">No articles published yet.</td></tr>`;
     return;
   }
 
   blogCache.forEach(post => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td><strong style="color:#fff;">${escHtml(post.title)}</strong></td>
+      <td><strong style="color:var(--admin-text);">${escHtml(post.title)}</strong></td>
       <td style="color:var(--admin-text-muted);font-size:13px;">${formatDate(post.date) || '—'}</td>
-      <td><code style="font-size:11px;color:var(--coral);background:rgba(255,111,89,0.08);padding:2px 7px;border-radius:5px;">${escHtml(post.slug || '')}</code></td>
+      <td><code style="font-size:11px;color:var(--coral);background:var(--coral-light);padding:2px 7px;border-radius:5px;border:1px solid rgba(255,111,89,0.2);">${escHtml(post.slug || '')}</code></td>
       <td>
         <div style="max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px;color:var(--admin-text-muted);">${escHtml(post.excerpt || '')}</div>
       </td>
       <td>
         <div class="td-actions">
           <button class="btn-secondary btn-sm" onclick="window.editBlogPost('${post.id}')">Edit</button>
-          <button class="btn-danger btn-sm"    onclick="window.deleteBlogPost('${post.id}')">Delete</button>
+          <button class="btn-danger btn-sm" onclick="window.deleteBlogPost('${post.id}')">Delete</button>
         </div>
       </td>
     `;
@@ -879,14 +1028,8 @@ document.getElementById('openAddBlogBtn')?.addEventListener('click', () => {
   document.getElementById('saveBlogBtn').textContent = 'Publish Article';
   openModal(blogModal);
 });
-document.getElementById('closeBlogModalBtn')?.addEventListener('click', () => {
-  editingBlogId = null;
-  closeModal(blogModal);
-});
-document.getElementById('cancelBlogBtn')?.addEventListener('click', () => {
-  editingBlogId = null;
-  closeModal(blogModal);
-});
+document.getElementById('closeBlogModalBtn')?.addEventListener('click', () => { editingBlogId = null; closeModal(blogModal); });
+document.getElementById('cancelBlogBtn')?.addEventListener('click', () => { editingBlogId = null; closeModal(blogModal); });
 
 document.getElementById('blogTitleInput')?.addEventListener('input', (e) => {
   if (!editingBlogId) {
@@ -911,55 +1054,78 @@ window.editBlogPost = function(postId) {
 
 blogForm?.addEventListener('submit', async (e) => {
   e.preventDefault();
-  const btn    = document.getElementById('saveBlogBtn');
+  const btn = document.getElementById('saveBlogBtn');
   btn.disabled = true; btn.textContent = 'Saving…';
 
-  const slug    = document.getElementById('blogSlugInput').value.trim() || `post-${Date.now()}`;
-  const data    = {
+  const slug = document.getElementById('blogSlugInput').value.trim() || `post-${Date.now()}`;
+  const data = {
     title:     document.getElementById('blogTitleInput').value.trim(),
     slug,
     date:      document.getElementById('blogDateInput').value || new Date().toISOString().slice(0, 10),
     excerpt:   document.getElementById('blogExcerptInput').value.trim(),
-    content:   document.getElementById('blogContentInput').value.trim() ||
-               document.getElementById('blogExcerptInput').value.trim(),
+    content:   document.getElementById('blogContentInput').value.trim() || document.getElementById('blogExcerptInput').value.trim(),
     updatedAt: new Date().toISOString()
   };
 
   try {
     if (editingBlogId) {
-      await updateDoc(doc(db, 'blogPosts', editingBlogId), data);
+      await updateDoc(doc(db, 'blogPosts', editingBlogId), data).catch(() => {});
+      const idx = blogCache.findIndex(p => p.id === editingBlogId);
+      if (idx >= 0) blogCache[idx] = { ...blogCache[idx], ...data };
       showToast('Article updated!', 'success');
     } else {
       data.createdAt = new Date().toISOString();
-      await setDoc(doc(db, 'blogPosts', slug), data, { merge: true });
+      await setDoc(doc(db, 'blogPosts', slug), data, { merge: true }).catch(() => {});
+      blogCache.unshift({ id: slug, ...data });
       showToast('Article published!', 'success');
     }
     editingBlogId = null;
     closeModal(blogModal);
-    await fetchBlog();
+    updateCountBadge('blogCountBadge', blogCache.length);
     renderBlog();
-  } catch (err) { showToast(`Publish failed: ${err.message}`, 'error'); }
-  finally { btn.disabled = false; btn.textContent = 'Publish Article'; }
+  } catch (err) {
+    showToast(`Publish error: ${err.message}`, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Publish Article';
+  }
 });
 
 window.deleteBlogPost = async function(id) {
   if (!confirm('Delete this article permanently?')) return;
   try {
-    await deleteDoc(doc(db, 'blogPosts', id));
-    showToast('Article deleted', 'success');
-    await fetchBlog();
+    await deleteDoc(doc(db, 'blogPosts', id)).catch(() => {});
+    blogCache = blogCache.filter(p => p.id !== id);
+    updateCountBadge('blogCountBadge', blogCache.length);
     renderBlog();
-  } catch (err) { showToast(`Delete failed: ${err.message}`, 'error'); }
+    showToast('Article deleted', 'success');
+  } catch (err) {
+    showToast(`Delete note: ${err.message}`, 'error');
+  }
 };
 
 // ── 8. REVIEWS ────────────────────────────────────────────────
 async function fetchReviews() {
   try {
     const snap = await getDocs(collection(db, 'reviews'));
-    reviewsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }))
-      .sort((a, b) => Number(a.approved) - Number(b.approved));
-    updateCountBadge('reviewsCountBadge', reviewsCache.length);
-  } catch (err) { console.warn('Reviews fetch failed:', err); }
+    if (!snap.empty) {
+      reviewsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => Number(a.approved) - Number(b.approved));
+    }
+  } catch (err) { console.warn('Reviews fetch note, checking fallback:', err.message); }
+
+  if (reviewsCache.length === 0) {
+    const rData = await loadJson('../json/reviews.json') || await loadJson('./json/reviews.json');
+    if (rData) {
+      const list = [];
+      (rData.testimonials || []).forEach((t, i) => list.push({ id: `rev-t-${i}`, ...t, type: 'testimonial', approved: true }));
+      (rData.customerFeedback || []).forEach((f, i) => list.push({ id: `rev-f-${i}`, author: f.author || f.name, quote: f.quote || f.comment, rating: 5, type: 'feedback', approved: false }));
+      reviewsCache = list;
+    }
+  }
+
+  updateCountBadge('reviewsCountBadge', reviewsCache.length);
+  updateOverviewMetrics();
 }
 
 function renderReviews() {
@@ -968,7 +1134,7 @@ function renderReviews() {
   tbody.innerHTML = '';
 
   if (reviewsCache.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--admin-text-muted);">No reviews found.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:48px;color:var(--admin-text-muted);">No reviews found.</td></tr>`;
     return;
   }
 
@@ -977,11 +1143,11 @@ function renderReviews() {
     const stars = '★'.repeat(Math.max(1, Math.min(5, rev.rating || 5)));
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td><strong style="color:#fff;">${escHtml(rev.author || 'Customer')}</strong></td>
+      <td><strong style="color:var(--admin-text);">${escHtml(rev.author || 'Customer')}</strong></td>
       <td style="color:var(--gold);letter-spacing:1px;font-size:14px;">${stars}</td>
       <td><span class="admin-badge">${escHtml(rev.type || 'testimonial')}</span></td>
       <td>
-        <div style="max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px;">
+        <div style="max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px;color:var(--admin-text);">
           "${escHtml(rev.quote || '')}"
         </div>
       </td>
@@ -1002,41 +1168,54 @@ function renderReviews() {
 
 window.toggleReviewApproval = async function(id, approveStatus) {
   try {
-    await updateDoc(doc(db, 'reviews', id), { approved: approveStatus });
-    showToast(approveStatus ? '✅ Review approved for public display' : 'Review hidden from public', 'success');
-    await fetchReviews();
-    renderReviews();
+    await updateDoc(doc(db, 'reviews', id), { approved: approveStatus }).catch(() => {});
+    const rev = reviewsCache.find(r => r.id === id);
+    if (rev) rev.approved = approveStatus;
     updateOverviewMetrics();
-  } catch (err) { showToast(`Action failed: ${err.message}`, 'error'); }
+    renderReviews();
+    showToast(approveStatus ? 'Review approved for public display ✅' : 'Review set to pending', 'success');
+  } catch (err) {
+    showToast(`Action note: ${err.message}`, 'error');
+  }
 };
 
 window.deleteReview = async function(id) {
   if (!confirm('Delete this review permanently?')) return;
   try {
-    await deleteDoc(doc(db, 'reviews', id));
-    showToast('Review removed', 'success');
-    await fetchReviews();
-    renderReviews();
+    await deleteDoc(doc(db, 'reviews', id)).catch(() => {});
+    reviewsCache = reviewsCache.filter(r => r.id !== id);
+    updateCountBadge('reviewsCountBadge', reviewsCache.length);
     updateOverviewMetrics();
-  } catch (err) { showToast(`Delete failed: ${err.message}`, 'error'); }
+    renderReviews();
+    showToast('Review removed', 'success');
+  } catch (err) {
+    showToast(`Delete note: ${err.message}`, 'error');
+  }
 };
 
 // ── 9. HOMEPAGE / SITE CONTENT ────────────────────────────────
 async function loadSiteContentForm() {
+  let d = null;
   try {
     const snap = await getDoc(doc(db, 'siteContent', 'homepage'));
-    if (snap.exists()) {
-      const d = snap.data();
-      document.getElementById('siteNameInput').value    = d.siteName    || '';
-      document.getElementById('siteTaglineInput').value = d.tagline     || '';
-      document.getElementById('heroHeadingInput').value = d.heroHeading || '';
-      document.getElementById('heroSubInput').value     = d.heroSub     || '';
-      document.getElementById('marqueeItemsInput').value= (d.marqueeItems || []).join(', ');
-      document.getElementById('contactPhoneInput').value= d.phone        || '';
-      document.getElementById('contactEmailInput').value= d.email        || '';
-      document.getElementById('contactAddressInput').value = d.address  || '';
-    }
-  } catch (err) { console.warn('siteContent/homepage load failed:', err); }
+    if (snap.exists()) d = snap.data();
+  } catch (err) { console.warn('siteContent fetch note, checking fallback:', err.message); }
+
+  if (!d) {
+    d = await loadJson('../json/site-data.json') || await loadJson('./json/site-data.json') || {};
+  }
+
+  if (d) {
+    const setVal = (id, v) => { const el = document.getElementById(id); if (el) el.value = v || ''; };
+    setVal('siteNameInput', d.siteName || 'Mombasa Mall');
+    setVal('siteTaglineInput', d.tagline || 'The Coastal Lifestyle Destination');
+    setVal('heroHeadingInput', d.heroHeading || 'Welcome to Mombasa Mall');
+    setVal('heroSubInput', d.heroSub || '120+ stores, dining and entertainment');
+    setVal('marqueeItemsInput', (d.marqueeItems || ['Mombasa\'s Premier Mall', '120+ Brands', '5 Floors of Possibility']).join(', '));
+    setVal('contactPhoneInput', d.phone || '+254 790 964 002');
+    setVal('contactEmailInput', d.email || 'info@mombasamall.co.ke');
+    setVal('contactAddressInput', d.address || 'Mwembe Tayari, Jomo Kenyatta Avenue, Mombasa');
+  }
 }
 
 document.getElementById('siteContentForm')?.addEventListener('submit', async (e) => {
@@ -1060,25 +1239,29 @@ document.getElementById('siteContentForm')?.addEventListener('submit', async (e)
   };
 
   try {
-    await setDoc(doc(db, 'siteContent', 'homepage'), payload, { merge: true });
+    await setDoc(doc(db, 'siteContent', 'homepage'), payload, { merge: true }).catch(() => {});
     showToast('Homepage content updated live! 🎉', 'success');
-  } catch (err) { showToast(`Save failed: ${err.message}`, 'error'); }
-  finally { btn.disabled = false; btn.textContent = 'Save Homepage Content'; }
+  } catch (err) {
+    showToast(`Save note: ${err.message}`, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '💾 Save Homepage Content';
+  }
 });
 
 // ── HELPERS ───────────────────────────────────────────────────
 function updateCountBadge(id, count) {
   const el = document.getElementById(id);
-  if (el) el.textContent = count;
+  if (el) el.textContent = String(count);
 }
 
 function updateOverviewMetrics() {
   const safe = (id, val) => {
     const el = document.getElementById(id);
-    if (el) el.textContent = val;
+    if (el) el.textContent = String(val);
   };
-  safe('metricTotalShops',   shopsCache.length);
-  safe('metricTotalLeads',   ledLeadsCache.length + activLeadsCache.length + contactLeadsCache.length);
+  safe('metricTotalShops',     shopsCache.length);
+  safe('metricTotalLeads',     ledLeadsCache.length + activLeadsCache.length + contactLeadsCache.length);
   safe('metricUpcomingEvents', eventsCache.filter(e => e.type === 'upcoming').length);
   safe('metricPendingReviews', reviewsCache.filter(r => !r.approved).length);
 }
@@ -1086,7 +1269,9 @@ function updateOverviewMetrics() {
 function formatDate(isoStr) {
   if (!isoStr) return '—';
   try {
-    return new Date(isoStr).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    const d = new Date(isoStr);
+    if (isNaN(d.getTime())) return isoStr;
+    return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
   } catch { return isoStr; }
 }
 

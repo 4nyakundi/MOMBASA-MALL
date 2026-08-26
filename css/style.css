@@ -5263,4 +5263,32 @@ span.bento-eyebrow[style*="color:var(--gold)"] {
   }
 }
 
+/* ============ SYS PORTAL LINK ============ */
+.sys-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: rgba(255, 111, 89, 0.12);
+  border: 1px solid rgba(255, 111, 89, 0.35);
+  color: var(--coral, #FF6F59) !important;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 11px !important;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  line-height: 1.2;
+}
+
+.sys-btn:hover {
+  background: var(--coral, #FF6F59);
+  color: #FFFFFF !important;
+  border-color: var(--coral, #FF6F59);
+  box-shadow: 0 2px 10px rgba(255, 111, 89, 0.4);
+  transform: translateY(-1px);
+}
+
+
 
