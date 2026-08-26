@@ -17,7 +17,15 @@
       console.warn('Firestore siteContent fetch error, falling back to JSON:', fsErr);
     }
 
-    // 2. Fallback to static JSON
+    // 2. Check shared live storage from dashboard
+    if (!data) {
+      const liveSiteRaw = localStorage.getItem('mombasa_live_site_content');
+      if (liveSiteRaw) {
+        try { data = JSON.parse(liveSiteRaw); } catch(e) {}
+      }
+    }
+
+    // 3. Fallback to static JSON
     if (!data) {
       const res = await fetch('/json/site-data.json').catch(() => fetch('./json/site-data.json'));
       if (res && res.ok) {

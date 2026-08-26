@@ -1,13 +1,12 @@
 // js/data-renderer.js
-// Universal data renderer pulling live from Firestore collections with graceful fallback to static JSON.
+// Universal data renderer pulling live from Firestore collections with shared live cache and graceful fallback to static JSON.
 
 import { db } from './firebase-config.js';
 import {
   collection,
   getDocs,
   query,
-  where,
-  orderBy
+  where
 } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -16,9 +15,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   async function fetchJson(path) {
     try {
       const r = await fetch(path);
+      if (!r.ok) throw new Error('HTTP ' + r.status);
       return await r.json();
     } catch (err) {
-      console.warn('Failed to load local JSON fallback:', path, err);
+      console.warn('Failed to load local JSON fallback:', path, err.message);
       return null;
     }
   }
@@ -34,7 +34,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         .map(d => ({ id: d.id, ...d.data() }))
         .filter(s => s.isActive !== false);
 
-      // Group shops by floor
       const floorNames = ["Ground Floor", "First Floor", "Second Floor", "Third Floor", "Basement Parking"];
       storesData.floors = floorNames.map(fName => ({
         name: fName,
@@ -42,10 +41,27 @@ document.addEventListener('DOMContentLoaded', async () => {
       })).filter(f => f.shops.length > 0);
     }
   } catch (firestoreErr) {
-    console.warn('Firestore shops fetch failed; using stores.json fallback:', firestoreErr);
+    console.warn('Firestore shops fetch note:', firestoreErr.message);
   }
 
-  // If Firestore returned no floors, fallback to stores.json
+  // If Firestore is empty, check shared live storage from dashboard
+  if (!storesData.floors || storesData.floors.length === 0) {
+    const liveShopsRaw = localStorage.getItem('mombasa_live_shops');
+    if (liveShopsRaw) {
+      try {
+        const liveShops = JSON.parse(liveShopsRaw).filter(s => s.isActive !== false);
+        const floorNames = ["Ground Floor", "First Floor", "Second Floor", "Third Floor", "Basement Parking"];
+        storesData.floors = floorNames.map(fName => ({
+          name: fName,
+          shops: liveShops.filter(s => (s.floor || '').toLowerCase() === fName.toLowerCase())
+        })).filter(f => f.shops.length > 0);
+      } catch (e) {
+        console.warn('Live cache parse note:', e);
+      }
+    }
+  }
+
+  // If still empty, fallback to stores.json
   if (!storesData.floors || storesData.floors.length === 0) {
     storesData = await fetchJson('../json/stores.json') || await fetchJson('./json/stores.json') || { floors: [] };
   }
@@ -106,96 +122,69 @@ document.addEventListener('DOMContentLoaded', async () => {
               style="width:44px;height:44px;border-radius:8px;object-fit:contain;background:#fff;border:1px solid rgba(15,15,15,0.08);padding:3px;flex-shrink:0;"
               onerror="this.src='./assets/Logo/Mall Logo/MOMBASA MALL 1.0.png'">
             <div class="store-card-info" style="display:flex;flex-direction:column;gap:2px;text-align:left;flex:1;min-width:0;">
-              <span style="font-size:10px;color:var(--coral,#FF6F59);font-weight:700;text-transform:uppercase;letter-spacing:0.04em;">${s.room || 'Unit'} · ${s.floor || ''}</span>
+              <span style="font-size:10px;color:var(--coral,#FF6F59);font-weight:700;text-transform:uppercase;letter-spacing:0.04em;">${s.room || 'Unit'} · ${s.floor || floor.name || ''}</span>
               <strong style="font-size:14px;font-weight:700;color:var(--navy,#0A1D37);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${s.name}</strong>
               <span style="font-size:11px;color:var(--ink-soft,#4B5966);">${desc}</span>
             </div>
           `;
 
           const handleClick = () => {
-            if (typeof openShopModal === 'function') {
-              openShopModal(s.name, s);
+            if (typeof window.openShopModal === 'function') {
+              window.openShopModal(s.name, s);
             }
           };
           card.addEventListener('click', handleClick);
-          card.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') handleClick(); });
+          card.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleClick(); } });
 
           list.appendChild(card);
         });
       });
 
       if (list.children.length === 0) {
-        list.innerHTML = `
-
-          <div style="grid-column: 1 / -1; text-align:center; padding:48px; color:var(--ink-soft, #4B5966);">
-            <h3 style="font-size:18px; font-weight:700; color:var(--navy, #0A1D37);">No matching stores found</h3>
-            <p style="font-size:14px; margin-top:8px;">Try searching for a different keyword or checking another category.</p>
-          </div>
-        `;
-      } else if (typeof gsap !== 'undefined') {
-        const cards = list.querySelectorAll('.store-card');
-        gsap.fromTo(cards, 
-          { opacity: 0, y: 12 },
-          { opacity: 1, y: 0, duration: 0.35, stagger: 0.02, ease: "power2.out" }
-        );
+        list.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--ink-soft);">No stores found matching your criteria.</div>`;
       }
     }
-    
-    if (hasFloorSwitcher) {
+
+    if (list) {
+      renderDirectory();
+      
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          renderDirectory(e.target.value, currentCategory);
+        });
+      }
+      
+      const filterPills = document.querySelectorAll('.cat-pill, .filter-pill');
+      filterPills.forEach(pill => {
+        pill.addEventListener('click', (e) => {
+          e.preventDefault();
+          filterPills.forEach(p => p.classList.remove('active'));
+          pill.classList.add('active');
+          currentCategory = pill.getAttribute('data-cat') || 'all';
+          renderDirectory(searchInput ? searchInput.value : '', currentCategory);
+        });
+      });
+      
       floorLayers.forEach(layer => {
         layer.addEventListener('click', () => {
           floorLayers.forEach(l => l.classList.remove('active'));
           layer.classList.add('active');
-          activeFloor = layer.getAttribute('data-floor');
-          
-          const badge = document.getElementById('active-floor-badge');
-          if (badge) badge.textContent = `Current Floor: ${activeFloor}`;
-          
-          if (typeof gsap !== 'undefined') {
-            gsap.fromTo(layer.querySelector('.floor-layer-plate'), 
-              { scale: 0.95 },
-              { scale: 1, duration: 0.3, ease: "back.out(1.5)" }
-            );
-          }
-          
-          const q = searchInput ? searchInput.value : '';
-          renderDirectory(q, currentCategory);
+          activeFloor = layer.getAttribute('data-floor-name') || layer.querySelector('.floor-name')?.textContent.trim() || 'Ground Floor';
+          renderDirectory(searchInput ? searchInput.value : '', currentCategory);
         });
       });
-      
-      const activeLayer = document.querySelector('.floor-layer.active');
-      if (activeLayer) activeFloor = activeLayer.getAttribute('data-floor');
     }
-    
-    renderDirectory();
-    
-    if (searchInput) {
-      searchInput.addEventListener('input', (e) => {
-        renderDirectory(e.target.value, currentCategory);
-      });
-    }
-    
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    filterButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        filterButtons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentCategory = btn.getAttribute('data-category') || 'all';
-        const q = searchInput ? searchInput.value : '';
-        renderDirectory(q, currentCategory);
-      });
-    });
   }
 
   // ----------------------------------------------------
-  // 2. POPULATE EVENTS & NEWS
+  // 2. POPULATE EVENTS (UPCOMING & PAST)
   // ----------------------------------------------------
   let eventsData = { upcoming: [], past: [] };
   try {
     const eventsSnap = await getDocs(collection(db, 'events'));
     if (!eventsSnap.empty) {
       eventsSnap.docs.forEach(d => {
-        const item = d.data();
+        const item = { id: d.id, ...d.data() };
         if (item.type === 'past') {
           eventsData.past.push(item);
         } else {
@@ -204,7 +193,19 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
     }
   } catch (err) {
-    console.warn('Firestore events fetch failed; using JSON fallback:', err);
+    console.warn('Firestore events fetch note:', err.message);
+  }
+
+  // Check live storage cache from dashboard
+  if (eventsData.upcoming.length === 0 && eventsData.past.length === 0) {
+    const liveEvtsRaw = localStorage.getItem('mombasa_live_events');
+    if (liveEvtsRaw) {
+      try {
+        const liveEvts = JSON.parse(liveEvtsRaw);
+        eventsData.upcoming = liveEvts.filter(e => e.type === 'upcoming');
+        eventsData.past     = liveEvts.filter(e => e.type === 'past');
+      } catch (e) {}
+    }
   }
 
   if (eventsData.upcoming.length === 0 && eventsData.past.length === 0) {
@@ -246,7 +247,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch { return dateStr; }
   }
 
-
   // ----------------------------------------------------
   // 3. POPULATE BLOG / JOURNAL
   // ----------------------------------------------------
@@ -257,7 +257,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       blogPosts = blogSnap.docs.map(d => d.data());
     }
   } catch (err) {
-    console.warn('Firestore blog fetch failed; using JSON fallback:', err);
+    console.warn('Firestore blog fetch note:', err.message);
+  }
+
+  if (blogPosts.length === 0) {
+    const liveBlogRaw = localStorage.getItem('mombasa_live_blog');
+    if (liveBlogRaw) {
+      try { blogPosts = JSON.parse(liveBlogRaw); } catch (e) {}
+    }
   }
 
   if (blogPosts.length === 0) {
@@ -271,7 +278,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       <article class="post glow-card" style="padding:28px; background:rgba(255,255,255,0.4); display:flex; flex-direction:column; gap:12px; align-items:start; border-radius:16px;">
         <small style="color:var(--yellow-deep, #E5C07B); font-weight:700; text-transform:uppercase; letter-spacing:0.05em; font-size:11px;">${p.date || ''}</small>
         <h3 style="margin:0; font-size:20px; font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; color:var(--ink, #0A1D37);">${p.title}</h3>
-        <p style="margin:0; font-size:14px; line-height:1.6; color:var(--ink-soft, #4B5966);">${p.excerpt}</p>
+        <p style="margin:0; font-size:14px; line-height:1.6; color:var(--ink-soft, #4B5966);">${p.excerpt || ''}</p>
         <a href="./blog.html#read-${p.slug || ''}" onclick="alert('Viewing Blog Article: \\n\\n' + this.previousElementSibling.textContent)" class="cta-btn" style="margin-top:8px; cursor:pointer;">Read Article <span class="cta-arrow">→</span></a>
       </article>
     `).join('');
@@ -295,7 +302,18 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
     }
   } catch (err) {
-    console.warn('Firestore reviews fetch failed; using JSON fallback:', err);
+    console.warn('Firestore reviews fetch note:', err.message);
+  }
+
+  if (reviewsData.testimonials.length === 0 && reviewsData.customerFeedback.length === 0) {
+    const liveRevRaw = localStorage.getItem('mombasa_live_reviews');
+    if (liveRevRaw) {
+      try {
+        const liveRevs = JSON.parse(liveRevRaw).filter(r => r.approved);
+        reviewsData.testimonials     = liveRevs.filter(r => r.type === 'testimonial');
+        reviewsData.customerFeedback = liveRevs.filter(r => r.type === 'feedback');
+      } catch (e) {}
+    }
   }
 
   if (reviewsData.testimonials.length === 0 && reviewsData.customerFeedback.length === 0) {

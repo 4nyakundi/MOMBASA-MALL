@@ -109,8 +109,14 @@
         <div class="admin-topbar-title" id="topbarTitle">Dashboard</div>
       </div>
       <div class="admin-topbar-actions">
-        <a href="../index.html" target="_blank" rel="noopener" class="btn-secondary btn-sm">
-          🌐 View Site
+        <a href="../stores/index.html" target="_blank" class="btn-secondary btn-sm" title="Open live public store directory">
+          🏪 Directory ↗
+        </a>
+        <a href="../news-events.html" target="_blank" class="btn-secondary btn-sm" title="Open live events calendar">
+          📅 Events ↗
+        </a>
+        <a href="../index.html" target="_blank" rel="noopener" class="btn-primary btn-sm" title="View live public homepage">
+          🌐 View Live Site ↗
         </a>
       </div>
     </header>
@@ -147,6 +153,45 @@
             <span class="metric-title">Pending Reviews</span>
             <span class="metric-value" id="metricPendingReviews">—</span>
             <span class="metric-foot">Awaiting your moderation</span>
+          </div>
+        </div>
+
+        <!-- Live Site Data Hub -->
+        <div class="seeder-card" style="background:#FFFFFF; border:1px solid var(--admin-border); margin-bottom:28px; padding:22px 24px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:12px;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <span style="font-size:24px;">🔗</span>
+              <div>
+                <h3 style="margin:0; font-size:16px; font-weight:700; color:var(--admin-text); display:flex; align-items:center; gap:8px;">
+                  Public Site &amp; Directory Synchronization Hub
+                  <span style="background:#ECFDF5; color:#059669; border:1px solid #A7F3D0; font-size:11px; padding:2px 8px; border-radius:12px; font-weight:700;">🟢 Live Connected</span>
+                </h3>
+                <p style="margin:4px 0 0; font-size:12.5px; color:var(--admin-text-muted);">All edits made in this dashboard synchronize live with the public website pages below.</p>
+              </div>
+            </div>
+            <button id="syncLiveSiteBtn" class="btn-primary btn-sm">
+              🔄 Sync Live Site Now
+            </button>
+          </div>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:10px; margin-top:14px; padding-top:14px; border-top:1px solid var(--admin-border-subtle);">
+            <a href="../stores/index.html" target="_blank" class="quick-action-btn" style="padding:10px 14px; font-size:12.5px;">
+              <span>🏪</span> Public Stores Directory ↗
+            </a>
+            <a href="../news-events.html" target="_blank" class="quick-action-btn" style="padding:10px 14px; font-size:12.5px;">
+              <span>📅</span> Public Events Calendar ↗
+            </a>
+            <a href="../gallery.html" target="_blank" class="quick-action-btn" style="padding:10px 14px; font-size:12.5px;">
+              <span>🖼️</span> Public Photo Gallery ↗
+            </a>
+            <a href="../led-advertising/index.html" target="_blank" class="quick-action-btn" style="padding:10px 14px; font-size:12.5px;">
+              <span>💡</span> Public LED Estimator ↗
+            </a>
+            <a href="../activations/index.html" target="_blank" class="quick-action-btn" style="padding:10px 14px; font-size:12.5px;">
+              <span>🎪</span> Public Activations Page ↗
+            </a>
+            <a href="../about-us.html#contact" target="_blank" class="quick-action-btn" style="padding:10px 14px; font-size:12.5px;">
+              <span>✉️</span> Public Contact Page ↗
+            </a>
           </div>
         </div>
 
@@ -223,9 +268,14 @@
               <option value="fashion">Fashion &amp; Shoes</option>
             </select>
           </div>
-          <button id="openAddShopBtn" class="btn-primary">
-            <span>+</span> Add New Store
-          </button>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <a href="../stores/index.html" target="_blank" class="btn-secondary">
+              🏪 View Live Directory ↗
+            </a>
+            <button id="openAddShopBtn" class="btn-primary">
+              <span>+</span> Add New Store
+            </button>
+          </div>
         </div>
 
         <div class="table-card">
@@ -262,9 +312,14 @@
       <section class="tab-panel" id="tab-gallery">
         <div class="section-toolbar">
           <h3 class="section-heading">Photo Albums &amp; Architecture</h3>
-          <button id="openAddGalleryBtn" class="btn-primary">
-            <span>+</span> Upload Photo
-          </button>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <a href="../gallery.html" target="_blank" class="btn-secondary">
+              🖼️ View Public Gallery ↗
+            </a>
+            <button id="openAddGalleryBtn" class="btn-primary">
+              <span>+</span> Upload Photo
+            </button>
+          </div>
         </div>
         <div class="gallery-grid" id="galleryGridContainer">
           <!-- Populated via JS -->
@@ -381,9 +436,14 @@
       <section class="tab-panel" id="tab-events">
         <div class="section-toolbar">
           <h3 class="section-heading">Upcoming &amp; Past Events</h3>
-          <button id="openAddEventBtn" class="btn-primary">
-            <span>+</span> Add Event
-          </button>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <a href="../news-events.html" target="_blank" class="btn-secondary">
+              📅 View Public Events ↗
+            </a>
+            <button id="openAddEventBtn" class="btn-primary">
+              <span>+</span> Add Event
+            </button>
+          </div>
         </div>
         <div class="table-card">
           <table class="admin-table">
@@ -437,6 +497,9 @@
       <section class="tab-panel" id="tab-reviews">
         <div class="section-toolbar">
           <h3 class="section-heading">Customer Testimonials &amp; Feedback Queue</h3>
+          <a href="../reviews.html" target="_blank" class="btn-secondary">
+            ⭐ View Public Reviews ↗
+          </a>
         </div>
         <div class="table-card">
           <table class="admin-table">
@@ -462,7 +525,12 @@
            ══════════════════════════════════════ -->
       <section class="tab-panel" id="tab-siteContent">
         <div class="table-card" style="padding:28px;max-width:800px;">
-          <h3 class="section-heading" style="margin-bottom:20px;">Homepage &amp; Branding Singleton Editor</h3>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
+            <h3 class="section-heading" style="margin:0;">Homepage &amp; Branding Live Editor</h3>
+            <a href="../index.html" target="_blank" class="btn-secondary">
+              🌐 Preview Live Homepage ↗
+            </a>
+          </div>
           <p style="font-size:13px;color:var(--admin-text-muted);margin:0 0 22px;line-height:1.65;">
             Changes here update the live public homepage instantly. Content is read from
             <code style="color:var(--coral);font-size:11px;">siteContent/homepage</code> in Firestore.

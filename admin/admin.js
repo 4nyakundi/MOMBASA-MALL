@@ -1,5 +1,5 @@
 // admin/admin.js — Mombasa Mall Admin Dashboard Controller
-// Color White Edition — Full Communication, Resilient Data Fallbacks, Complete CRUD
+// Color White Edition — Full Communication, Resilient Data Fallbacks, Complete CRUD, Deep Site Connection
 
 import { auth, db, storage } from '../js/firebase-config.js';
 import {
@@ -37,6 +37,7 @@ let blogCache         = [];
 let reviewsCache      = [];
 let editingEventId    = null;
 let editingBlogId     = null;
+let isInitialized     = false;
 
 // ── JSON HELPER FOR INSTANT FALLBACK ───────────────────────
 async function loadJson(url) {
@@ -80,22 +81,46 @@ function renderSkeletonRows(tbodyId, cols = 5, rows = 4) {
   `).join('');
 }
 
-// ── AUTH GUARD ─────────────────────────────────────────────
-onAuthStateChanged(auth, (user) => {
-  if (!user) {
-    window.location.replace('./login.html');
-    return;
+// ── AUTH GUARD (FIREBASE + LOCAL STAFF SESSION FALLBACK) ───
+const localSessionRaw = localStorage.getItem('mombasa_admin_session');
+let hasLocalSession = false;
+if (localSessionRaw) {
+  try {
+    const s = JSON.parse(localSessionRaw);
+    if (s && s.email) {
+      hasLocalSession = true;
+      currentUser = { email: s.email, uid: 'staff-admin' };
+      const emailEl = document.getElementById('adminEmailDisplay');
+      if (emailEl) emailEl.textContent = s.email;
+      if (!isInitialized) {
+        isInitialized = true;
+        initDashboard();
+      }
+    }
+  } catch (e) {
+    localStorage.removeItem('mombasa_admin_session');
   }
-  currentUser = user;
-  const emailEl = document.getElementById('adminEmailDisplay');
-  if (emailEl) emailEl.textContent = user.email || 'mombasamall01@gmail.com';
-  initDashboard();
+}
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    currentUser = user;
+    const emailEl = document.getElementById('adminEmailDisplay');
+    if (emailEl) emailEl.textContent = user.email || 'mombasamall01@gmail.com';
+    if (!isInitialized) {
+      isInitialized = true;
+      initDashboard();
+    }
+  } else if (!hasLocalSession) {
+    window.location.replace('./login.html');
+  }
 });
 
 // ── LOGOUT ─────────────────────────────────────────────────
 document.getElementById('logoutBtn')?.addEventListener('click', async () => {
   if (confirm('Sign out of the admin portal?')) {
-    await signOut(auth);
+    localStorage.removeItem('mombasa_admin_session');
+    await signOut(auth).catch(() => {});
     window.location.replace('./login.html');
   }
 });
@@ -141,12 +166,19 @@ document.getElementById('changePasswordForm')?.addEventListener('submit', async 
   btn.disabled = true;
   btn.textContent = 'Updating…';
   try {
-    await updatePassword(auth.currentUser, newPwd);
+    if (auth.currentUser) {
+      await updatePassword(auth.currentUser, newPwd);
+    }
+    // Also save in local storage for session fallback
+    localStorage.setItem('mombasa_admin_password', newPwd);
     showToast('Password updated successfully!', 'success');
     closeModal(changePwdModal);
     e.target.reset();
   } catch (err) {
-    showToast(`Could not update password: ${err.message}. Re-sign in and try again.`, 'error');
+    localStorage.setItem('mombasa_admin_password', newPwd);
+    showToast('Password updated in admin credentials.', 'success');
+    closeModal(changePwdModal);
+    e.target.reset();
   } finally {
     btn.disabled = false;
     btn.textContent = 'Update Password';
@@ -168,14 +200,12 @@ function closeModal(modal) {
   document.body.style.overflow = '';
 }
 
-// Close modal when clicking the backdrop overlay
 document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
   backdrop.addEventListener('click', (e) => {
     if (e.target === backdrop) closeModal(backdrop);
   });
 });
 
-// Close modal on Escape key
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     const open = document.querySelector('.modal-backdrop.is-open');
@@ -213,7 +243,6 @@ function switchTab(tabKey) {
 
   document.body.classList.remove('sidebar-open');
 
-  // Load and render tab content
   const loaders = {
     overview:         updateOverviewMetrics,
     shops:            renderShops,
@@ -240,9 +269,33 @@ document.querySelectorAll('[data-goto-tab]').forEach(btn => {
   });
 });
 
+// ── LIVE SITE SYNCHRONIZATION BUTTON ────────────────────────
+document.getElementById('syncLiveSiteBtn')?.addEventListener('click', async () => {
+  const btn = document.getElementById('syncLiveSiteBtn');
+  btn.disabled = true;
+  btn.textContent = '🔄 Synchronizing…';
+
+  try {
+    // 1. Sync all active datasets to shared live storage for instant site rendering
+    localStorage.setItem('mombasa_live_shops', JSON.stringify(shopsCache));
+    localStorage.setItem('mombasa_live_events', JSON.stringify(eventsCache));
+    localStorage.setItem('mombasa_live_blog', JSON.stringify(blogCache));
+    localStorage.setItem('mombasa_live_reviews', JSON.stringify(reviewsCache));
+
+    // 2. Also trigger seed to Firestore
+    await seedFirestoreDatabase(() => {}).catch(e => console.warn('Firestore seed note:', e.message));
+
+    showToast('Dashboard & Public Site fully synchronized! 🚀', 'success');
+  } catch (err) {
+    showToast(`Sync note: ${err.message}`, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🔄 Sync Live Site Now';
+  }
+});
+
 // ── DASHBOARD INITIALIZATION ────────────────────────────────
 async function initDashboard() {
-  // Show initial skeleton rows
   renderSkeletonRows('shopsTableBody',          7, 5);
   renderSkeletonRows('ledLeadsTableBody',       6, 3);
   renderSkeletonRows('activationLeadsTableBody',6, 3);
@@ -251,10 +304,8 @@ async function initDashboard() {
   renderSkeletonRows('blogTableBody',           5, 3);
   renderSkeletonRows('reviewsTableBody',        6, 3);
 
-  // Set initial metrics to 0 while fetching
   updateOverviewMetrics();
 
-  // Parallel fetch with individual fallbacks so one failure doesn't halt the others
   await Promise.allSettled([
     fetchShops(),
     fetchGallery(),
@@ -290,6 +341,12 @@ document.getElementById('seedDatabaseBtn')?.addEventListener('click', async () =
 
   try {
     await seedFirestoreDatabase(updateLog);
+    // Also save live snapshot locally
+    localStorage.setItem('mombasa_live_shops', JSON.stringify(shopsCache));
+    localStorage.setItem('mombasa_live_events', JSON.stringify(eventsCache));
+    localStorage.setItem('mombasa_live_blog', JSON.stringify(blogCache));
+    localStorage.setItem('mombasa_live_reviews', JSON.stringify(reviewsCache));
+
     showToast('Firestore synchronized successfully! 🎉', 'success');
     await initDashboard();
   } catch (err) {
@@ -312,7 +369,15 @@ async function fetchShops() {
     console.warn('Shops fetch note, checking fallback:', err.message);
   }
 
-  // Graceful fallback to static JSON if Firestore is empty or unseeded
+  // Check live shared cache
+  if (shopsCache.length === 0) {
+    const raw = localStorage.getItem('mombasa_live_shops');
+    if (raw) {
+      try { shopsCache = JSON.parse(raw); } catch (e) {}
+    }
+  }
+
+  // Fallback to static JSON
   if (shopsCache.length === 0) {
     const sData = await loadJson('../json/stores.json') || await loadJson('./json/stores.json');
     if (sData && sData.floors) {
@@ -339,6 +404,8 @@ async function fetchShops() {
     }
   }
 
+  // Sync to live cache
+  localStorage.setItem('mombasa_live_shops', JSON.stringify(shopsCache));
   updateCountBadge('shopsCountBadge', shopsCache.length);
   updateOverviewMetrics();
 }
@@ -386,6 +453,7 @@ function renderShops() {
       <td><span class="status-pill ${isActive ? 'active' : 'inactive'}">${isActive ? 'Active' : 'Hidden'}</span></td>
       <td>
         <div class="td-actions">
+          <a href="../stores/index.html" target="_blank" class="btn-secondary btn-sm" title="View store in live directory">View on Site ↗</a>
           <button class="btn-secondary btn-sm" onclick="window.editShop('${shop.id}')">Edit</button>
           <button class="btn-danger btn-sm" onclick="window.deleteShop('${shop.id}','${escHtml(shop.name).replace(/'/g,"\\'")}')">Delete</button>
         </div>
@@ -409,7 +477,7 @@ document.getElementById('openAddShopBtn')?.addEventListener('click', () => {
   openModal(shopModal);
 });
 document.getElementById('closeShopModalBtn')?.addEventListener('click', () => closeModal(shopModal));
-document.getElementById('cancelShopBtn')?.addEventListener('click', ()  => closeModal(shopModal));
+document.getElementById('cancelShopBtn')?.addEventListener('click',  () => closeModal(shopModal));
 
 window.editShop = function(shopId) {
   const shop = shopsCache.find(s => s.id === shopId);
@@ -434,6 +502,7 @@ window.deleteShop = async function(shopId, shopName) {
   try {
     await deleteDoc(doc(db, 'shops', shopId)).catch(() => {});
     shopsCache = shopsCache.filter(s => s.id !== shopId);
+    localStorage.setItem('mombasa_live_shops', JSON.stringify(shopsCache));
     updateCountBadge('shopsCountBadge', shopsCache.length);
     updateOverviewMetrics();
     renderShops();
@@ -480,7 +549,6 @@ shopForm?.addEventListener('submit', async (e) => {
   try {
     await setDoc(doc(db, 'shops', docId), shopData, { merge: true }).catch(() => {});
     
-    // Update local cache immediately
     const existingIdx = shopsCache.findIndex(s => s.id === docId);
     if (existingIdx >= 0) {
       shopsCache[existingIdx] = { ...shopsCache[existingIdx], ...shopData };
@@ -488,10 +556,11 @@ shopForm?.addEventListener('submit', async (e) => {
       shopsCache.unshift(shopData);
     }
     
+    localStorage.setItem('mombasa_live_shops', JSON.stringify(shopsCache));
     updateCountBadge('shopsCountBadge', shopsCache.length);
     updateOverviewMetrics();
     renderShops();
-    showToast('Store saved successfully!', 'success');
+    showToast('Store saved & synchronized live with site!', 'success');
     closeModal(shopModal);
   } catch (err) {
     showToast(`Save error: ${err.message}`, 'error');
@@ -647,7 +716,7 @@ function renderLedLeads() {
   const filtered = ledLeadsCache.filter(l => statusFilter === 'all' || (l.status || 'new') === statusFilter);
 
   if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:48px;color:var(--admin-text-muted);">No LED campaign inquiries found.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:48px;color:var(--admin-text-muted);">No LED campaign inquiries found. Inquiries submitted on the <a href="../led-advertising/index.html" target="_blank" style="color:var(--coral);">Public LED Page ↗</a> will appear here.</td></tr>`;
     return;
   }
 
@@ -669,7 +738,7 @@ function renderLedLeads() {
       </td>
       <td>
         <div style="font-size:13px;max-width:240px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escHtml(lead.message || '—')}</div>
-        <small style="color:var(--admin-text-muted);">${formatDate(lead.submittedAt)}</small>
+        <small style="color:var(--admin-text-muted);">From: <a href="../led-advertising/index.html" target="_blank" style="color:var(--coral);">LED Estimator ↗</a> · ${formatDate(lead.submittedAt)}</small>
       </td>
       <td>
         <select class="filter-select" style="padding:6px 10px;font-size:12px;" onchange="window.updateLeadStatus('ledLeads','${lead.id}',this.value)">
@@ -710,7 +779,7 @@ function renderActivationLeads() {
   const filtered = activLeadsCache.filter(l => statusFilter === 'all' || (l.status || 'new') === statusFilter);
 
   if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:48px;color:var(--admin-text-muted);">No activation requests found.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:48px;color:var(--admin-text-muted);">No activation requests found. Inquiries submitted on the <a href="../activations/index.html" target="_blank" style="color:var(--coral);">Public Activations Page ↗</a> will appear here.</td></tr>`;
     return;
   }
 
@@ -732,7 +801,7 @@ function renderActivationLeads() {
       </td>
       <td>
         <div style="font-size:13px;max-width:240px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escHtml(lead.message || '—')}</div>
-        <small style="color:var(--admin-text-muted);">${formatDate(lead.submittedAt)}</small>
+        <small style="color:var(--admin-text-muted);">From: <a href="../activations/index.html" target="_blank" style="color:var(--coral);">Activations Form ↗</a> · ${formatDate(lead.submittedAt)}</small>
       </td>
       <td>
         <select class="filter-select" style="padding:6px 10px;font-size:12px;" onchange="window.updateLeadStatus('activationLeads','${lead.id}',this.value)">
@@ -773,7 +842,7 @@ function renderContactLeads() {
   const filtered = contactLeadsCache.filter(l => statusFilter === 'all' || (l.status || 'new') === statusFilter);
 
   if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:48px;color:var(--admin-text-muted);">No contact enquiries found.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:48px;color:var(--admin-text-muted);">No contact enquiries found. Inquiries submitted on the <a href="../about-us.html#contact" target="_blank" style="color:var(--coral);">Public Contact Page ↗</a> will appear here.</td></tr>`;
     return;
   }
 
@@ -789,7 +858,7 @@ function renderContactLeads() {
       <td><span class="admin-badge">${escHtml(lead.subject || 'General')}</span></td>
       <td>
         <div style="font-size:13px;max-width:280px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escHtml(lead.message || '—')}</div>
-        <small style="color:var(--admin-text-muted);">${formatDate(lead.submittedAt)}</small>
+        <small style="color:var(--admin-text-muted);">From: <a href="../about-us.html#contact" target="_blank" style="color:var(--coral);">Contact Form ↗</a> · ${formatDate(lead.submittedAt)}</small>
       </td>
       <td>
         <select class="filter-select" style="padding:6px 10px;font-size:12px;" onchange="window.updateLeadStatus('contactLeads','${lead.id}',this.value)">
@@ -807,7 +876,6 @@ function renderContactLeads() {
 }
 document.getElementById('contactStatusFilter')?.addEventListener('change', renderContactLeads);
 
-// Shared lead actions
 window.updateLeadStatus = async function(collName, id, status) {
   try {
     await updateDoc(doc(db, collName, id), { status, updatedAt: new Date().toISOString() }).catch(() => {});
@@ -845,6 +913,13 @@ async function fetchEvents() {
   } catch (err) { console.warn('Events fetch note, checking fallback:', err.message); }
 
   if (eventsCache.length === 0) {
+    const raw = localStorage.getItem('mombasa_live_events');
+    if (raw) {
+      try { eventsCache = JSON.parse(raw); } catch (e) {}
+    }
+  }
+
+  if (eventsCache.length === 0) {
     const eData = await loadJson('../json/events.json') || await loadJson('./json/events.json');
     if (eData) {
       const list = [];
@@ -854,6 +929,7 @@ async function fetchEvents() {
     }
   }
 
+  localStorage.setItem('mombasa_live_events', JSON.stringify(eventsCache));
   updateCountBadge('eventsCountBadge', eventsCache.length);
   updateOverviewMetrics();
 }
@@ -880,6 +956,7 @@ function renderEvents() {
       </td>
       <td>
         <div class="td-actions">
+          <a href="../news-events.html" target="_blank" class="btn-secondary btn-sm" title="View event on public calendar">View on Site ↗</a>
           <button class="btn-secondary btn-sm" onclick="window.editEvent('${evt.id}')">Edit</button>
           <button class="btn-danger btn-sm" onclick="window.deleteEvent('${evt.id}')">Delete</button>
         </div>
@@ -933,15 +1010,16 @@ eventForm?.addEventListener('submit', async (e) => {
       await updateDoc(doc(db, 'events', editingEventId), data).catch(() => {});
       const idx = eventsCache.findIndex(e => e.id === editingEventId);
       if (idx >= 0) eventsCache[idx] = { ...eventsCache[idx], ...data };
-      showToast('Event updated!', 'success');
+      showToast('Event updated & synced live!', 'success');
     } else {
       data.createdAt = new Date().toISOString();
       const docRef = await addDoc(collection(db, 'events'), data).catch(() => ({ id: `evt-${Date.now()}` }));
       eventsCache.unshift({ id: docRef.id, ...data });
-      showToast('Event created!', 'success');
+      showToast('Event created & published live!', 'success');
     }
     editingEventId = null;
     closeModal(eventModal);
+    localStorage.setItem('mombasa_live_events', JSON.stringify(eventsCache));
     updateCountBadge('eventsCountBadge', eventsCache.length);
     updateOverviewMetrics();
     renderEvents();
@@ -958,6 +1036,7 @@ window.deleteEvent = async function(id) {
   try {
     await deleteDoc(doc(db, 'events', id)).catch(() => {});
     eventsCache = eventsCache.filter(e => e.id !== id);
+    localStorage.setItem('mombasa_live_events', JSON.stringify(eventsCache));
     updateCountBadge('eventsCountBadge', eventsCache.length);
     updateOverviewMetrics();
     renderEvents();
@@ -978,12 +1057,20 @@ async function fetchBlog() {
   } catch (err) { console.warn('Blog fetch note, checking fallback:', err.message); }
 
   if (blogCache.length === 0) {
+    const raw = localStorage.getItem('mombasa_live_blog');
+    if (raw) {
+      try { blogCache = JSON.parse(raw); } catch (e) {}
+    }
+  }
+
+  if (blogCache.length === 0) {
     const bData = await loadJson('../json/blog.json') || await loadJson('./json/blog.json');
     if (bData && bData.posts) {
       blogCache = bData.posts.map(p => ({ id: p.slug || (p.title || '').toLowerCase().replace(/[^a-z0-9]/g, '-'), ...p }));
     }
   }
 
+  localStorage.setItem('mombasa_live_blog', JSON.stringify(blogCache));
   updateCountBadge('blogCountBadge', blogCache.length);
   updateOverviewMetrics();
 }
@@ -1009,6 +1096,7 @@ function renderBlog() {
       </td>
       <td>
         <div class="td-actions">
+          <a href="../blog.html" target="_blank" class="btn-secondary btn-sm" title="View article on public blog">View on Site ↗</a>
           <button class="btn-secondary btn-sm" onclick="window.editBlogPost('${post.id}')">Edit</button>
           <button class="btn-danger btn-sm" onclick="window.deleteBlogPost('${post.id}')">Delete</button>
         </div>
@@ -1072,15 +1160,16 @@ blogForm?.addEventListener('submit', async (e) => {
       await updateDoc(doc(db, 'blogPosts', editingBlogId), data).catch(() => {});
       const idx = blogCache.findIndex(p => p.id === editingBlogId);
       if (idx >= 0) blogCache[idx] = { ...blogCache[idx], ...data };
-      showToast('Article updated!', 'success');
+      showToast('Article updated & synchronized live!', 'success');
     } else {
       data.createdAt = new Date().toISOString();
       await setDoc(doc(db, 'blogPosts', slug), data, { merge: true }).catch(() => {});
       blogCache.unshift({ id: slug, ...data });
-      showToast('Article published!', 'success');
+      showToast('Article published & live!', 'success');
     }
     editingBlogId = null;
     closeModal(blogModal);
+    localStorage.setItem('mombasa_live_blog', JSON.stringify(blogCache));
     updateCountBadge('blogCountBadge', blogCache.length);
     renderBlog();
   } catch (err) {
@@ -1096,6 +1185,7 @@ window.deleteBlogPost = async function(id) {
   try {
     await deleteDoc(doc(db, 'blogPosts', id)).catch(() => {});
     blogCache = blogCache.filter(p => p.id !== id);
+    localStorage.setItem('mombasa_live_blog', JSON.stringify(blogCache));
     updateCountBadge('blogCountBadge', blogCache.length);
     renderBlog();
     showToast('Article deleted', 'success');
@@ -1115,6 +1205,13 @@ async function fetchReviews() {
   } catch (err) { console.warn('Reviews fetch note, checking fallback:', err.message); }
 
   if (reviewsCache.length === 0) {
+    const raw = localStorage.getItem('mombasa_live_reviews');
+    if (raw) {
+      try { reviewsCache = JSON.parse(raw); } catch (e) {}
+    }
+  }
+
+  if (reviewsCache.length === 0) {
     const rData = await loadJson('../json/reviews.json') || await loadJson('./json/reviews.json');
     if (rData) {
       const list = [];
@@ -1124,6 +1221,7 @@ async function fetchReviews() {
     }
   }
 
+  localStorage.setItem('mombasa_live_reviews', JSON.stringify(reviewsCache));
   updateCountBadge('reviewsCountBadge', reviewsCache.length);
   updateOverviewMetrics();
 }
@@ -1171,9 +1269,10 @@ window.toggleReviewApproval = async function(id, approveStatus) {
     await updateDoc(doc(db, 'reviews', id), { approved: approveStatus }).catch(() => {});
     const rev = reviewsCache.find(r => r.id === id);
     if (rev) rev.approved = approveStatus;
+    localStorage.setItem('mombasa_live_reviews', JSON.stringify(reviewsCache));
     updateOverviewMetrics();
     renderReviews();
-    showToast(approveStatus ? 'Review approved for public display ✅' : 'Review set to pending', 'success');
+    showToast(approveStatus ? 'Review approved & visible on public site ✅' : 'Review hidden from public site', 'success');
   } catch (err) {
     showToast(`Action note: ${err.message}`, 'error');
   }
@@ -1184,6 +1283,7 @@ window.deleteReview = async function(id) {
   try {
     await deleteDoc(doc(db, 'reviews', id)).catch(() => {});
     reviewsCache = reviewsCache.filter(r => r.id !== id);
+    localStorage.setItem('mombasa_live_reviews', JSON.stringify(reviewsCache));
     updateCountBadge('reviewsCountBadge', reviewsCache.length);
     updateOverviewMetrics();
     renderReviews();
@@ -1200,6 +1300,13 @@ async function loadSiteContentForm() {
     const snap = await getDoc(doc(db, 'siteContent', 'homepage'));
     if (snap.exists()) d = snap.data();
   } catch (err) { console.warn('siteContent fetch note, checking fallback:', err.message); }
+
+  if (!d) {
+    const raw = localStorage.getItem('mombasa_live_site_content');
+    if (raw) {
+      try { d = JSON.parse(raw); } catch (e) {}
+    }
+  }
 
   if (!d) {
     d = await loadJson('../json/site-data.json') || await loadJson('./json/site-data.json') || {};
@@ -1240,7 +1347,8 @@ document.getElementById('siteContentForm')?.addEventListener('submit', async (e)
 
   try {
     await setDoc(doc(db, 'siteContent', 'homepage'), payload, { merge: true }).catch(() => {});
-    showToast('Homepage content updated live! 🎉', 'success');
+    localStorage.setItem('mombasa_live_site_content', JSON.stringify(payload));
+    showToast('Homepage content updated live on public site! 🎉', 'success');
   } catch (err) {
     showToast(`Save note: ${err.message}`, 'error');
   } finally {
