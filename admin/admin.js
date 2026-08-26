@@ -230,6 +230,14 @@
       { id: 'gal-8', imageUrl: '../assets/Logo/Shops Logo/Payless.jpg', caption: 'Payless Footwear Retail', category: 'retail', sortOrder: 8 }
     ];
 
+    // 6. LEADS CACHE (Local & Cloud Synchronized)
+    const savedLed = localStorage.getItem('mombasa_live_led_leads');
+    if (savedLed) { try { ledLeadsCache = JSON.parse(savedLed); } catch(e){} }
+    const savedActiv = localStorage.getItem('mombasa_live_activation_leads');
+    if (savedActiv) { try { activLeadsCache = JSON.parse(savedActiv); } catch(e){} }
+    const savedContact = localStorage.getItem('mombasa_live_contact_leads');
+    if (savedContact) { try { contactLeadsCache = JSON.parse(savedContact); } catch(e){} }
+
     // Update count badges
     updateCountBadge('shopsCountBadge', shopsCache.length);
     updateCountBadge('galleryCountBadge', galleryCache.length);
@@ -516,17 +524,43 @@
   window.updateLeadStatus = function(collName, id, status) {
     const map = { ledLeads: ledLeadsCache, activationLeads: activLeadsCache, contactLeads: contactLeadsCache };
     const lead = (map[collName] || []).find(l => l.id === id);
-    if (lead) lead.status = status;
-    showToast('Lead status updated', 'success');
+    if (lead) {
+      lead.status = status;
+      if (collName === 'ledLeads') localStorage.setItem('mombasa_live_led_leads', JSON.stringify(ledLeadsCache));
+      if (collName === 'activationLeads') localStorage.setItem('mombasa_live_activation_leads', JSON.stringify(activLeadsCache));
+      if (collName === 'contactLeads') localStorage.setItem('mombasa_live_contact_leads', JSON.stringify(contactLeadsCache));
+      showToast('Lead status updated', 'success');
+      if (fb.isCloudReady && fb.db) {
+        try { fb.fsMod.updateDoc(fb.fsMod.doc(fb.db, collName, id), { status }); } catch(e){}
+      }
+    }
   };
 
   window.deleteLead = function(collName, id) {
     if (!confirm('Delete this record?')) return;
-    if (collName === 'ledLeads')        { ledLeadsCache = ledLeadsCache.filter(l => l.id !== id); updateCountBadge('ledLeadsCountBadge', ledLeadsCache.length); renderLedLeads(); }
-    if (collName === 'activationLeads') { activLeadsCache = activLeadsCache.filter(l => l.id !== id); updateCountBadge('activationLeadsCountBadge', activLeadsCache.length); renderActivationLeads(); }
-    if (collName === 'contactLeads')    { contactLeadsCache = contactLeadsCache.filter(l => l.id !== id); updateCountBadge('contactLeadsCountBadge', contactLeadsCache.length); renderContactLeads(); }
+    if (collName === 'ledLeads') {
+      ledLeadsCache = ledLeadsCache.filter(l => l.id !== id);
+      localStorage.setItem('mombasa_live_led_leads', JSON.stringify(ledLeadsCache));
+      updateCountBadge('ledLeadsCountBadge', ledLeadsCache.length);
+      renderLedLeads();
+    }
+    if (collName === 'activationLeads') {
+      activLeadsCache = activLeadsCache.filter(l => l.id !== id);
+      localStorage.setItem('mombasa_live_activation_leads', JSON.stringify(activLeadsCache));
+      updateCountBadge('activationLeadsCountBadge', activLeadsCache.length);
+      renderActivationLeads();
+    }
+    if (collName === 'contactLeads') {
+      contactLeadsCache = contactLeadsCache.filter(l => l.id !== id);
+      localStorage.setItem('mombasa_live_contact_leads', JSON.stringify(contactLeadsCache));
+      updateCountBadge('contactLeadsCountBadge', contactLeadsCache.length);
+      renderContactLeads();
+    }
     updateOverviewMetrics();
     showToast('Record deleted', 'success');
+    if (fb.isCloudReady && fb.db) {
+      try { fb.fsMod.deleteDoc(fb.fsMod.doc(fb.db, collName, id)); } catch(e){}
+    }
   };
 
   // ── 6. EVENTS RENDER ───────────────────────────────────────
