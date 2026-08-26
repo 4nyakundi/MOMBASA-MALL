@@ -153,7 +153,21 @@ body.admin-body {
   font-size: 16px;
   flex-shrink: 0;
   width: 20px;
-  text-align: center;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-nav-item .nav-icon svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  display: block;
 }
 
 .admin-nav-item .nav-label {
@@ -357,9 +371,31 @@ body.admin-body {
 .metric-card.accent-gold  { border-left-color: var(--gold); }
 
 .metric-icon {
-  font-size: 22px;
-  margin-bottom: 4px;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+  background: #F8FAFC;
+  color: #334155;
 }
+
+.metric-icon svg {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.metric-card.accent-coral .metric-icon { background: #FFF1F0; color: var(--coral); }
+.metric-card.accent-blue  .metric-icon { background: #EFF6FF; color: var(--blue); }
+.metric-card.accent-green .metric-icon { background: #ECFDF5; color: var(--green); }
+.metric-card.accent-gold  .metric-icon { background: #FEFCE8; color: var(--gold); }
 
 .metric-title {
   font-size: 11px;
@@ -418,10 +454,23 @@ body.admin-body {
 }
 
 .quick-action-btn .qa-icon {
-  font-size: 18px;
   width: 22px;
-  text-align: center;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+}
+
+.quick-action-btn .qa-icon svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  display: block;
 }
 
 /* ── TOOLBAR ────────────────────────────────────────────── */

@@ -1,0 +1,656 @@
+// admin/default-data.js — Offline & local file protocol fallback dataset
+window.MOMBASA_DEFAULT_STORES = {
+  "floors": [
+    {
+      "name": "Basement Parking",
+      "shops": [
+        {
+          "name": "Valet & Parking Services",
+          "logo": "./assets/Logo/Mall Logo/MOMBASA MALL 1.0.png",
+          "room": "B-01",
+          "category": "services",
+          "description": "Premium secure valet parking at the basement level. Hand over your keys to our vetted staff and shop at ease.",
+          "phone": "+254 700 111 001",
+          "email": "parking@mombasamall.co.ke",
+          "social": "@mombasamall"
+        },
+        {
+          "name": "Secure Basement Parking Deck",
+          "logo": "./assets/Logo/Mall Logo/MOMBASA MALL 1.0.png",
+          "room": "B-02",
+          "category": "services",
+          "description": "Spacious automated parking deck with 24/7 security guard patrol and CCTV monitoring. Safe, dry and convenient.",
+          "phone": "+254 700 111 002",
+          "email": "parking@mombasamall.co.ke",
+          "social": "@mombasamall"
+        },
+        {
+          "name": "Car Wash & Auto Spa",
+          "logo": "./assets/Logo/Mall Logo/MOMBASA MALL 1.0.png",
+          "room": "B-03",
+          "category": "services",
+          "description": "Have your car professionally detailed, hand washed, and vacuumed while you browse our retail floors.",
+          "phone": "+254 700 111 003",
+          "email": "autospa@mombasamall.co.ke",
+          "social": "@mombasamall_spa"
+        }
+      ]
+    },
+    {
+      "name": "Ground Floor",
+      "shops": [
+        {
+          "name": "Naivas",
+          "logo": "./assets/Logo/Shops Logo/Naivasmain.jpeg",
+          "room": "G-01",
+          "category": "retail",
+          "description": "Flagship 24/7 hypermarket anchor tenant offering fresh coastal groceries, bakery, butchery, deli, and home essentials.",
+          "phone": "+254 790 964 002",
+          "email": "customercare@naivas.co.ke",
+          "social": "@naivas_supermarket"
+        },
+        {
+          "name": "Chicken Inn",
+          "logo": "./assets/Logo/Shops Logo/chicken inn - Copy.jpeg",
+          "room": "G-02",
+          "category": "food",
+          "description": "Famous crisply-fried fresh chicken, chips, burger meals, and quick family combo boxes on the ground floor.",
+          "phone": "+254 700 111 011",
+          "email": "chickeninn@mombasamall.co.ke",
+          "social": "@chickeninnkenya"
+        },
+        {
+          "name": "Creamy Inn",
+          "logo": "./assets/Logo/Shops Logo/creamy inn - Copy.jpeg",
+          "room": "G-03",
+          "category": "food",
+          "description": "Delicious soft-serve ice cream, thick milkshakes, sundaes, toppings, and refreshing frozen desserts.",
+          "phone": "+254 700 111 012",
+          "email": "creamyinn@mombasamall.co.ke",
+          "social": "@creamyinnke"
+        },
+        {
+          "name": "Pizza Inn",
+          "logo": "./assets/Logo/Shops Logo/pizza inn.jpeg",
+          "room": "G-04",
+          "category": "food",
+          "description": "Freshly made hot pizzas with signature coastal and classic toppings, garlic breads, and drinks.",
+          "phone": "+254 700 111 013",
+          "email": "pizzainn@mombasamall.co.ke",
+          "social": "@pizzainnkenya"
+        },
+        {
+          "name": "Mpesa & Western Union",
+          "logo": "./assets/Logo/Mall Logo/MOMBASA MALL 1.0.png",
+          "room": "G-05",
+          "category": "services",
+          "description": "Authorized multi-channel financial agency offering fast M-Pesa deposits/withdrawals, Western Union remittances, and SIM services.",
+          "phone": "+254 790 964 002",
+          "email": "services@mombasamall.co.ke",
+          "social": "@mombasamall"
+        },
+        {
+          "name": "Outside Shops on Back",
+          "logo": "./assets/Logo/Mall Logo/MOMBASA MALL 1.0.png",
+          "room": "G-06",
+          "category": "retail",
+          "description": "Convenient outdoor walkway shops providing quick-access daily essentials, street snacks, and coastal retail goods.",
+          "phone": "+254 790 964 002",
+          "email": "info@mombasamall.co.ke",
+          "social": "@mombasamall"
+        },
+        {
+          "name": "Cotton Candy (Pop Shop)",
+          "logo": "./assets/Logo/Mall Logo/MOMBASA MALL 1.0.png",
+          "room": "G-07",
+          "category": "food",
+          "description": "Freshly spun colorful cotton candy, sweet confectionery treats, popcorn, and festive snacks for kids and families.",
+          "phone": "+254 790 964 002",
+          "email": "popshop@mombasamall.co.ke",
+          "social": "@mombasamall"
+        },
+        {
+          "name": "Activation Area (Pop Shop)",
+          "logo": "./assets/Logo/Mall Logo/MOMBASA MALL 1.0.png",
+          "room": "G-08",
+          "category": "services",
+          "description": "Dynamic atrium pop-up exhibition and product activation zone hosting rotating brands, product launches, and seasonal displays.",
+          "phone": "+254 790 964 002",
+          "email": "leasing@mombasamall.co.ke",
+          "social": "@mombasamall"
+        }
+      ]
+    },
+    {
+      "name": "First Floor",
+      "shops": [
+        {
+          "name": "Naivas First Floor",
+          "logo": "./assets/Logo/Shops Logo/Naivasmain.jpeg",
+          "room": "F-01",
+          "category": "retail",
+          "description": "First-floor extension of Naivas hypermarket featuring home appliances, cookware, bedding, electronics, and general merchandise.",
+          "phone": "+254 790 964 002",
+          "email": "customercare@naivas.co.ke",
+          "social": "@naivas_supermarket"
+        },
+        {
+          "name": "Hallahulah Game Shop",
+          "logo": "./assets/Logo/Shops Logo/Hallahula .jpg",
+          "room": "F-02",
+          "category": "retail",
+          "description": "Gaming consoles, video games, gaming peripherals, accessories, and entertainment merchandise store.",
+          "phone": "+254 700 111 021",
+          "email": "hallahulah@mombasamall.co.ke",
+          "social": "@hallahulahgames"
+        },
+        {
+          "name": "Daliah Human Wigs",
+          "logo": "./assets/Logo/Shops Logo/daliah .jpg",
+          "room": "F-03",
+          "category": "retail",
+          "description": "100% virgin human hair wigs, lace frontals, bundles, hair styling accessories, and custom wig maintenance products.",
+          "phone": "+254 700 111 022",
+          "email": "daliah@mombasamall.co.ke",
+          "social": "@daliah_humanwigs"
+        },
+        {
+          "name": "Payless",
+          "logo": "./assets/Logo/Shops Logo/Payless.jpg",
+          "room": "F-04",
+          "category": "retail",
+          "description": "Affordable family footwear, sports sneakers, formal leather shoes, sandals, and stylish bags for men, women, and kids.",
+          "phone": "+254 790 964 002",
+          "email": "support@payless.co.ke",
+          "social": "@paylesskenya"
+        },
+        {
+          "name": "Grand Computer",
+          "logo": "./assets/Logo/Shops Logo/Grand Computer.jpg",
+          "room": "F-05",
+          "category": "retail",
+          "description": "Quality laptops, desktop PCs, computer parts, printers, networking hardware, and expert PC diagnostics and repair.",
+          "phone": "+254 700 111 024",
+          "email": "grand@computers.co.ke",
+          "social": "@grandcomputers"
+        },
+        {
+          "name": "Tickles and Giggles",
+          "logo": "./assets/Logo/Shops Logo/Tickles and Giggles .jpg",
+          "room": "F-06",
+          "category": "retail",
+          "description": "Premium baby wear, toddler apparel, developmental toys, nursery essentials, strollers, and maternity care products.",
+          "phone": "+254 700 111 025",
+          "email": "ticklesgiggles@mombasamall.co.ke",
+          "social": "@ticklesandgiggles"
+        },
+        {
+          "name": "Namada Healthcare",
+          "logo": "./assets/Logo/Mall Logo/MOMBASA MALL 1.0.png",
+          "room": "F-07",
+          "category": "services",
+          "description": "Comprehensive healthcare clinic and pharmacy offering patient consultations, wellness checkups, and prescription medicines.",
+          "phone": "+254 700 111 026",
+          "email": "namada@healthcare.co.ke",
+          "social": "@namadahealthcare"
+        },
+        {
+          "name": "Online Holidays",
+          "logo": "./assets/Logo/Mall Logo/MOMBASA MALL 1.0.png",
+          "room": "F-08",
+          "category": "services",
+          "description": "Full-service tour operator and travel agency providing coastal excursions, flight bookings, safari packages, and holiday visas.",
+          "phone": "+254 700 111 027",
+          "email": "info@onlineholidays.co.ke",
+          "social": "@onlineholidays"
+        },
+        {
+          "name": "West 11",
+          "logo": "./assets/Logo/Shops Logo/West 11.jpg",
+          "room": "F-09",
+          "category": "retail",
+          "description": "Contemporary fashion boutique featuring men and women casual wear, smart dresses, jackets, and trendy footwear.",
+          "phone": "+254 700 111 028",
+          "email": "west11@mombasamall.co.ke",
+          "social": "@west11fashion"
+        },
+        {
+          "name": "7day Mensware",
+          "logo": "./assets/Logo/Shops Logo/7days mensware.jpg",
+          "room": "F-10",
+          "category": "retail",
+          "description": "Smart tailored suits, linen shirts, casual polo shirts, denim, leather shoes, and accessories for the modern gentleman.",
+          "phone": "+254 790 964 002",
+          "email": "info@7daysmenswear.com",
+          "social": "@7daysmenswear"
+        },
+        {
+          "name": "KG Cosmetics",
+          "logo": "./assets/Logo/Shops Logo/kg cosmetics.jpeg",
+          "room": "F-11",
+          "category": "retail",
+          "description": "Global cosmetic brands, luxury perfumes, skincare serums, haircare treatments, and professional beauty essentials.",
+          "phone": "+254 700 111 030",
+          "email": "kg@cosmetics.co.ke",
+          "social": "@kgcosmetics"
+        },
+        {
+          "name": "Lovisa",
+          "logo": "./assets/Logo/Shops Logo/Lovisa.jpg",
+          "room": "F-12",
+          "category": "retail",
+          "description": "Trendy fashion jewellery, sterling silver accessories, statement earrings, bridal collections, and piercing services.",
+          "phone": "+254 790 964 002",
+          "email": "customerservice@lovisa.com",
+          "social": "@lovisajewellery"
+        },
+        {
+          "name": "Fakri Timezone",
+          "logo": "./assets/Logo/Shops Logo/Fakri Timezone.jpg",
+          "room": "F-13",
+          "category": "retail",
+          "description": "Luxury watches, clock maintenance & repair, designer sunglasses, optical frames, and precision lens fittings.",
+          "phone": "+254 700 111 032",
+          "email": "info@fakhri.co.ke",
+          "social": "@fakhritimezone"
+        },
+        {
+          "name": "Dendri",
+          "logo": "./assets/Logo/Shops Logo/denri _400x400.jpg",
+          "room": "F-14",
+          "category": "retail",
+          "description": "Handcrafted Kenyan bags, premium leather backpacks, cross-body pouches, wallets, and durable travel luggage.",
+          "phone": "+254 712 345 678",
+          "email": "sales@denri.co.ke",
+          "social": "@denri_africa"
+        },
+        {
+          "name": "NCBA Bank",
+          "logo": "./assets/Logo/Shops Logo/NCBA.png",
+          "room": "F-15",
+          "category": "services",
+          "description": "Full-service banking hall, commercial banking, wealth advisory, diaspora banking, and 24/7 intelligent ATM lobby.",
+          "phone": "+254 711 056 444",
+          "email": "contact@ncbagroup.com",
+          "social": "@ncbabankkenya"
+        },
+        {
+          "name": "Diamond Tech",
+          "logo": "./assets/Logo/Mall Logo/MOMBASA MALL 1.0.png",
+          "room": "F-16",
+          "category": "retail",
+          "description": "CCTV security systems, smart access control, digital alarms, consumer electronics, and smart tech accessories.",
+          "phone": "+254 700 111 035",
+          "email": "mombasa@diamondtech.co.ke",
+          "social": "@diamondtech"
+        },
+        {
+          "name": "Africa Collectives (Pop Shop)",
+          "logo": "./assets/Logo/Mall Logo/MOMBASA MALL 1.0.png",
+          "room": "F-17",
+          "category": "retail",
+          "description": "Curated African crafts, handmade jewelry, coastal art prints, beadwork, sculptures, and cultural souvenir gifts.",
+          "phone": "+254 790 964 002",
+          "email": "africacollectives@mombasamall.co.ke",
+          "social": "@africacollectives"
+        }
+      ]
+    },
+    {
+      "name": "Second Floor",
+      "shops": [
+        {
+          "name": "Play On (Game Area)",
+          "logo": "./assets/Logo/Mall Logo/MOMBASA MALL2.0.png",
+          "room": "S-01",
+          "category": "services",
+          "description": "Mega family entertainment zone featuring interactive arcade games, VR motion simulators, toddler soft play, and birthday party rooms.",
+          "phone": "+254 790 964 002",
+          "email": "playon@mombasamall.co.ke",
+          "social": "@playon_arena"
+        },
+        {
+          "name": "Creamy Inn, Chicken Inn, Pizza Inn (Kiosk)",
+          "logo": "./assets/Logo/Shops Logo/pizza inn.jpeg",
+          "room": "S-02",
+          "category": "food",
+          "description": "Express food court kiosk serving freshly baked pizzas, crisp fried chicken, ice cream cones, and milkshakes on the 2nd floor.",
+          "phone": "+254 700 111 041",
+          "email": "foodcourt@mombasamall.co.ke",
+          "social": "@mombasamall_food"
+        },
+        {
+          "name": "Jumia / Skyve Shot / Xtigi Service Center",
+          "logo": "./assets/Logo/Shops Logo/JUMIA.jpg",
+          "room": "S-03",
+          "category": "services",
+          "description": "Combined digital services hub: Official Jumia pickup point, Skyve photo & video studio, and authorized Xtigi mobile repair center.",
+          "phone": "+254 700 000 000",
+          "email": "support@jumia.co.ke",
+          "social": "@jumiakenya"
+        },
+        {
+          "name": "World Designers",
+          "logo": "./assets/Logo/Shops Logo/World designers.jpg",
+          "room": "S-04",
+          "category": "retail",
+          "description": "Bespoke fashion design, luxury tailoring, interior drapery, custom fabrics, and haute couture apparel creation.",
+          "phone": "+254 700 111 043",
+          "email": "world@designers.co.ke",
+          "social": "@worlddesigners"
+        },
+        {
+          "name": "SAS Beauty",
+          "logo": "./assets/Logo/Mall Logo/MOMBASA MALL 1.0.png",
+          "room": "S-05",
+          "category": "retail",
+          "description": "Premium cosmetic products, beauty care essentials, perfumes, nail extensions, and personalized beauty consultations.",
+          "phone": "+254 700 111 044",
+          "email": "sasbeauty@mombasamall.co.ke",
+          "social": "@sasbeauty"
+        },
+        {
+          "name": "Novum",
+          "logo": "./assets/Logo/Shops Logo/NOVUM.jpg",
+          "room": "S-06",
+          "category": "services",
+          "description": "Luxury beauty parlour, aesthetic clinic, relaxing massage spa, manicure/pedicure lounge, and professional hair styling studio.",
+          "phone": "+254 700 111 045",
+          "email": "info@novum.co.ke",
+          "social": "@novumbeauty"
+        },
+        {
+          "name": "Ident Smile",
+          "logo": "./assets/Logo/Shops Logo/Ident Smile.jpg",
+          "room": "S-07",
+          "category": "services",
+          "description": "Modern aesthetic dental care, teeth whitening, clear aligners, dental hygiene clinic, and smile makeover consultations.",
+          "phone": "+254 790 964 002",
+          "email": "identsmile@mombasamall.co.ke",
+          "social": "@identsmile"
+        },
+        {
+          "name": "Tawal ICT Solution",
+          "logo": "./assets/Logo/Shops Logo/Tawala ICT.jpg",
+          "room": "S-08",
+          "category": "services",
+          "description": "Corporate IT support, business networking solutions, enterprise software setup, cloud backup, and hardware maintenance.",
+          "phone": "+254 700 111 047",
+          "email": "tech@tawalaict.com",
+          "social": "@tawala_ict"
+        },
+        {
+          "name": "Mintos Salon Spa Barbershop",
+          "logo": "./assets/Logo/Shops Logo/mintos.jpg",
+          "room": "S-09",
+          "category": "services",
+          "description": "Upscale executive barbershop, ladies salon, Moroccan baths, beard grooming, facial therapies, and full body wellness massage.",
+          "phone": "+254 700 111 048",
+          "email": "mintos@mombasamall.co.ke",
+          "social": "@mintos_spa"
+        },
+        {
+          "name": "SSB",
+          "logo": "./assets/Logo/Shops Logo/ssb.jpeg",
+          "room": "S-10",
+          "category": "retail",
+          "description": "Exclusive boutique offering high quality imported apparel, modest coastal dresses, footwear, and curated fashion accessories.",
+          "phone": "+254 700 111 049",
+          "email": "ssb@mombasamall.co.ke",
+          "social": "@ssb_boutique"
+        },
+        {
+          "name": "Rudra",
+          "logo": "./assets/Logo/Shops Logo/RUDRA.jpg",
+          "room": "S-11",
+          "category": "retail",
+          "description": "Ethnic fashion wear, exquisite silk sarees, designer kurtis, traditional Indian wear, jewellery, and decorative home gifts.",
+          "phone": "+254 700 111 050",
+          "email": "rudra@mombasamall.co.ke",
+          "social": "@rudra_fashions"
+        },
+        {
+          "name": "West 11 Sports",
+          "logo": "./assets/Logo/Shops Logo/West 11.jpg",
+          "room": "S-12",
+          "category": "retail",
+          "description": "Original athletic sportswear, running trainers, football club jerseys, gym gear, training equipment, and sports accessories.",
+          "phone": "+254 700 111 051",
+          "email": "west11sports@mombasamall.co.ke",
+          "social": "@west11sports"
+        },
+        {
+          "name": "Osona Yarns",
+          "logo": "./assets/Logo/Shops Logo/OSONA YARNS .png",
+          "room": "S-13",
+          "category": "retail",
+          "description": "Artisanal hand-dyed knitting yarns, macrame cords, crochet threads, craft tools, and DIY sewing accessories.",
+          "phone": "+254 700 111 052",
+          "email": "osona@yarns.co.ke",
+          "social": "@osonayarns"
+        },
+        {
+          "name": "Afribot Robotics",
+          "logo": "./assets/Logo/Mall Logo/MOMBASA MALL 1.0.png",
+          "room": "S-14",
+          "category": "services",
+          "description": "Cutting-edge robotics, AI education academy, coding workshops for youth, STEM learning kits, and smart automation demos.",
+          "phone": "+254 700 111 053",
+          "email": "afribot@mombasamall.co.ke",
+          "social": "@afribot_robotics"
+        },
+        {
+          "name": "Luxe Kaftan",
+          "logo": "./assets/Logo/Shops Logo/luxe 8f60f7.jpg",
+          "room": "S-15",
+          "category": "retail",
+          "description": "Opulent bridal kaftans, embroidered silk abayas, occasion wear, matching hijabs, and luxury modest couture.",
+          "phone": "+254 700 111 054",
+          "email": "luxe@kaftans.co.ke",
+          "social": "@luxekaftans"
+        },
+        {
+          "name": "Malkia",
+          "logo": "./assets/Logo/Shops Logo/MALKIA.jpg",
+          "room": "S-16",
+          "category": "retail",
+          "description": "Elegant African dresses, bespoke coastal print fashions, stylish clutch bags, headwraps, and beauty essentials.",
+          "phone": "+254 700 111 055",
+          "email": "malkia@mombasamall.co.ke",
+          "social": "@malkiabeauty"
+        },
+        {
+          "name": "Michael Boutique",
+          "logo": "./assets/Logo/Shops Logo/Michaels.jpg",
+          "room": "S-17",
+          "category": "retail",
+          "description": "High-end designer boutique showcasing luxury men's & women's couture, evening dinner gowns, jackets, and accessories.",
+          "phone": "+254 700 111 056",
+          "email": "michaels@mombasamall.co.ke",
+          "social": "@michaelsboutique"
+        },
+        {
+          "name": "Oraimo (Upcoming)",
+          "logo": "./assets/Logo/Mall Logo/MOMBASA MALL 1.0.png",
+          "room": "S-18",
+          "category": "retail",
+          "description": "Opening soon: Official Oraimo smart accessories store featuring earbuds, fast chargers, smartwatches, power banks, and speakers.",
+          "phone": "+254 790 964 002",
+          "email": "oraimo@mombasamall.co.ke",
+          "social": "@oraimokenya"
+        },
+        {
+          "name": "Keswick",
+          "logo": "./assets/Logo/Mall Logo/MOMBASA MALL 1.0.png",
+          "room": "S-19",
+          "category": "retail",
+          "description": "Christian bookshop, inspirational literature, family Bibles, educational books, stationery, music, and uplifting gifts.",
+          "phone": "+254 700 111 058",
+          "email": "keswick@mombasamall.co.ke",
+          "social": "@keswickbooks"
+        }
+      ]
+    },
+    {
+      "name": "Third Floor",
+      "shops": [
+        {
+          "name": "Gamers Vault",
+          "logo": "./assets/Logo/Shops Logo/Gamers-Vault-Tag-2 - Copy.PNG",
+          "room": "T-01",
+          "category": "retail",
+          "description": "Ultimate esports lounge and gaming hub with PlayStation 5 rigs, high-refresh rate gaming PCs, VR racing sims, and live tournaments.",
+          "phone": "+254 790 964 002",
+          "email": "arena@gamersvault.co.ke",
+          "social": "@gamersvault_ke"
+        },
+        {
+          "name": "Legacy Gym",
+          "logo": "./assets/Logo/Mall Logo/MOMBASA MALL 1.0.png",
+          "room": "T-02",
+          "category": "services",
+          "description": "Premier fitness facility equipped with state-of-the-art weights, cardio machines, personal fitness trainers, sauna, and group workout classes.",
+          "phone": "+254 700 111 061",
+          "email": "legacygym@mombasamall.co.ke",
+          "social": "@legacygym_ke"
+        },
+        {
+          "name": "Westerwelle Foundation",
+          "logo": "./assets/Logo/Shops Logo/Westerwellemsa.png",
+          "room": "T-03",
+          "category": "services",
+          "description": "International startup incubator, tech innovation lab, and flexible co-working hub offering hot desks, meeting rooms, and startup accelerator programs.",
+          "phone": "+254 700 111 062",
+          "email": "mombasa@westerwelle.co.ke",
+          "social": "@westerwelle_mombasa"
+        },
+        {
+          "name": "Equity Afia CBD",
+          "logo": "./assets/Logo/Shops Logo/equity afria.png",
+          "room": "T-04",
+          "category": "services",
+          "description": "Modern outpatient medical clinic providing physician consultations, full diagnostic laboratory, pharmacy, dental and optical care.",
+          "phone": "+254 763 063 000",
+          "email": "info@equityafia.co.ke",
+          "social": "@equityafia"
+        }
+      ]
+    }
+  ]
+};
+
+window.MOMBASA_DEFAULT_EVENTS = {
+  "upcoming": [
+    {
+      "title": "Summer Family Day & Kids Carnival",
+      "date": "2026-09-05",
+      "summary": "Join us at the Play-On Kids Zone for free face painting, magic shows, bouncy castles, and local youth music performances."
+    },
+    {
+      "title": "East African Fashion Pop-up Weekend",
+      "date": "2026-09-18",
+      "summary": "Browse and buy collections from over 15 local and regional designers showcasing custom-made apparel, kaftans, and hand-woven bags."
+    },
+    {
+      "title": "Swahili Foodie & Spice Market",
+      "date": "2026-10-02",
+      "summary": "Savor authentic coastal dishes, spicy street food, and chef-led cooking demos in our main atrium and food court."
+    }
+  ],
+  "past": [
+    {
+      "title": "Back-to-School Mega Sale",
+      "date": "2026-07-10",
+      "summary": "Unbeatable discounts on books, stationery, and uniforms across major retail stores."
+    },
+    {
+      "title": "Mombasa Tech Innovation Night",
+      "date": "2026-06-22",
+      "summary": "Co-hosted by Westerwelle Startup Haus, bringing together over 120 tech developers and startup founders in Mombasa."
+    }
+  ]
+};
+
+window.MOMBASA_DEFAULT_BLOG = {
+  "posts": [
+    {
+      "title": "Welcome to Westerwelle Startup Haus Mombasa",
+      "date": "2026-08-10",
+      "excerpt": "Discover the newly launched co-working space and tech incubator on the third floor of Mombasa Mall, offering prime office suites, meeting rooms, and startup support.",
+      "slug": "westerwelle-coworking-launch"
+    },
+    {
+      "title": "Fresh Grocery Shopping Made Easy at Naivas Anchor",
+      "date": "2026-08-01",
+      "excerpt": "Explore the massive Naivas Supermarket on the ground floor of Mombasa Mall, featuring fresh produce, a bakery, butchery, and a fully-stocked homeware section.",
+      "slug": "naivas-grocery-shopping"
+    },
+    {
+      "title": "Planning the Perfect Family Weekend at Play-On Zone",
+      "date": "2026-07-22",
+      "excerpt": "From indoor soft playgrounds to child-safe ball pits and interactive crafts, discover why Play-On at Mombasa Mall is the family destination of choice.",
+      "slug": "family-weekend-play-on"
+    },
+    {
+      "title": "How Digital LED Screens Can Boost Your Brand Exposure",
+      "date": "2026-07-08",
+      "excerpt": "Learn about our dual-sided high-definition digital billboards in the main atrium and food court, and how flexible advertising loops can scale your business.",
+      "slug": "boost-brand-led-screens"
+    }
+  ]
+};
+
+window.MOMBASA_DEFAULT_REVIEWS = {
+  "testimonials": [
+    {
+      "author": "Aisha Omar",
+      "quote": "Mombasa Mall has completely transformed my shopping routine. Naivas on the ground floor is incredibly convenient, and NCBA bank is right next door.",
+      "rating": 5
+    },
+    {
+      "author": "Peter Mwangi",
+      "quote": "Basement parking is spacious, safe, and secure. The automated entry ticketer is fast, and security guards are always helpful.",
+      "rating": 4
+    },
+    {
+      "author": "Joy Kerubo",
+      "quote": "Westerwelle Startup Haus on the third floor is Mombasa's best coworking incubator! Superfast internet, quiet meeting rooms, and amazing tech events.",
+      "rating": 5
+    },
+    {
+      "author": "Ali Hassan",
+      "quote": "The food court on the second floor offers a fantastic mix of local Swahili dishes and fast food. Play-On Kids Zone kept my children fully entertained while I shopped.",
+      "rating": 5
+    }
+  ],
+  "customerFeedback": [
+    {
+      "name": "Fatma",
+      "comment": "Loved the weekend designer fashion pop-up markets! Got a beautiful local kaftan."
+    },
+    {
+      "name": "Kiprotich",
+      "comment": "Convenient location in Mwembe Tayari. Very easy to access via public transport or private drive."
+    },
+    {
+      "name": "Emily",
+      "comment": "Equity Afia Clinic on the ground floor offers quick and affordable checkups. So glad to have it in the mall."
+    }
+  ]
+};
+
+window.MOMBASA_DEFAULT_SITE_DATA = {
+  "siteName": "Mombasa Mall",
+  "domain": "mombasamall.co.ke",
+  "tagline": "For all your shopping needs",
+  "description": "Mombasa Mall is Mombasa's premier shopping, dining and entertainment destination. Shop, dine, and discover a curated mix of local and international brands.",
+  "address": "Mombasa Mall, Jomo Kenyatta Avenue, Mwembe Tayari, Mombasa, Kenya",
+  "phone": "+254 790 964 002",
+  "email": "info@mombasamall.co.ke",
+  "openingHours": "Open 24/7",
+  "social": {
+    "facebook": "https://facebook.com/mombasamall",
+    "instagram": "https://instagram.com/mombasamall",
+    "twitter": "https://twitter.com/mombasamall"
+  }
+};
