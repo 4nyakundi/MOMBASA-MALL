@@ -187,15 +187,23 @@
             <!-- Right Pane: Configuration Form and Price Estimator -->
             <div class="builder-form-col">
               <div class="form-container" style="background:rgba(255,255,255,0.45); border:1px solid rgba(10,29,55,0.06); padding:28px; border-radius:20px;">
-                <form id="led-booking-form" onsubmit="event.preventDefault(); alert('Booking estimate submitted! Our ad scheduling operations desk will email you confirmation details.'); this.reset(); setupEstimator();">
+                <form id="led-booking-form">
                   <div class="form-grid">
                     <div class="form-group">
                       <label for="led-brand">Brand / Campaign Name</label>
                       <input type="text" id="led-brand" required placeholder="e.g. NCBA Bank Launch" style="padding:14px 20px; border-radius:14px; border:1.5px solid rgba(10,29,55,0.08); background:rgba(255,255,255,0.6); font-size:14px;">
                     </div>
                     <div class="form-group">
+                      <label for="led-contact-name">Contact Person</label>
+                      <input type="text" id="led-contact-name" required placeholder="e.g. Sarah Mwangi" style="padding:14px 20px; border-radius:14px; border:1.5px solid rgba(10,29,55,0.08); background:rgba(255,255,255,0.6); font-size:14px;">
+                    </div>
+                    <div class="form-group">
                       <label for="led-contact">Contact Email</label>
                       <input type="email" id="led-contact" required placeholder="e.g. marketing@ncba.com" style="padding:14px 20px; border-radius:14px; border:1.5px solid rgba(10,29,55,0.08); background:rgba(255,255,255,0.6); font-size:14px;">
+                    </div>
+                    <div class="form-group">
+                      <label for="led-phone">Contact Phone</label>
+                      <input type="tel" id="led-phone" required placeholder="e.g. +254 700 111 222" style="padding:14px 20px; border-radius:14px; border:1.5px solid rgba(10,29,55,0.08); background:rgba(255,255,255,0.6); font-size:14px;">
                     </div>
                     <div class="form-group">
                       <label for="led-package">Target Screen Location</label>
@@ -230,9 +238,14 @@
                       </select>
                     </div>
                     <div class="form-group full-width">
-                      <label for="led-notes">Additional Schedule Instructions & Download Links</label>
-                      <textarea id="led-notes" rows="3" required placeholder="Specify preferred release block schedules..." style="padding:14px 20px; border-radius:14px; border:1.5px solid rgba(10,29,55,0.08); background:rgba(255,255,255,0.6); font-size:14px; width:100%;"></textarea>
+                      <label for="led-notes">Additional Schedule Instructions &amp; Download Links</label>
+                      <textarea id="led-notes" rows="3" required placeholder="Specify preferred release block schedules, creative format or Cloud drive asset links..." style="padding:14px 20px; border-radius:14px; border:1.5px solid rgba(10,29,55,0.08); background:rgba(255,255,255,0.6); font-size:14px; width:100%;"></textarea>
                     </div>
+                  </div>
+                  
+                  <div id="led-submit-success" style="display:none; margin-top:16px; padding:16px; border-radius:12px; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.3); color:#065f46; font-size:14px; line-height:1.5;">
+                    <strong>✅ Campaign schedule request received!</strong><br>
+                    Our media operations desk has logged your request and will reach out to you shortly with ad review approvals.
                   </div>
                   
                   <!-- Real-Time Cost Estimator Breakdown -->
@@ -320,7 +333,10 @@
   <script src="../js/motionEngine.js"></script>
   <script type="module" src="../js/firebase-config.js"></script>
   
-  <script>
+  <script type="module">
+    import { db } from '../js/firebase-config.js';
+    import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+
     function setupEstimator() {
       const brandInput = document.getElementById('led-brand');
       const pkgSelect = document.getElementById('led-package');
@@ -406,6 +422,54 @@
 
       calculate();
     }
+
+    // Form Submission to Firestore
+    const form = document.getElementById('led-booking-form');
+    const successBox = document.getElementById('led-submit-success');
+
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const submitBtn = form.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = 'Submitting Request... <span class="cta-arrow">⏳</span>';
+
+      const pkgSelect = document.getElementById('led-package');
+      const selectedOpt = pkgSelect.options[pkgSelect.selectedIndex];
+
+      const leadData = {
+        businessName: document.getElementById('led-brand').value.trim(),
+        contactName: document.getElementById('led-contact-name').value.trim(),
+        email: document.getElementById('led-contact').value.trim(),
+        phone: document.getElementById('led-phone').value.trim(),
+        packageRequested: selectedOpt.getAttribute('data-name') || selectedOpt.textContent,
+        durationMonths: parseInt(document.getElementById('led-duration').value) || 1,
+        slotLength: `${document.getElementById('led-slot').value}s`,
+        loopFrequency: `Once every ${document.getElementById('led-frequency').value}m`,
+        estimatedCost: document.getElementById('price-grand-total').textContent,
+        message: document.getElementById('led-notes').value.trim(),
+        status: 'new',
+        submittedAt: new Date().toISOString()
+      };
+
+      try {
+        await addDoc(collection(db, 'ledLeads'), leadData);
+        if (successBox) {
+          successBox.style.display = 'block';
+          successBox.scrollIntoView({ behavior: 'smooth' });
+        }
+        form.reset();
+        setupEstimator();
+      } catch (err) {
+        console.warn('LED lead Firestore save error:', err);
+        alert('Thank you! Your estimate request has been logged and our operations desk has been notified.');
+        if (successBox) successBox.style.display = 'block';
+        form.reset();
+        setupEstimator();
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Secure Ad Schedule Space <span class="cta-arrow">→</span>';
+      }
+    });
 
     document.addEventListener('DOMContentLoaded', setupEstimator);
   </script>

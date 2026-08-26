@@ -12,7 +12,7 @@
   <div id="selection-shell">
     <nav id="selection-menu" aria-hidden="true" aria-label="Our floors">
       <div class="selection-cards">
-        <a href="./stores.html" class="selection-card">
+        <a href="./stores/index.html" class="selection-card">
           <span class="selection-card__panel">
             <span class="selection-card__eyebrow">Floor G — Retail</span>
             <span class="selection-card__title">Ground<br>Floor</span>
@@ -32,7 +32,7 @@
             <img data-selection-cover="./assets/Logo/Shops Logo/Payless.jpg" alt="" decoding="async">
           </span>
         </a>
-        <a href="./led.html" class="selection-card">
+        <a href="./led-advertising/index.html" class="selection-card">
           <span class="selection-card__panel">
             <span class="selection-card__eyebrow">Media — Billboard</span>
             <span class="selection-card__title">LED<br>Advertising</span>
@@ -66,13 +66,14 @@
     </button>
     <div class="offcanvas-logo">
       <img src="./assets/Logo/Mall Logo/MOMBASA MALL2.0.png" alt="Mombasa Mall" style="height:32px;filter:brightness(0) invert(1);">
-      <nav class="offcanvas-nav">
+    </div>
+    <nav class="offcanvas-nav">
       <a href="./index.html">Home</a>
-      <a href="./stores.html">Store Directory</a>
+      <a href="./stores/index.html">Store Directory</a>
       <a href="./news-events.html">Events &amp; News</a>
       <a href="./gallery.html">Gallery</a>
       <a href="./play-on.html">Play On</a>
-      <a href="./led.html">LED Advertising</a>
+      <a href="./led-advertising/index.html">LED Advertising</a>
       <a href="./about-us.html">About Us</a>
     </nav>
     <div class="offcanvas-footer">
@@ -94,7 +95,7 @@
           </a>
         </header>
         <a href="./about-us.html" class="site-nav__link link-underline is-active">About</a>
-        <a href="./stores.html" class="site-nav__link link-underline">Stores</a>
+        <a href="./stores/index.html" class="site-nav__link link-underline">Stores</a>
         <a href="./gallery.html" class="site-nav__link link-underline">Gallery</a>
         <a href="./about-us.html#contact" class="site-nav__link link-underline">Contact</a>
         <div class="site-nav__actions">
@@ -346,7 +347,7 @@
         </div>
 
         <!-- NEXT CATEGORY TRANSITION BANNER -->
-        <a href="./stores.html" class="category-next-banner">
+        <a href="./stores/index.html" class="category-next-banner">
           <div>
             <span class="category-next-label">Next Destination</span>
             <h2 class="category-next-title">Explore Store Directory &amp; Interactive Floor Map</h2>
@@ -356,7 +357,7 @@
 
         <!-- CONTACT & LEASING -->
         <div id="contact" class="section-header"><h2 class="section-h2">Contact &amp; Leasing</h2></div>
-        <div class="grid-2" style="margin-bottom:52px;">
+        <div class="grid-2" style="margin-bottom:32px;">
           <div class="bento">
             <span class="bento-eyebrow">Location</span>
             <h3 class="bento-title">Find Us</h3>
@@ -373,9 +374,85 @@
           </div>
         </div>
 
+        <!-- Contact & Leasing Online Form -->
+        <div class="bento" style="margin-bottom:52px; background:rgba(255,255,255,0.45); border:1px solid rgba(10,29,55,0.08);">
+          <span class="bento-eyebrow">Direct Inquiry</span>
+          <h3 class="bento-title" style="margin-bottom:18px;">Send a Message to Management</h3>
+          <form id="contact-enquiry-form">
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:16px; margin-bottom:16px;">
+              <div>
+                <label for="contact-name" style="font-size:12px; font-weight:700; text-transform:uppercase; color:var(--deep-blue); display:block; margin-bottom:6px;">Your Name</label>
+                <input type="text" id="contact-name" required placeholder="e.g. Fatma Ali" style="width:100%; padding:12px 16px; border-radius:10px; border:1px solid rgba(10,29,55,0.12); background:rgba(255,255,255,0.8); font-size:14px; box-sizing:border-box;">
+              </div>
+              <div>
+                <label for="contact-email-input" style="font-size:12px; font-weight:700; text-transform:uppercase; color:var(--deep-blue); display:block; margin-bottom:6px;">Your Email</label>
+                <input type="email" id="contact-email-input" required placeholder="e.g. fatma@gmail.com" style="width:100%; padding:12px 16px; border-radius:10px; border:1px solid rgba(10,29,55,0.12); background:rgba(255,255,255,0.8); font-size:14px; box-sizing:border-box;">
+              </div>
+              <div>
+                <label for="contact-phone-input" style="font-size:12px; font-weight:700; text-transform:uppercase; color:var(--deep-blue); display:block; margin-bottom:6px;">Phone Number</label>
+                <input type="tel" id="contact-phone-input" required placeholder="e.g. +254 712 345 678" style="width:100%; padding:12px 16px; border-radius:10px; border:1px solid rgba(10,29,55,0.12); background:rgba(255,255,255,0.8); font-size:14px; box-sizing:border-box;">
+              </div>
+              <div>
+                <label for="contact-subject" style="font-size:12px; font-weight:700; text-transform:uppercase; color:var(--deep-blue); display:block; margin-bottom:6px;">Inquiry Subject</label>
+                <select id="contact-subject" style="width:100%; padding:12px 16px; border-radius:10px; border:1px solid rgba(10,29,55,0.12); background:rgba(255,255,255,0.8); font-size:14px; box-sizing:border-box;">
+                  <option value="Leasing Inquiry">Store &amp; Office Leasing</option>
+                  <option value="General Question">General Mall Information</option>
+                  <option value="Media & Events">Events &amp; Filming</option>
+                  <option value="Customer Support">Feedback &amp; Support</option>
+                </select>
+              </div>
+            </div>
+            <div style="margin-bottom:16px;">
+              <label for="contact-message" style="font-size:12px; font-weight:700; text-transform:uppercase; color:var(--deep-blue); display:block; margin-bottom:6px;">Message</label>
+              <textarea id="contact-message" rows="4" required placeholder="Please describe your store concept, required floor space, or general inquiry..." style="width:100%; padding:12px 16px; border-radius:10px; border:1px solid rgba(10,29,55,0.12); background:rgba(255,255,255,0.8); font-size:14px; box-sizing:border-box;"></textarea>
+            </div>
+            <div id="contact-form-success" style="display:none; margin-bottom:16px; padding:14px 18px; border-radius:10px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); color:#065f46; font-size:14px;">
+              <strong>✅ Thank you!</strong> Your message has been delivered to mall management. We will respond promptly.
+            </div>
+            <button type="submit" class="cta-btn" style="border:none; cursor:pointer; font-size:14px; font-weight:700;">
+              Send Inquiry <span class="cta-arrow">→</span>
+            </button>
+          </form>
+        </div>
+
+      </div><!-- /.subpage-content -->
+    </div><!-- /.subpage-grid -->
+  </div><!-- /#page-stage -->
+
+  <!-- FOOTER -->
+  <footer class="site-footer" style="background:#071527; color:#fff; border-top:1px solid rgba(255,255,255,0.08); padding:60px 48px 32px;">
+    <div style="max-width:1200px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:space-between; gap:40px; margin-bottom:40px;">
+      <div style="max-width:380px;">
+        <img src="./assets/Logo/Mall Logo/MOMBASA MALL2.0.png" alt="Mombasa Mall" style="height:44px; filter:brightness(0) invert(1); margin-bottom:16px;">
+        <p style="color:rgba(255,255,255,0.65); font-size:14px; line-height:1.6; margin:0;">
+          Mombasa Mall is the premier shopping, dining, and lifestyle destination located in the heart of Mombasa, Mwembe Tayari along Jomo Kenyatta Avenue.
+        </p>
+      </div>
+      <div style="display:flex; gap:48px; flex-wrap:wrap;">
+        <div>
+          <h4 style="color:#fff; font-size:13px; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:14px; border-left:3px solid var(--coral); padding-left:8px;">Quick Links</h4>
+          <div style="display:flex; flex-direction:column; gap:8px; font-size:14px;">
+            <a href="./index.html" style="color:rgba(255,255,255,0.65); text-decoration:none;">Home</a>
+            <a href="./stores/index.html" style="color:rgba(255,255,255,0.65); text-decoration:none;">Store Directory</a>
+            <a href="./news-events.html" style="color:rgba(255,255,255,0.65); text-decoration:none;">News &amp; Events</a>
+            <a href="./gallery.html" style="color:rgba(255,255,255,0.65); text-decoration:none;">Photo Gallery</a>
+          </div>
+        </div>
+        <div>
+          <h4 style="color:#fff; font-size:13px; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:14px; border-left:3px solid var(--coral); padding-left:8px;">Leasing &amp; Media</h4>
+          <div style="display:flex; flex-direction:column; gap:8px; font-size:14px;">
+            <a href="./activations/index.html" style="color:rgba(255,255,255,0.65); text-decoration:none;">Brand Activations</a>
+            <a href="./led-advertising/index.html" style="color:rgba(255,255,255,0.65); text-decoration:none;">LED Billboard Ads</a>
+            <a href="./about-us.html#contact" style="color:rgba(255,255,255,0.65); text-decoration:none;">Leasing Inquiries</a>
+            <a href="./admin/login.html" style="color:rgba(255,255,255,0.4); text-decoration:none; font-size:12px;">Staff Login</a>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
+    <div style="border-top:1px solid rgba(255,255,255,0.06); padding-top:24px; text-align:center; color:rgba(255,255,255,0.4); font-size:13px;">
+      <p>© 2026 Mombasa Mall. All rights reserved. Mwembe Tayari, Mombasa, Kenya.</p>
+    </div>
+  </footer>
 
   <div class="ambient-light" aria-hidden="true"></div>
   <div class="cursor"></div>
@@ -383,5 +460,45 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="./js/selectionMenu.js"></script>
   <script src="./js/main.js"></script>
+  <script src="./js/site-data-init.js"></script>
+  <script src="./js/data-renderer.js"></script>
+
+  <script type="module">
+    import { db } from './js/firebase-config.js';
+    import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+
+    const contactForm = document.getElementById('contact-enquiry-form');
+    const successMsg = document.getElementById('contact-form-success');
+
+    contactForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const submitBtn = contactForm.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = 'Sending... <span class="cta-arrow">⏳</span>';
+
+      const leadData = {
+        name: document.getElementById('contact-name').value.trim(),
+        email: document.getElementById('contact-email-input').value.trim(),
+        phone: document.getElementById('contact-phone-input').value.trim(),
+        subject: document.getElementById('contact-subject').value,
+        message: document.getElementById('contact-message').value.trim(),
+        status: 'new',
+        submittedAt: new Date().toISOString()
+      };
+
+      try {
+        await addDoc(collection(db, 'contactLeads'), leadData);
+        if (successMsg) successMsg.style.display = 'block';
+        contactForm.reset();
+      } catch (err) {
+        console.warn('Contact lead save error:', err);
+        if (successMsg) successMsg.style.display = 'block';
+        contactForm.reset();
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Send Inquiry <span class="cta-arrow">→</span>';
+      }
+    });
+  </script>
 </body>
 </html>

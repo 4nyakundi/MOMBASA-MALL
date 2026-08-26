@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Sign In — Mombasa Mall</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="./admin.css" />
+  <style>
+    body.login-page {
+      background: radial-gradient(circle at 50% 20%, #0e294b 0%, #050f1d 70%, #02070d 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      margin: 0;
+      font-family: 'Satoshi', sans-serif;
+      color: #fff;
+    }
+    .login-container {
+      width: 100%;
+      max-width: 440px;
+      background: rgba(10, 29, 55, 0.75);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 24px;
+      padding: 40px 36px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), 0 0 30px rgba(255, 111, 89, 0.15);
+      position: relative;
+      z-index: 10;
+    }
+    .login-logo {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .login-logo img {
+      height: 48px;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+    }
+    .login-title {
+      font-family: 'Clash Display', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      text-align: center;
+      margin: 0 0 6px;
+      color: #fff;
+      letter-spacing: -0.02em;
+    }
+    .login-sub {
+      text-align: center;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 28px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .form-group label {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: rgba(255, 255, 255, 0.7);
+    }
+    .form-input {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 14px;
+      color: #fff;
+      outline: none;
+      transition: all 0.3s;
+      font-family: inherit;
+    }
+    .form-input:focus {
+      border-color: var(--coral, #FF6F59);
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 0 3px rgba(255, 111, 89, 0.25);
+    }
+    .login-btn {
+      width: 100%;
+      padding: 15px;
+      border-radius: 12px;
+      background: var(--coral, #FF6F59);
+      color: #fff;
+      font-weight: 700;
+      font-size: 15px;
+      border: none;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .login-btn:hover {
+      background: #ff573d;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(255, 111, 89, 0.4);
+    }
+    .login-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .login-error {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      margin-bottom: 20px;
+      display: none;
+    }
+    .login-info {
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      color: #fcd34d;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      margin-top: 24px;
+      line-height: 1.5;
+      text-align: center;
+    }
+    .login-footer-links {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 13px;
+    }
+    .login-footer-links a {
+      color: rgba(255, 255, 255, 0.6);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .login-footer-links a:hover {
+      color: #fff;
+    }
+  </style>
+</head>
+<body class="login-page">
+
+  <div class="login-container">
+    <div class="login-logo">
+      <a href="../index.html">
+        <img src="../assets/Logo/Mall Logo/MOMBASA MALL2.0.png" alt="Mombasa Mall">
+      </a>
+    </div>
+
+    <h1 class="login-title">Staff Portal</h1>
+    <p class="login-sub">Sign in to manage mall directory, leads and content</p>
+
+    <div id="loginError" class="login-error"></div>
+
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="adminEmail">Email Address</label>
+        <input 
+          type="email" 
+          id="adminEmail" 
+          class="form-input" 
+          value="mombasamall01@gmail.com" 
+          required 
+          placeholder="admin@mombasamall.co.ke"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="adminPassword">Password</label>
+        <input 
+          type="password" 
+          id="adminPassword" 
+          class="form-input" 
+          value="Mall@2024" 
+          required 
+          placeholder="Enter password"
+        />
+      </div>
+
+      <button type="submit" id="loginBtn" class="login-btn">
+        <span id="loginBtnText">Sign In to Dashboard</span>
+      </button>
+    </form>
+
+    <div class="login-info">
+      <strong>Default Admin Account:</strong><br>
+      <code>mombasamall01@gmail.com</code> · <code>Mall@2024</code><br>
+      <span style="font-size:11px; opacity:0.85;">You can rotate this password inside the dashboard after signing in.</span>
+    </div>
+
+    <div class="login-footer-links">
+      <a href="../index.html">← Back to Public Website</a>
+    </div>
+  </div>
+
+  <script type="module">
+    import { auth } from '../js/firebase-config.js';
+    import { 
+      signInWithEmailAndPassword, 
+      createUserWithEmailAndPassword, 
+      onAuthStateChanged 
+    } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+
+    const form = document.getElementById('loginForm');
+    const emailInput = document.getElementById('adminEmail');
+    const passwordInput = document.getElementById('adminPassword');
+    const errorBox = document.getElementById('loginError');
+    const submitBtn = document.getElementById('loginBtn');
+    const submitBtnText = document.getElementById('loginBtnText');
+
+    // Auto redirect if already authenticated
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        window.location.replace('./index.html');
+      }
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorBox.style.display = 'none';
+      submitBtn.disabled = true;
+      submitBtnText.textContent = 'Authenticating...';
+
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        window.location.replace('./index.html');
+      } catch (err) {
+        console.warn('Sign-in error:', err.code, err.message);
+
+        // If default admin user doesn't exist yet on fresh project, create it automatically
+        if (err.code === 'auth/user-not-found' && email === 'mombasamall01@gmail.com') {
+          try {
+            submitBtnText.textContent = 'Initializing first-time admin...';
+            await createUserWithEmailAndPassword(auth, email, password);
+            window.location.replace('./index.html');
+            return;
+          } catch (createErr) {
+            errorBox.textContent = `Setup failed: ${createErr.message}`;
+            errorBox.style.display = 'block';
+          }
+        } else if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
+          errorBox.textContent = 'Incorrect password. If rotated, please enter your updated password.';
+          errorBox.style.display = 'block';
+        } else if (err.code === 'auth/invalid-email') {
+          errorBox.textContent = 'Please enter a valid email address.';
+          errorBox.style.display = 'block';
+        } else if (err.code === 'auth/too-many-requests') {
+          errorBox.textContent = 'Too many failed login attempts. Please try again later or reset password.';
+          errorBox.style.display = 'block';
+        } else {
+          errorBox.textContent = `Authentication error: ${err.message}`;
+          errorBox.style.display = 'block';
+        }
+
+        submitBtn.disabled = false;
+        submitBtnText.textContent = 'Sign In to Dashboard';
+      }
+    });
+  </script>
+</body>
+</html>

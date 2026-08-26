@@ -1,8 +1,11 @@
-// firebase-config.js
-// This module initializes Firebase using the web SDK and exports the app and analytics instances.
+// js/firebase-config.js
+// Modular Firebase configuration exporting app, analytics, auth, db (Firestore), and storage.
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-analytics.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+import { getStorage } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCMmYP4jQb4DWvMKygVpqeXgUYx8rhMqts",
@@ -14,15 +17,29 @@ const firebaseConfig = {
   measurementId: "G-BFHGBTPGWE"
 };
 
-// Initialize Firebase
+// Initialize Firebase App
 const app = initializeApp(firebaseConfig);
-// Analytics requires the site be served over https (or localhost) and optionally a valid measurementId
-let analytics;
+
+// Initialize Firebase Services
+const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
+
+let analytics = null;
 try {
   analytics = getAnalytics(app);
 } catch (err) {
-  // Analytics initialization can fail in non-browser or blocked environments; swallow the error so the rest of the site still works.
+  // Analytics can fail in non-browser, file://, or blocked environments
   console.warn('Firebase analytics not initialized:', err.message);
 }
 
-export { app, analytics, firebaseConfig };
+// Expose globally for vanilla scripts
+if (typeof window !== 'undefined') {
+  window.__FIREBASE_APP__ = app;
+  window.__FIREBASE_CONFIG__ = firebaseConfig;
+  window.__FIREBASE_AUTH__ = auth;
+  window.__FIREBASE_DB__ = db;
+  window.__FIREBASE_STORAGE__ = storage;
+}
+
+export { app, analytics, auth, db, storage, firebaseConfig };
