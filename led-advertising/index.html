@@ -2,1176 +2,493 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>6:AM Signage &amp; LED Advertising — Mombasa Mall</title>
-  <meta name="description" content="Dynamic high-definition 24/7 LED billboard advertising at Mombasa Mall, Mwembe Tayari along Jomo Kenyatta Avenue. In partnership with 6:AM Kenya. Outdoor & Indoor digital advertising screens." />
-  <link rel="stylesheet" href="../css/style.css">
+  <meta name="description" content="Dynamic high-definition 24/7 LED billboard advertising at Mombasa Mall, Mwembe Tayari along Jomo Kenyatta Avenue. In strategic partnership with 6:AM Kenya. Outdoor and indoor digital screen network." />
+  <link rel="stylesheet" href="../css/style.css" />
   <style>
-    /* LED Advertising Page Specific High-Performance Corporate Styles */
-    :root {
-      --led-blue: #0A3A60;
-      --led-cyan: #00B4D8;
-      --led-dark: #071E33;
-      --led-card-bg: rgba(255, 255, 255, 0.85);
-      --led-border: rgba(10, 58, 96, 0.12);
-    }
-
-    .badge-partnership {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 14px;
-      border-radius: 30px;
-      background: rgba(10, 58, 96, 0.08);
-      border: 1px solid rgba(10, 58, 96, 0.18);
-      color: var(--led-blue);
-      font-size: 11.5px;
+    /* LED Subpage Polished Styles */
+    .bento-price-tag {
+      margin-top: 16px;
+      font-family: var(--font-mono, monospace);
+      font-size: 13px;
       font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      margin-bottom: 16px;
+      color: var(--gold, #fcbf49);
+      display: inline-block;
+      background: rgba(252, 191, 73, 0.1);
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(252, 191, 73, 0.2);
     }
-
-    .specs-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 24px;
-      margin: 40px 0;
-    }
-
-    .spec-card {
-      background: #FFFFFF;
-      border: 1px solid var(--led-border);
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(10, 58, 96, 0.06);
-      display: flex;
-      flex-direction: column;
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-    }
-
-    .spec-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 16px 40px rgba(10, 58, 96, 0.12);
-    }
-
-    .spec-card-img-wrap {
-      position: relative;
-      height: 220px;
-      background: #0F172A;
-      overflow: hidden;
-    }
-
-    .spec-card-img-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0.9;
-      transition: transform 0.4s ease;
-    }
-
-    .spec-card:hover .spec-card-img-wrap img {
-      transform: scale(1.04);
-    }
-
-    .spec-badge-overlay {
-      position: absolute;
-      top: 14px;
-      left: 14px;
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(8px);
-      color: #FFFFFF;
-      padding: 5px 12px;
-      border-radius: 8px;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      border: 1px solid rgba(255,255,255,0.15);
-    }
-
-    .spec-card-body {
-      padding: 24px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .spec-dim-pill {
+    .traffic-pill {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: #EFF6FF;
-      color: #1D4ED8;
-      font-size: 12px;
-      font-weight: 700;
       padding: 4px 10px;
       border-radius: 6px;
-      margin-bottom: 12px;
-    }
-
-    .spec-metric-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      padding: 12px 0;
-      border-top: 1px solid #F1F5F9;
-      margin-top: auto;
-      font-size: 12.5px;
-    }
-
-    .spec-metric-row strong {
-      color: var(--navy);
-      display: block;
-      font-size: 13.5px;
-    }
-
-    .matrix-table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
-      border: 1px solid #E2E8F0;
-      border-radius: 16px;
-      overflow: hidden;
-      background: #FFFFFF;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-      margin: 24px 0;
-    }
-
-    .matrix-table th {
-      background: #0F2D4A;
-      color: #FFFFFF;
-      padding: 16px 20px;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      text-align: left;
-      font-weight: 700;
-    }
-
-    .matrix-table td {
-      padding: 16px 20px;
-      border-bottom: 1px solid #F1F5F9;
-      font-size: 13.5px;
-      color: #334155;
-    }
-
-    .matrix-table tr:last-child td {
-      border-bottom: none;
-    }
-
-    .matrix-table tr:hover td {
-      background: #F8FAFC;
-    }
-
-    .price-highlight {
-      font-family: 'Clash Display', 'Plus Jakarta Sans', sans-serif;
-      font-weight: 700;
-      color: #0F172A;
-      font-size: 16px;
-    }
-
-    .price-vat-tag {
-      font-size: 10px;
-      color: #64748B;
-      font-weight: 600;
-      text-transform: uppercase;
-    }
-
-    .analytics-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-      margin: 32px 0;
-    }
-
-    .analytics-card {
-      background: #FFFFFF;
-      border: 1px solid #E2E8F0;
-      border-radius: 16px;
-      padding: 24px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.02);
-    }
-
-    .analytics-card-title {
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: #64748B;
-      margin-bottom: 8px;
-    }
-
-    .progress-bar-wrap {
-      margin-bottom: 14px;
-    }
-
-    .progress-bar-label {
-      display: flex;
-      justify-content: space-between;
-      font-size: 13px;
-      font-weight: 600;
-      color: #1E293B;
-      margin-bottom: 4px;
-    }
-
-    .progress-bar-bg {
-      height: 8px;
-      background: #F1F5F9;
-      border-radius: 4px;
-      overflow: hidden;
-    }
-
-    .progress-bar-fill {
-      height: 100%;
-      border-radius: 4px;
-      background: linear-gradient(90deg, #FF6F59, #FF8E7E);
-    }
-
-    .progress-bar-fill.blue { background: linear-gradient(90deg, #0A3A60, #00B4D8); }
-    .progress-bar-fill.gold { background: linear-gradient(90deg, #F59E0B, #FBBF24); }
-    .progress-bar-fill.green { background: linear-gradient(90deg, #10B981, #34D399); }
-    .progress-bar-fill.purple { background: linear-gradient(90deg, #8B5CF6, #A78BFA); }
-
-    .roi-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 20px;
-      margin: 32px 0;
-    }
-
-    .roi-card {
-      background: linear-gradient(145deg, #FFFFFF, #F8FAFC);
-      border: 1px solid #E2E8F0;
-      border-left: 4px solid var(--coral);
-      border-radius: 16px;
-      padding: 24px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.03);
-    }
-
-    .roi-stat {
-      font-family: 'Clash Display', sans-serif;
-      font-size: 32px;
-      font-weight: 700;
-      color: var(--coral);
-      line-height: 1;
-      margin: 8px 0;
-    }
-
-    .clients-wall-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-      gap: 14px;
-      margin: 30px 0;
-    }
-
-    .client-badge-box {
-      background: #FFFFFF;
-      border: 1px solid #E2E8F0;
-      border-radius: 12px;
-      padding: 14px 10px;
-      text-align: center;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: 700;
-      color: #334155;
-      min-height: 60px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-      transition: all 0.2s ease;
-    }
-
-    .client-badge-box:hover {
-      border-color: var(--coral);
-      color: var(--coral);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 14px rgba(255, 111, 89, 0.12);
-    }
-
-    .traffic-timeline {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-      margin: 24px 0;
-    }
-
-    .traffic-time-slot {
-      background: #FFFFFF;
-      border: 1px solid #E2E8F0;
-      border-radius: 14px;
-      padding: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-      position: relative;
-    }
-
-    .traffic-time-slot.featured {
-      border-color: var(--coral);
-      background: #FFFBFB;
-    }
-
-    .time-badge {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 6px;
-      background: #0F2D4A;
-      color: #FFFFFF;
+      background: rgba(255, 111, 89, 0.1);
+      color: var(--coral, #ff6f59);
       font-size: 11px;
       font-weight: 700;
+      text-transform: uppercase;
       margin-bottom: 8px;
     }
-
-    .traffic-time-slot.featured .time-badge {
-      background: var(--coral);
-    }
-
-    .traffic-share {
-      font-size: 22px;
-      font-weight: 800;
-      color: #0F172A;
-      margin-bottom: 4px;
-    }
-
-    .traffic-counts {
-      font-size: 11.5px;
-      color: #64748B;
-      line-height: 1.5;
+    .client-chip {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-main, #e2e8f0);
+      display: inline-block;
     }
   </style>
 </head>
-<body class="custom-cursor-active relative">
-  <div class="cursor"></div>
-  <div class="ambient-light"></div>
+<body class="subpage">
 
-  <!-- Header Section with Upgraded Mega Menus -->
-  <header class="site-header glass-panel">
-    <div class="logo">
-      <a href="../index.html" style="display:flex; align-items:center;">
-        <img src="../assets/Logo/Mall Logo/MOMBASA MALL2.0.png" alt="Mombasa Mall" style="height:48px; object-fit:contain;">
-      </a>
-    </div>
-    <nav class="header-nav">
-      <a href="../index.html">Home</a>
-      
-      <!-- Stores Mega Menu Dropdown -->
-      <div class="nav-dropdown-wrapper">
-        <a href="../stores/index.html" class="dropdown-trigger">Stores <svg class="dropdown-arrow" width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-        <div class="nav-dropdown glass-panel">
-          <div class="dropdown-grid">
-            <div class="dropdown-col">
-              <h5>Directory</h5>
-              <a href="../stores/index.html#store-directory">All Stores</a>
-              <a href="../stores/index.html#space-rental">Space Rental</a>
-              <a href="../stores/index.html#activations">Activations</a>
-              <h5>Floors</h5>
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:4px;">
-                <a href="../stores/index.html#stores-basement-parking">Basement</a>
-                <a href="../stores/index.html#stores-ground-floor">Ground</a>
-                <a href="../stores/index.html#stores-first-floor">1st Floor</a>
-                <a href="../stores/index.html#stores-second-floor">2nd Floor</a>
-                <a href="../stores/index.html#stores-third-floor">3rd Floor</a>
-              </div>
-            </div>
-            <div class="dropdown-col">
-              <div class="dropdown-preview-card">
-                <div>
-                  <div class="dropdown-preview-title">Floor Directory</div>
-                  <div class="dropdown-preview-desc">Explore 51+ active brands, services, and dining experiences across 5 levels.</div>
-                </div>
-                <img src="../assets/Logo/Mall Logo/MOMBASA MALL 1.0.png" alt="Stores Preview" style="object-fit:contain; border-radius:8px; height:80px; width:100%; margin-top:8px; background:rgba(10,29,55,0.04); padding:4px;">
-              </div>
-            </div>
-          </div>
-        </div>
+  <!-- OUR FLOORS OVERLAY -->
+  <div id="selection-shell">
+    <nav id="selection-menu" aria-hidden="true" aria-label="Our floors">
+      <div class="selection-cards">
+        <a href="../stores/index.html" class="selection-card">
+          <span class="selection-card__panel">
+            <span class="selection-card__eyebrow">Floor G — Retail</span>
+            <span class="selection-card__title">Ground<br>Floor</span>
+            <span class="selection-card__desc">Anchor Retail, Banking<br>&amp; Essential Services</span>
+          </span>
+          <span class="selection-card__cover" aria-hidden="true">
+            <img data-selection-cover="../assets/Logo/Shops Logo/Naivasmain.jpeg" alt="" decoding="async">
+          </span>
+        </a>
+        <a href="../news-events.html" class="selection-card">
+          <span class="selection-card__panel">
+            <span class="selection-card__eyebrow">Floors 2 &amp; 3 — Dining</span>
+            <span class="selection-card__title">Food Court<br>&amp; Events</span>
+            <span class="selection-card__desc">Restaurants, Cafés<br>&amp; Live Entertainment</span>
+          </span>
+          <span class="selection-card__cover" aria-hidden="true">
+            <img data-selection-cover="../assets/Logo/Shops Logo/Payless.jpg" alt="" decoding="async">
+          </span>
+        </a>
+        <a href="./index.html" class="selection-card">
+          <span class="selection-card__panel">
+            <span class="selection-card__eyebrow">Media — Billboard</span>
+            <span class="selection-card__title">LED<br>Advertising</span>
+            <span class="selection-card__desc">Premium Digital<br>Screen Inventory</span>
+          </span>
+          <span class="selection-card__cover" aria-hidden="true">
+            <img data-selection-cover="../assets/Logo/Mall Logo/MOMBASA MALL2.0.png" alt="" decoding="async">
+          </span>
+        </a>
+        <a href="../play-on.html" class="selection-card">
+          <span class="selection-card__panel">
+            <span class="selection-card__eyebrow">Entertainment</span>
+            <span class="selection-card__title">Play On<br>Arena</span>
+            <span class="selection-card__desc">Family Fun, Kids Zone<br>&amp; Brand Activations</span>
+          </span>
+          <span class="selection-card__cover" aria-hidden="true">
+            <img data-selection-cover="../assets/Logo/Shops Logo/West 11.jpg" alt="" decoding="async">
+          </span>
+        </a>
       </div>
-      
-      <!-- News & Events Mega Menu Dropdown -->
-      <div class="nav-dropdown-wrapper">
-        <a href="../news-events.html" class="dropdown-trigger">News &amp; Events <svg class="dropdown-arrow" width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-        <div class="nav-dropdown glass-panel">
-          <div class="dropdown-grid">
-            <div class="dropdown-col">
-              <h5>Happening Now</h5>
-              <a href="../news-events.html#upcoming-events">Upcoming Events</a>
-              <a href="../news-events.html#latest-news">Latest News</a>
-              <a href="../blog.html">Mall Life Blog</a>
-            </div>
-            <div class="dropdown-col">
-              <div class="dropdown-preview-card">
-                <div>
-                  <div class="dropdown-preview-title">Coastal Vibe Events</div>
-                  <div class="dropdown-preview-desc">Check out our upcoming festivals, weekend craft markets, and special holiday store deals.</div>
-                </div>
-                <div style="background:var(--coral); color:white; padding:6px 10px; border-radius:6px; font-size:10px; font-weight:700; text-align:center; margin-top:8px;">LIVE MUSIC WEEKENDS</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- About Us Mega Menu Dropdown -->
-      <div class="nav-dropdown-wrapper">
-        <a href="../about-us.html" class="dropdown-trigger">About Us <svg class="dropdown-arrow" width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-        <div class="nav-dropdown glass-panel">
-          <div class="dropdown-grid">
-            <div class="dropdown-col">
-              <h5>The Mall</h5>
-              <a href="../about-us.html#our-vision">Vision &amp; Mission</a>
-              <a href="../about-us.html#history">History &amp; Architecture</a>
-              <a href="../reviews.html">Customer Reviews</a>
-              <a href="../about-us.html#contact">Contact &amp; Leasing</a>
-            </div>
-            <div class="dropdown-col">
-              <div class="dropdown-preview-card">
-                <div>
-                  <div class="dropdown-preview-title">Mombasa's Center</div>
-                  <div class="dropdown-preview-desc">Modern space, state-of-the-art office co-working space, medical facility and family hub.</div>
-                </div>
-                <img src="../assets/Logo/Mall Logo/MOMBASA MALL2.0.png" alt="About Preview" style="object-fit:contain; border-radius:8px; height:80px; width:100%; margin-top:8px; background:rgba(10,29,55,0.05); padding:4px;">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Gallery / Media Dropdown -->
-      <div class="nav-dropdown-wrapper">
-        <a href="../gallery.html" class="dropdown-trigger">Gallery <svg class="dropdown-arrow" width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-        <div class="nav-dropdown glass-panel">
-          <div class="dropdown-grid">
-            <div class="dropdown-col">
-              <h5>Explore Media</h5>
-              <a href="../gallery.html#photos">Photo Albums</a>
-              <a href="../gallery.html#videos">Videos</a>
-              <a href="../play-on.html">Play On Arena</a>
-            </div>
-            <div class="dropdown-col">
-              <div class="dropdown-preview-card">
-                <div>
-                  <div class="dropdown-preview-title">Visual Tour</div>
-                  <div class="dropdown-preview-desc">Browse photos of our stunning architecture, stores, and community spaces.</div>
-                </div>
-                <div style="font-size:10px; font-weight:700; color:var(--coral); text-align:center; padding:10px; border:1px dashed var(--coral); border-radius:8px; margin-top:8px;">📷 400+ PHOTOS</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <a href="../led-advertising/index.html" style="color:var(--coral); font-weight:700;">LED Advertisement</a>
+      <button class="selection-close" id="selection-close" aria-label="Close">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M1.5 1.5L16.5 16.5M16.5 1.5L1.5 16.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
     </nav>
-    <div style="display:flex; align-items:center; gap:8px;">
-      <a class="header-btn" href="../about-us.html#contact">Visit</a>
-      <a href="../admin/login.html" class="sys-btn" title="Staff System Portal">sys.</a>
+  </div>
+
+  <!-- OFF-CANVAS -->
+  <div id="offcanvas-menu" class="offcanvas-menu" aria-hidden="true">
+    <button class="offcanvas-close" id="offcanvas-close" aria-label="Close menu">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1 1L15 15M15 1L1 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <div class="offcanvas-logo">
+      <img src="../assets/Logo/Mall Logo/MOMBASA MALL2.0.png" alt="Mombasa Mall" style="height:32px;filter:brightness(0) invert(1);">
     </div>
-  </header>
+    <nav class="offcanvas-nav">
+      <a href="../index.html">Home</a>
+      <a href="../stores/index.html">Store Directory</a>
+      <a href="../news-events.html">Events &amp; News</a>
+      <a href="../gallery.html">Gallery</a>
+      <a href="../play-on.html">Play On</a>
+      <a href="./index.html">LED Advertising</a>
+      <a href="../about-us.html">About Us</a>
+      <a href="../admin/login.html" class="sys-btn" style="align-self:flex-start; margin-top:8px;">sys.</a>
+    </nav>
+    <div class="offcanvas-footer">
+      <p>Mwembe Tayari, Mombasa</p>
+      <p>+254 790 964 002</p>
+    </div>
+  </div>
+  <div class="offcanvas-backdrop" id="offcanvas-backdrop"></div>
 
-  <!-- ScrollSmoother wrapper structure -->
-  <div id="smooth-wrapper">
-    <div id="smooth-content">
-      <main class="main-content" style="padding:140px 56px 60px;">
-        
-        <!-- HERO SECTION -->
-        <section class="hero" style="min-height:260px; margin-bottom:20px;">
-          <div>
-            <div class="badge-partnership">
-              <span>6:AM SIGNAGE ADVERTISEMENT</span>
-              <span>×</span>
-              <span>MOMBASA MALL</span>
+  <!-- PAGE STAGE -->
+  <div id="page-stage">
+    <div class="subpage-grid">
+
+      <!-- LEFT NAV -->
+      <nav class="subpage-nav site-nav" aria-label="Primary">
+        <header class="site-logo">
+          <a href="../index.html" aria-label="Mombasa Mall — Home">
+            <img src="../assets/Logo/Mall Logo/MOMBASA MALL2.0.png" alt="Mombasa Mall" width="160" decoding="async">
+          </a>
+        </header>
+        <a href="../about-us.html" class="site-nav__link link-underline">About</a>
+        <a href="../stores/index.html" class="site-nav__link link-underline">Stores</a>
+        <a href="../gallery.html" class="site-nav__link link-underline">Gallery</a>
+        <a href="../about-us.html#contact" class="site-nav__link link-underline">Contact</a>
+        <a href="../admin/login.html" class="sys-btn" title="Staff System Portal">sys.</a>
+        <div class="site-nav__actions">
+          <button type="button" class="our-selection-btn" id="open-selection" aria-haspopup="true" aria-expanded="false" aria-controls="selection-menu">
+            <span>Our Floors</span>
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+              <rect width="4" height="4" fill="currentColor"/><rect x="9" width="4" height="4" fill="currentColor"/>
+              <rect y="9" width="4" height="4" fill="currentColor"/><rect x="9" y="9" width="4" height="4" fill="currentColor"/>
+            </svg>
+          </button>
+          <button type="button" class="menu-btn" id="hamburger" aria-label="Open menu" aria-expanded="false">
+            <svg width="22" height="12" viewBox="0 0 22 12" fill="none" aria-hidden="true">
+              <rect width="22" height="3" fill="currentColor"/><rect y="9" width="12" height="3" fill="currentColor"/>
+            </svg>
+          </button>
+        </div>
+      </nav>
+
+      <!-- RIGHT SCROLLABLE CONTENT -->
+      <div class="subpage-content">
+
+        <!-- CINEMATIC SUBPAGE HERO -->
+        <div class="subpage-cinematic-hero">
+          <div class="subpage-hero-stage">
+            <img src="../assets/Logo/Random pics/MOMBASA MALL.jpg" alt="Mombasa Mall LED Advertising" class="subpage-hero-bg-img">
+            <div class="subpage-hero-overlay"></div>
+            <div class="subpage-hero-split-title">
+              <span class="split-part split-left">LED</span>
+              <span class="split-part split-right">ADVERTISING</span>
             </div>
-            <h1 style="font-size:clamp(32px, 4.5vw, 54px); font-weight:800; line-height:1.1; color:var(--navy); margin-bottom:14px;">
-              High-Impact LED Digital Screen Advertising in Mombasa
-            </h1>
-            <p style="color:var(--ink-soft); max-width:680px; font-size:16px; line-height:1.65; margin:0 0 24px;">
-              Elevate your brand with 24/7 continuous digital screen exposure strategically positioned at Mombasa Mall along Jomo Kenyatta Avenue, overlooking the high-traffic Mwembe Tayari junction.
+          </div>
+          <div class="subpage-hero-bottom-flow">
+            <span class="subpage-eyebrow">6:AM Kenya Signage Advertisement &times; Mombasa Mall</span>
+            <p class="subpage-lead">Dynamic high-definition 24/7 digital screen advertising along Jomo Kenyatta Avenue. Reach 80,000–100,000 monthly viewers across high-traffic Mwembe Tayari intersections and luxury mall atriums.</p>
+          </div>
+        </div>
+
+        <!-- STATS OVERVIEW -->
+        <div class="grid-4" style="margin-top:36px;margin-bottom:52px;">
+          <div class="bento" style="text-align:center;">
+            <div class="stat-number" style="font-size:36px;color:var(--coral);">100K</div>
+            <p class="bento-text" style="margin-top:6px;font-size:12px;">Monthly Viewers Reach (80K–100K)</p>
+          </div>
+          <div class="bento" style="text-align:center;">
+            <div class="stat-number" style="font-size:36px;color:var(--gold);">10,000+</div>
+            <p class="bento-text" style="margin-top:6px;font-size:12px;">Daily Outdoor Footfalls (Mwembe Tayari)</p>
+          </div>
+          <div class="bento" style="text-align:center;">
+            <div class="stat-number" style="font-size:36px;color:var(--ice-blue, #00B4D8);">786</div>
+            <p class="bento-text" style="margin-top:6px;font-size:12px;">Estimated Daily Impressions per Screen</p>
+          </div>
+          <div class="bento" style="text-align:center;">
+            <div class="stat-number" style="font-size:36px;color:var(--coral);">24/7</div>
+            <p class="bento-text" style="margin-top:6px;font-size:12px;">Continuous Display &amp; Tech Support</p>
+          </div>
+        </div>
+
+        <!-- SCREEN PACKAGES & INVENTORY -->
+        <div class="section-header">
+          <h2 class="section-h2">Screen Inventory &amp; Official Rate Card</h2>
+        </div>
+        <div class="grid-2" style="margin-bottom:52px;">
+          
+          <div class="bento" style="border-left:4px solid var(--coral);">
+            <div class="traffic-pill">Flagship Network</div>
+            <h3 class="bento-title">Full Package (Outdoor + Indoor Network)</h3>
+            <p class="bento-text">Simultaneous broadcast across the outdoor mega billboard (1280&times;720px) and the indoor 4-screen atrium array (1600&times;400px). Maximum brand dominance across motorist and shopper crowds.</p>
+            <div style="margin-top:16px;font-size:12.5px;color:var(--text-muted);line-height:1.6;">
+              &bull; 2 Weeks: <strong>KES 80,000 + VAT</strong><br>
+              &bull; 1 Month: <strong>KES 180,000 + VAT</strong><br>
+              &bull; Quarterly (3 Months): <strong>KES 620,000 + VAT</strong>
+            </div>
+            <span class="bento-price-tag">From KES 80,000 + VAT</span>
+          </div>
+
+          <div class="bento" style="border-left:4px solid var(--gold);">
+            <div class="traffic-pill" style="background:rgba(252,191,73,0.15);color:var(--gold);">Outdoor Highway</div>
+            <h3 class="bento-title">Outdoor Screen Only (11m &times; 6m)</h3>
+            <p class="bento-text">High-definition 1280&times;720px outdoor digital billboard overlooking Mwembe Tayari roundabout and Jomo Kenyatta Avenue. Captures 10,000+ daily vehicles and pedestrians.</p>
+            <div style="margin-top:16px;font-size:12.5px;color:var(--text-muted);line-height:1.6;">
+              &bull; 2 Weeks: <strong>KES 70,000 + VAT</strong><br>
+              &bull; 1 Month: <strong>KES 150,000 + VAT</strong><br>
+              &bull; Quarterly (3 Months): <strong>KES 540,000 + VAT</strong>
+            </div>
+            <span class="bento-price-tag">From KES 70,000 + VAT</span>
+          </div>
+
+          <div class="bento" style="border-left:4px solid #00B4D8;">
+            <div class="traffic-pill" style="background:rgba(0,180,216,0.15);color:#00B4D8;">Shopper Touchpoints</div>
+            <h3 class="bento-title">Indoor Screen Network (4 Screens)</h3>
+            <p class="bento-text">Network of 4 synchronized 1600&times;400px digital screens at the Main Entrance, Ground Atrium Void, Naivas Express Checkouts, and 2nd Floor Food Court.</p>
+            <div style="margin-top:16px;font-size:12.5px;color:var(--text-muted);line-height:1.6;">
+              &bull; 2 Weeks: <strong>KES 20,000 + VAT</strong><br>
+              &bull; 1 Month: <strong>KES 40,000 + VAT</strong><br>
+              &bull; Quarterly (3 Months): <strong>KES 150,000 + VAT</strong>
+            </div>
+            <span class="bento-price-tag">From KES 20,000 + VAT</span>
+          </div>
+
+          <div class="bento">
+            <div class="traffic-pill" style="background:rgba(16,185,129,0.15);color:#10B981;">Operating Specs</div>
+            <h3 class="bento-title">Broadcast Specs &amp; Technical Support</h3>
+            <p class="bento-text">All packages include standard 15-second loop duration airing every 3 minutes. Operates 24/7 with dedicated standby engineering and remote asset scheduling.</p>
+            <div style="margin-top:16px;font-size:12.5px;color:var(--text-muted);line-height:1.6;">
+              &bull; Slot Duration: <strong>15s every 3 mins</strong><br>
+              &bull; Operation: <strong>24/7 continuous exposure</strong><br>
+              &bull; Formats: <strong>MP4, MOV, JPEG, PNG</strong>
+            </div>
+            <span class="bento-price-tag" style="color:#10B981;border-color:rgba(16,185,129,0.2);background:rgba(16,185,129,0.1);">24/7 Active Broadcast</span>
+          </div>
+
+        </div>
+
+        <!-- AUDIENCE & HOURLY TRAFFIC INTELLIGENCE -->
+        <div class="section-header">
+          <h2 class="section-h2">Audience Demographics &amp; Traffic Intelligence</h2>
+        </div>
+        <div class="grid-3" style="margin-bottom:52px;">
+          <div class="bento">
+            <span class="bento-eyebrow">Demographics</span>
+            <h3 class="bento-title">Age Distribution</h3>
+            <p class="bento-text">
+              &bull; <strong>Age 18–44 (Priority):</strong> Active shoppers, digital natives, and lifestyle consumers.<br><br>
+              &bull; <strong>Age 45–65:</strong> High-net-worth investors, property owners, and families.
             </p>
-            <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
-              <a href="#pricing-matrix" class="header-btn" style="background:var(--navy); color:#FFFFFF; border:none; padding:12px 24px; font-size:13.5px; border-radius:30px; text-decoration:none; font-weight:700;">
-                View Official Pricing &amp; Plans ↓
-              </a>
-              <a href="#campaign-estimator" class="header-btn" style="background:var(--coral); color:#FFFFFF; border:none; padding:12px 24px; font-size:13.5px; border-radius:30px; text-decoration:none; font-weight:700;">
-                Calculate &amp; Book Campaign ↓
-              </a>
-            </div>
           </div>
-        </section>
-
-        <!-- HIGH-LEVEL METRICS COUNTER (from PDF) -->
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:20px; margin-bottom:48px;">
-          <div class="glass-glow-card" style="padding:22px 24px; text-align:center; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:18px;">
-            <div style="font-size:11px; font-weight:700; color:var(--coral); text-transform:uppercase; letter-spacing:0.05em;">Monthly Viewers Reach</div>
-            <div style="font-size:36px; font-weight:800; margin-top:6px; color:var(--navy);" class="scramble-text-value" data-value="100000">80,000 - 100,000</div>
-            <div style="font-size:11.5px; color:#64748B; margin-top:4px;">Across indoor &amp; outdoor loops</div>
+          <div class="bento">
+            <span class="bento-eyebrow">Audience Breakdown</span>
+            <h3 class="bento-title">Visitor Composition</h3>
+            <p class="bento-text">
+              &bull; Corporates &amp; Enterprises: <strong>27.8%</strong><br>
+              &bull; Tourists &amp; Holiday Visitors: <strong>25.3%</strong><br>
+              &bull; Travellers &amp; Commuters: <strong>19.0%</strong><br>
+              &bull; Working Professionals: <strong>15.2%</strong><br>
+              &bull; Local SMEs &amp; Traders: <strong>12.7%</strong>
+            </p>
           </div>
-          <div class="glass-glow-card" style="padding:22px 24px; text-align:center; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:18px;">
-            <div style="font-size:11px; font-weight:700; color:var(--coral); text-transform:uppercase; letter-spacing:0.05em;">Daily Outdoor Footfalls</div>
-            <div style="font-size:36px; font-weight:800; margin-top:6px; color:var(--navy);" class="scramble-text-value" data-value="10000">10,000+</div>
-            <div style="font-size:11.5px; color:#64748B; margin-top:4px;">At Mwembe Tayari roundabout</div>
-          </div>
-          <div class="glass-glow-card" style="padding:22px 24px; text-align:center; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:18px;">
-            <div style="font-size:11px; font-weight:700; color:var(--coral); text-transform:uppercase; letter-spacing:0.05em;">Daily Impressions</div>
-            <div style="font-size:36px; font-weight:800; margin-top:6px; color:var(--navy);" class="scramble-text-value" data-value="786">786</div>
-            <div style="font-size:11.5px; color:#64748B; margin-top:4px;">Estimated views per screen</div>
-          </div>
-          <div class="glass-glow-card" style="padding:22px 24px; text-align:center; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:18px;">
-            <div style="font-size:11px; font-weight:700; color:var(--coral); text-transform:uppercase; letter-spacing:0.05em;">Continuous Display</div>
-            <div style="font-size:36px; font-weight:800; margin-top:6px; color:var(--navy);">24 / 7</div>
-            <div style="font-size:11.5px; color:#64748B; margin-top:4px;">With standby technical support</div>
+          <div class="bento">
+            <span class="bento-eyebrow">Peak Traffic</span>
+            <h3 class="bento-title">Hourly Impresssions</h3>
+            <p class="bento-text">
+              &bull; <strong>7–10 AM (Morning):</strong> 25% (Entry: 967 / Exit: 677)<br>
+              &bull; <strong>12–3 PM (Lunch):</strong> 40% (Entry: 3,988 / Exit: 3,502)<br>
+              &bull; <strong>5–8 PM (Evening):</strong> 55% (Entry: 7,743 / Exit: 7,599)<br>
+              &bull; <strong>8–10 PM (Leisure):</strong> Entry: 8,436 / Exit: 8,631
+            </p>
           </div>
         </div>
 
-        <!-- SCREEN DIMENSIONS & HARDWARE SHOWCASE -->
-        <section style="margin-bottom:60px;">
-          <div style="text-align:center; max-width:640px; margin:0 auto 32px;">
-            <span class="badge-partnership" style="margin-bottom:8px;">Screen Hardware &amp; Locations</span>
-            <h2 style="font-size:32px; font-weight:800; color:var(--navy); margin-bottom:10px;">Precision Digital Billboard Network</h2>
-            <p style="font-size:14px; color:#64748B; line-height:1.6;">Engineered with brightness-adjustable, high-definition LED technology for superior contrast and crystal-clear visibility day and night.</p>
-          </div>
-
-          <div class="specs-grid">
-            <!-- Outdoor Screen Card -->
-            <div class="spec-card">
-              <div class="spec-card-img-wrap">
-                <img src="../assets/Logo/Random pics/MOMBASA MALL.jpg" alt="Outdoor LED Screen Billboard">
-                <div class="spec-badge-overlay">Outdoor Prime Billboard</div>
+        <!-- BOOKING FORM WITH DYNAMIC PRICE CALCULATOR -->
+        <div class="section-header"><h2 class="section-h2">Book Your LED Campaign</h2></div>
+        <div class="bento" style="max-width:680px;margin-bottom:52px;">
+          <form id="led-form">
+            <div class="grid-2" style="margin-bottom:16px;">
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <label style="font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-muted);">Brand / Campaign Name</label>
+                <input type="text" id="ledBrand" required placeholder="e.g. NCBA Bank Launch" style="padding:13px 16px;border-radius:10px;font-size:13px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#fff;">
               </div>
-              <div class="spec-card-body">
-                <div class="spec-dim-pill">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                  11m × 6m (11m × 7m Frame)
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <label style="font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-muted);">Contact Person</label>
+                <input type="text" id="ledPerson" required placeholder="e.g. Sarah Mwangi" style="padding:13px 16px;border-radius:10px;font-size:13px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#fff;">
+              </div>
+            </div>
+
+            <div class="grid-2" style="margin-bottom:16px;">
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <label style="font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-muted);">Contact Email</label>
+                <input type="email" id="ledEmail" required placeholder="marketing@brand.co.ke" style="padding:13px 16px;border-radius:10px;font-size:13px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#fff;">
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <label style="font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-muted);">Contact Phone / WhatsApp</label>
+                <input type="tel" id="ledPhone" required placeholder="+254 700 111 222" style="padding:13px 16px;border-radius:10px;font-size:13px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#fff;">
+              </div>
+            </div>
+
+            <div class="grid-2" style="margin-bottom:20px;">
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <label style="font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-muted);">Selected Package</label>
+                <select id="screenSelect" style="padding:13px 16px;border-radius:10px;font-size:13px;border:1px solid rgba(255,255,255,0.1);background:rgba(15,23,42,0.9);color:#fff;">
+                  <option value="full" data-price-2w="80000" data-price-1m="180000" data-price-3m="620000">Full Package (Outdoor + Indoor Network)</option>
+                  <option value="outdoor" data-price-2w="70000" data-price-1m="150000" data-price-3m="540000">Outdoor Mega Screen (1280&times;720px)</option>
+                  <option value="indoor" data-price-2w="20000" data-price-1m="40000" data-price-3m="150000">Indoor Screen Network (4 Screens)</option>
+                </select>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <label style="font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-muted);">Campaign Duration</label>
+                <select id="durationSelect" style="padding:13px 16px;border-radius:10px;font-size:13px;border:1px solid rgba(255,255,255,0.1);background:rgba(15,23,42,0.9);color:#fff;">
+                  <option value="2w">2 Weeks Duration</option>
+                  <option value="1m" selected>1 Month (30 Days)</option>
+                  <option value="3m">Quarterly (3 Months)</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="margin-bottom:20px;display:flex;flex-direction:column;gap:6px;">
+              <label style="font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-muted);">Campaign Notes &amp; Preferred Start Date</label>
+              <textarea id="ledNotes" rows="3" placeholder="Provide target start dates, artwork cloud link, or specific time scheduling requests..." style="padding:13px 16px;border-radius:10px;font-size:13px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#fff;"></textarea>
+            </div>
+
+            <!-- LIVE PRICE ESTIMATOR BREAKDOWN -->
+            <div class="calc-price-display" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);padding:20px;border-radius:14px;margin-bottom:20px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                <span style="font-size:12px;color:var(--text-muted);">Subtotal (Excl. VAT):</span>
+                <strong id="calcSubtotal" style="color:#fff;font-size:14px;">KES 180,000</strong>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                <span style="font-size:12px;color:var(--text-muted);">VAT (16%):</span>
+                <strong id="calcVat" style="color:#fff;font-size:14px;">KES 28,800</strong>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,0.1);padding-top:12px;">
+                <div>
+                  <div style="font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--gold);">Total Estimated (Incl. VAT)</div>
+                  <div style="font-size:11px;color:var(--text-muted);" id="calcSubtext">1 Month · 15s Loop / 3 Mins (24/7)</div>
                 </div>
-                <h3 style="font-size:20px; font-weight:800; color:var(--navy); margin-bottom:8px;">Outdoor High-Traffic Mega Screen</h3>
-                <p style="font-size:13px; color:#64748B; line-height:1.6; margin-bottom:18px;">
-                  Dominates the exterior facade overlooking the Mwembe Tayari roundabout and Jomo Kenyatta Avenue traffic junction, capturing over 10,000+ daily motorists and commuters.
-                </p>
-                <div class="spec-metric-row">
-                  <div>
-                    <span style="color:#64748B; font-size:11px; text-transform:uppercase;">Resolution</span>
-                    <strong>1280 × 720 px</strong>
-                  </div>
-                  <div>
-                    <span style="color:#64748B; font-size:11px; text-transform:uppercase;">Loop Slot</span>
-                    <strong>15s every 3 min</strong>
-                  </div>
-                </div>
+                <div class="calc-price-val" id="calcPriceVal" style="font-size:24px;font-weight:800;color:var(--coral);">KES 208,800</div>
               </div>
             </div>
 
-            <!-- Indoor Screens Network Card -->
-            <div class="spec-card">
-              <div class="spec-card-img-wrap">
-                <img src="../assets/Logo/Random pics/events - Copy.jpeg" alt="Indoor LED Screens Atrium">
-                <div class="spec-badge-overlay">Indoor Network • 4 Screens</div>
-              </div>
-              <div class="spec-card-body">
-                <div class="spec-dim-pill">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                  4m × 1m (Network of 4 Screens)
-                </div>
-                <h3 style="font-size:20px; font-weight:800; color:var(--navy); margin-bottom:8px;">Indoor Atrium &amp; Entrance Network</h3>
-                <p style="font-size:13px; color:#64748B; line-height:1.6; margin-bottom:18px;">
-                  Synchronized across high-density mall touchpoints: Main Ground Entrance, Atrium Void, Naivas Express Checkout, and 2nd Floor Food Court Dining Area.
-                </p>
-                <div class="spec-metric-row">
-                  <div>
-                    <span style="color:#64748B; font-size:11px; text-transform:uppercase;">Resolution</span>
-                    <strong>1600 × 400 px</strong>
-                  </div>
-                  <div>
-                    <span style="color:#64748B; font-size:11px; text-transform:uppercase;">Total Screens</span>
-                    <strong>4 Synchronized</strong>
-                  </div>
-                </div>
-              </div>
+            <div id="led-submit-success" style="display:none;margin-bottom:16px;padding:14px;border-radius:10px;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);color:#34D399;font-size:13px;">
+              &check; <strong>Campaign request received!</strong> Our 6:AM Kenya media team has logged your booking and will contact you via WhatsApp / email within 24 hours.
             </div>
+
+            <button type="submit" class="btn-flagship" style="padding:14px 32px; border-radius:9999px; font-size:12px; width:100%; justify-content:center; cursor:pointer;">
+              Submit LED Campaign Request &rarr;
+            </button>
+          </form>
+        </div>
+
+        <!-- CLIENTS & DIRECT CONTACT DESK -->
+        <div class="section-header"><h2 class="section-h2">Trusted Corporate Partners &amp; Media Desk</h2></div>
+        <div class="bento" style="margin-bottom:60px;">
+          <p class="bento-text" style="margin-bottom:18px;">Prominent brands advertising on 6:AM Kenya screens at Mombasa Mall:</p>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px;">
+            <span class="client-chip">County Gov. of Mombasa</span>
+            <span class="client-chip">NCBA Bank</span>
+            <span class="client-chip">Westerwelle Foundation</span>
+            <span class="client-chip">Mombasa Cement</span>
+            <span class="client-chip">Naivas Supermarket</span>
+            <span class="client-chip">Equity Afia</span>
+            <span class="client-chip">Kenya Airways</span>
+            <span class="client-chip">Chicken Inn</span>
+            <span class="client-chip">Creamy Inn</span>
+            <span class="client-chip">Pizza Inn</span>
+            <span class="client-chip">Play-On Arena</span>
+            <span class="client-chip">Meidas Ads KE</span>
+            <span class="client-chip">Legacy Fitness</span>
+            <span class="client-chip">Coast Cables</span>
+            <span class="client-chip">Jumia</span>
+            <span class="client-chip">Sultan's Real Estate</span>
           </div>
-        </section>
-
-        <!-- OFFICIAL PACKAGES & PRICING MATRIX (from PDF Page 4) -->
-        <section id="pricing-matrix" style="margin-bottom:60px; scroll-margin-top:120px;">
-          <div style="text-align:center; max-width:640px; margin:0 auto 24px;">
-            <span class="badge-partnership" style="margin-bottom:8px;">Official Rate Card</span>
-            <h2 style="font-size:32px; font-weight:800; color:var(--navy); margin-bottom:10px;">Package &amp; Pricing Structure</h2>
-            <p style="font-size:14px; color:#64748B;">Transparent rates for short-term bursts and long-term brand equity campaigns.</p>
-          </div>
-
-          <div style="overflow-x:auto;">
-            <table class="matrix-table">
-              <thead>
-                <tr>
-                  <th>Package Tier</th>
-                  <th>Display Hardware Included</th>
-                  <th>2 Weeks Duration</th>
-                  <th>1 Month Duration</th>
-                  <th>Quarterly (3 Months)</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    <strong style="color:var(--navy); font-size:15px; display:block;">Full Network Package</strong>
-                    <small style="color:#64748B;">Maximum visibility across indoor &amp; outdoor</small>
-                  </td>
-                  <td>Outdoor (1280×720px) &amp; Indoor (1600×400px)</td>
-                  <td><span class="price-highlight">KES 80,000</span> <span class="price-vat-tag">+ VAT</span></td>
-                  <td><span class="price-highlight">KES 180,000</span> <span class="price-vat-tag">+ VAT</span></td>
-                  <td><span class="price-highlight" style="color:var(--coral);">KES 620,000</span> <span class="price-vat-tag">+ VAT</span></td>
-                </tr>
-                <tr>
-                  <td>
-                    <strong style="color:var(--navy); font-size:15px; display:block;">Outdoor Screen Only</strong>
-                    <small style="color:#64748B;">High-traffic motorist &amp; commuter focus</small>
-                  </td>
-                  <td>Outdoor Mega Billboard (1280×720px)</td>
-                  <td><span class="price-highlight">KES 70,000</span> <span class="price-vat-tag">+ VAT</span></td>
-                  <td><span class="price-highlight">KES 150,000</span> <span class="price-vat-tag">+ VAT</span></td>
-                  <td><span class="price-highlight">KES 540,000</span> <span class="price-vat-tag">+ VAT</span></td>
-                </tr>
-                <tr>
-                  <td>
-                    <strong style="color:var(--navy); font-size:15px; display:block;">Indoor Screen Network</strong>
-                    <small style="color:#64748B;">Shopper &amp; retail customer engagement</small>
-                  </td>
-                  <td>Indoor Atrium &amp; Entrance 4-Screen Array (1600×400px)</td>
-                  <td><span class="price-highlight">KES 20,000</span> <span class="price-vat-tag">+ VAT</span></td>
-                  <td><span class="price-highlight">KES 40,000</span> <span class="price-vat-tag">+ VAT</span></td>
-                  <td><span class="price-highlight">KES 150,000</span> <span class="price-vat-tag">+ VAT</span></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding:14px 20px; font-size:12.5px; color:#64748B; display:flex; flex-wrap:wrap; gap:16px; justify-content:space-between; align-items:center;">
-            <span>⏱️ <strong>Slot Specs:</strong> 15 seconds every 3 minutes</span>
-            <span>🕒 <strong>Run Time:</strong> 24/7 continuous exposure</span>
-            <span>🔧 <strong>Support:</strong> Standby technical support &amp; content rotation</span>
-          </div>
-        </section>
-
-        <!-- AUDIENCE BREAKDOWN & PEAK VIEWING HOURS (from PDF Page 5, 7, 9, 10) -->
-        <section style="margin-bottom:60px;">
-          <div style="text-align:center; max-width:640px; margin:0 auto 32px;">
-            <span class="badge-partnership" style="margin-bottom:8px;">Audience Demographics &amp; Timing</span>
-            <h2 style="font-size:32px; font-weight:800; color:var(--navy); margin-bottom:10px;">Traffic Intelligence &amp; Reach</h2>
-            <p style="font-size:14px; color:#64748B;">Target your campaigns based on real-time pedestrian volume and verified foot traffic patterns.</p>
-          </div>
-
-          <!-- Audience Demographics & Composition -->
-          <div class="analytics-grid">
-            <div class="analytics-card">
-              <div class="analytics-card-title">Audience Composition</div>
-              <div class="progress-bar-wrap">
-                <div class="progress-bar-label"><span>Enterprises &amp; Corporates</span> <span>27.8%</span></div>
-                <div class="progress-bar-bg"><div class="progress-bar-fill purple" style="width:27.8%;"></div></div>
-              </div>
-              <div class="progress-bar-wrap">
-                <div class="progress-bar-label"><span>Tourists &amp; Holiday Visitors</span> <span>25.3%</span></div>
-                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:25.3%;"></div></div>
-              </div>
-              <div class="progress-bar-wrap">
-                <div class="progress-bar-label"><span>Commuters &amp; Travellers</span> <span>19.0%</span></div>
-                <div class="progress-bar-bg"><div class="progress-bar-fill blue" style="width:19%;"></div></div>
-              </div>
-              <div class="progress-bar-wrap">
-                <div class="progress-bar-label"><span>Working Professionals</span> <span>15.2%</span></div>
-                <div class="progress-bar-bg"><div class="progress-bar-fill green" style="width:15.2%;"></div></div>
-              </div>
-              <div class="progress-bar-wrap">
-                <div class="progress-bar-label"><span>SMEs &amp; Local Business Owners</span> <span>12.7%</span></div>
-                <div class="progress-bar-bg"><div class="progress-bar-fill gold" style="width:12.7%;"></div></div>
-              </div>
-            </div>
-
-            <div class="analytics-card">
-              <div class="analytics-card-title">Target Demographics</div>
-              <div style="display:flex; flex-direction:column; gap:16px; margin-top:12px;">
-                <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding:14px;">
-                  <span style="font-size:11px; font-weight:700; color:var(--coral); text-transform:uppercase;">Primary Demographics (Priority)</span>
-                  <div style="font-size:24px; font-weight:800; color:#0F172A; margin:4px 0;">Age 18 – 44</div>
-                  <p style="font-size:12px; color:#64748B; margin:0;">Active shoppers, digital natives, tech enthusiasts, and lifestyle consumers.</p>
-                </div>
-                <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding:14px;">
-                  <span style="font-size:11px; font-weight:700; color:#0A3A60; text-transform:uppercase;">Secondary Demographics</span>
-                  <div style="font-size:24px; font-weight:800; color:#0F172A; margin:4px 0;">Age 45 – 65</div>
-                  <p style="font-size:12px; color:#64748B; margin:0;">High-income decision makers, investors, property owners, and families.</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="analytics-card">
-              <div class="analytics-card-title">Regional Footprint (Polygram)</div>
-              <ul style="margin:12px 0 0; padding-left:18px; font-size:13px; color:#334155; line-height:1.7;">
-                <li><strong>Mombasa CBD:</strong> Highest impact coverage score capturing central business traffic.</li>
-                <li><strong>Nyali &amp; Ukunda/Kwale:</strong> Affluent residential and resort tourist corridors.</li>
-                <li><strong>Kizingo/Ganjoni &amp; Mvita/Tononoka:</strong> Dense residential zone ideal for high-frequency burst campaigns.</li>
-              </ul>
-            </div>
-          </div>
-
-          <!-- Peak Viewing Hours & Entrance Foot Traffic (from PDF Page 9 & 10) -->
-          <h3 style="font-size:20px; font-weight:800; color:var(--navy); margin:36px 0 16px;">Verified Hourly Traffic Patterns</h3>
-          <div class="traffic-timeline">
-            <div class="traffic-time-slot">
-              <span class="time-badge">7:00 AM – 10:00 AM</span>
-              <div class="traffic-share">25%</div>
-              <div style="font-size:12.5px; font-weight:700; color:#1E293B; margin-bottom:4px;">Morning Rush Hour</div>
-              <div class="traffic-counts">
-                Entry: <strong>967</strong> • Exit: <strong>677</strong><br>
-                Commuters, professionals &amp; morning transit.
-              </div>
-            </div>
-
-            <div class="traffic-time-slot">
-              <span class="time-badge">12:00 PM – 3:00 PM</span>
-              <div class="traffic-share">40%</div>
-              <div style="font-size:12.5px; font-weight:700; color:#1E293B; margin-bottom:4px;">Midday Peak Lunch</div>
-              <div class="traffic-counts">
-                Entry: <strong>3,988</strong> • Exit: <strong>3,502</strong><br>
-                Shoppers, dining crowds, tourists &amp; traders.
-              </div>
-            </div>
-
-            <div class="traffic-time-slot featured">
-              <span class="time-badge">5:00 PM – 8:00 PM</span>
-              <div class="traffic-share" style="color:var(--coral);">55%</div>
-              <div style="font-size:12.5px; font-weight:700; color:#1E293B; margin-bottom:4px;">Evening Prime Rush</div>
-              <div class="traffic-counts">
-                Entry: <strong>7,743</strong> • Exit: <strong>7,599</strong><br>
-                Peak commuter traffic &amp; evening supermarket rush.
-              </div>
-            </div>
-
-            <div class="traffic-time-slot">
-              <span class="time-badge">8:00 PM – 10:00 PM</span>
-              <div class="traffic-share">Night</div>
-              <div style="font-size:12.5px; font-weight:700; color:#1E293B; margin-bottom:4px;">Leisure &amp; Nightlife</div>
-              <div class="traffic-counts">
-                Entry: <strong>8,436</strong> • Exit: <strong>8,631</strong><br>
-                Dining, gaming arena, cinema &amp; late shopping.
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- PROVEN INDUSTRY ROI (from PDF Page 11) -->
-        <section style="margin-bottom:60px;">
-          <div style="text-align:center; max-width:640px; margin:0 auto 28px;">
-            <span class="badge-partnership" style="margin-bottom:8px;">Proven Track Record</span>
-            <h2 style="font-size:32px; font-weight:800; color:var(--navy); margin-bottom:10px;">Industry-Specific ROI Metrics</h2>
-            <p style="font-size:14px; color:#64748B;">Documented performance results delivered to our corporate and retail advertisers.</p>
-          </div>
-
-          <div class="roi-grid">
-            <div class="roi-card">
-              <div style="font-size:11px; font-weight:700; color:#64748B; text-transform:uppercase;">Retail Businesses</div>
-              <div class="roi-stat">+25%</div>
-              <div style="font-size:13.5px; font-weight:700; color:#0F172A; margin-bottom:4px;">Foot Traffic Increase</div>
-              <p style="font-size:12.5px; color:#64748B; margin:0;">Achieved within the first 30 days of campaign activation across mall screens.</p>
-            </div>
-
-            <div class="roi-card" style="border-left-color:#00B4D8;">
-              <div style="font-size:11px; font-weight:700; color:#64748B; text-transform:uppercase;">Hospitality Sector</div>
-              <div class="roi-stat" style="color:#00B4D8;">+20%</div>
-              <div style="font-size:13.5px; font-weight:700; color:#0F172A; margin-bottom:4px;">Booking Conversion Growth</div>
-              <p style="font-size:12.5px; color:#64748B; margin:0;">Enhanced reservation and occupancy rates for coastal hotels using targeted peak slots.</p>
-            </div>
-
-            <div class="roi-card" style="border-left-color:#10B981;">
-              <div style="font-size:11px; font-weight:700; color:#64748B; text-transform:uppercase;">Local SMEs &amp; Brands</div>
-              <div class="roi-stat" style="color:#10B981;">150%</div>
-              <div style="font-size:13.5px; font-weight:700; color:#0F172A; margin-bottom:4px;">Average Return on Ad Spend</div>
-              <p style="font-size:12.5px; color:#64748B; margin:0;">Measured direct inbound inquiries and sales lift across regional small businesses.</p>
-            </div>
-          </div>
-        </section>
-
-        <!-- PROMINENT CLIENT BRANDS (from PDF Page 12) -->
-        <section style="margin-bottom:60px;">
-          <div style="text-align:center; max-width:640px; margin:0 auto 24px;">
-            <span class="badge-partnership" style="margin-bottom:8px;">Trusted By Leading Brands</span>
-            <h2 style="font-size:28px; font-weight:800; color:var(--navy); margin-bottom:10px;">Our Esteemed Clients</h2>
-            <p style="font-size:13.5px; color:#64748B;">Join top enterprises, financial institutions, and retail leaders advertising with 6:AM Kenya at Mombasa Mall.</p>
-          </div>
-
-          <div class="clients-wall-grid">
-            <div class="client-badge-box">County Gov. of Mombasa</div>
-            <div class="client-badge-box">NCBA Bank</div>
-            <div class="client-badge-box">Westerwelle Foundation</div>
-            <div class="client-badge-box">Mombasa Cement</div>
-            <div class="client-badge-box">Naivas Supermarket</div>
-            <div class="client-badge-box">Equity Afia</div>
-            <div class="client-badge-box">Kenya Airways</div>
-            <div class="client-badge-box">Chicken Inn</div>
-            <div class="client-badge-box">Creamy Inn</div>
-            <div class="client-badge-box">Pizza Inn</div>
-            <div class="client-badge-box">Play-On Kids Arena</div>
-            <div class="client-badge-box">Meidas Ads KE</div>
-            <div class="client-badge-box">Legacy Fitness Club</div>
-            <div class="client-badge-box">Coast Cables</div>
-            <div class="client-badge-box">Jumia Kenya</div>
-            <div class="client-badge-box">Sultan's Real Estate</div>
-          </div>
-        </section>
-
-        <!-- CAMPAIGN BUILDER & COST ESTIMATOR (Tied to Admin Dashboard) -->
-        <section id="campaign-estimator" style="padding:28px 0; scroll-margin-top:120px;">
-          <div style="text-align:center; max-width:640px; margin:0 auto 32px;">
-            <span class="badge-partnership" style="margin-bottom:8px;">Interactive Simulator</span>
-            <h2 style="font-size:32px; font-weight:800; color:var(--navy); margin-bottom:10px;">Configure &amp; Book Your Campaign</h2>
-            <p style="font-size:14px; color:#64748B;">Select your preferred package, duration, and slot specs to generate instant estimates and submit directly to our operations desk.</p>
-          </div>
-
-          <div class="campaign-builder-workspace">
-            <!-- Left Pane: Portrait/Landscape Screen Simulator -->
-            <div class="builder-preview-col">
-              <div class="led-simulator-frame" id="simulator-frame">
-                <div></div>
-                <div class="simulator-screen-content">
-                  <div id="simulator-bg-preview" class="preview-placeholder-bg"></div>
-                  <div class="simulator-metadata">
-                    <span id="simulator-pkg-tag" class="simulator-tag">FULL PACKAGE</span>
-                    <div id="simulator-brand-title" class="simulator-title">YOUR BRAND HERE</div>
-                    <div id="simulator-pkg-desc" class="simulator-desc">Outdoor (1280x720) + Indoor Array • 15s Loop</div>
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Mock upload field for preview change -->
-              <div style="margin-top:16px; text-align:center;">
-                <label for="ad-preview-upload" style="font-size:12px; font-weight:700; color:var(--coral); cursor:pointer; display:inline-block; border:1px dashed var(--coral); padding:8px 14px; border-radius:10px; background:rgba(255,111,89,0.04);">
-                  📸 Upload Creative Mockup
-                </label>
-                <input type="file" id="ad-preview-upload" accept="image/*" style="display:none;">
-                <span style="display:block; font-size:10px; color:var(--slate-muted); margin-top:6px;">Preview your visual scale on simulated LED screen</span>
-              </div>
-            </div>
-
-            <!-- Right Pane: Configuration Form and Price Estimator -->
-            <div class="builder-form-col">
-              <div class="form-container" style="background:#FFFFFF; border:1px solid #E2E8F0; padding:28px; border-radius:20px; box-shadow:0 10px 30px rgba(0,0,0,0.04);">
-                <form id="led-booking-form">
-                  <div class="form-grid">
-                    <div class="form-group">
-                      <label for="led-brand">Brand / Business Name</label>
-                      <input type="text" id="led-brand" required placeholder="e.g. NCBA Bank Launch">
-                    </div>
-                    <div class="form-group">
-                      <label for="led-contact-name">Contact Person</label>
-                      <input type="text" id="led-contact-name" required placeholder="e.g. Sarah Mwangi">
-                    </div>
-                    <div class="form-group">
-                      <label for="led-contact">Contact Email</label>
-                      <input type="email" id="led-contact" required placeholder="e.g. marketing@brand.co.ke">
-                    </div>
-                    <div class="form-group">
-                      <label for="led-phone">Contact Phone (WhatsApp)</label>
-                      <input type="tel" id="led-phone" required placeholder="e.g. +254 700 111 222">
-                    </div>
-                    <div class="form-group full-width">
-                      <label for="led-package">Advertising Package Tier</label>
-                      <select id="led-package">
-                        <option value="full" data-name="Full Package (Outdoor + Indoor Network)" data-price-2w="80000" data-price-1m="180000" data-price-3m="620000">Full Package — Outdoor (1280x720) &amp; Indoor 4-Screen Array</option>
-                        <option value="outdoor" data-name="Outdoor Screen Only (1280x720px)" data-price-2w="70000" data-price-1m="150000" data-price-3m="540000">Outdoor Screen Only — Mega Billboard (1280 × 720px)</option>
-                        <option value="indoor" data-name="Indoor Screen Network (1600x400px, 4 Screens)" data-price-2w="20000" data-price-1m="40000" data-price-3m="150000">Indoor Screen Network — Atrium &amp; Entrances (1600 × 400px)</option>
-                      </select>
-                    </div>
-                    <div class="form-group">
-                      <label for="led-duration">Campaign Duration</label>
-                      <select id="led-duration">
-                        <option value="2w">2 Weeks Duration</option>
-                        <option value="1m" selected>1 Month (30 Days)</option>
-                        <option value="3m">Quarterly (3 Months)</option>
-                      </select>
-                    </div>
-                    <div class="form-group">
-                      <label for="led-slot">Slot Duration</label>
-                      <select id="led-slot">
-                        <option value="15" selected>15 Seconds (Standard Slot)</option>
-                        <option value="30">30 Seconds (Extended Slot)</option>
-                      </select>
-                    </div>
-                    <div class="form-group full-width">
-                      <label for="led-notes">Campaign Concept, Preferred Dates &amp; Download Links</label>
-                      <textarea id="led-notes" rows="3" placeholder="Provide target flight dates, creative artwork drive link, or special scheduling instructions..."></textarea>
-                    </div>
-                  </div>
-                  
-                  <div id="led-submit-success" style="display:none; margin-top:16px; padding:16px; border-radius:12px; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.3); color:#065f46; font-size:14px; line-height:1.5;">
-                    <strong>✅ Campaign schedule request received!</strong><br>
-                    Your request has been logged in our Operations Portal. Our media team from <strong>6:AM Kenya</strong> will contact you via WhatsApp / email within 24 hours.
-                  </div>
-                  <div id="led-submit-error" style="display:none; margin-top:16px; padding:16px; border-radius:12px; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); color:#991b1b; font-size:14px; line-height:1.5;">
-                    ⚠️ Error sending inquiry. Please call us directly at <strong>+254 790 964 002</strong> or email <strong>advertise@6amkenya.com</strong>.
-                  </div>
-
-                  <!-- Real-Time Cost Estimator Breakdown -->
-                  <div class="pricing-summary-card" style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:16px; padding:20px; margin-top:16px;">
-                    <h4 style="font-size:13px; font-weight:700; color:var(--navy); margin:0 0 12px; text-transform:uppercase; letter-spacing:0.04em;">Official Cost Breakdown</h4>
-                    <div class="pricing-row">
-                      <span>Package Base Rate:</span>
-                      <strong id="price-base">KES 180,000</strong>
-                    </div>
-                    <div class="pricing-row">
-                      <span>Selected Duration:</span>
-                      <strong id="price-duration-label">1 Month</strong>
-                    </div>
-                    <div class="pricing-row">
-                      <span>Slot Spec:</span>
-                      <strong id="price-slot-label">15s loop / 3 mins (24/7)</strong>
-                    </div>
-                    <div class="pricing-row">
-                      <span>Subtotal (Excl. VAT):</span>
-                      <strong id="price-subtotal">KES 180,000</strong>
-                    </div>
-                    <div class="pricing-row">
-                      <span>VAT (16%):</span>
-                      <strong id="price-vat">KES 28,800</strong>
-                    </div>
-                    <div class="pricing-row total" style="border-top:1px solid #CBD5E1; padding-top:10px; margin-top:6px;">
-                      <span style="font-size:15px; font-weight:700; color:var(--navy);">Total Estimated (Incl. VAT):</span>
-                      <strong id="price-grand-total" style="font-size:18px; font-weight:800; color:var(--coral);">KES 208,800</strong>
-                    </div>
-                  </div>
-                  
-                  <button type="submit" class="cta-btn" style="border:none; width:100%; margin-top:20px; text-align:center; justify-content:center; background:var(--coral); color:#FFFFFF; padding:16px 24px; border-radius:14px; font-size:15px; font-weight:700; cursor:pointer;">
-                    Submit LED Campaign Request →
-                  </button>
-                </form>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- DIRECT CONTACT & LOCATION (from PDF Page 14) -->
-        <section style="margin:48px 0 20px; background:#0F2D4A; color:#FFFFFF; border-radius:24px; padding:48px 40px;">
-          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:32px; align-items:center;">
-            <div>
-              <span style="background:rgba(255,255,255,0.15); color:#FFFFFF; padding:4px 12px; border-radius:20px; font-size:11px; font-weight:700; text-transform:uppercase;">Direct Media Desk</span>
-              <h2 style="font-size:32px; font-weight:800; margin:12px 0 10px; color:#FFFFFF;">Get in Touch with 6:AM Kenya</h2>
-              <p style="color:rgba(255,255,255,0.75); font-size:14px; line-height:1.6; margin:0 0 20px;">
-                Ready to book your advertising slots or require customized multi-month enterprise packages? Contact our direct marketing desk today.
-              </p>
-              <div style="display:flex; flex-direction:column; gap:12px; font-size:14px;">
-                <div style="display:flex; align-items:center; gap:10px;">
-                  <span>✉️</span> <strong>advertise@6amkenya.com</strong>
-                </div>
-                <div style="display:flex; align-items:center; gap:10px;">
-                  <span>📞</span> <strong>+254 790 964 002</strong>
-                </div>
-                <div style="display:flex; align-items:center; gap:10px;">
-                  <span>📍</span> <strong>Mombasa Mall, Mwembe Tayari, Jomo Kenyatta Avenue</strong>
-                </div>
-              </div>
-            </div>
-            <div style="text-align:center;">
-              <div style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); border-radius:20px; padding:32px 24px;">
-                <h3 style="font-size:20px; font-weight:700; color:#FFFFFF; margin-bottom:12px;">Need Custom Screen Loops?</h3>
-                <p style="color:rgba(255,255,255,0.7); font-size:13px; margin-bottom:20px;">We support video MP4, high-res static visuals, animated typography, and dynamic time-triggered creatives.</p>
-                <a href="tel:+254790964002" class="header-btn" style="background:#FFFFFF; color:#0F2D4A; font-weight:800; text-decoration:none; padding:12px 24px; border-radius:30px; display:inline-block;">
-                  Call Media Desk Now
-                </a>
-              </div>
-            </div>
-          </div>
-        </section>
-
-      </main>
-
-      <!-- Upscaled Footer -->
-      <footer class="site-footer" style="background:#111; color:#fff; border-top:1px solid rgba(255,255,255,0.08);">
-        <div class="footer-top" style="padding:80px 56px 40px;">
-          <div class="footer-brand">
-            <a href="../index.html" style="display:inline-flex; align-items:center; margin-bottom:20px; text-decoration:none;">
-              <img src="../assets/Logo/Mall Logo/MOMBASA MALL2.0.png" alt="Mombasa Mall" style="height:48px; object-fit:contain; filter:brightness(0) invert(1);">
-            </a>
-            <p style="color:rgba(255,255,255,0.6); font-size:14px; line-height:1.6;">Mombasa Mall is the premier shopping, dining, and lifestyle destination located in the heart of Mombasa, Mwembe Tayari along Jomo Kenyatta Avenue.</p>
-          </div>
-          <div class="footer-cols">
-            <div class="footer-col">
-              <h4 style="color:#fff; border-left:3px solid var(--yellow); padding-left:8px; font-size:14px; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:16px;">Directory</h4>
-              <a href="../stores/index.html" style="color:rgba(255,255,255,0.6);">Stores List</a>
-              <a href="../stores/index.html#stores-ground-floor" style="color:rgba(255,255,255,0.6);">Ground Floor</a>
-            </div>
-            <div class="footer-col">
-              <h4 style="color:#fff; border-left:3px solid var(--yellow); padding-left:8px; font-size:14px; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:16px;">Leasing</h4>
-              <a href="../activations/index.html" style="color:rgba(255,255,255,0.6);">Pop-up Activations</a>
-              <a href="../led-advertising/index.html" style="color:rgba(255,255,255,0.6);">LED Billboard Ads</a>
-            </div>
+          <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:20px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;font-size:13px;color:var(--text-muted);">
+            <div>✉️ <strong>advertise@6amkenya.com</strong></div>
+            <div>📞 <strong>+254 790 964 002</strong></div>
+            <div>📍 <strong>Mombasa Mall, Mwembe Tayari, Jomo Kenyatta Avenue</strong></div>
           </div>
         </div>
-        <div class="footer-bottom" style="padding:24px; text-align:center; border-top:1px solid rgba(255,255,255,0.06); color:rgba(255,255,255,0.4); font-size:13px;">
-          <p>© Mombasa Mall &amp; 6:AM Signage Advertisement — All rights reserved.</p>
-        </div>
-      </footer>
+
+      </div>
     </div>
   </div>
 
-  <!-- GSAP and ScrollTrigger -->
+  <div class="ambient-light" aria-hidden="true"></div>
+  <div class="cursor"></div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollSmoother.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/SplitText.min.js"></script>
-  
+  <script src="../js/selectionMenu.js"></script>
   <script src="../js/main.js"></script>
-  <script src="../js/site-data-init.js"></script>
-  <script type="module" src="../js/data-renderer.js"></script>
-  <script src="../js/motionEngine.js"></script>
-  
   <script>
-    // Robust LED Advertising Estimator & Lead Dispatcher
-    // Fully supports file:/// protocol and HTTP/Firestore cloud synchronization
     (function () {
-      'use strict';
+      const screenSelect = document.getElementById('screenSelect');
+      const durationSelect = document.getElementById('durationSelect');
+      const calcSubtotal = document.getElementById('calcSubtotal');
+      const calcVat = document.getElementById('calcVat');
+      const priceVal = document.getElementById('calcPriceVal');
+      const subtext = document.getElementById('calcSubtext');
+      const form = document.getElementById('led-form');
+      const successBox = document.getElementById('led-submit-success');
 
-      function initEstimator() {
-        const brandInput      = document.getElementById('led-brand');
-        const pkgSelect       = document.getElementById('led-package');
-        const durationSelect  = document.getElementById('led-duration');
-        const slotSelect      = document.getElementById('led-slot');
-        const adUpload        = document.getElementById('ad-preview-upload');
+      function updateEstimate() {
+        const opt = screenSelect.selectedOptions[0];
+        const durationKey = durationSelect.value; // '2w', '1m', '3m'
         
-        const brandTitle      = document.getElementById('simulator-brand-title');
-        const pkgTag          = document.getElementById('simulator-pkg-tag');
-        const pkgDesc         = document.getElementById('simulator-pkg-desc');
-        const bgPreview       = document.getElementById('simulator-bg-preview');
-        
-        const priceBase       = document.getElementById('price-base');
-        const priceDurationEl = document.getElementById('price-duration-label');
-        const priceSlotEl     = document.getElementById('price-slot-label');
-        const priceSubtotal   = document.getElementById('price-subtotal');
-        const priceVat        = document.getElementById('price-vat');
-        const priceGrandTotal = document.getElementById('price-grand-total');
+        let subtotal = 180000;
+        if (durationKey === '2w') subtotal = parseInt(opt.getAttribute('data-price-2w'), 10) || 80000;
+        if (durationKey === '1m') subtotal = parseInt(opt.getAttribute('data-price-1m'), 10) || 180000;
+        if (durationKey === '3m') subtotal = parseInt(opt.getAttribute('data-price-3m'), 10) || 620000;
 
-        if (!pkgSelect) return;
+        const vat = Math.round(subtotal * 0.16);
+        const grandTotal = subtotal + vat;
 
-        function calculate() {
-          const brand = brandInput.value.trim() || 'YOUR BRAND HERE';
-          const selectedPkg = pkgSelect.options[pkgSelect.selectedIndex];
-          const durationKey = durationSelect.value; // '2w', '1m', '3m'
-          
-          let basePrice = 180000;
-          if (durationKey === '2w') basePrice = parseFloat(selectedPkg.getAttribute('data-price-2w')) || 80000;
-          if (durationKey === '1m') basePrice = parseFloat(selectedPkg.getAttribute('data-price-1m')) || 180000;
-          if (durationKey === '3m') basePrice = parseFloat(selectedPkg.getAttribute('data-price-3m')) || 620000;
+        calcSubtotal.textContent = 'KES ' + subtotal.toLocaleString();
+        calcVat.textContent = 'KES ' + vat.toLocaleString();
+        priceVal.textContent = 'KES ' + grandTotal.toLocaleString();
 
-          const pkgName = selectedPkg.getAttribute('data-name') || 'Full Package';
-          const slotLen = slotSelect.value;
-
-          // Slot multiplier (if 30s selected, 1.5x)
-          const slotMultiplier = slotLen === '30' ? 1.5 : 1.0;
-          const subtotal = Math.round(basePrice * slotMultiplier);
-          const vat = Math.round(subtotal * 0.16);
-          const grandTotal = subtotal + vat;
-
-          // Update Simulator
-          brandTitle.textContent = brand.toUpperCase();
-          pkgTag.textContent = pkgSelect.value.toUpperCase();
-          if (pkgSelect.value === 'outdoor') {
-            pkgDesc.textContent = `Outdoor Billboard (1280x720) • ${slotLen}s Loop`;
-          } else if (pkgSelect.value === 'indoor') {
-            pkgDesc.textContent = `Indoor 4-Screen Array (1600x400) • ${slotLen}s Loop`;
-          } else {
-            pkgDesc.textContent = `Outdoor (1280x720) + Indoor Array • ${slotLen}s Loop`;
-          }
-
-          // Update Price Breakdown
-          const durationLabels = { '2w': '2 Weeks', '1m': '1 Month (30 Days)', '3m': 'Quarterly (3 Months)' };
-          priceBase.textContent = `KES ${basePrice.toLocaleString()}`;
-          priceDurationEl.textContent = durationLabels[durationKey] || '1 Month';
-          priceSlotEl.textContent = `${slotLen}s loop / 3 mins (${slotMultiplier > 1 ? slotMultiplier + 'x rate' : 'Standard rate'})`;
-          priceSubtotal.textContent = `KES ${subtotal.toLocaleString()}`;
-          priceVat.textContent = `KES ${vat.toLocaleString()}`;
-          priceGrandTotal.textContent = `KES ${grandTotal.toLocaleString()}`;
-        }
-
-        brandInput.addEventListener('input', calculate);
-        pkgSelect.addEventListener('change', calculate);
-        durationSelect.addEventListener('change', calculate);
-        slotSelect.addEventListener('change', calculate);
-
-        adUpload.addEventListener('change', function (e) {
-          const file = e.target.files[0];
-          if (file) {
-            const reader = new FileReader();
-            reader.onload = function (evt) {
-              bgPreview.style.backgroundImage = `url('${evt.target.result}')`;
-            };
-            reader.readAsDataURL(file);
-          }
-        });
-
-        calculate();
+        const durationLabels = { '2w': '2 Weeks', '1m': '1 Month (30 Days)', '3m': 'Quarterly (3 Months)' };
+        subtext.textContent = `${durationLabels[durationKey] || '1 Month'} · 15s Loop / 3 Mins (24/7)`;
       }
 
-      // Form Submission Handler (Saves to localStorage live cache & Firestore if online)
-      const form = document.getElementById('led-booking-form');
-      const successBox = document.getElementById('led-submit-success');
-      const errorBox = document.getElementById('led-submit-error');
+      screenSelect?.addEventListener('change', updateEstimate);
+      durationSelect?.addEventListener('change', updateEstimate);
+      updateEstimate();
 
+      // Form submission tied to Admin Dashboard
       form?.addEventListener('submit', async function (e) {
         e.preventDefault();
         const submitBtn = form.querySelector('button[type="submit"]');
         submitBtn.disabled = true;
-        submitBtn.innerHTML = 'Submitting Request…';
+        submitBtn.textContent = 'Submitting Request…';
 
-        const pkgSelect = document.getElementById('led-package');
-        const selectedPkg = pkgSelect.options[pkgSelect.selectedIndex];
-
+        const opt = screenSelect.selectedOptions[0];
         const leadData = {
-          id: `led-${Date.now()}`,
-          businessName:     document.getElementById('led-brand').value.trim(),
-          contactName:      document.getElementById('led-contact-name').value.trim(),
-          email:            document.getElementById('led-contact').value.trim(),
-          phone:            document.getElementById('led-phone').value.trim(),
-          packageRequested: selectedPkg.getAttribute('data-name') || selectedPkg.textContent,
-          durationMonths:   document.getElementById('led-duration').value,
-          slotLength:       `${document.getElementById('led-slot').value}s`,
-          estimatedCost:    document.getElementById('price-grand-total').textContent,
-          message:          document.getElementById('led-notes').value.trim() || 'No additional notes',
-          status:           'new',
-          submittedAt:      new Date().toISOString()
+          id: 'led-' + Date.now(),
+          businessName: document.getElementById('ledBrand').value.trim(),
+          contactName: document.getElementById('ledPerson').value.trim(),
+          email: document.getElementById('ledEmail').value.trim(),
+          phone: document.getElementById('ledPhone').value.trim(),
+          packageRequested: opt.textContent,
+          durationMonths: durationSelect.value,
+          slotLength: '15s every 3m (24/7)',
+          estimatedCost: priceVal.textContent,
+          message: document.getElementById('ledNotes').value.trim() || 'No additional notes',
+          status: 'new',
+          submittedAt: new Date().toISOString()
         };
 
-        // 1. Save directly to localStorage for instant Admin Dashboard synchronization
+        // 1. Save directly into localStorage for immediate Admin Dashboard reflection
         try {
-          const existingRaw = localStorage.getItem('mombasa_live_led_leads');
-          const list = existingRaw ? JSON.parse(existingRaw) : [];
+          const raw = localStorage.getItem('mombasa_live_led_leads');
+          const list = raw ? JSON.parse(raw) : [];
           list.unshift(leadData);
           localStorage.setItem('mombasa_live_led_leads', JSON.stringify(list));
-        } catch (err) {
-          console.warn('LocalStorage error:', err);
-        }
+        } catch (err) {}
 
-        // 2. Push to Firestore if on HTTP/HTTPS
+        // 2. Push to Firestore if not file://
         if (window.location.protocol !== 'file:') {
           try {
             const { db } = await import('../js/firebase-config.js');
-            const { collection, addDoc } = await import("https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js");
+            const { collection, addDoc } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js');
             await addDoc(collection(db, 'ledLeads'), leadData);
-          } catch (cloudErr) {
-            console.warn('Firestore cloud notice:', cloudErr.message);
-          }
+          } catch(e){}
         }
 
         if (successBox) {
           successBox.style.display = 'block';
           successBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
-        if (errorBox) errorBox.style.display = 'none';
-
         form.reset();
-        initEstimator();
+        updateEstimate();
         submitBtn.disabled = false;
-        submitBtn.innerHTML = 'Submit LED Campaign Request →';
+        submitBtn.textContent = 'Submit LED Campaign Request →';
 
-        setTimeout(function () {
-          if (successBox) successBox.style.display = 'none';
-        }, 9000);
+        setTimeout(() => { if (successBox) successBox.style.display = 'none'; }, 8000);
       });
-
-      document.addEventListener('DOMContentLoaded', initEstimator);
-      if (document.readyState === 'interactive' || document.readyState === 'complete') {
-        initEstimator();
-      }
     })();
   </script>
 </body>
