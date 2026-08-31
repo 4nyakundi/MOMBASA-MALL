@@ -1621,9 +1621,25 @@
       }
     });
 
-    // 13. Mobile sidebar toggle
-    document.getElementById('sidebarToggle')?.addEventListener('click', () => {
+    // 13. Mobile sidebar toggle & close
+    document.getElementById('sidebarToggle')?.addEventListener('click', (e) => {
+      e.stopPropagation();
       document.body.classList.toggle('sidebar-open');
+    });
+
+    document.getElementById('sidebarCloseBtn')?.addEventListener('click', () => {
+      document.body.classList.remove('sidebar-open');
+    });
+
+    // Dismiss sidebar when tapping outside on mobile/tablet
+    document.addEventListener('click', (e) => {
+      if (document.body.classList.contains('sidebar-open')) {
+        const sidebar = document.getElementById('adminSidebar');
+        const toggleBtn = document.getElementById('sidebarToggle');
+        if (sidebar && !sidebar.contains(e.target) && toggleBtn && !toggleBtn.contains(e.target)) {
+          document.body.classList.remove('sidebar-open');
+        }
+      }
     });
 
     // 14. Global modal dismiss on backdrop or escape
