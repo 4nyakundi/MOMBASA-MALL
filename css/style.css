@@ -2925,6 +2925,108 @@ input:focus, select:focus, textarea:focus {
   color: var(--text-muted) !important;
 }
 
+/* ---- UPCOMING EVENT HERO TEASER CARD ---- */
+.hero-bottom-flex {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: flex-end !important;
+  gap: 28px !important;
+  flex-wrap: wrap !important;
+}
+
+.hero-event-card {
+  display: flex;
+  flex-direction: column;
+  background: rgba(10, 29, 55, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.3);
+  padding: 16px 20px;
+  border-radius: 14px;
+  max-width: 360px;
+  width: 100%;
+  text-decoration: none !important;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s, box-shadow 0.28s;
+  pointer-events: auto;
+  margin-bottom: 4px;
+}
+
+.hero-event-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 111, 89, 0.55);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.42), 0 0 20px rgba(255, 111, 89, 0.2);
+}
+
+.hero-event-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.hero-event-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 111, 89, 0.18);
+  border: 1px solid rgba(255, 111, 89, 0.35);
+  color: var(--coral, #FF6F59);
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 3px 8px;
+  border-radius: 12px;
+}
+
+.hero-event-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--coral, #FF6F59);
+  border-radius: 50%;
+  box-shadow: 0 0 6px var(--coral, #FF6F59);
+  animation: heroEventPulse 2s infinite ease-in-out;
+}
+
+@keyframes heroEventPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+.hero-event-cta {
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--coral, #FF6F59);
+  transition: transform 0.2s;
+}
+
+.hero-event-card:hover .hero-event-cta {
+  transform: translateX(3px);
+}
+
+.hero-event-title {
+  font-family: var(--font-body, 'Satoshi', sans-serif);
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 6px 0;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+.hero-event-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.4;
+}
+
 /* ---- FOOTER (bottom-right corner) ---- */
 .site-footer {
   grid-column: 2;

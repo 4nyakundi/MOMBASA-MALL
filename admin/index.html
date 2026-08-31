@@ -73,10 +73,6 @@
         <span class="nav-label">Reviews Moderation</span>
         <span class="nav-count" id="reviewsCountBadge">0</span>
       </button>
-      <button class="admin-nav-item" data-tab="siteContent" title="Homepage Content">
-        <span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
-        <span class="nav-label">Homepage Content</span>
-      </button>
     </nav>
 
     <div class="admin-sidebar-footer">
@@ -236,9 +232,6 @@
           <button class="quick-action-btn" data-goto-tab="reviews">
             <span class="qa-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span> Moderate Reviews
           </button>
-          <button class="quick-action-btn" data-goto-tab="siteContent">
-            <span class="qa-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span> Edit Homepage
-          </button>
         </div>
 
         <!-- Seeder Card -->
@@ -364,50 +357,112 @@
             <thead>
               <tr>
                 <th>Brand / Business</th>
-                <th>Contact</th>
-                <th>Package &amp; Est. Cost</th>
-                <th>Notes / Schedule</th>
+                <th>Contact Info</th>
+                <th>Screen Package</th>
+                <th>Hire Duration</th>
+                <th>Estimated Cost &amp; Notes</th>
                 <th>Status</th>
-                <th>Actions</th>
+                <th style="width:130px;">Actions</th>
               </tr>
             </thead>
             <tbody id="ledLeadsTableBody">
-              <tr class="skeleton-row"><td colspan="6"><span class="skeleton skeleton-cell"></span></td></tr>
+              <tr class="skeleton-row"><td colspan="7"><span class="skeleton skeleton-cell"></span></td></tr>
             </tbody>
           </table>
         </div>
       </section>
 
       <!-- ══════════════════════════════════════
-           TAB 5: ACTIVATION LEADS
+           TAB 5: ACTIVATION LEADS & CALENDAR
            ══════════════════════════════════════ -->
       <section class="tab-panel" id="tab-activationLeads">
-        <div class="section-toolbar">
-          <div class="toolbar-left">
-            <span style="font-size:13px;color:var(--admin-text-muted);white-space:nowrap;">Filter by status:</span>
-            <select id="activationStatusFilter" class="filter-select">
-              <option value="all">All Applications</option>
-              <option value="new">New</option>
-              <option value="contacted">Contacted</option>
-              <option value="won">Approved / Booked</option>
-              <option value="lost">Declined</option>
-            </select>
+        <div class="section-toolbar" style="margin-bottom:18px;">
+          <div>
+            <h3 class="section-heading" style="margin:0;">Activations &amp; Event Booking Schedule</h3>
+            <p style="font-size:12.5px;color:var(--admin-text-muted);margin:3px 0 0;">Interactive month calendar showing client reservation ranges and booked atrium/forecourt dates.</p>
+          </div>
+          <a href="../activations/index.html" target="_blank" class="btn-secondary" style="display:inline-flex;align-items:center;gap:6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg> View Booking Page ↗
+          </a>
+        </div>
+
+        <!-- 1. MONTH-VIEW CALENDAR -->
+        <div class="activation-cal-card">
+          <div class="cal-header">
+            <div class="cal-title-wrap">
+              <div style="width:36px;height:36px;border-radius:8px;background:var(--coral-light);display:flex;align-items:center;justify-content:center;color:var(--coral);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              </div>
+              <div>
+                <h4 class="cal-title" id="activationCalTitle">August 2026</h4>
+                <span style="font-size:12px;color:var(--admin-text-muted);" id="activationCalSub">Click marked dates to view client booking details</span>
+              </div>
+            </div>
+            <div class="cal-nav-btns">
+              <button type="button" class="btn-secondary btn-sm" id="calTodayBtn">Today</button>
+              <button type="button" class="cal-nav-btn" id="calPrevBtn" aria-label="Previous Month">‹</button>
+              <button type="button" class="cal-nav-btn" id="calNextBtn" aria-label="Next Month">›</button>
+            </div>
+          </div>
+
+          <div class="cal-weekdays">
+            <span class="cal-weekday">Sun</span>
+            <span class="cal-weekday">Mon</span>
+            <span class="cal-weekday">Tue</span>
+            <span class="cal-weekday">Wed</span>
+            <span class="cal-weekday">Thu</span>
+            <span class="cal-weekday">Fri</span>
+            <span class="cal-weekday">Sat</span>
+          </div>
+
+          <div class="cal-grid" id="activationCalGrid">
+            <!-- Populated via JS -->
           </div>
         </div>
+
+        <!-- 2. FULL LIST TABLE OF ALL ACTIVATION BOOKINGS (SORTABLE) -->
+        <div class="section-toolbar" style="margin-top:28px;">
+          <div class="toolbar-left" style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font-size:13px;color:var(--admin-text-muted);white-space:nowrap;font-weight:600;">Status:</span>
+              <select id="activationStatusFilter" class="filter-select">
+                <option value="all">All Statuses</option>
+                <option value="new">New Inquiries</option>
+                <option value="contacted">Contacted</option>
+                <option value="won">Approved / Booked</option>
+                <option value="lost">Declined</option>
+              </select>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font-size:13px;color:var(--admin-text-muted);white-space:nowrap;font-weight:600;">Sort by:</span>
+              <select id="activationSortSelect" class="filter-select">
+                <option value="date-asc">Start Date (Earliest First)</option>
+                <option value="date-desc">Start Date (Latest First)</option>
+                <option value="status">Status Priority</option>
+                <option value="days-desc">Duration (Longest First)</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <span style="font-size:12.5px;color:var(--admin-text-muted);" id="activationCountFoot">Showing all bookings</span>
+          </div>
+        </div>
+
         <div class="table-card">
           <table class="admin-table">
             <thead>
               <tr>
-                <th>Applicant / Brand</th>
-                <th>Contact</th>
+                <th>Company / Client</th>
+                <th>Contact Info</th>
                 <th>Activation Type</th>
-                <th>Dates &amp; Concept</th>
+                <th>Booking Window &amp; Days</th>
+                <th>Concept &amp; Requirements</th>
                 <th>Status</th>
-                <th>Actions</th>
+                <th style="width:140px;">Actions</th>
               </tr>
             </thead>
             <tbody id="activationLeadsTableBody">
-              <tr class="skeleton-row"><td colspan="6"><span class="skeleton skeleton-cell"></span></td></tr>
+              <tr class="skeleton-row"><td colspan="7"><span class="skeleton skeleton-cell"></span></td></tr>
             </tbody>
           </table>
         </div>
@@ -466,10 +521,10 @@
           <table class="admin-table">
             <thead>
               <tr>
-                <th>Event Title</th>
-                <th>Date</th>
-                <th>Type</th>
-                <th>Summary</th>
+                <th>Event Title &amp; Venue</th>
+                <th>Date &amp; Schedule</th>
+                <th>Status</th>
+                <th>Details &amp; Media</th>
                 <th style="width:160px;">Actions</th>
               </tr>
             </thead>
@@ -544,61 +599,6 @@
 
       <!-- ══════════════════════════════════════
            TAB 10: HOMEPAGE SITE CONTENT
-           ══════════════════════════════════════ -->
-      <section class="tab-panel" id="tab-siteContent">
-        <div class="table-card" style="padding:28px;max-width:800px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
-            <h3 class="section-heading" style="margin:0;">Homepage &amp; Branding Live Editor</h3>
-            <a href="../index.html" target="_blank" class="btn-secondary" style="display:inline-flex;align-items:center;gap:6px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> Preview Live Homepage ↗
-            </a>
-          </div>
-          <p style="font-size:13px;color:var(--admin-text-muted);margin:0 0 22px;line-height:1.65;">
-            Changes here update the live public homepage instantly. Content is read from
-            <code style="color:var(--coral);font-size:11px;">siteContent/homepage</code> in Firestore.
-          </p>
-          <form id="siteContentForm">
-            <div class="form-grid">
-              <div class="form-group">
-                <label for="siteNameInput">Site / Mall Name</label>
-                <input type="text" id="siteNameInput" class="form-control" placeholder="Mombasa Mall" required>
-              </div>
-              <div class="form-group">
-                <label for="siteTaglineInput">Tagline / Headline</label>
-                <input type="text" id="siteTaglineInput" class="form-control" placeholder="The Coastal Lifestyle Destination" required>
-              </div>
-              <div class="form-group col-2">
-                <label for="heroHeadingInput">Hero Main Heading</label>
-                <input type="text" id="heroHeadingInput" class="form-control" placeholder="Welcome to Mombasa Mall" required>
-              </div>
-              <div class="form-group col-2">
-                <label for="heroSubInput">Hero Subtitle</label>
-                <input type="text" id="heroSubInput" class="form-control" placeholder="120+ stores, dining and entertainment" required>
-              </div>
-              <div class="form-group col-2">
-                <label for="marqueeItemsInput">Marquee Ticker Items (comma-separated)</label>
-                <input type="text" id="marqueeItemsInput" class="form-control" placeholder="The Coastal Lifestyle, Premium Shopping, 120+ Brands">
-              </div>
-              <div class="form-group">
-                <label for="contactPhoneInput">Contact Phone</label>
-                <input type="tel" id="contactPhoneInput" class="form-control" placeholder="+254 790 964 002" required>
-              </div>
-              <div class="form-group">
-                <label for="contactEmailInput">Contact Email</label>
-                <input type="email" id="contactEmailInput" class="form-control" placeholder="info@mombasamall.co.ke" required>
-              </div>
-              <div class="form-group col-2">
-                <label for="contactAddressInput">Physical Address</label>
-                <input type="text" id="contactAddressInput" class="form-control" placeholder="Mwembe Tayari, Jomo Kenyatta Avenue, Mombasa" required>
-              </div>
-            </div>
-            <button type="submit" id="saveSiteContentBtn" class="btn-primary" style="margin-top:6px;">
-              💾 Save Homepage Content
-            </button>
-          </form>
-        </div>
-      </section>
-
     </div><!-- /.admin-content -->
   </main>
 
@@ -653,16 +653,39 @@
               <input type="email" id="shopEmailInput" class="form-control" placeholder="store@example.com">
             </div>
             <div class="form-group">
-              <label for="shopSocialInput">Social Handle / Instagram</label>
+              <label for="shopSocialInput">Social Handle (Short)</label>
               <input type="text" id="shopSocialInput" class="form-control" placeholder="@brand_ke">
             </div>
-            <div class="form-group col-2">
-              <label for="shopLogoFileInput">Upload Logo (Firebase Storage)</label>
-              <input type="file" id="shopLogoFileInput" class="form-control" accept="image/*">
+            <div class="form-group">
+              <label for="shopSocialMediaUrl">Social Media Link (Full URL) *</label>
+              <input type="url" id="shopSocialMediaUrl" class="form-control" placeholder="https://instagram.com/brand_ke">
             </div>
             <div class="form-group col-2">
-              <label for="shopLogoUrlInput">Or Static Logo URL / Asset Path</label>
-              <input type="text" id="shopLogoUrlInput" class="form-control" placeholder="./assets/Logo/Shops Logo/...">
+              <label for="shopLogoFileInput">Store Brand Logo (Single Image)</label>
+              <input type="file" id="shopLogoFileInput" class="form-control" accept="image/*">
+              <div class="logo-preview-box" id="shopLogoPreviewBox">
+                <img id="shopLogoPreviewImg" class="logo-preview-img" src="../assets/Logo/Mall Logo/MOMBASA MALL 1.0.png" alt="Logo preview">
+                <div>
+                  <strong style="font-size:13px;color:var(--admin-text);display:block;">Logo Preview</strong>
+                  <span style="font-size:12px;color:var(--admin-text-muted);" id="shopLogoPreviewText">Choose an image file to upload or update</span>
+                </div>
+              </div>
+              <input type="hidden" id="shopLogoUrlInput">
+            </div>
+            <div class="form-group col-2">
+              <label>Additional Shop Photos (Upload Multiple Pictures)</label>
+              <p style="font-size:12px;color:var(--admin-text-muted);margin:0 0 8px;">Upload photos of the store interior, displays, storefront, and promotions. You can add multiple photos one at a time.</p>
+              <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                <input type="file" id="shopPhotoFileInput" class="form-control" accept="image/*" multiple style="flex:1;min-width:200px;">
+                <button type="button" id="addShopPhotoBtn" class="btn-secondary btn-sm" style="white-space:nowrap;">+ Upload Photo(s)</button>
+              </div>
+              <div style="display:flex;gap:8px;margin-top:8px;">
+                <input type="text" id="shopPhotoUrlAddInput" class="form-control" placeholder="Or add photo by asset path / URL (e.g. ./assets/Mall Pics/…)">
+                <button type="button" id="addShopPhotoUrlBtn" class="btn-secondary btn-sm" style="white-space:nowrap;">Add URL</button>
+              </div>
+              <div class="photo-gallery-preview" id="shopPhotosContainer">
+                <div style="grid-column:1/-1;text-align:center;padding:12px;color:var(--admin-text-muted);font-size:12px;">No additional photos added yet. Use the file picker above to add photos.</div>
+              </div>
             </div>
             <div class="form-group col-2">
               <label for="shopDescInput">Store Description</label>
@@ -697,12 +720,18 @@
         <div class="modal-body">
           <div class="form-grid full">
             <div class="form-group">
-              <label for="galleryFile">Choose Image File (uploads to Firebase Storage)</label>
+              <label for="galleryFile">Choose Image File *</label>
               <input type="file" id="galleryFile" class="form-control" accept="image/*">
+              <div id="galleryFilePreview" style="margin-top:8px; display:none; align-items:center; gap:10px;">
+                <img id="galleryFilePreviewImg" src="" style="width:64px; height:64px; object-fit:cover; border-radius:8px; border:1px solid var(--admin-border);">
+                <span style="font-size:12px; color:var(--admin-text-muted);" id="galleryFilePreviewName"></span>
+              </div>
             </div>
             <div class="form-group">
-              <label for="galleryUrlInput">Or Existing Image URL</label>
-              <input type="text" id="galleryUrlInput" class="form-control" placeholder="./assets/Logo/Random pics/…">
+              <details style="font-size:12px; color:var(--admin-text-muted); cursor:pointer;">
+                <summary style="font-weight:600; color:var(--admin-text-muted); outline:none;">Advanced: Paste manual image URL instead (Optional)</summary>
+                <input type="text" id="galleryUrlInput" class="form-control" placeholder="./assets/Logo/Random pics/… or https://…" style="margin-top:8px;">
+              </details>
             </div>
             <div class="form-group">
               <label for="galleryCaption">Caption / Title *</label>
@@ -735,32 +764,63 @@
        MODAL: ADD / EDIT EVENT
        ══════════════════════════════════════════ -->
   <div id="eventModal" class="modal-backdrop" aria-hidden="true">
-    <div class="modal-card">
+    <div class="modal-card" style="max-width:680px;">
       <div class="modal-header">
         <h3 id="eventModalTitle">Create Event / News</h3>
         <button id="closeEventModalBtn" class="modal-close" aria-label="Close">&times;</button>
       </div>
       <form id="eventForm">
         <div class="modal-body">
-          <div class="form-grid full">
-            <div class="form-group">
+          <div class="form-grid">
+            <div class="form-group col-2">
               <label for="eventTitle">Event Title *</label>
-              <input type="text" id="eventTitle" class="form-control" required placeholder="e.g. Coastal Fashion Pop-up Weekend">
+              <input type="text" id="eventTitle" class="form-control" required placeholder="e.g. Coastal Fashion &amp; Lifestyle Weekend">
             </div>
             <div class="form-group">
-              <label for="eventDate">Date *</label>
+              <label for="eventDate">Event Date *</label>
               <input type="date" id="eventDate" class="form-control" required>
             </div>
             <div class="form-group">
-              <label for="eventType">Event Status / Type</label>
+              <label for="eventTime">Time &amp; Schedule *</label>
+              <input type="text" id="eventTime" class="form-control" required placeholder="e.g. 10:00 AM – 7:00 PM">
+            </div>
+            <div class="form-group">
+              <label for="eventVenue">Venue / Location inside Mall *</label>
+              <input type="text" id="eventVenue" class="form-control" required placeholder="e.g. Ground Floor Central Grand Atrium">
+            </div>
+            <div class="form-group">
+              <label for="eventType">Event Status / Category</label>
               <select id="eventType" class="form-control">
                 <option value="upcoming">Upcoming Event</option>
                 <option value="past">Past Event Archive</option>
               </select>
             </div>
-            <div class="form-group">
-              <label for="eventSummary">Event Summary / Details *</label>
-              <textarea id="eventSummary" class="form-control" required placeholder="Details, activities, location inside mall…"></textarea>
+            <div class="form-group col-2">
+              <label for="eventSummary">Event Details &amp; Concept *</label>
+              <textarea id="eventSummary" class="form-control" rows="4" required placeholder="Full description of the event, scheduled activities, entertainment, participating brands, and admission info…"></textarea>
+            </div>
+            <div class="form-group col-2">
+              <label>Supporting Event Photos (Upload Multiple)</label>
+              <p style="font-size:12px;color:var(--admin-text-muted);margin:0 0 8px;">Upload event promotional banners, artist/lineup posters, or photos of the setup.</p>
+              <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                <input type="file" id="eventPhotoFileInput" class="form-control" accept="image/*" multiple style="flex:1;min-width:200px;">
+                <button type="button" id="addEventPhotoBtn" class="btn-secondary btn-sm" style="white-space:nowrap;">+ Upload Photo(s)</button>
+              </div>
+              <div style="display:flex;gap:8px;margin-top:8px;">
+                <input type="text" id="eventPhotoUrlAddInput" class="form-control" placeholder="Or add photo URL (e.g. ./assets/Logo/Random pics/events - Copy.jpeg)">
+                <button type="button" id="addEventPhotoUrlBtn" class="btn-secondary btn-sm" style="white-space:nowrap;">Add URL</button>
+              </div>
+              <div class="photo-gallery-preview" id="eventPhotosContainer">
+                <div style="grid-column:1/-1;text-align:center;padding:12px;color:var(--admin-text-muted);font-size:12px;">No event photos added yet.</div>
+              </div>
+            </div>
+            <div class="form-group col-2">
+              <label for="eventVideoUrl">Event Teaser Video (URL or Storage upload)</label>
+              <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                <input type="file" id="eventVideoFileInput" class="form-control" accept="video/*" style="flex:1;min-width:200px;">
+                <button type="button" id="uploadEventVideoBtn" class="btn-secondary btn-sm" style="white-space:nowrap;">Upload Video</button>
+              </div>
+              <input type="text" id="eventVideoUrl" class="form-control" placeholder="Or paste video URL / YouTube / MP4 link (e.g. ./assets/home.mp4.mp4)" style="margin-top:8px;">
             </div>
           </div>
         </div>
@@ -811,6 +871,24 @@
           <button type="submit" id="saveBlogBtn" class="btn-primary">Publish Article</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       MODAL: ACTIVATION BOOKING DETAILS
+       ══════════════════════════════════════════ -->
+  <div id="activationDetailModal" class="modal-backdrop" aria-hidden="true">
+    <div class="modal-card" style="max-width:560px;">
+      <div class="modal-header">
+        <h3 id="actModalTitle">Activation Booking Details</h3>
+        <button id="closeActivationModalBtn" class="modal-close" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body" id="activationModalBody">
+        <!-- Rendered dynamically via JS -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="closeActivationDetailBtn" class="btn-secondary">Close</button>
+      </div>
     </div>
   </div>
 

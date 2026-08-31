@@ -271,11 +271,27 @@
           </div>
 
           <!-- Hero text (bottom of hero) -->
-          <div class="hero-bottom">
+          <div class="hero-bottom hero-bottom-flex">
             <div class="hero-content">
               <h1 class="hero-h1">Where Retail Meets<br>The Indian Ocean.</h1>
               <p class="hero-sub">Open Daily · Mwembe Tayari, Mombasa · 5 Floors</p>
             </div>
+
+            <!-- Sleek Upcoming Event Teaser -->
+            <a href="./news-events.html" id="heroUpcomingEventCard" class="hero-event-card" aria-label="Upcoming Event Details">
+              <div class="hero-event-card-header">
+                <span class="hero-event-badge">
+                  <span class="hero-event-dot"></span>
+                  <span>Upcoming Event</span>
+                </span>
+                <span class="hero-event-cta">Explore ↗</span>
+              </div>
+              <h4 class="hero-event-title" id="heroEventTitle">Coastal Designers &amp; Pop-up Fair</h4>
+              <div class="hero-event-meta">
+                <span id="heroEventSchedule">📅 Sat, 12 Sep · 10:00 AM – 7:00 PM</span>
+                <span id="heroEventVenue">📍 Ground Floor Central Grand Atrium</span>
+              </div>
+            </a>
           </div>
         </div>
 
@@ -346,6 +362,55 @@
           if (p) p.classList.add('is-done');
         }
       }, 2500);
+    })();
+  </script>
+
+  <!-- Live Upcoming Event Handler for Homepage -->
+  <script>
+    (function () {
+      function populateHeroEvent() {
+        var card = document.getElementById('heroUpcomingEventCard');
+        if (!card) return;
+        var events = [];
+        var saved = localStorage.getItem('mombasa_live_events');
+        if (saved) {
+          try { events = JSON.parse(saved); } catch(e){}
+        }
+        if (!events || events.length === 0) return;
+        var upcoming = events.filter(function(e) { return e.type === 'upcoming' || !e.type; });
+        if (upcoming.length === 0) return;
+
+        upcoming.sort(function(a, b) {
+          var da = a.eventDate || a.date || '2099-01-01';
+          var db = b.eventDate || b.date || '2099-01-01';
+          return da.localeCompare(db);
+        });
+
+        var nextEvt = upcoming[0];
+        var titleEl = document.getElementById('heroEventTitle');
+        var schedEl = document.getElementById('heroEventSchedule');
+        var venueEl = document.getElementById('heroEventVenue');
+
+        if (titleEl && nextEvt.title) titleEl.textContent = nextEvt.title;
+        if (schedEl) {
+          var dStr = nextEvt.eventDate || nextEvt.date || '';
+          try {
+            var d = new Date(dStr);
+            if (!isNaN(d.getTime())) {
+              dStr = d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+            }
+          } catch(e){}
+          schedEl.textContent = '📅 ' + dStr + (nextEvt.eventTime ? ' · ' + nextEvt.eventTime : '');
+        }
+        if (venueEl && nextEvt.venue) {
+          venueEl.textContent = '📍 ' + nextEvt.venue;
+        }
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', populateHeroEvent);
+      } else {
+        populateHeroEvent();
+      }
     })();
   </script>
 

@@ -446,13 +446,15 @@
         submitBtn.textContent = 'Submitting Request…';
 
         const opt = screenSelect.selectedOptions[0];
+        const durOpt = durationSelect.selectedOptions[0];
         const leadData = {
           id: 'led-' + Date.now(),
           businessName: document.getElementById('ledBrand').value.trim(),
           contactName: document.getElementById('ledPerson').value.trim(),
           email: document.getElementById('ledEmail').value.trim(),
           phone: document.getElementById('ledPhone').value.trim(),
-          packageRequested: opt.textContent,
+          packageRequested: opt ? opt.textContent.trim() : 'Digital Screen Campaign',
+          durationRequested: durOpt ? durOpt.textContent.trim() : durationSelect.value,
           durationMonths: durationSelect.value,
           slotLength: '15s every 3m (24/7)',
           estimatedCost: priceVal.textContent,

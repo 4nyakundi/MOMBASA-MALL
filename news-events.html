@@ -224,30 +224,93 @@
   <script src="./js/main.js"></script>
   <script src="./js/site-data-init.js"></script>
 
-  <!-- Live Firestore Events Populator -->
+  <!-- Live Events Populator (Cloud & Local Synchronized) -->
   <script type="module">
     import { db } from './js/firebase-config.js';
-    import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+    import { collection, getDocs } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+
+    function formatDate(isoStr) {
+      if (!isoStr) return 'Upcoming';
+      try {
+        const d = new Date(isoStr);
+        if (isNaN(d.getTime())) return isoStr;
+        return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+      } catch { return isoStr; }
+    }
 
     async function loadLiveEvents() {
+      let events = [];
       try {
         const snap = await getDocs(collection(db, 'events'));
         if (!snap.empty) {
-          const events = snap.docs.map(d => d.data());
-          const upcoming = events.filter(e => e.type === 'upcoming');
-          const grid = document.getElementById('eventsUpcomingGrid');
-          if (grid && upcoming.length > 0) {
-            grid.innerHTML = upcoming.map(evt => `
-              <div class="bento">
-                <span class="bento-eyebrow" style="color:var(--gold);">${evt.date || 'Upcoming'}</span>
-                <h3 class="bento-title">${evt.title}</h3>
-                <p class="bento-text">${evt.summary || ''}</p>
-              </div>
-            `).join('');
-          }
+          events = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         }
       } catch (e) {
-        console.warn('Live events fetch skipped (using static):', e);
+        console.warn('Live Firestore events note:', e.message);
+      }
+
+      if (!events || events.length === 0) {
+        const localSaved = localStorage.getItem('mombasa_live_events');
+        if (localSaved) {
+          try { events = JSON.parse(localSaved); } catch(err) {}
+        }
+      }
+
+      if (events && events.length > 0) {
+        const upcoming = events.filter(e => e.type === 'upcoming' || !e.type);
+        const grid = document.getElementById('eventsUpcomingGrid');
+        if (grid && upcoming.length > 0) {
+          grid.innerHTML = upcoming.map(evt => {
+            const dateDisplay = formatDate(evt.eventDate || evt.date);
+            const timeDisplay = evt.eventTime || evt.time || '';
+            const venueDisplay = evt.venue || 'Central Grand Atrium';
+            const detailsText = evt.details || evt.summary || '';
+            const photos = Array.isArray(evt.photoUrls) ? evt.photoUrls : (evt.photo ? [evt.photo] : []);
+            const video = evt.videoUrl || '';
+
+            return `
+              <div class="bento" style="display:flex; flex-direction:column; gap:12px; position:relative; overflow:hidden;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px; flex-wrap:wrap;">
+                  <span class="bento-eyebrow" style="color:var(--coral); font-weight:800; font-size:12px;">
+                    📅 ${dateDisplay} ${timeDisplay ? '· ' + timeDisplay : ''}
+                  </span>
+                  <span style="font-size:11px; font-weight:700; color:var(--text-muted); background:rgba(255,255,255,0.06); padding:2px 8px; border-radius:12px;">
+                    📍 ${venueDisplay}
+                  </span>
+                </div>
+
+                <h3 class="bento-title" style="font-size:20px; margin:0;">${evt.title}</h3>
+
+                <p class="bento-text" style="line-height:1.6; color:rgba(255,255,255,0.8); margin:0;">
+                  ${detailsText}
+                </p>
+
+                ${photos.length > 0 ? `
+                  <div style="display:flex; gap:8px; margin-top:8px; overflow-x:auto; padding-bottom:4px;">
+                    ${photos.map(p => `
+                      <img src="${p}" alt="${evt.title}" style="width:110px; height:74px; object-fit:cover; border-radius:8px; border:1px solid rgba(255,255,255,0.12); flex-shrink:0;">
+                    `).join('')}
+                  </div>
+                ` : ''}
+
+                ${video ? `
+                  <div style="margin-top:8px;">
+                    ${video.includes('.mp4') || video.startsWith('data:video') ? `
+                      <video controls style="width:100%; max-height:180px; border-radius:8px; background:#000;" preload="metadata">
+                        <source src="${video}">
+                        Your browser does not support video playback.
+                      </video>
+                    ` : `
+                      <a href="${video}" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:700; color:var(--coral); text-decoration:none;">
+                        ▶ Watch Video Teaser ↗
+                      </a>
+                    `}
+                  </div>
+                ` : ''}
+              </div>
+            `;
+          }).join('');
+        }
       }
     }
     document.addEventListener('DOMContentLoaded', loadLiveEvents);

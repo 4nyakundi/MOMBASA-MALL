@@ -1952,12 +1952,47 @@
 
         modalSocialWa.href = socialWa;
         modalSocialIg.href = socialIg;
-        modalSocialWeb.href = socialWeb;
-        modalCallBtn.href = `tel:${phone.replace(/\\s+/g, '')}`;
+        const socialMediaUrl = card.getAttribute('data-social-media-url') || card.getAttribute('data-social-web') || '#';
+        if (socialMediaUrl && socialMediaUrl !== '#') {
+          modalSocialWeb.href = socialMediaUrl.startsWith('http') ? socialMediaUrl : 'https://' + socialMediaUrl;
+          modalSocialWeb.style.display = 'inline-flex';
+        }
 
         modalBackdrop.classList.add('is-open');
         modalBackdrop.setAttribute('aria-hidden', 'false');
       }
+
+      window.openShopModal = function (storeName, shopObj = null) {
+        if (shopObj) {
+          modalTitle.textContent = shopObj.name || storeName;
+          modalUnit.textContent = `${shopObj.floor || ''} · Unit ${shopObj.room || ''}`;
+          modalCatPill.textContent = shopObj.category || 'Retail';
+          modalFloorPill.textContent = shopObj.floor || 'Ground Floor';
+          modalHoursPill.textContent = 'Open Today';
+          modalDesc.textContent = shopObj.description || '';
+          modalHoursVal.textContent = shopObj.hours || 'Open Daily 9 AM - 9 PM';
+          modalPhoneVal.textContent = shopObj.phone || '+254 790 964 002';
+          modalEmailVal.textContent = shopObj.email || 'info@mombasamall.co.ke';
+          modalLocVal.textContent = `Unit ${shopObj.room || ''}, ${shopObj.floor || ''}`;
+
+          const logo = shopObj.logoUrl || shopObj.logo || './assets/Logo/Mall Logo/MOMBASA MALL 1.0.png';
+          modalLogoImg.src = logo;
+          const photos = Array.isArray(shopObj.photoUrls) && shopObj.photoUrls.length > 0 ? shopObj.photoUrls : (shopObj.photo ? [shopObj.photo] : []);
+          modalHeroImg.src = photos.length > 0 ? photos[0] : logo;
+
+          const socialLink = shopObj.socialMediaUrl || shopObj.socialWeb || (shopObj.socialHandle ? 'https://instagram.com/' + shopObj.socialHandle.replace(/^@/, '') : '#');
+          if (socialLink && socialLink !== '#') {
+            modalSocialWeb.href = socialLink.startsWith('http') ? socialLink : 'https://' + socialLink;
+            modalSocialWeb.style.display = 'inline-flex';
+          }
+
+          modalCallBtn.href = `tel:${(shopObj.phone || '+254 790 964 002').replace(/\s+/g, '')}`;
+          modalBackdrop.classList.add('is-open');
+          modalBackdrop.setAttribute('aria-hidden', 'false');
+          return;
+        }
+        window.triggerStoreByName(storeName);
+      };
 
       window.triggerStoreByName = function (storeName) {
         storeCards.forEach(card => {
