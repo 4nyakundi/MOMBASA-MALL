@@ -274,10 +274,9 @@
             <div id="act-form-error" style="display:none; margin-bottom:16px; padding:14px 18px; border-radius:10px; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); color:#991b1b; font-size:14px;">
               ⚠️ Something went wrong. Please try again or contact us at <strong>+254 790 964 002</strong>.
             </div>
-            <button type="submit" class="cta-btn" style="border:none; cursor:pointer; font-size:14px; font-weight:700;">
-              Submit Activation Application <span class="cta-arrow">→</span>
+            <button type="submit" class="form-submit-btn" style="margin-top:8px;">
+              <span>Submit Activation Proposal</span> <span class="btn-arrow">→</span>
             </button>
-
           </form>
         </div>
 
@@ -334,12 +333,13 @@
 
     const actForm = document.getElementById('activation-booking-form');
     const successBox = document.getElementById('act-form-success');
+    const errorBox = document.getElementById('act-form-error');
 
     actForm?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const submitBtn = actForm.querySelector('button[type="submit"]');
       submitBtn.disabled = true;
-      submitBtn.innerHTML = 'Submitting Application… <span class="cta-arrow">⏳</span>';
+      submitBtn.innerHTML = '<span>Submitting Proposal…</span> <span class="btn-arrow">⏳</span>';
 
       const phone = document.getElementById('act-phone').value.trim();
       const email = document.getElementById('act-email').value.trim();
@@ -390,7 +390,7 @@
         }
       } finally {
         submitBtn.disabled = false;
-        submitBtn.innerHTML = 'Submit Activation Application <span class="cta-arrow">→</span>';
+        submitBtn.innerHTML = '<span>Submit Activation Proposal</span> <span class="btn-arrow">→</span>';
       }
     });
   </script>

@@ -414,10 +414,9 @@
             <div id="contact-form-error" style="display:none; margin-bottom:16px; padding:14px 18px; border-radius:10px; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); color:#991b1b; font-size:14px;">
               ⚠️ Sorry, something went wrong. Please try again or call us directly.
             </div>
-            <button type="submit" class="cta-btn" style="border:none; cursor:pointer; font-size:14px; font-weight:700;">
-              Send Inquiry <span class="cta-arrow">→</span>
+            <button type="submit" class="form-submit-btn" style="margin-top:8px;">
+              <span>Send Message to Management</span> <span class="btn-arrow">→</span>
             </button>
-
           </form>
         </div>
 
@@ -480,11 +479,12 @@
       e.preventDefault();
       const submitBtn = contactForm.querySelector('button[type="submit"]');
       submitBtn.disabled = true;
-      submitBtn.innerHTML = 'Sending… <span class="cta-arrow">⏳</span>';
+      submitBtn.innerHTML = '<span>Sending Message…</span> <span class="btn-arrow">⏳</span>';
 
       const errorMsg = document.getElementById('contact-form-error');
 
       const leadData = {
+        id: 'contact-' + Date.now(),
         name:        document.getElementById('contact-name').value.trim(),
         email:       document.getElementById('contact-email-input').value.trim(),
         phone:       document.getElementById('contact-phone-input').value.trim(),
@@ -494,8 +494,18 @@
         submittedAt: new Date().toISOString()
       };
 
+      // Immediate local cache reflection for admin dashboard
       try {
-        await addDoc(collection(db, 'contactLeads'), leadData);
+        const raw = localStorage.getItem('mombasa_live_contact_leads');
+        const list = raw ? JSON.parse(raw) : [];
+        list.unshift(leadData);
+        localStorage.setItem('mombasa_live_contact_leads', JSON.stringify(list));
+      } catch(e) {}
+
+      try {
+        if (window.location.protocol !== 'file:') {
+          await addDoc(collection(db, 'contactLeads'), leadData);
+        }
         if (successMsg) {
           successMsg.style.display = 'block';
           successMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -512,7 +522,7 @@
         }
       } finally {
         submitBtn.disabled = false;
-        submitBtn.innerHTML = 'Send Inquiry <span class="cta-arrow">→</span>';
+        submitBtn.innerHTML = '<span>Send Message to Management</span> <span class="btn-arrow">→</span>';
       }
     });
   </script>
