@@ -629,20 +629,22 @@
     list.forEach(lead => {
       const tr = document.createElement('tr');
       const statusVal = lead.status || 'new';
-      const dur = lead.durationRequested || (lead.durationMonths ? `${lead.durationMonths} duration` : 'Standard Duration');
+      const dur = lead.durationRequested || (lead.durationMonths ? `${lead.durationMonths} Month(s)` : 'Standard Duration');
 
       tr.innerHTML = `
-        <td><strong style="color:var(--admin-text);">${escHtml(lead.businessName || 'Brand Partner')}</strong></td>
         <td>
-          <strong style="color:var(--admin-text);display:block;font-size:13px;">${escHtml(lead.contactName || '—')}</strong>
-          <div style="font-size:12.5px;color:var(--admin-text);">${escHtml(lead.phone || '—')}</div>
-          <small style="color:var(--admin-text-muted);">${escHtml(lead.email || '')}</small>
+          <strong style="color:var(--admin-text);display:block;font-size:13.5px;">${escHtml(lead.businessName || lead.companyName || 'Brand Partner')}</strong>
+          <small style="color:var(--admin-text-muted);">${escHtml(lead.contactName || lead.applicantName || '—')}</small>
         </td>
-        <td><span class="admin-badge">${escHtml(lead.packageRequested || 'Digital Billboard')}</span></td>
+        <td>
+          <div style="font-size:13px;font-weight:700;color:var(--admin-text);">${escHtml(lead.phone || '—')}</div>
+          ${lead.email ? `<small style="color:var(--admin-text-muted);">${escHtml(lead.email)}</small>` : ''}
+        </td>
+        <td><span class="admin-badge">${escHtml(lead.packageRequested || lead.screenType || 'Digital Billboard')}</span></td>
         <td><span style="display:inline-block;padding:4px 9px;border-radius:6px;background:rgba(217,119,6,0.12);color:#B45309;font-weight:700;font-size:12px;">${escHtml(dur)}</span></td>
         <td>
-          ${lead.estimatedCost ? `<div style="font-weight:700;color:var(--admin-text);font-size:12.5px;">${escHtml(lead.estimatedCost)}</div>` : ''}
-          <div style="max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;color:var(--admin-text-muted);">${escHtml(lead.message || '—')}</div>
+          ${lead.estimatedCost ? `<div style="font-weight:800;color:var(--coral);font-size:12.5px;">${escHtml(lead.estimatedCost)}</div>` : ''}
+          <div style="max-width:240px;font-size:12.5px;color:var(--admin-text-muted);line-height:1.4;word-break:break-word;" title="${escHtml(lead.message || '')}">${escHtml(lead.message || '—')}</div>
         </td>
         <td>
           <select class="filter-select" style="padding:6px 10px;font-size:12px;font-weight:600;" onchange="window.updateLeadStatus('ledLeads','${lead.id}',this.value)">
@@ -652,11 +654,73 @@
             <option value="lost" ${statusVal === 'lost' ? 'selected' : ''}>Lost</option>
           </select>
         </td>
-        <td><button class="btn-danger btn-sm" onclick="window.deleteLead('ledLeads','${lead.id}')">Delete</button></td>
+        <td>
+          <div class="td-actions">
+            <button class="btn-secondary btn-sm" onclick="window.openLedDetails('${lead.id}')">View</button>
+            <button class="btn-danger btn-sm" onclick="window.deleteLead('ledLeads','${lead.id}')">Delete</button>
+          </div>
+        </td>
       `;
       tbody.appendChild(tr);
     });
   }
+
+  function openLedDetails(leadId) {
+    const lead = ledLeadsCache.find(l => l.id === leadId);
+    if (!lead) return;
+    const body = document.getElementById('ledModalBody');
+    const modal = document.getElementById('ledDetailModal');
+    if (!body || !modal) return;
+
+    body.innerHTML = `
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <div style="background:var(--coral-light); padding:16px; border-radius:12px; border:1px solid rgba(255,107,71,0.2);">
+          <span style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:var(--coral);">Brand / Company</span>
+          <h3 style="margin:4px 0 0; font-size:20px; font-weight:800; color:var(--admin-text); word-break:break-word;">${escHtml(lead.businessName || lead.companyName || 'Brand Partner')}</h3>
+          <p style="margin:2px 0 0; font-size:13px; color:var(--admin-text-muted);">Contact Name: <strong>${escHtml(lead.contactName || lead.applicantName || '—')}</strong></p>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label style="font-size:11px; text-transform:uppercase; color:var(--admin-text-muted);">Phone Number</label>
+            <div style="font-size:14px; font-weight:700; color:var(--admin-text);">${escHtml(lead.phone || '—')}</div>
+          </div>
+          <div class="form-group">
+            <label style="font-size:11px; text-transform:uppercase; color:var(--admin-text-muted);">Email Address</label>
+            <div style="font-size:14px; font-weight:600; color:var(--admin-text); word-break:break-all;">${escHtml(lead.email || '—')}</div>
+          </div>
+          <div class="form-group">
+            <label style="font-size:11px; text-transform:uppercase; color:var(--admin-text-muted);">Screen Package</label>
+            <div style="font-size:14px; font-weight:700; color:var(--coral);">${escHtml(lead.packageRequested || lead.screenType || 'Digital Billboard')}</div>
+          </div>
+          <div class="form-group">
+            <label style="font-size:11px; text-transform:uppercase; color:var(--admin-text-muted);">Requested Hire Duration</label>
+            <div style="font-size:14px; font-weight:700; color:var(--admin-text);">${escHtml(lead.durationRequested || (lead.durationMonths ? `${lead.durationMonths} Month(s)` : '1 Month'))}</div>
+          </div>
+          ${lead.estimatedCost ? `
+          <div class="form-group col-2">
+            <label style="font-size:11px; text-transform:uppercase; color:var(--admin-text-muted);">Estimated Campaign Budget</label>
+            <div style="font-size:16px; font-weight:800; color:var(--coral); background:#F8FAFC; padding:10px 14px; border-radius:8px; border:1px solid var(--admin-border);">${escHtml(lead.estimatedCost)}</div>
+          </div>` : ''}
+          <div class="form-group col-2">
+            <label style="font-size:11px; text-transform:uppercase; color:var(--admin-text-muted);">Campaign Description &amp; Technical Notes</label>
+            <div style="font-size:13px; color:var(--admin-text); background:#F8FAFC; padding:12px 14px; border-radius:8px; border:1px solid var(--admin-border); line-height:1.6; word-break:break-word; white-space:pre-wrap;">${escHtml(lead.message || 'No additional campaign requirements specified.')}</div>
+          </div>
+          <div class="form-group col-2">
+            <label style="font-size:11px; text-transform:uppercase; color:var(--admin-text-muted);">Inquiry Status</label>
+            <select class="filter-select" style="padding:9px 12px; font-weight:700; width:100%;" onchange="window.updateLeadStatus('ledLeads','${lead.id}',this.value); closeModal(document.getElementById('ledDetailModal'));">
+              <option value="new" ${lead.status === 'new' ? 'selected' : ''}>New (Uncontacted)</option>
+              <option value="contacted" ${lead.status === 'contacted' ? 'selected' : ''}>Contacted</option>
+              <option value="won" ${lead.status === 'won' ? 'selected' : ''}>Won / Booked Campaign</option>
+              <option value="lost" ${lead.status === 'lost' ? 'selected' : ''}>Lost / Declined</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    `;
+    openModal(modal);
+  }
+  window.openLedDetails = openLedDetails;
 
   // ── 4. ACTIVATIONS CALENDAR & LEADS RENDER ──────────────────
   function renderActivationCalendar() {
@@ -898,22 +962,75 @@
       const tr = document.createElement('tr');
       const statusVal = lead.status || 'new';
       tr.innerHTML = `
-        <td><strong>${escHtml(lead.name || 'Visitor')}</strong></td>
-        <td><div>${escHtml(lead.phone || '—')}</div><small style="color:var(--admin-text-muted);">${escHtml(lead.email || '')}</small></td>
-        <td><span class="admin-badge">${escHtml(lead.subject || 'General')}</span></td>
-        <td><div>${escHtml(lead.message || '—')}</div></td>
+        <td><strong style="color:var(--admin-text);font-size:13.5px;">${escHtml(lead.name || 'Visitor')}</strong></td>
         <td>
-          <select class="filter-select" style="padding:6px 10px;font-size:12px;" onchange="window.updateLeadStatus('contactLeads','${lead.id}',this.value)">
+          <div style="font-size:13px;font-weight:700;color:var(--admin-text);">${escHtml(lead.phone || '—')}</div>
+          ${lead.email ? `<small style="color:var(--admin-text-muted);">${escHtml(lead.email)}</small>` : ''}
+        </td>
+        <td><span class="admin-badge">${escHtml(lead.subject || 'General')}</span></td>
+        <td>
+          <div style="max-width:280px;font-size:13px;color:var(--admin-text);line-height:1.4;word-break:break-word;" title="${escHtml(lead.message || '')}">${escHtml(lead.message || '—')}</div>
+        </td>
+        <td>
+          <select class="filter-select" style="padding:6px 10px;font-size:12px;font-weight:600;" onchange="window.updateLeadStatus('contactLeads','${lead.id}',this.value)">
             <option value="new" ${statusVal === 'new' ? 'selected' : ''}>New</option>
             <option value="contacted" ${statusVal === 'contacted' ? 'selected' : ''}>Contacted</option>
             <option value="closed" ${statusVal === 'closed' ? 'selected' : ''}>Closed</option>
           </select>
         </td>
-        <td><button class="btn-danger btn-sm" onclick="window.deleteLead('contactLeads','${lead.id}')">Delete</button></td>
+        <td>
+          <div class="td-actions">
+            <button class="btn-secondary btn-sm" onclick="window.openContactDetails('${lead.id}')">View</button>
+            <button class="btn-danger btn-sm" onclick="window.deleteLead('contactLeads','${lead.id}')">Delete</button>
+          </div>
+        </td>
       `;
       tbody.appendChild(tr);
     });
   }
+
+  function openContactDetails(leadId) {
+    const lead = contactLeadsCache.find(l => l.id === leadId);
+    if (!lead) return;
+    const body = document.getElementById('contactModalBody');
+    const modal = document.getElementById('contactDetailModal');
+    if (!body || !modal) return;
+
+    body.innerHTML = `
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <div style="background:var(--coral-light); padding:16px; border-radius:12px; border:1px solid rgba(255,107,71,0.2);">
+          <span style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:var(--coral);">Inquiry From</span>
+          <h3 style="margin:4px 0 0; font-size:20px; font-weight:800; color:var(--admin-text); word-break:break-word;">${escHtml(lead.name || 'Website Visitor')}</h3>
+          <p style="margin:2px 0 0; font-size:13px; color:var(--admin-text-muted);">Subject: <strong>${escHtml(lead.subject || 'General Inquiry')}</strong></p>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label style="font-size:11px; text-transform:uppercase; color:var(--admin-text-muted);">Phone Number</label>
+            <div style="font-size:14px; font-weight:700; color:var(--admin-text);">${escHtml(lead.phone || '—')}</div>
+          </div>
+          <div class="form-group">
+            <label style="font-size:11px; text-transform:uppercase; color:var(--admin-text-muted);">Email Address</label>
+            <div style="font-size:14px; font-weight:600; color:var(--admin-text); word-break:break-all;">${escHtml(lead.email || '—')}</div>
+          </div>
+          <div class="form-group col-2">
+            <label style="font-size:11px; text-transform:uppercase; color:var(--admin-text-muted);">Full Message Content</label>
+            <div style="font-size:13.5px; color:var(--admin-text); background:#F8FAFC; padding:14px; border-radius:8px; border:1px solid var(--admin-border); line-height:1.6; word-break:break-word; white-space:pre-wrap;">${escHtml(lead.message || 'No message content provided.')}</div>
+          </div>
+          <div class="form-group col-2">
+            <label style="font-size:11px; text-transform:uppercase; color:var(--admin-text-muted);">Inquiry Status</label>
+            <select class="filter-select" style="padding:9px 12px; font-weight:700; width:100%;" onchange="window.updateLeadStatus('contactLeads','${lead.id}',this.value); closeModal(document.getElementById('contactDetailModal'));">
+              <option value="new" ${lead.status === 'new' ? 'selected' : ''}>New (Awaiting Response)</option>
+              <option value="contacted" ${lead.status === 'contacted' ? 'selected' : ''}>Contacted / In Progress</option>
+              <option value="closed" ${lead.status === 'closed' ? 'selected' : ''}>Resolved / Closed</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    `;
+    openModal(modal);
+  }
+  window.openContactDetails = openContactDetails;
 
   window.updateLeadStatus = function(collName, id, status) {
     const map = { ledLeads: ledLeadsCache, activationLeads: activLeadsCache, contactLeads: contactLeadsCache };
@@ -1642,7 +1759,20 @@
       }
     });
 
-    // 14. Global modal dismiss on backdrop or escape
+    // 14. Detail Modals (LED & Contact & Activation)
+    const ledDetailModal = document.getElementById('ledDetailModal');
+    document.getElementById('closeLedModalBtn')?.addEventListener('click', () => closeModal(ledDetailModal));
+    document.getElementById('closeLedDetailBtn')?.addEventListener('click', () => closeModal(ledDetailModal));
+
+    const contactDetailModal = document.getElementById('contactDetailModal');
+    document.getElementById('closeContactModalBtn')?.addEventListener('click', () => closeModal(contactDetailModal));
+    document.getElementById('closeContactDetailBtn')?.addEventListener('click', () => closeModal(contactDetailModal));
+
+    const actModal = document.getElementById('activationDetailModal');
+    document.getElementById('closeActivationModalBtn')?.addEventListener('click', () => closeModal(actModal));
+    document.getElementById('closeActivationDetailBtn')?.addEventListener('click', () => closeModal(actModal));
+
+    // 15. Global modal dismiss on backdrop or escape
     document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
       backdrop.addEventListener('click', (e) => { if (e.target === backdrop) closeModal(backdrop); });
     });

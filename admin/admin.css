@@ -1,11 +1,12 @@
 /* =========================================================
-   admin/admin.css — Mombasa Mall Admin Dashboard
-   Clean White Sidebar Edition with Bold Black Menu Text
-   Full Page Scroll Capability & Complete Responsive System
+   admin/admin.css — Mombasa Mall Control Centre Dashboard
+   Pure White Sidebar + Deep Solid Black Typography
+   Full Window Smooth Scrolling Architecture
+   Fluid Responsive Layout & Screen Word-Fitting System
    ========================================================= */
 
 /* ── GOOGLE FONTS ───────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500;600;700;800;900&display=swap');
 
 /* ── DESIGN TOKENS ───────────────────────────────────────── */
 :root {
@@ -24,7 +25,7 @@
   --purple:          #8B5CF6;
   --amber:           #F59E0B;
 
-  /* Sidebar (White Background + Black Text) */
+  /* Sidebar Tokens (Pure White Background + Deep Solid Black Text) */
   --sidebar-bg:            #FFFFFF;
   --sidebar-border:        #E2E8F0;
   --sidebar-hover:         #F1F5F9;
@@ -41,8 +42,8 @@
   --admin-border-subtle: #F1F5F9;
   --admin-border-focus:  rgba(255, 107, 71, 0.4);
   --admin-text:          #0F172A;
-  --admin-text-muted:    #64748B;
-  --admin-text-light:    #94A3B8;
+  --admin-text-muted:    #475569;
+  --admin-text-light:    #64748B;
 
   --sidebar-w:  264px;
   --topbar-h:   68px;
@@ -61,26 +62,35 @@
   --transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ── RESET ──────────────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* ── RESET & UNIVERSAL WORD-FITTING ─────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  overflow-wrap: break-word;
+}
 
-/* ── FULL SCROLL CAPABILITY ENABLERS (OVERRIDE HOMEPAGE LOCKS) ── */
+/* ── MASTER WINDOW SCROLL ARCHITECTURE ───────────────────── */
+/* html owns the master scroll container; body never traps it */
 html, html:root {
-  height: auto !important;
+  height: 100% !important;
   min-height: 100% !important;
-  overflow-y: auto !important;
+  overflow-y: scroll !important; /* Always show scrollbar to prevent layout shift */
   overflow-x: hidden !important;
   scroll-behavior: smooth !important;
+  -webkit-overflow-scrolling: touch;
 }
 
 body.admin-body {
-  height: auto !important;
   min-height: 100vh !important;
-  background: var(--admin-bg);
-  color: var(--admin-text);
-  font-family: 'Inter', 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  display: flex !important;
-  overflow-y: auto !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: var(--admin-bg) !important;
+  color: var(--admin-text) !important;
+  font-family: 'Inter', 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  display: block !important;
+  overflow-y: visible !important;
   overflow-x: hidden !important;
   position: relative !important;
   -webkit-font-smoothing: antialiased;
@@ -88,10 +98,12 @@ body.admin-body {
 }
 
 /* ════════════════════════════════════════════════════════
-   SIDEBAR (WHITE BACKGROUND · BLACK MENU TEXT)
+   SIDEBAR (PURE WHITE BACKGROUND · DEEP SOLID BLACK TEXT)
    ════════════════════════════════════════════════════════ */
 .admin-sidebar {
   width: var(--sidebar-w);
+  height: 100vh;
+  height: 100dvh;
   background: #FFFFFF !important;
   border-right: 1px solid var(--sidebar-border);
   display: flex;
@@ -186,7 +198,7 @@ body.admin-body {
   color: #000000;
 }
 
-/* ── SIDEBAR NAV (BOLD BLACK TEXT) ──────────────────────── */
+/* ── SIDEBAR NAV (DEEP SOLID BLACK TYPOGRAPHY) ──────────── */
 .admin-nav {
   padding: 14px 12px;
   display: flex;
@@ -198,7 +210,7 @@ body.admin-body {
 .nav-section-title {
   font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.09em;
   color: #000000 !important;
   padding: 16px 12px 6px;
   font-weight: 900;
@@ -263,10 +275,11 @@ body.admin-body {
   flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
   color: #000000 !important;
 }
 
-/* Active Nav Item: Bold Black Pill with White Text */
+/* Active Nav Item: Bold Black Pill with Crisp White Text */
 .admin-nav-item.is-active {
   background: #000000 !important;
   color: #FFFFFF !important;
@@ -390,16 +403,16 @@ body.admin-body {
 }
 
 /* ════════════════════════════════════════════════════════
-   MAIN WORKSPACE AREA (UNRESTRICTED SCROLLING)
+   MAIN WORKSPACE AREA (FULL VERTICAL SCROLLING)
    ════════════════════════════════════════════════════════ */
 .admin-main {
   margin-left: var(--sidebar-w);
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
+  width: calc(100% - var(--sidebar-w));
   min-height: 100vh;
   height: auto !important;
-  transition: margin-left var(--transition);
+  display: flex;
+  flex-direction: column;
+  transition: margin-left var(--transition), width var(--transition);
   background: var(--admin-bg);
   overflow-y: visible !important;
   overflow-x: hidden !important;
@@ -408,7 +421,7 @@ body.admin-body {
 /* ── TOPBAR ─────────────────────────────────────────────── */
 .admin-topbar {
   height: var(--topbar-h);
-  background: rgba(255,255,255,0.94);
+  background: rgba(255, 255, 255, 0.96);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--admin-border);
@@ -427,6 +440,8 @@ body.admin-body {
   display: flex;
   align-items: center;
   gap: 14px;
+  flex: 1;
+  min-width: 0;
 }
 
 .sidebar-toggle-btn {
@@ -447,10 +462,13 @@ body.admin-body {
 .sidebar-toggle-btn svg { display: block; }
 
 .admin-topbar-title {
-  font-size: 18px;
-  font-weight: 800;
-  color: var(--admin-text);
+  font-size: clamp(16px, 2vw, 19px);
+  font-weight: 900;
+  color: #000000;
   letter-spacing: -0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .admin-topbar-actions {
@@ -460,11 +478,13 @@ body.admin-body {
   flex-shrink: 0;
 }
 
-/* ── CONTENT CONTAINER (PLENTY OF BOTTOM PADDING FOR SCROLL) ── */
+/* ── CONTENT CONTAINER (PLENTY OF BOTTOM PADDING FOR FULL SCROLL) ── */
 .admin-content {
-  padding: 28px 32px 80px;
+  padding: 28px 32px 100px;
   flex: 1 0 auto;
+  width: 100%;
   max-width: 100%;
+  box-sizing: border-box;
   height: auto !important;
   overflow-y: visible !important;
 }
@@ -489,10 +509,11 @@ body.admin-body {
 
 /* ── SECTION HEADING ────────────────────────────────────── */
 .section-heading {
-  font-size: 17px;
-  font-weight: 800;
-  color: var(--admin-text);
+  font-size: clamp(15px, 2vw, 18px);
+  font-weight: 900;
+  color: #000000;
   letter-spacing: -0.02em;
+  word-break: break-word;
 }
 
 /* ════════════════════════════════════════════════════════
@@ -500,9 +521,9 @@ body.admin-body {
    ════════════════════════════════════════════════════════ */
 .metrics-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-  margin-bottom: 28px;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 18px;
+  margin-bottom: 26px;
 }
 
 .metric-card {
@@ -512,7 +533,7 @@ body.admin-body {
   padding: 22px 20px;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 6px;
   position: relative;
   overflow: hidden;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -587,24 +608,27 @@ body.admin-body {
 .metric-title {
   font-size: 11px;
   color: var(--admin-text-muted);
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.07em;
+  word-break: break-word;
 }
 
 .metric-value {
-  font-size: 38px;
-  font-weight: 800;
-  color: var(--admin-text);
-  line-height: 1;
+  font-size: clamp(26px, 3.2vw, 38px);
+  font-weight: 900;
+  color: #000000;
+  line-height: 1.1;
   letter-spacing: -0.03em;
   font-variant-numeric: tabular-nums;
+  word-break: break-word;
 }
 
 .metric-foot {
   font-size: 11.5px;
   color: var(--admin-text-light);
-  margin-top: 3px;
+  margin-top: 2px;
+  word-break: break-word;
 }
 
 /* ════════════════════════════════════════════════════════
@@ -612,7 +636,7 @@ body.admin-body {
    ════════════════════════════════════════════════════════ */
 .quick-actions-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
   gap: 12px;
   margin-bottom: 28px;
 }
@@ -621,12 +645,12 @@ body.admin-body {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 12px 16px;
+  padding: 12px 14px;
   background: var(--admin-card);
   border: 1px solid var(--admin-border);
   border-radius: var(--radius);
-  color: #1E293B;
-  font-size: 13px;
+  color: #000000;
+  font-size: 12.5px;
   font-weight: 700;
   cursor: pointer;
   transition: all var(--transition);
@@ -635,6 +659,8 @@ body.admin-body {
   box-shadow: var(--shadow-xs);
   text-decoration: none;
   font-family: inherit;
+  line-height: 1.35;
+  word-break: break-word;
 }
 
 .quick-action-btn:hover {
@@ -680,8 +706,9 @@ body.admin-body {
 .seeder-card h3 {
   font-size: 15px;
   margin: 0 0 6px;
-  color: var(--admin-text);
-  font-weight: 700;
+  color: #000000;
+  font-weight: 800;
+  word-break: break-word;
 }
 
 .seeder-card p {
@@ -689,7 +716,8 @@ body.admin-body {
   color: var(--admin-text-muted);
   margin: 0 0 18px;
   line-height: 1.65;
-  max-width: 680px;
+  max-width: 720px;
+  word-break: break-word;
 }
 
 .sync-hub-card {
@@ -712,7 +740,7 @@ body.admin-body {
 
 .sync-hub-links {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 8px;
   padding: 16px 20px;
   background: rgba(255,107,71,0.03);
@@ -742,7 +770,7 @@ body.admin-body {
 .search-input-wrap {
   position: relative;
   flex: 1;
-  min-width: 220px;
+  min-width: 200px;
   max-width: 340px;
 }
 
@@ -791,6 +819,7 @@ body.admin-body {
   cursor: pointer;
   transition: border-color 0.2s, box-shadow 0.2s;
   box-shadow: var(--shadow-xs);
+  font-weight: 600;
 }
 
 .filter-select:focus {
@@ -928,41 +957,56 @@ body.admin-body {
 }
 
 /* ════════════════════════════════════════════════════════
-   TABLE CARD (SMOOTH HORIZONTAL SCROLL)
+   TABLE CARD & RESPONSIVE WORD-FITTING TABLES
    ════════════════════════════════════════════════════════ */
 .table-card {
-  background: var(--admin-card);
+  background: #FFFFFF;
   border: 1px solid var(--admin-border);
   border-radius: var(--radius-lg);
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   box-shadow: var(--shadow-sm);
+  width: 100%;
 }
 
 .admin-table {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
-  font-size: 13.5px;
+  font-size: 13px;
+  table-layout: auto;
 }
 
 .admin-table th {
   background: #F8FAFC;
-  padding: 13px 18px;
+  padding: 13px 16px;
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #475569;
-  border-bottom: 1px solid var(--admin-border);
+  color: #000000;
+  border-bottom: 2px solid var(--admin-border);
   white-space: nowrap;
-  font-weight: 800;
+  font-weight: 900;
 }
 
 .admin-table td {
-  padding: 14px 18px;
+  padding: 13px 16px;
   border-bottom: 1px solid var(--admin-border-subtle);
   vertical-align: middle;
-  color: var(--admin-text);
+  color: #0F172A;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.admin-table td strong {
+  color: #000000;
+  font-weight: 800;
+  word-break: break-word;
+}
+
+.admin-table td small {
+  color: var(--admin-text-muted);
+  word-break: break-word;
 }
 
 .admin-table tbody tr:last-child td { border-bottom: none; }
@@ -983,8 +1027,22 @@ body.admin-body {
 }
 
 /* ════════════════════════════════════════════════════════
-   STATUS PILLS
+   STATUS PILLS & BADGES
    ════════════════════════════════════════════════════════ */
+.admin-badge {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 3px 8px;
+  border-radius: 20px;
+  background: var(--coral-light);
+  color: var(--coral);
+  border: 1px solid rgba(255,107,71,0.3);
+  font-weight: 800;
+  white-space: nowrap;
+  display: inline-block;
+}
+
 .status-pill {
   display: inline-flex;
   align-items: center;
@@ -992,7 +1050,7 @@ body.admin-body {
   padding: 3px 10px;
   border-radius: 20px;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   white-space: nowrap;
@@ -1047,7 +1105,7 @@ body.admin-body {
    ════════════════════════════════════════════════════════ */
 .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 18px;
 }
 
@@ -1082,23 +1140,21 @@ body.admin-body {
   font-size: 10px;
   text-transform: uppercase;
   color: var(--coral);
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 0.07em;
   margin-bottom: 3px;
 }
 
 .gallery-item-caption {
   font-size: 13px;
-  color: var(--admin-text);
-  font-weight: 600;
+  color: #000000;
+  font-weight: 700;
   margin-bottom: 10px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  word-break: break-word;
 }
 
 /* ════════════════════════════════════════════════════════
-   MODAL
+   MODALS (SCROLLABLE & ADAPTIVE BOTTOM SHEETS)
    ════════════════════════════════════════════════════════ */
 .modal-backdrop {
   position: fixed;
@@ -1114,6 +1170,7 @@ body.admin-body {
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.22s, visibility 0.22s;
+  overflow-y: auto;
 }
 
 .modal-backdrop.is-open {
@@ -1122,12 +1179,13 @@ body.admin-body {
 }
 
 .modal-card {
-  background: var(--admin-card);
+  background: #FFFFFF;
   border: 1px solid var(--admin-border);
   border-radius: var(--radius-xl);
   width: 100%;
   max-width: 660px;
-  max-height: 92vh;
+  max-height: 90vh;
+  max-height: 90dvh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -1141,7 +1199,7 @@ body.admin-body {
 }
 
 .modal-header {
-  padding: 20px 24px;
+  padding: 18px 24px;
   border-bottom: 1px solid var(--admin-border);
   display: flex;
   align-items: center;
@@ -1153,9 +1211,10 @@ body.admin-body {
 .modal-header h3 {
   margin: 0;
   font-size: 17px;
-  color: var(--admin-text);
-  font-weight: 700;
+  color: #000000;
+  font-weight: 800;
   letter-spacing: -0.02em;
+  word-break: break-word;
 }
 
 .modal-close {
@@ -1177,14 +1236,15 @@ body.admin-body {
 
 .modal-close:hover {
   background: #E5E7EB;
-  color: var(--admin-text);
+  color: #000000;
 }
 
 .modal-body {
   padding: 24px;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   flex: 1;
-  background: var(--admin-card);
+  background: #FFFFFF;
 }
 
 .modal-footer {
@@ -1217,10 +1277,11 @@ body.admin-body {
 
 .form-group label {
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.07em;
-  color: #4B5563;
+  color: #000000;
+  word-break: break-word;
 }
 
 .form-control {
@@ -1300,7 +1361,7 @@ input[type="file"].form-control::-webkit-file-upload-button:hover {
   color: var(--admin-text) !important;
   cursor: pointer;
   margin: 0;
-  font-weight: 500 !important;
+  font-weight: 600 !important;
 }
 
 /* ════════════════════════════════════════════════════════
@@ -1337,7 +1398,7 @@ input[type="file"].form-control::-webkit-file-upload-button:hover {
   font-family: 'JetBrains Mono', 'Courier New', monospace;
   font-size: 11.5px;
   color: #374151;
-  max-height: 180px;
+  max-height: 220px;
   overflow-y: auto;
   line-height: 1.6;
 }
@@ -1367,13 +1428,14 @@ input[type="file"].form-control::-webkit-file-upload-button:hover {
   border-radius: var(--radius);
   box-shadow: 0 8px 30px rgba(0,0,0,0.25);
   font-size: 13.5px;
-  font-weight: 500;
+  font-weight: 600;
   display: flex;
   align-items: center;
   gap: 10px;
   animation: toastIn 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
-  max-width: 360px;
+  max-width: 380px;
   pointer-events: all;
+  word-break: break-word;
 }
 
 .toast.success { border-left-color: var(--green); }
@@ -1389,7 +1451,7 @@ input[type="file"].form-control::-webkit-file-upload-button:hover {
    ACTIVATIONS CALENDAR WIDGET
    ════════════════════════════════════════════════════════ */
 .activation-cal-card {
-  background: var(--admin-card);
+  background: #FFFFFF;
   border: 1px solid var(--admin-border);
   border-radius: var(--radius-lg);
   padding: 24px;
@@ -1419,8 +1481,8 @@ input[type="file"].form-control::-webkit-file-upload-button:hover {
 .cal-title {
   margin: 0;
   font-size: 18px;
-  font-weight: 800;
-  color: var(--admin-text);
+  font-weight: 900;
+  color: #000000;
   letter-spacing: -0.02em;
 }
 
@@ -1463,10 +1525,10 @@ input[type="file"].form-control::-webkit-file-upload-button:hover {
 
 .cal-weekday {
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--admin-text-muted);
+  color: #000000;
   padding: 6px 0;
 }
 
@@ -1515,8 +1577,8 @@ input[type="file"].form-control::-webkit-file-upload-button:hover {
 
 .cal-date-num {
   font-size: 12px;
-  font-weight: 700;
-  color: var(--admin-text);
+  font-weight: 800;
+  color: #000000;
   margin-bottom: 4px;
   display: flex;
   justify-content: space-between;
@@ -1687,7 +1749,7 @@ input[type="file"].form-control::-webkit-file-upload-button:hover {
 
   .admin-main {
     margin-left: 0 !important;
-    width: 100%;
+    width: 100% !important;
   }
 
   .admin-topbar {
@@ -1695,7 +1757,7 @@ input[type="file"].form-control::-webkit-file-upload-button:hover {
   }
 
   .admin-content {
-    padding: 22px 20px 80px;
+    padding: 22px 20px 100px;
   }
 
   .metrics-grid {
@@ -1756,7 +1818,7 @@ input[type="file"].form-control::-webkit-file-upload-button:hover {
   }
 
   .admin-content {
-    padding: 16px 14px 80px;
+    padding: 16px 14px 100px;
   }
 
   /* Welcome Banner */
@@ -1768,7 +1830,7 @@ input[type="file"].form-control::-webkit-file-upload-button:hover {
   }
 
   #dashGreeting {
-    font-size: 18px !important;
+    font-size: 19px !important;
   }
 
   #dashDateLine {
@@ -1800,7 +1862,7 @@ input[type="file"].form-control::-webkit-file-upload-button:hover {
   }
 
   .metric-value {
-    font-size: 28px;
+    font-size: 26px;
   }
 
   .metric-foot {
@@ -1836,7 +1898,7 @@ input[type="file"].form-control::-webkit-file-upload-button:hover {
     justify-content: center;
   }
 
-  /* Tables: smooth mobile horizontal scrolling */
+  /* Tables: smooth touch scrolling */
   .table-card {
     border-radius: var(--radius);
     overflow-x: auto;
