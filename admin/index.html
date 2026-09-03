@@ -285,9 +285,18 @@
             Seed or re-sync all 51 stores, events, blog posts, reviews, and site content from the authoritative dataset
             directly into live Firestore collections. Run this once on initial deployment or whenever directory records are updated.
           </p>
-          <button id="seedDatabaseBtn" class="btn-primary" style="display:inline-flex;align-items:center;gap:6px;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Seed All Collections to Firestore
-          </button>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+            <button id="seedDatabaseBtn" class="btn-primary" style="display:inline-flex;align-items:center;gap:6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Seed All Collections to Firestore
+            </button>
+            <button id="backupAllDataBtn" class="btn-secondary" style="display:inline-flex;align-items:center;gap:6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Download JSON Backup
+            </button>
+            <button id="restoreBackupBtn" class="btn-secondary" style="display:inline-flex;align-items:center;gap:6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Restore Backup
+            </button>
+            <input type="file" id="restoreBackupFile" accept=".json" style="display:none;" />
+          </div>
           <div id="seedProgressLog" class="seed-log"></div>
         </div>
       </section>
@@ -319,7 +328,10 @@
               <option value="fashion">Fashion &amp; Shoes</option>
             </select>
           </div>
-          <div style="display:flex; align-items:center; gap:8px;">
+          <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            <button id="exportShopsCsvBtn" class="btn-secondary" style="display:inline-flex;align-items:center;gap:6px;" title="Export store directory to CSV">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export CSV
+            </button>
             <a href="../stores/index.html" target="_blank" class="btn-secondary" style="display:inline-flex;align-items:center;gap:6px;">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h20v4H2z"/><path d="M4 7v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V7"/><path d="M9 11v6"/><path d="M15 11v6"/></svg> View Live Directory ↗
             </a>
@@ -383,7 +395,9 @@
       <section class="tab-panel" id="tab-ledLeads">
         <div class="section-toolbar">
           <div class="toolbar-left">
-            <span style="font-size:13px;color:var(--admin-text-muted);white-space:nowrap;">Filter by status:</span>
+            <div class="search-input-wrap">
+              <input type="text" id="ledSearchInput" class="search-input" placeholder="Search brand, applicant, phone…">
+            </div>
             <select id="ledStatusFilter" class="filter-select">
               <option value="all">All Inquiries</option>
               <option value="new">New (Uncontacted)</option>
@@ -391,6 +405,14 @@
               <option value="won">Won / Booked</option>
               <option value="lost">Lost / Declined</option>
             </select>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            <button id="exportLedCsvBtn" class="btn-secondary" style="display:inline-flex;align-items:center;gap:6px;" title="Export LED Billboard inquiries to CSV">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export CSV
+            </button>
+            <a href="../led-advertising/index.html" target="_blank" class="btn-secondary" style="display:inline-flex;align-items:center;gap:6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> View LED Page ↗
+            </a>
           </div>
         </div>
         <div class="table-card">
@@ -422,9 +444,14 @@
             <h3 class="section-heading" style="margin:0;">Activations &amp; Event Booking Schedule</h3>
             <p style="font-size:12.5px;color:var(--admin-text-muted);margin:3px 0 0;">Interactive month calendar showing client reservation ranges and booked atrium/forecourt dates.</p>
           </div>
-          <a href="../activations/index.html" target="_blank" class="btn-secondary" style="display:inline-flex;align-items:center;gap:6px;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg> View Booking Page ↗
-          </a>
+          <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            <button id="exportActivationsCsvBtn" class="btn-secondary" style="display:inline-flex;align-items:center;gap:6px;" title="Export Activation bookings to CSV">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export CSV
+            </button>
+            <a href="../activations/index.html" target="_blank" class="btn-secondary" style="display:inline-flex;align-items:center;gap:6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg> View Booking Page ↗
+            </a>
+          </div>
         </div>
 
         <!-- 1. MONTH-VIEW CALENDAR -->
@@ -463,7 +490,10 @@
 
         <!-- 2. FULL LIST TABLE OF ALL ACTIVATION BOOKINGS (SORTABLE) -->
         <div class="section-toolbar" style="margin-top:28px;">
-          <div class="toolbar-left" style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+          <div class="toolbar-left" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+            <div class="search-input-wrap">
+              <input type="text" id="activationSearchInput" class="search-input" placeholder="Search company, applicant, space…">
+            </div>
             <div style="display:flex;align-items:center;gap:8px;">
               <span style="font-size:13px;color:var(--admin-text-muted);white-space:nowrap;font-weight:600;">Status:</span>
               <select id="activationStatusFilter" class="filter-select">
@@ -475,12 +505,12 @@
               </select>
             </div>
             <div style="display:flex;align-items:center;gap:8px;">
-              <span style="font-size:13px;color:var(--admin-text-muted);white-space:nowrap;font-weight:600;">Sort by:</span>
+              <span style="font-size:13px;color:var(--admin-text-muted);white-space:nowrap;font-weight:600;">Sort:</span>
               <select id="activationSortSelect" class="filter-select">
-                <option value="date-asc">Start Date (Earliest First)</option>
-                <option value="date-desc">Start Date (Latest First)</option>
+                <option value="date-asc">Start Date (Earliest)</option>
+                <option value="date-desc">Start Date (Latest)</option>
                 <option value="status">Status Priority</option>
-                <option value="days-desc">Duration (Longest First)</option>
+                <option value="days-desc">Duration (Longest)</option>
               </select>
             </div>
           </div>
@@ -515,13 +545,23 @@
       <section class="tab-panel" id="tab-contactLeads">
         <div class="section-toolbar">
           <div class="toolbar-left">
-            <span style="font-size:13px;color:var(--admin-text-muted);white-space:nowrap;">Filter by status:</span>
+            <div class="search-input-wrap">
+              <input type="text" id="contactSearchInput" class="search-input" placeholder="Search sender, phone, message…">
+            </div>
             <select id="contactStatusFilter" class="filter-select">
               <option value="all">All Enquiries</option>
               <option value="new">New</option>
               <option value="contacted">Contacted</option>
               <option value="closed">Closed</option>
             </select>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <button id="exportContactCsvBtn" class="btn-secondary" style="display:inline-flex;align-items:center;gap:6px;" title="Export Contact inquiries to CSV">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export CSV
+            </button>
+            <a href="../about-us.html#contact" target="_blank" class="btn-secondary" style="display:inline-flex;align-items:center;gap:6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> View Contact Page ↗
+            </a>
           </div>
         </div>
         <div class="table-card">
@@ -548,8 +588,20 @@
            ══════════════════════════════════════ -->
       <section class="tab-panel" id="tab-events">
         <div class="section-toolbar">
-          <h3 class="section-heading">Upcoming &amp; Past Events</h3>
-          <div style="display:flex; align-items:center; gap:8px;">
+          <div class="toolbar-left">
+            <div class="search-input-wrap">
+              <input type="text" id="eventSearchInput" class="search-input" placeholder="Search event title, venue, details…">
+            </div>
+            <select id="eventTypeFilter" class="filter-select">
+              <option value="all">All Events</option>
+              <option value="upcoming">Upcoming Events</option>
+              <option value="past">Past Events</option>
+            </select>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            <button id="exportEventsCsvBtn" class="btn-secondary" style="display:inline-flex;align-items:center;gap:6px;" title="Export Events to CSV">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export CSV
+            </button>
             <a href="../news-events.html" target="_blank" class="btn-secondary" style="display:inline-flex;align-items:center;gap:6px;">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> View Public Events ↗
             </a>

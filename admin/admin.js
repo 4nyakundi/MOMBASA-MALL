@@ -1,6 +1,7 @@
 // admin/admin.js — Mombasa Mall Admin Dashboard Controller
-// Enterprise Corporate Edition — 100% Robust for file:/// and http(s):// environments.
-// Zero emoji, full corporate SVG vectors, instant rendering, resilient local + cloud data bus.
+// Enterprise High-Performance & Resilient Real-Time Edition
+// Features: Client Image Optimization, Instant Multi-Entity Search, Real-Time Sync Bus,
+// CSV/JSON Export & Restore Suite, Non-Blocking Cloud/Local Storage Bus.
 
 (function () {
   'use strict';
@@ -34,14 +35,60 @@
     isCloudReady: false
   };
 
-  // ── FILE UPLOAD UTILS ──────────────────────────────────────
-  function readFileAsDataUrl(file) {
+  // Real-Time Cross-Tab & Multi-Window Sync Bus
+  const syncBus = (typeof BroadcastChannel !== 'undefined') ? new BroadcastChannel('mombasa_mall_sync_bus') : null;
+
+  function broadcastChange(action, entity) {
+    if (syncBus) {
+      try {
+        syncBus.postMessage({ action, entity, timestamp: Date.now() });
+      } catch (e) {}
+    }
+  }
+
+  // ── CLIENT-SIDE IMAGE COMPRESSION (PREVENTS STORAGE OVERFLOW) ──
+  function compressImage(file, maxWidth = 1400, quality = 0.82) {
     return new Promise((resolve, reject) => {
+      // If SVG or non-image, fallback directly
+      if (!file.type.match(/image.*/) || file.type.includes('svg')) {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+        return;
+      }
+
       const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+
+          if (width > maxWidth) {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // Return optimized JPEG Data URL
+          resolve(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.onerror = () => resolve(e.target.result);
+        img.src = e.target.result;
+      };
       reader.onerror = reject;
       reader.readAsDataURL(file);
     });
+  }
+
+  function readFileAsDataUrl(file) {
+    return compressImage(file, 1400, 0.82);
   }
 
   async function uploadFileToStorageOrDataUrl(file, pathPrefix = 'uploads') {
@@ -52,10 +99,117 @@
         const snap = await fb.stMod.uploadBytes(fileRef, file);
         return await fb.stMod.getDownloadURL(snap.ref);
       } catch (err) {
-        console.warn('[Storage] Upload note, using instant DataURL fallback:', err.message);
+        console.warn('[Storage] Cloud upload note, using optimized DataURL fallback:', err.message);
       }
     }
-    return await readFileAsDataUrl(file);
+    return await compressImage(file, 1400, 0.82);
+  }
+
+  // ── CSV & JSON EXPORT UTILITIES ────────────────────────────
+  function exportToCSV(filename, rows) {
+    if (!rows || !rows.length) {
+      showToast('No records available to export.', 'warning');
+      return;
+    }
+    const separator = ',';
+    const keys = Object.keys(rows[0]);
+    const csvContent =
+      keys.join(separator) +
+      '\n' +
+      rows.map(row => {
+        return keys.map(k => {
+          let cell = row[k] === null || row[k] === undefined ? '' : row[k];
+          cell = Array.isArray(cell) ? cell.join('; ') : cell.toString().replace(/"/g, '""');
+          if (cell.search(/("|,|\n)/g) >= 0) {
+            cell = `"${cell}"`;
+          }
+          return cell;
+        }).join(separator);
+      }).join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute('download', `${filename}_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showToast(`Exported ${rows.length} records to ${filename}.csv`, 'success');
+  }
+
+  function downloadJSONBackup() {
+    const backup = {
+      timestamp: new Date().toISOString(),
+      source: 'Mombasa Mall Control Centre',
+      version: '2.0.0',
+      data: {
+        shops: shopsCache,
+        gallery: galleryCache,
+        ledLeads: ledLeadsCache,
+        activationLeads: activLeadsCache,
+        contactLeads: contactLeadsCache,
+        events: eventsCache,
+        blog: blogCache,
+        reviews: reviewsCache
+      }
+    };
+    const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute('download', `Mombasa_Mall_Backup_${new Date().toISOString().slice(0, 10)}.json`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showToast('Complete JSON database backup downloaded!', 'success');
+  }
+
+  function restoreFromJSON(jsonText) {
+    try {
+      const parsed = JSON.parse(jsonText);
+      const data = parsed.data || parsed;
+      if (!data) throw new Error('Invalid backup structure');
+
+      if (Array.isArray(data.shops)) {
+        shopsCache = data.shops;
+        localStorage.setItem('mombasa_live_shops', JSON.stringify(shopsCache));
+      }
+      if (Array.isArray(data.gallery)) {
+        galleryCache = data.gallery;
+        localStorage.setItem('mombasa_live_gallery', JSON.stringify(galleryCache));
+      }
+      if (Array.isArray(data.ledLeads)) {
+        ledLeadsCache = data.ledLeads;
+        localStorage.setItem('mombasa_live_led_leads', JSON.stringify(ledLeadsCache));
+      }
+      if (Array.isArray(data.activationLeads)) {
+        activLeadsCache = data.activationLeads;
+        localStorage.setItem('mombasa_live_activation_leads', JSON.stringify(activLeadsCache));
+      }
+      if (Array.isArray(data.contactLeads)) {
+        contactLeadsCache = data.contactLeads;
+        localStorage.setItem('mombasa_live_contact_leads', JSON.stringify(contactLeadsCache));
+      }
+      if (Array.isArray(data.events)) {
+        eventsCache = data.events;
+        localStorage.setItem('mombasa_live_events', JSON.stringify(eventsCache));
+      }
+      if (Array.isArray(data.blog)) {
+        blogCache = data.blog;
+        localStorage.setItem('mombasa_live_blog', JSON.stringify(blogCache));
+      }
+      if (Array.isArray(data.reviews)) {
+        reviewsCache = data.reviews;
+        localStorage.setItem('mombasa_live_reviews', JSON.stringify(reviewsCache));
+      }
+
+      updateAllBadges();
+      updateOverviewMetrics();
+      renderCurrentTab();
+      broadcastChange('restore_database', 'all');
+      showToast('Database successfully restored from backup! 🎉', 'success');
+    } catch (err) {
+      showToast(`Restore failed: ${err.message}`, 'error');
+    }
   }
 
   // ── TOAST NOTIFICATIONS (Enterprise SVG Icons) ────────────
@@ -86,14 +240,12 @@
     if (!modal) return;
     modal.classList.add('is-open');
     modal.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
   }
 
   function closeModal(modal) {
     if (!modal) return;
     modal.classList.remove('is-open');
     modal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
   }
 
   // ── AUTH CHECK ─────────────────────────────────────────────
@@ -108,8 +260,6 @@
         return true;
       } catch (e) {}
     }
-    // If not authenticated and not running locally, redirect to login
-    // In local file mode, provide automatic administrator session
     currentUser = { email: 'mombasamall01@gmail.com', role: 'Administrator' };
     localStorage.setItem('mombasa_admin_session', JSON.stringify(currentUser));
     const emailEl = document.getElementById('adminEmailDisplay');
@@ -117,10 +267,10 @@
     return true;
   }
 
-  // ── CLOUD FIREBASE INITIALIZATION (ASYNC / NON-BLOCKING) ───
+  // ── CLOUD FIREBASE INITIALIZATION ──────────────────────────
   async function initCloudFirebase() {
     if (window.location.protocol === 'file:') {
-      console.log('[Mombasa Mall Admin] Local file protocol detected. Operating on instant local dataset.');
+      console.log('[Mombasa Mall Admin] Local protocol active. Utilizing high-speed local data bus.');
       return;
     }
     try {
@@ -137,7 +287,6 @@
       fb.stMod = stMod;
       fb.isCloudReady = true;
 
-      // Listen for Firebase Auth state
       authMod.onAuthStateChanged(fb.auth, (user) => {
         if (user) {
           currentUser = user;
@@ -146,10 +295,9 @@
         }
       });
 
-      // Background cloud sync
       syncWithFirestoreCloud();
     } catch (e) {
-      console.warn('[Mombasa Mall Admin] Cloud Firebase offline or unavailable; running in high-performance local mode:', e.message);
+      console.warn('[Mombasa Mall Admin] Cloud Firebase notice; operating in offline-first mode:', e.message);
     }
   }
 
@@ -201,7 +349,9 @@
             phone: shop.phone || '+254 790 964 002',
             email: shop.email || 'info@mombasamall.co.ke',
             socialHandle: shop.social || '@mombasamall',
+            socialMediaUrl: shop.socialMediaUrl || '',
             logoUrl: shop.logo || '../assets/Logo/Mall Logo/MOMBASA MALL 1.0.png',
+            photoUrls: shop.photos || [],
             isActive: true
           });
         });
@@ -250,184 +400,72 @@
     }
 
     // 5. GALLERY
-    galleryCache = [
-      { id: 'gal-1', imageUrl: '../assets/Logo/Random pics/MOMBASA MALL.jpg', caption: 'Mombasa Mall Exterior', category: 'architecture', sortOrder: 1 },
-      { id: 'gal-2', imageUrl: '../assets/Logo/Random pics/events - Copy.jpeg', caption: 'Atrium Events & Activations', category: 'events', sortOrder: 2 },
-      { id: 'gal-3', imageUrl: '../assets/Logo/Random pics/Staff.jpeg', caption: 'Mall Hospitality & Management', category: 'community', sortOrder: 3 },
-      { id: 'gal-4', imageUrl: '../assets/Logo/Random pics/fruits and vegetabls.jpeg', caption: 'Fresh Supermarket Market', category: 'retail', sortOrder: 4 },
-      { id: 'gal-5', imageUrl: '../assets/Logo/Random pics/Rounder about.jpeg', caption: 'Mwembe Tayari Roundabout', category: 'architecture', sortOrder: 5 },
-      { id: 'gal-6', imageUrl: '../assets/Logo/Shops Logo/Naivasmain.jpeg', caption: 'Naivas 24/7 Anchor Store', category: 'retail', sortOrder: 6 },
-      { id: 'gal-7', imageUrl: '../assets/Logo/Shops Logo/West 11.jpg', caption: 'West 11 Rooftop Dining', category: 'retail', sortOrder: 7 },
-      { id: 'gal-8', imageUrl: '../assets/Logo/Shops Logo/Payless.jpg', caption: 'Payless Footwear Retail', category: 'retail', sortOrder: 8 }
-    ];
-
-    // 6. LEADS & EVENTS CACHE (Local & Cloud Synchronized)
-    const savedLed = localStorage.getItem('mombasa_live_led_leads');
-    if (savedLed) { try { ledLeadsCache = JSON.parse(savedLed); } catch(e){} }
-    if (!ledLeadsCache || ledLeadsCache.length === 0) {
-      ledLeadsCache = [
-        {
-          id: 'led-1',
-          businessName: 'TotalEnergies Kenya',
-          contactName: 'Farouk Said',
-          phone: '+254 720 333 888',
-          email: 'commercial@totalenergies.ke',
-          packageRequested: 'Outdoor Mega Screen (1280×720px)',
-          durationRequested: '1 Month (30 Days)',
-          durationMonths: '1m',
-          estimatedCost: 'KES 150,000',
-          message: 'Excellium fuel loyalty campaign rotation across peak drive-time hours.',
-          status: 'won',
-          submittedAt: '2026-08-12T10:00:00.000Z'
-        },
-        {
-          id: 'led-2',
-          businessName: 'Kenya Airways (KQ)',
-          contactName: 'Faith Chebet',
-          phone: '+254 734 567 890',
-          email: 'ads@kenya-airways.com',
-          packageRequested: 'Indoor Screen Network (4 Screens)',
-          durationRequested: '2 Weeks Duration',
-          durationMonths: '2w',
-          estimatedCost: 'KES 20,000',
-          message: 'Mombasa holiday weekend getaway promotions and Asante rewards spots.',
-          status: 'contacted',
-          submittedAt: '2026-08-20T12:00:00.000Z'
-        },
-        {
-          id: 'led-3',
-          businessName: 'Jumia Kenya',
-          contactName: 'Harrison Kimani',
-          phone: '+254 799 444 222',
-          email: 'harrison@jumia.co.ke',
-          packageRequested: 'Outdoor Mega Screen (1280×720px)',
-          durationRequested: 'Quarterly (3 Months)',
-          durationMonths: '3m',
-          estimatedCost: 'KES 540,000',
-          message: 'Black Friday & Holiday Mega Sale brand takeover loop.',
-          status: 'new',
-          submittedAt: '2026-08-30T15:30:00.000Z'
-        }
-      ];
-      localStorage.setItem('mombasa_live_led_leads', JSON.stringify(ledLeadsCache));
+    const savedGallery = localStorage.getItem('mombasa_live_gallery');
+    if (savedGallery) {
+      try { galleryCache = JSON.parse(savedGallery); } catch (e) {}
+    }
+    if (!galleryCache.length && window.MOMBASA_DEFAULT_GALLERY) {
+      galleryCache = window.MOMBASA_DEFAULT_GALLERY.map((g, i) => ({ id: `gal-def-${i}`, ...g }));
+      localStorage.setItem('mombasa_live_gallery', JSON.stringify(galleryCache));
     }
 
-    const savedActiv = localStorage.getItem('mombasa_live_activation_leads');
-    if (savedActiv) { try { activLeadsCache = JSON.parse(savedActiv); } catch(e){} }
-    if (!activLeadsCache || activLeadsCache.length === 0) {
-      activLeadsCache = [
-        {
-          id: 'act-1',
-          companyName: 'Safaricom PLC',
-          contactName: 'Amina Juma',
-          contactInfo: '+254 722 000 111 · ajuma@safaricom.co.ke',
-          phone: '+254 722 000 111',
-          email: 'ajuma@safaricom.co.ke',
-          activationType: 'Central Grand Atrium Showcase',
-          bookingStartDate: '2026-08-15',
-          durationDays: 4,
-          message: '5G experiential showcase booth with interactive demo stations and device trade-in counter.',
-          status: 'won',
-          submittedAt: '2026-08-01T09:00:00.000Z'
-        },
-        {
-          id: 'act-2',
-          companyName: 'Coca-Cola Beverages Africa',
-          contactName: 'Brian Mwangi',
-          contactInfo: '+254 733 123 456 · brian@ccba.co.ke',
-          phone: '+254 733 123 456',
-          email: 'brian@ccba.co.ke',
-          activationType: 'Outdoor Forecourt Roadshow',
-          bookingStartDate: '2026-08-28',
-          durationDays: 3,
-          message: 'Coke Studio acoustic weekend activation with DJ set, chilling lounge and sampling trucks.',
-          status: 'won',
-          submittedAt: '2026-08-10T14:30:00.000Z'
-        },
-        {
-          id: 'act-3',
-          companyName: 'Samsung Electronics East Africa',
-          contactName: 'David Ochieng',
-          contactInfo: '+254 711 987 654 · d.ochieng@samsung.com',
-          phone: '+254 711 987 654',
-          email: 'd.ochieng@samsung.com',
-          activationType: 'Pop-Up Retail Kiosk',
-          bookingStartDate: '2026-09-04',
-          durationDays: 5,
-          message: 'Galaxy AI smartphone and watch experience popup zone with mobile gaming challenges.',
-          status: 'new',
-          submittedAt: '2026-08-25T11:15:00.000Z'
-        },
-        {
-          id: 'act-4',
-          companyName: 'KCB Bank Kenya',
-          contactName: 'Lucy Wanjiku',
-          contactInfo: '+254 700 555 444 · lwanjiku@kcbgroup.com',
-          phone: '+254 700 555 444',
-          email: 'lwanjiku@kcbgroup.com',
-          activationType: 'Sampling & Product Demo',
-          bookingStartDate: '2026-09-18',
-          durationDays: 2,
-          message: 'Vooma digital payments onboarding and merchant registration customer care desk.',
-          status: 'contacted',
-          submittedAt: '2026-08-29T16:00:00.000Z'
-        }
-      ];
-      localStorage.setItem('mombasa_live_activation_leads', JSON.stringify(activLeadsCache));
-    }
+    // 6. LEADS (LED, ACTIVATION, CONTACT)
+    const sLed = localStorage.getItem('mombasa_live_led_leads');
+    if (sLed) { try { ledLeadsCache = JSON.parse(sLed); } catch (e) {} }
 
-    const savedContact = localStorage.getItem('mombasa_live_contact_leads');
-    if (savedContact) { try { contactLeadsCache = JSON.parse(savedContact); } catch(e){} }
+    const sAct = localStorage.getItem('mombasa_live_activation_leads');
+    if (sAct) { try { activLeadsCache = JSON.parse(sAct); } catch (e) {} }
 
-    // Ensure events have venue, time, details, and media
-    if (eventsCache.length > 0) {
-      eventsCache.forEach(e => {
-        if (!e.eventTime) e.eventTime = e.time || '10:00 AM – 7:00 PM';
-        if (!e.venue)     e.venue     = 'Ground Floor Central Grand Atrium';
-        if (!e.details)   e.details   = e.summary || '';
-        if (!e.photoUrls) e.photoUrls = ['./assets/Logo/Random pics/events - Copy.jpeg'];
-        if (!e.eventDate) e.eventDate = e.date || '';
-      });
-      localStorage.setItem('mombasa_live_events', JSON.stringify(eventsCache));
-    }
+    const sCnt = localStorage.getItem('mombasa_live_contact_leads');
+    if (sCnt) { try { contactLeadsCache = JSON.parse(sCnt); } catch (e) {} }
 
-    // Update count badges
+    updateAllBadges();
+    updateOverviewMetrics();
+  }
+
+  function updateAllBadges() {
     updateCountBadge('shopsCountBadge', shopsCache.length);
     updateCountBadge('galleryCountBadge', galleryCache.length);
-    updateCountBadge('eventsCountBadge', eventsCache.length);
-    updateCountBadge('blogCountBadge', blogCache.length);
-    updateCountBadge('reviewsCountBadge', reviewsCache.length);
     updateCountBadge('ledLeadsCountBadge', ledLeadsCache.length);
     updateCountBadge('activationLeadsCountBadge', activLeadsCache.length);
     updateCountBadge('contactLeadsCountBadge', contactLeadsCache.length);
-
-    updateOverviewMetrics();
+    updateCountBadge('eventsCountBadge', eventsCache.length);
+    updateCountBadge('blogCountBadge', blogCache.length);
+    updateCountBadge('reviewsCountBadge', reviewsCache.length);
   }
 
   // ── TAB SWITCHING ──────────────────────────────────────────
   function switchTab(tabKey) {
-    if (!tabKey) return;
     activeTab = tabKey;
-
-    const navItems  = document.querySelectorAll('.admin-nav-item[data-tab]');
-    const tabPanels = document.querySelectorAll('.tab-panel');
-    const topbarTitle = document.getElementById('topbarTitle');
-
-    navItems.forEach(item => {
-      item.classList.toggle('is-active', item.getAttribute('data-tab') === tabKey);
+    document.querySelectorAll('.admin-nav-item').forEach(b => {
+      b.classList.toggle('is-active', b.dataset.tab === tabKey);
     });
-    tabPanels.forEach(panel => {
-      panel.classList.toggle('is-active', panel.id === `tab-${tabKey}`);
+    document.querySelectorAll('.tab-panel').forEach(p => {
+      p.classList.toggle('is-active', p.id === `tab-${tabKey}`);
     });
 
-    const activeItem = document.querySelector(`.admin-nav-item[data-tab="${tabKey}"] .nav-label`);
-    if (topbarTitle && activeItem) {
-      topbarTitle.textContent = activeItem.textContent.trim();
-    }
+    const titleEl = document.getElementById('topbarTitle');
+    const titles = {
+      overview:        'Dashboard',
+      shops:           'Stores & Units Management',
+      gallery:         'Photo Gallery Management',
+      ledLeads:        'LED Billboard Leads',
+      activationLeads: 'Activation Leads & Schedule',
+      contactLeads:    'Contact & Leasing Inquiries',
+      events:          'Events & News Management',
+      blogPosts:       'Journal & Editorial Blog',
+      reviews:         'Reviews Moderation'
+    };
+    if (titleEl) titleEl.textContent = titles[tabKey] || 'Admin Dashboard';
 
+    // Close mobile drawer on navigation
     document.body.classList.remove('sidebar-open');
 
-    // Render tab content
+    renderCurrentTab();
+  }
+  window.switchTab = switchTab;
+
+  function renderCurrentTab() {
     const loaders = {
       overview:         updateOverviewMetrics,
       shops:            renderShops,
@@ -439,9 +477,8 @@
       blogPosts:        renderBlog,
       reviews:          renderReviews
     };
-    loaders[tabKey]?.();
+    loaders[activeTab]?.();
   }
-  window.switchTab = switchTab;
 
   // ── METRIC HELPERS ─────────────────────────────────────────
   function updateCountBadge(id, count) {
@@ -488,15 +525,15 @@
       const tr = document.createElement('tr');
       const isActive = shop.isActive !== false;
       tr.innerHTML = `
-        <td>
-          <img src="${escHtml(shop.logoUrl || '../assets/Logo/Mall Logo/MOMBASA MALL 1.0.png')}"
-            style="width:38px;height:38px;object-fit:contain;border-radius:8px;background:#F8FAFC;padding:2px;border:1px solid #E2E8F0;"
-            alt="${escHtml(shop.name)}"
-            onerror="this.src='../assets/Logo/Mall Logo/MOMBASA MALL 1.0.png'">
+        <td style="width:56px;">
+          <img src="${escHtml(shop.logoUrl || shop.logo || '../assets/Logo/Mall Logo/MOMBASA MALL 1.0.png')}"
+               alt="${escHtml(shop.name)}"
+               style="width:40px;height:40px;object-fit:contain;border-radius:8px;background:#F8FAFC;border:1px solid #E2E8F0;padding:2px;"
+               loading="lazy">
         </td>
         <td>
-          <strong style="color:var(--admin-text);display:block;">${escHtml(shop.name)}</strong>
-          <small style="color:var(--admin-text-muted);">${escHtml(shop.email || '')}${shop.phone ? ' · ' + escHtml(shop.phone) : ''}</small>
+          <strong style="color:var(--admin-text);font-size:14px;display:block;">${escHtml(shop.name)}</strong>
+          <small style="color:var(--admin-text-muted);">${escHtml(shop.phone || '—')}${shop.email ? ' · ' + escHtml(shop.email) : ''}</small>
         </td>
         <td><span class="admin-badge">${escHtml(shop.room || '—')}</span></td>
         <td style="color:var(--admin-text);font-size:13px;">${escHtml(shop.floor || 'Ground Floor')}</td>
@@ -573,6 +610,7 @@
     updateCountBadge('shopsCountBadge', shopsCache.length);
     updateOverviewMetrics();
     renderShops();
+    broadcastChange('delete_shop', shopId);
     showToast(`Deleted "${shopName}"`, 'success');
 
     if (fb.isCloudReady && fb.db) {
@@ -601,12 +639,18 @@
     });
   }
 
-  window.deleteGalleryItem = function(id) {
-    if (!confirm('Remove this photo from the gallery?')) return;
+  window.deleteGalleryItem = async function(id) {
+    if (!confirm('Remove this photo from gallery?')) return;
     galleryCache = galleryCache.filter(g => g.id !== id);
+    localStorage.setItem('mombasa_live_gallery', JSON.stringify(galleryCache));
     updateCountBadge('galleryCountBadge', galleryCache.length);
     renderGallery();
+    broadcastChange('delete_gallery', id);
     showToast('Photo removed from gallery', 'success');
+
+    if (fb.isCloudReady && fb.db) {
+      try { await fb.fsMod.deleteDoc(fb.fsMod.doc(fb.db, 'gallery', id)); } catch(e){}
+    }
   };
 
   // ── 3. LED LEADS RENDER ────────────────────────────────────
@@ -615,14 +659,23 @@
     if (!tbody) return;
     tbody.innerHTML = '';
 
+    const search       = document.getElementById('ledSearchInput')?.value.toLowerCase().trim() || '';
     const filterStatus = document.getElementById('ledStatusFilter')?.value || 'all';
-    let list = [...ledLeadsCache];
-    if (filterStatus !== 'all') {
-      list = list.filter(l => l.status === filterStatus);
-    }
+
+    let list = ledLeadsCache.filter(l => {
+      const matchesSearch = !search ||
+        (l.businessName && l.businessName.toLowerCase().includes(search)) ||
+        (l.companyName  && l.companyName.toLowerCase().includes(search)) ||
+        (l.contactName  && l.contactName.toLowerCase().includes(search)) ||
+        (l.applicantName&& l.applicantName.toLowerCase().includes(search)) ||
+        (l.phone        && l.phone.toLowerCase().includes(search)) ||
+        (l.email        && l.email.toLowerCase().includes(search));
+      const matchesStatus = filterStatus === 'all' || (l.status || 'new') === filterStatus;
+      return matchesSearch && matchesStatus;
+    });
 
     if (list.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:48px;color:var(--admin-text-muted);">No LED inquiries found. Submissions from the <a href="../led-advertising/index.html" target="_blank" style="color:var(--coral);font-weight:600;">LED Advertising Estimator ↗</a> appear here.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:48px;color:var(--admin-text-muted);">No LED inquiries match your search. Submissions from the <a href="../led-advertising/index.html" target="_blank" style="color:var(--coral);font-weight:600;">LED Advertising Estimator ↗</a> appear here.</td></tr>`;
       return;
     }
 
@@ -734,16 +787,13 @@
 
     titleEl.textContent = `${months[curMonth]} ${curYear}`;
 
-    // First day of month (0 = Sun, 6 = Sat)
     const firstDayIndex = new Date(curYear, curMonth, 1).getDay();
-    // Days in current month
     const daysInMonth = new Date(curYear, curMonth + 1, 0).getDate();
-    // Days in previous month
     const prevDaysInMonth = new Date(curYear, curMonth, 0).getDate();
 
     gridEl.innerHTML = '';
 
-    const today = new Date(2026, 7, 31); // Aligned with site operational clock
+    const today = new Date(2026, 7, 31);
     const isThisMonth = (today.getFullYear() === curYear && today.getMonth() === curMonth);
 
     // Prev month trailing cells
@@ -762,7 +812,6 @@
 
       cell.className = `cal-cell${isToday ? ' today' : ''}`;
 
-      // Overlapping bookings: bookingStartDate <= dayStr <= bookingStartDate + durationDays - 1
       const matchingLeads = activLeadsCache.filter(lead => {
         if (!lead.bookingStartDate) return false;
         const start = new Date(lead.bookingStartDate + 'T00:00:00');
@@ -798,7 +847,7 @@
       gridEl.appendChild(cell);
     }
 
-    // Trailing cells for next month to complete 35 or 42 cells
+    // Trailing cells for next month
     const totalRendered = firstDayIndex + daysInMonth;
     const remaining = (totalRendered <= 35 ? 35 : 42) - totalRendered;
     for (let j = 1; j <= remaining; j++) {
@@ -875,13 +924,21 @@
     if (!tbody) return;
     tbody.innerHTML = '';
 
+    const search       = document.getElementById('activationSearchInput')?.value.toLowerCase().trim() || '';
     const filterStatus = document.getElementById('activationStatusFilter')?.value || 'all';
     const sortMode     = document.getElementById('activationSortSelect')?.value || 'date-asc';
 
-    let list = [...activLeadsCache];
-    if (filterStatus !== 'all') {
-      list = list.filter(l => l.status === filterStatus);
-    }
+    let list = activLeadsCache.filter(l => {
+      const matchesSearch = !search ||
+        (l.companyName  && l.companyName.toLowerCase().includes(search)) ||
+        (l.businessName && l.businessName.toLowerCase().includes(search)) ||
+        (l.contactName  && l.contactName.toLowerCase().includes(search)) ||
+        (l.applicantName&& l.applicantName.toLowerCase().includes(search)) ||
+        (l.phone        && l.phone.toLowerCase().includes(search)) ||
+        (l.activationType && l.activationType.toLowerCase().includes(search));
+      const matchesStatus = filterStatus === 'all' || (l.status || 'new') === filterStatus;
+      return matchesSearch && matchesStatus;
+    });
 
     list.sort((a, b) => {
       if (sortMode === 'date-asc') {
@@ -953,12 +1010,26 @@
     if (!tbody) return;
     tbody.innerHTML = '';
 
-    if (contactLeadsCache.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:48px;color:var(--admin-text-muted);">No inquiries yet. Submissions from the <a href="../about-us.html#contact" target="_blank" style="color:var(--coral);font-weight:600;">Public Contact Form ↗</a> appear here.</td></tr>`;
+    const search       = document.getElementById('contactSearchInput')?.value.toLowerCase().trim() || '';
+    const filterStatus = document.getElementById('contactStatusFilter')?.value || 'all';
+
+    let list = contactLeadsCache.filter(l => {
+      const matchesSearch = !search ||
+        (l.name    && l.name.toLowerCase().includes(search)) ||
+        (l.email   && l.email.toLowerCase().includes(search)) ||
+        (l.phone   && l.phone.toLowerCase().includes(search)) ||
+        (l.subject && l.subject.toLowerCase().includes(search)) ||
+        (l.message && l.message.toLowerCase().includes(search));
+      const matchesStatus = filterStatus === 'all' || (l.status || 'new') === filterStatus;
+      return matchesSearch && matchesStatus;
+    });
+
+    if (list.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:48px;color:var(--admin-text-muted);">No inquiries match your search. Submissions from the <a href="../about-us.html#contact" target="_blank" style="color:var(--coral);font-weight:600;">Public Contact Form ↗</a> appear here.</td></tr>`;
       return;
     }
 
-    contactLeadsCache.forEach(lead => {
+    list.forEach(lead => {
       const tr = document.createElement('tr');
       const statusVal = lead.status || 'new';
       tr.innerHTML = `
@@ -1040,6 +1111,7 @@
       if (collName === 'ledLeads') localStorage.setItem('mombasa_live_led_leads', JSON.stringify(ledLeadsCache));
       if (collName === 'activationLeads') localStorage.setItem('mombasa_live_activation_leads', JSON.stringify(activLeadsCache));
       if (collName === 'contactLeads') localStorage.setItem('mombasa_live_contact_leads', JSON.stringify(contactLeadsCache));
+      broadcastChange(`update_status_${collName}`, id);
       showToast('Lead status updated', 'success');
       if (fb.isCloudReady && fb.db) {
         try { fb.fsMod.updateDoc(fb.fsMod.doc(fb.db, collName, id), { status }); } catch(e){}
@@ -1068,6 +1140,7 @@
       renderContactLeads();
     }
     updateOverviewMetrics();
+    broadcastChange(`delete_${collName}`, id);
     showToast('Record deleted', 'success');
     if (fb.isCloudReady && fb.db) {
       try { fb.fsMod.deleteDoc(fb.fsMod.doc(fb.db, collName, id)); } catch(e){}
@@ -1099,12 +1172,25 @@
     if (!tbody) return;
     tbody.innerHTML = '';
 
-    if (eventsCache.length === 0) {
+    const search     = document.getElementById('eventSearchInput')?.value.toLowerCase().trim() || '';
+    const typeFilter = document.getElementById('eventTypeFilter')?.value || 'all';
+
+    let list = eventsCache.filter(e => {
+      const matchesSearch = !search ||
+        (e.title   && e.title.toLowerCase().includes(search)) ||
+        (e.venue   && e.venue.toLowerCase().includes(search)) ||
+        (e.details && e.details.toLowerCase().includes(search)) ||
+        (e.summary && e.summary.toLowerCase().includes(search));
+      const matchesType = typeFilter === 'all' || (e.type || 'upcoming') === typeFilter;
+      return matchesSearch && matchesType;
+    });
+
+    if (list.length === 0) {
       tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:48px;color:var(--admin-text-muted);">No events scheduled yet. Add your first event!</td></tr>`;
       return;
     }
 
-    eventsCache.forEach(evt => {
+    list.forEach(evt => {
       const type = evt.type || 'upcoming';
       const tr = document.createElement('tr');
       const photoCount = Array.isArray(evt.photoUrls) ? evt.photoUrls.length : (evt.photo ? 1 : 0);
@@ -1166,6 +1252,7 @@
     updateCountBadge('eventsCountBadge', eventsCache.length);
     updateOverviewMetrics();
     renderEvents();
+    broadcastChange('delete_event', id);
     showToast('Event deleted', 'success');
     if (fb.isCloudReady && fb.db) {
       try { fb.fsMod.deleteDoc(fb.fsMod.doc(fb.db, 'events', id)); } catch(e){}
@@ -1222,6 +1309,7 @@
     localStorage.setItem('mombasa_live_blog', JSON.stringify(blogCache));
     updateCountBadge('blogCountBadge', blogCache.length);
     renderBlog();
+    broadcastChange('delete_blog', id);
     showToast('Article deleted', 'success');
   };
 
@@ -1265,7 +1353,8 @@
     localStorage.setItem('mombasa_live_reviews', JSON.stringify(reviewsCache));
     updateOverviewMetrics();
     renderReviews();
-    showToast(approveStatus ? 'Review approved & visible on site' : 'Review set to pending', 'success');
+    broadcastChange('toggle_review', id);
+    showToast(`Review ${approveStatus ? 'Approved' : 'Unapproved'}`, 'info');
   };
 
   window.deleteReview = function(id) {
@@ -1275,45 +1364,143 @@
     updateCountBadge('reviewsCountBadge', reviewsCache.length);
     updateOverviewMetrics();
     renderReviews();
-    showToast('Review removed', 'success');
+    broadcastChange('delete_review', id);
+    showToast('Review deleted', 'success');
   };
 
-  // ── 9. EVENT LISTENERS & MODAL BINDINGS ───────────────────
-
-  // ── ATTACH ALL EVENT LISTENERS ─────────────────────────────
+  // ── ATTACH EVENT LISTENERS ─────────────────────────────────
   function attachEventListeners() {
-    // 1. Sidebar Nav
-    document.querySelectorAll('.admin-nav-item[data-tab]').forEach(item => {
-      item.addEventListener('click', (e) => {
-        e.preventDefault();
-        switchTab(item.getAttribute('data-tab'));
-      });
+    // 1. Navigation clicks
+    document.querySelectorAll('.admin-nav-item').forEach(btn => {
+      btn.addEventListener('click', () => switchTab(btn.dataset.tab));
     });
-
-    // 2. Overview Quick Actions
     document.querySelectorAll('[data-goto-tab]').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        switchTab(btn.getAttribute('data-goto-tab'));
-      });
+      btn.addEventListener('click', () => switchTab(btn.dataset.gotoTab));
     });
 
-    // 3. Search and Filters
-    document.getElementById('shopSearchInput')?.addEventListener('input',  renderShops);
-    document.getElementById('shopFloorFilter')?.addEventListener('change', renderShops);
-    document.getElementById('shopCategoryFilter')?.addEventListener('change', renderShops);
+    // 2. Real-time Search & Filter Handlers with Instant Updates
+    ['shopSearchInput', 'shopFloorFilter', 'shopCategoryFilter'].forEach(id => {
+      const el = document.getElementById(id);
+      el?.addEventListener('input', renderShops);
+      el?.addEventListener('change', renderShops);
+    });
 
-    // 3b. LED & Activation Calendar Controls
-    document.getElementById('ledStatusFilter')?.addEventListener('change', renderLedLeads);
-    document.getElementById('activationStatusFilter')?.addEventListener('change', renderActivationLeads);
-    document.getElementById('activationSortSelect')?.addEventListener('change', renderActivationLeads);
+    ['ledSearchInput', 'ledStatusFilter'].forEach(id => {
+      const el = document.getElementById(id);
+      el?.addEventListener('input', renderLedLeads);
+      el?.addEventListener('change', renderLedLeads);
+    });
 
+    ['activationSearchInput', 'activationStatusFilter', 'activationSortSelect'].forEach(id => {
+      const el = document.getElementById(id);
+      el?.addEventListener('input', renderActivationLeads);
+      el?.addEventListener('change', renderActivationLeads);
+    });
+
+    ['contactSearchInput', 'contactStatusFilter'].forEach(id => {
+      const el = document.getElementById(id);
+      el?.addEventListener('input', renderContactLeads);
+      el?.addEventListener('change', renderContactLeads);
+    });
+
+    ['eventSearchInput', 'eventTypeFilter'].forEach(id => {
+      const el = document.getElementById(id);
+      el?.addEventListener('input', renderEvents);
+      el?.addEventListener('change', renderEvents);
+    });
+
+    // 3. CSV Export Triggers
+    document.getElementById('exportShopsCsvBtn')?.addEventListener('click', () => {
+      const rows = shopsCache.map(s => ({
+        Name: s.name,
+        Room: s.room,
+        Floor: s.floor,
+        Category: s.category,
+        Phone: s.phone,
+        Email: s.email,
+        Social: s.socialHandle,
+        Status: s.isActive !== false ? 'Active' : 'Inactive'
+      }));
+      exportToCSV('Mombasa_Mall_Stores', rows);
+    });
+
+    document.getElementById('exportLedCsvBtn')?.addEventListener('click', () => {
+      const rows = ledLeadsCache.map(l => ({
+        Brand: l.businessName || l.companyName,
+        Contact: l.contactName || l.applicantName,
+        Phone: l.phone,
+        Email: l.email,
+        ScreenPackage: l.packageRequested || l.screenType,
+        Duration: l.durationRequested || (l.durationMonths ? `${l.durationMonths} Month(s)` : '1 Month'),
+        EstimatedBudget: l.estimatedCost || '—',
+        Status: l.status || 'new',
+        Notes: l.message || ''
+      }));
+      exportToCSV('Mombasa_Mall_LED_Leads', rows);
+    });
+
+    document.getElementById('exportActivationsCsvBtn')?.addEventListener('click', () => {
+      const rows = activLeadsCache.map(a => ({
+        Company: a.companyName || a.businessName,
+        Contact: a.contactName || a.applicantName,
+        Phone: a.phone,
+        Email: a.email,
+        SpaceType: a.activationType,
+        StartDate: a.bookingStartDate,
+        DurationDays: a.durationDays,
+        Status: a.status || 'new',
+        Requirements: a.message || ''
+      }));
+      exportToCSV('Mombasa_Mall_Activation_Bookings', rows);
+    });
+
+    document.getElementById('exportContactCsvBtn')?.addEventListener('click', () => {
+      const rows = contactLeadsCache.map(c => ({
+        Name: c.name,
+        Phone: c.phone,
+        Email: c.email,
+        Subject: c.subject,
+        Message: c.message,
+        Status: c.status || 'new'
+      }));
+      exportToCSV('Mombasa_Mall_Contact_Inquiries', rows);
+    });
+
+    document.getElementById('exportEventsCsvBtn')?.addEventListener('click', () => {
+      const rows = eventsCache.map(e => ({
+        Title: e.title,
+        Venue: e.venue,
+        Date: e.eventDate || e.date,
+        Time: e.eventTime || e.time,
+        Type: e.type,
+        Summary: e.details || e.summary
+      }));
+      exportToCSV('Mombasa_Mall_Events', rows);
+    });
+
+    // 4. JSON Backup & Restore Suite
+    document.getElementById('backupAllDataBtn')?.addEventListener('click', downloadJSONBackup);
+
+    const restoreFileInput = document.getElementById('restoreBackupFile');
+    document.getElementById('restoreBackupBtn')?.addEventListener('click', () => restoreFileInput?.click());
+    restoreFileInput?.addEventListener('change', (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        restoreFromJSON(evt.target.result);
+        restoreFileInput.value = '';
+      };
+      reader.readAsText(file);
+    });
+
+    // 5. Calendar Navigation
     document.getElementById('calPrevBtn')?.addEventListener('click', () => {
-      calCurrentDate.setMonth(calCurrentDate.getMonth() - 1);
+      calCurrentDate = new Date(calCurrentDate.getFullYear(), calCurrentDate.getMonth() - 1, 1);
       renderActivationCalendar();
     });
     document.getElementById('calNextBtn')?.addEventListener('click', () => {
-      calCurrentDate.setMonth(calCurrentDate.getMonth() + 1);
+      calCurrentDate = new Date(calCurrentDate.getFullYear(), calCurrentDate.getMonth() + 1, 1);
       renderActivationCalendar();
     });
     document.getElementById('calTodayBtn')?.addEventListener('click', () => {
@@ -1321,99 +1508,81 @@
       renderActivationCalendar();
     });
 
-    document.getElementById('closeActivationModalBtn')?.addEventListener('click', () => closeModal(document.getElementById('activationDetailModal')));
-    document.getElementById('closeActivationDetailBtn')?.addEventListener('click', () => closeModal(document.getElementById('activationDetailModal')));
-
-    // 4. Modals - Store (Logo, Multiple Photos, Social Link)
+    // 6. Modals - Shop Form
     const shopModal = document.getElementById('shopModal');
     const shopForm  = document.getElementById('shopForm');
     document.getElementById('openAddShopBtn')?.addEventListener('click', () => {
       shopForm.reset();
       document.getElementById('shopDocId').value = '';
-      document.getElementById('shopLogoUrlInput').value = '';
-      document.getElementById('shopSocialMediaUrl').value = '';
       pendingShopLogo = null;
       currentShopPhotos = [];
       const logoImg = document.getElementById('shopLogoPreviewImg');
       if (logoImg) logoImg.src = '../assets/Logo/Mall Logo/MOMBASA MALL 1.0.png';
-      const logoTxt = document.getElementById('shopLogoPreviewText');
-      if (logoTxt) logoTxt.textContent = 'Choose an image file to upload or update';
       renderShopPhotosPreview();
-      document.getElementById('shopModalTitle').textContent = 'Add New Store';
+      document.getElementById('shopModalTitle').textContent = 'Add New Store / Unit';
+      document.getElementById('shopIsActiveInput').checked = true;
       openModal(shopModal);
     });
     document.getElementById('closeShopModalBtn')?.addEventListener('click', () => closeModal(shopModal));
-    document.getElementById('cancelShopBtn')?.addEventListener('click',  () => closeModal(shopModal));
+    document.getElementById('cancelShopBtn')?.addEventListener('click', () => closeModal(shopModal));
 
-    // Store Logo File Selection
-    document.getElementById('shopLogoFileInput')?.addEventListener('change', async (e) => {
+    // Store Logo File Picker
+    const shopLogoFileInput = document.getElementById('shopLogoFileInput');
+    shopLogoFileInput?.addEventListener('change', async (e) => {
       const file = e.target.files?.[0];
-      if (!file) return;
-      try {
-        const dataUrl = await readFileAsDataUrl(file);
-        pendingShopLogo = dataUrl;
-        const logoImg = document.getElementById('shopLogoPreviewImg');
-        if (logoImg) logoImg.src = dataUrl;
-        const logoTxt = document.getElementById('shopLogoPreviewText');
-        if (logoTxt) logoTxt.textContent = `Selected: ${file.name}`;
-      } catch(err) {
-        console.warn('Logo preview error:', err);
+      if (file) {
+        try {
+          pendingShopLogo = await readFileAsDataUrl(file);
+          const logoImg = document.getElementById('shopLogoPreviewImg');
+          if (logoImg) logoImg.src = pendingShopLogo;
+          const logoTxt = document.getElementById('shopLogoPreviewText');
+          if (logoTxt) logoTxt.textContent = `Selected: ${file.name}`;
+        } catch (err) {}
       }
     });
 
-    // Store Multiple Photos Selection
-    const shopPhotoFileInput = document.getElementById('shopPhotoFileInput');
+    // Store Multiple Photos Picker
+    const shopPhotosFileInput = document.getElementById('shopPhotosFileInput');
     document.getElementById('addShopPhotoBtn')?.addEventListener('click', () => {
-      shopPhotoFileInput?.click();
+      shopPhotosFileInput?.click();
     });
-    shopPhotoFileInput?.addEventListener('change', async (e) => {
+    shopPhotosFileInput?.addEventListener('change', async (e) => {
       const files = Array.from(e.target.files || []);
       if (files.length === 0) return;
       for (const file of files) {
         try {
           const dataUrl = await readFileAsDataUrl(file);
           currentShopPhotos.push(dataUrl);
-        } catch(err) {}
+        } catch (err) {}
       }
-      shopPhotoFileInput.value = '';
+      shopPhotosFileInput.value = '';
       renderShopPhotosPreview();
-      showToast(`Added ${files.length} shop photo(s)`, 'info');
+      showToast(`Added ${files.length} photo(s) to store showcase`, 'info');
     });
 
+    // Store Photos by URL
     document.getElementById('addShopPhotoUrlBtn')?.addEventListener('click', () => {
       const input = document.getElementById('shopPhotoUrlAddInput');
       const val = input ? input.value.trim() : '';
       if (!val) {
-        showToast('Please enter an image URL or asset path', 'warning');
+        showToast('Please enter a photo URL or asset path', 'warning');
         return;
       }
       currentShopPhotos.push(val);
       if (input) input.value = '';
       renderShopPhotosPreview();
-      showToast('Photo added to shop gallery', 'info');
+      showToast('Photo added to showcase', 'info');
     });
 
     shopForm?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const saveBtn = document.getElementById('saveShopBtn');
-      if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Saving Store…'; }
+      if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Saving…'; }
 
-      const docId = document.getElementById('shopDocId').value.trim() ||
-                    document.getElementById('shopRoomInput').value.toLowerCase().replace(/[^a-z0-9]/g, '-') ||
-                    `shop-${Date.now()}`;
+      const docId = document.getElementById('shopDocId').value.trim();
+      const logoUrl = pendingShopLogo || document.getElementById('shopLogoUrlInput').value.trim() || '../assets/Logo/Mall Logo/MOMBASA MALL 1.0.png';
 
-      let logoUrl = document.getElementById('shopLogoUrlInput').value.trim() || '../assets/Logo/Mall Logo/MOMBASA MALL 1.0.png';
-      const logoFile = document.getElementById('shopLogoFileInput')?.files?.[0];
-      if (logoFile) {
-        logoUrl = await uploadFileToStorageOrDataUrl(logoFile, 'shops/logos');
-      } else if (pendingShopLogo) {
-        logoUrl = pendingShopLogo;
-      }
-
-      const socialMediaUrl = document.getElementById('shopSocialMediaUrl')?.value.trim() || '';
-
-      const shopData = {
-        id:             docId,
+      const data = {
         name:           document.getElementById('shopNameInput').value.trim(),
         category:       document.getElementById('shopCategoryInput').value,
         floor:          document.getElementById('shopFloorInput').value,
@@ -1421,35 +1590,50 @@
         phone:          document.getElementById('shopPhoneInput').value.trim(),
         email:          document.getElementById('shopEmailInput').value.trim(),
         socialHandle:   document.getElementById('shopSocialInput').value.trim(),
-        socialMediaUrl: socialMediaUrl,
+        socialMediaUrl: document.getElementById('shopSocialMediaUrl').value.trim(),
         logoUrl:        logoUrl,
+        logo:           logoUrl,
         photoUrls:      [...currentShopPhotos],
+        photo:          currentShopPhotos[0] || '',
         description:    document.getElementById('shopDescInput').value.trim(),
         isActive:       document.getElementById('shopIsActiveInput').checked,
         updatedAt:      new Date().toISOString()
       };
 
-      const existingIdx = shopsCache.findIndex(s => s.id === docId);
-      if (existingIdx >= 0) {
-        shopsCache[existingIdx] = { ...shopsCache[existingIdx], ...shopData };
+      if (docId) {
+        data.id = docId;
+        const idx = shopsCache.findIndex(s => s.id === docId);
+        if (idx >= 0) shopsCache[idx] = { ...shopsCache[idx], ...data };
+        showToast(`Updated "${data.name}" live!`, 'success');
       } else {
-        shopsCache.unshift(shopData);
+        data.id = (data.room ? data.room.toLowerCase().replace(/[^a-z0-9]/g, '-') : data.name.toLowerCase().replace(/[^a-z0-9]/g, '-')) || `shop-${Date.now()}`;
+        data.createdAt = new Date().toISOString();
+        shopsCache.push(data);
+        showToast(`Created store "${data.name}"!`, 'success');
       }
 
+      pendingShopLogo = null;
+      currentShopPhotos = [];
+      closeModal(shopModal);
+      if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Save Store'; }
       localStorage.setItem('mombasa_live_shops', JSON.stringify(shopsCache));
       updateCountBadge('shopsCountBadge', shopsCache.length);
       updateOverviewMetrics();
       renderShops();
-      closeModal(shopModal);
-      if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Save Store'; }
-      showToast('Store saved & synced with public directory!', 'success');
+      broadcastChange('save_shop', data.id);
 
       if (fb.isCloudReady && fb.db) {
-        try { await fb.fsMod.setDoc(fb.fsMod.doc(fb.db, 'shops', docId), shopData, { merge: true }); } catch(e){}
+        try {
+          if (docId) {
+            await fb.fsMod.updateDoc(fb.fsMod.doc(fb.db, 'shops', docId), data);
+          } else {
+            await fb.fsMod.setDoc(fb.fsMod.doc(fb.db, 'shops', data.id), data);
+          }
+        } catch (err) {}
       }
     });
 
-    // 5. Modals - Event (Expanded with Date, Time, Venue, Details, Photos, Video)
+    // 7. Modals - Event
     const eventModal = document.getElementById('eventModal');
     const eventForm  = document.getElementById('eventForm');
     document.getElementById('openAddEventBtn')?.addEventListener('click', () => {
@@ -1467,7 +1651,6 @@
     document.getElementById('closeEventModalBtn')?.addEventListener('click', () => { editingEventId = null; closeModal(eventModal); });
     document.getElementById('cancelEventBtn')?.addEventListener('click', () => { editingEventId = null; closeModal(eventModal); });
 
-    // Event Photos Selection
     const eventPhotoFileInput = document.getElementById('eventPhotoFileInput');
     document.getElementById('addEventPhotoBtn')?.addEventListener('click', () => {
       eventPhotoFileInput?.click();
@@ -1499,7 +1682,6 @@
       showToast('Photo added to event', 'info');
     });
 
-    // Event Video File Selection
     const eventVideoFileInput = document.getElementById('eventVideoFileInput');
     document.getElementById('uploadEventVideoBtn')?.addEventListener('click', () => {
       eventVideoFileInput?.click();
@@ -1555,6 +1737,7 @@
       updateCountBadge('eventsCountBadge', eventsCache.length);
       updateOverviewMetrics();
       renderEvents();
+      broadcastChange('save_event', data.id);
 
       if (fb.isCloudReady && fb.db) {
         try {
@@ -1567,7 +1750,7 @@
       }
     });
 
-    // 6. Modals - Blog
+    // 8. Modals - Blog
     const blogModal = document.getElementById('blogModal');
     const blogForm  = document.getElementById('blogForm');
     document.getElementById('openAddBlogBtn')?.addEventListener('click', () => {
@@ -1613,9 +1796,10 @@
       localStorage.setItem('mombasa_live_blog', JSON.stringify(blogCache));
       updateCountBadge('blogCountBadge', blogCache.length);
       renderBlog();
+      broadcastChange('save_blog', slug);
     });
 
-    // 7. Modals - Gallery (Streamlined file upload, URL is optional fallback)
+    // 9. Modals - Gallery
     const galleryModal = document.getElementById('galleryModal');
     const galleryFile = document.getElementById('galleryFile');
     const galleryPreview = document.getElementById('galleryFilePreview');
@@ -1636,7 +1820,7 @@
         try {
           const dataUrl = await readFileAsDataUrl(file);
           galleryPreviewImg.src = dataUrl;
-          galleryPreviewName.textContent = `${file.name} (${Math.round(file.size / 1024)} KB)`;
+          galleryPreviewName.textContent = `${file.name} (Optimized)`;
           galleryPreview.style.display = 'flex';
         } catch(err) {}
       }
@@ -1645,7 +1829,7 @@
     document.getElementById('galleryForm')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const saveBtn = document.getElementById('saveGalleryBtn');
-      if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Uploading…'; }
+      if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Optimizing & Uploading…'; }
 
       let imageUrl = '';
       const file = galleryFile?.files?.[0];
@@ -1674,14 +1858,16 @@
       renderGallery();
       closeModal(galleryModal);
       if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Upload to Gallery'; }
+      localStorage.setItem('mombasa_live_gallery', JSON.stringify(galleryCache));
       showToast('Photo added to gallery', 'success');
+      broadcastChange('save_gallery', newDoc.id);
 
       if (fb.isCloudReady && fb.db) {
         try { await fb.fsMod.addDoc(fb.fsMod.collection(fb.db, 'gallery'), newDoc); } catch(e){}
       }
     });
 
-    // 8. Sync Live Site Button
+    // 10. Sync Live Site Button
     document.getElementById('syncLiveSiteBtn')?.addEventListener('click', () => {
       const btn = document.getElementById('syncLiveSiteBtn');
       btn.disabled = true;
@@ -1690,14 +1876,15 @@
       localStorage.setItem('mombasa_live_events', JSON.stringify(eventsCache));
       localStorage.setItem('mombasa_live_blog', JSON.stringify(blogCache));
       localStorage.setItem('mombasa_live_reviews', JSON.stringify(reviewsCache));
+      broadcastChange('sync_public_site', 'all');
       setTimeout(() => {
         btn.disabled = false;
         btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> Sync Live Site Now`;
         showToast('Dashboard & Public Site fully synchronized! 🚀', 'success');
-      }, 400);
+      }, 350);
     });
 
-    // 10. Seed Button
+    // 11. Seed Button
     document.getElementById('seedDatabaseBtn')?.addEventListener('click', async () => {
       const logBox = document.getElementById('seedProgressLog');
       if (logBox) { logBox.style.display = 'block'; logBox.innerHTML = '<div>Syncing 51 stores, events, blog, reviews, and site data…</div>'; }
@@ -1705,15 +1892,16 @@
       localStorage.setItem('mombasa_live_events', JSON.stringify(eventsCache));
       localStorage.setItem('mombasa_live_blog', JSON.stringify(blogCache));
       localStorage.setItem('mombasa_live_reviews', JSON.stringify(reviewsCache));
+      broadcastChange('seed_database', 'all');
       setTimeout(() => {
         if (logBox) {
           logBox.innerHTML += '<div style="color:#10B981;font-weight:700;margin-top:6px;">✓ 51 Stores Synchronized successfully!</div>';
         }
         showToast('All collections synchronized successfully!', 'success');
-      }, 500);
+      }, 400);
     });
 
-    // 11. Password Modal
+    // 12. Password Modal
     const changePwdModal = document.getElementById('changePasswordModal');
     document.getElementById('openChangePasswordBtn')?.addEventListener('click', () => openModal(changePwdModal));
     document.getElementById('closeChangePasswordBtn')?.addEventListener('click', () => closeModal(changePwdModal));
@@ -1730,7 +1918,7 @@
       e.target.reset();
     });
 
-    // 12. Logout
+    // 13. Logout
     document.getElementById('logoutBtn')?.addEventListener('click', () => {
       if (confirm('Sign out of the admin portal?')) {
         localStorage.removeItem('mombasa_admin_session');
@@ -1738,7 +1926,7 @@
       }
     });
 
-    // 13. Mobile sidebar toggle & close
+    // 14. Mobile sidebar toggle & close
     document.getElementById('sidebarToggle')?.addEventListener('click', (e) => {
       e.stopPropagation();
       document.body.classList.toggle('sidebar-open');
@@ -1748,7 +1936,6 @@
       document.body.classList.remove('sidebar-open');
     });
 
-    // Dismiss sidebar when tapping outside on mobile/tablet
     document.addEventListener('click', (e) => {
       if (document.body.classList.contains('sidebar-open')) {
         const sidebar = document.getElementById('adminSidebar');
@@ -1759,7 +1946,7 @@
       }
     });
 
-    // 14. Detail Modals (LED & Contact & Activation)
+    // 15. Detail Modals (LED & Contact & Activation)
     const ledDetailModal = document.getElementById('ledDetailModal');
     document.getElementById('closeLedModalBtn')?.addEventListener('click', () => closeModal(ledDetailModal));
     document.getElementById('closeLedDetailBtn')?.addEventListener('click', () => closeModal(ledDetailModal));
@@ -1772,7 +1959,7 @@
     document.getElementById('closeActivationModalBtn')?.addEventListener('click', () => closeModal(actModal));
     document.getElementById('closeActivationDetailBtn')?.addEventListener('click', () => closeModal(actModal));
 
-    // 15. Global modal dismiss on backdrop or escape
+    // 16. Global modal dismiss on backdrop or escape
     document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
       backdrop.addEventListener('click', (e) => { if (e.target === backdrop) closeModal(backdrop); });
     });
@@ -1780,6 +1967,25 @@
       if (e.key === 'Escape') {
         const open = document.querySelector('.modal-backdrop.is-open');
         if (open) closeModal(open);
+      }
+    });
+
+    // 17. Real-Time Cross-Tab / Public Site Listener
+    if (syncBus) {
+      syncBus.onmessage = (e) => {
+        if (e.data && e.data.action) {
+          initData();
+          renderCurrentTab();
+          updateOverviewMetrics();
+        }
+      };
+    }
+
+    window.addEventListener('storage', (e) => {
+      if (e.key && e.key.startsWith('mombasa_live_')) {
+        initData();
+        renderCurrentTab();
+        updateOverviewMetrics();
       }
     });
   }
@@ -1813,7 +2019,6 @@
     initCloudFirebase();
   });
 
-  // If DOM is already parsed
   if (document.readyState === 'interactive' || document.readyState === 'complete') {
     checkAuth();
     initData();
