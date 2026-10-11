@@ -1,10 +1,11 @@
 <!doctype html>
 <html lang="en">
 <head>
+  <base href="../">
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Store Directory &amp; Interactive Floor Map — Mombasa Mall</title>
-  <meta name="description" content="Explore 46+ verified stores across 5 levels at Mombasa Mall with interactive blueprints, live store locator, anchor spotlights, and verified social media links." />
+  <title>Store Directory &amp; Floor-by-Floor Directory — Mombasa Mall</title>
+  <meta name="description" content="Explore 46+ verified stores across four shopping levels at Mombasa Mall with interactive blueprints, live store locator, anchor spotlights, and verified social media links." />
   <link rel="icon" type="image/png" href="./assets/Logo/Mall Logo/MOMBASA MALL 1.0.png" />
   <link rel="apple-touch-icon" href="./assets/Logo/Mall Logo/MOMBASA MALL 1.0.png" />
   <link rel="manifest" href="./manifest.json" />
@@ -14,7 +15,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://mombasamall.firebaseapp.com/stores.html" />
   <meta property="og:title" content="Store Directory &amp; Floor Map — Mombasa Mall" />
-  <meta property="og:description" content="Explore 46+ verified stores across 5 floors at Mombasa Mall with interactive floor maps and social channels." />
+  <meta property="og:description" content="Explore 46+ verified stores across the ground floor and three upper shopping floors at Mombasa Mall with interactive floor maps and social channels." />
   <meta property="og:image" content="./assets/Logo/Random pics/MOMBASA MALL.jpg" />
 
   <link rel="stylesheet" href="./css/style.css" />
@@ -901,7 +902,7 @@
         height: 140px;
       }
 
-      /* Interactive Floor Map Mobile */
+      /* Floor-by-Floor Directory Mobile */
       .floor-map-section {
         padding: 18px 14px;
         border-radius: 18px;
@@ -1065,7 +1066,130 @@
         padding: 7px 10px;
       }
     }
+    /* Store-page visual refinement. All styles stay local to this document. */
+    :root { --store-coral: #246b9e; --store-navy: #102f50; }
+    .subpage-content { background: #f4f7fa !important; width: 100%; max-width: none; padding: 108px clamp(20px, 5vw, 80px) 48px; scroll-padding-top: 105px; }
+    .floating-header .site-logo { background: #102f50; border-radius: 12px; padding: 8px 14px; }
+    .floating-header .site-logo img { height: 30px; filter: brightness(0) invert(1) !important; }
+    .floating-header .our-selection-btn { background: #102f50 !important; color: #fff !important; border-color: #102f50 !important; box-shadow: 0 4px 14px rgba(16,47,80,.12) !important; }
+    .floating-header .menu-btn { background: #fff !important; color: #102f50 !important; border-color: #dce6ef !important; }
+    .floating-header .our-selection-btn span { color: inherit; }
+    .ambient-light { display: none; }
+    .store-scroll-progress { position: fixed; top: 0; left: 0; width: 100%; height: 3px; background: #62b7e0; transform: scaleX(0); transform-origin: left; z-index: 1000; pointer-events: none; }
+    .store-kicker { display: block; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .17em; color: #246b9e; }
+    .store-hero { overflow: hidden; border-radius: 28px; background: #102f50; margin-bottom: 56px; box-shadow: 0 22px 60px rgba(16,47,80,.12); }
+    .store-hero .subpage-hero-stage { height: clamp(440px, 65vh, 680px); justify-content: flex-start; }
+    .store-hero .subpage-hero-bg-img { filter: none; object-position: center 45%; transform: none; transition: none; }
+    .store-hero .subpage-hero-overlay { background: linear-gradient(90deg,rgba(7,29,49,.92),rgba(7,29,49,.64) 48%,rgba(7,29,49,.13)),linear-gradient(0deg,rgba(7,29,49,.65),transparent 65%); }
+    .store-hero-copy { position: relative; z-index: 2; padding: clamp(28px,5vw,72px); max-width: 980px; color: white; }
+    .store-hero-copy .store-kicker { color: #b9dcf2; margin-bottom: 25px; }
+    .store-hero-copy h1 { font-family: var(--font-display); font-size: clamp(42px,5.9vw,86px); font-weight: 600; line-height: 1.08; letter-spacing: -.025em; margin: 0 0 24px; color: #fff !important; }
+    .store-hero-copy h1 span { display: block; color: #fff; }
+    .store-hero-copy h1 span:last-child { color: #b9dcf2; }
+    .store-hero-copy p { max-width: 390px; font-size: 15px; line-height: 1.8; color: #d8e4ed; margin-bottom: 28px; }
+    .store-hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 22px; }
+    .store-primary-link, .store-secondary-link { display: inline-flex; align-items: center; gap: 24px; font-size: 12px; font-weight: 700; text-decoration: none; }
+    .store-primary-link { background: #fff; color: #102f50; border-radius: 100px; padding: 16px 22px; }
+    .store-secondary-link { color: white; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,.4); }
+    .store-hero-actions a span { color: inherit; }
+    .store-hero-label { display: block; margin-top: 38px; font-size: 9px; letter-spacing: .16em; color: #b9cbd9; }
+    .store-hero-summary { display: grid; grid-template-columns: 1.6fr repeat(3,1fr); padding: 28px 36px; gap: 24px; background: white; align-items: center; }
+    .store-hero-summary p { font-size: 16px; color: #102f50; margin: 8px 0 0; font-weight: 600; }
+    .store-stat { border-left: 1px solid #e1e9f0; padding-left: 28px; }
+    .store-stat strong { display: block; font-size: 30px; line-height: 1.2; letter-spacing: -.045em; color: #102f50; }
+    .store-stat span { display: block; font-size: 11px; color: #607487; margin-top: 6px; }
+    .spotlight-section { margin: 0 0 56px; }
+    .spotlight-header h2 { font-size: clamp(24px,3vw,36px) !important; letter-spacing: -.035em; }
+    .spotlight-grid { grid-template-columns: repeat(4,minmax(0,1fr)); gap: 18px; }
+    .spotlight-card { border: 1px solid #dce6ef; border-radius: 20px; transition: box-shadow .25s, border-color .25s; }
+    .spotlight-card:hover { transform: none; border-color: #93b7d0; }
+    .spotlight-media { height: 185px; }
+    .spotlight-bg { transition: none; }
+    .spotlight-card:hover .spotlight-bg { transform: none; }
+    .spotlight-content { padding: 22px 20px; }
+    .spotlight-title { font-size: 18px !important; }
+    .spotlight-desc { line-height: 1.75 !important; }
+    .spotlight-foot { font-size: 10px; flex-wrap: wrap; gap: 8px; color: #246b9e !important; }
+    .floor-map-section { padding: clamp(20px,3vw,40px); border: 1px solid #dce6ef; box-shadow: 0 8px 30px rgba(16,47,80,.035); margin-bottom: 60px; }
+    .blueprint-header-bar { align-items: flex-start; }
+    #currentMapFloorTitle { max-width: 580px; line-height: 1.35; letter-spacing: -.025em; }
+    .blueprint-tabs { border-radius: 14px; gap: 4px; }
+    .blueprint-tab { border-radius: 10px; padding: 10px 14px; }
+    .blueprint-stage { background: radial-gradient(ellipse at top,#183f60,#091b2e 75%); border: 1px solid #274a65; min-height: 400px; }
+    .directory-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 26px; }
+    .directory-heading h2 { color: #102f50; font-family: var(--font-display); font-size: clamp(28px,3.5vw,44px); letter-spacing: -.02em; line-height: 1.15; margin: 10px 0 0; }
+    .directory-heading p { color: #607487; font-size: 12px; line-height: 1.8; margin: 0; }
+    .filter-bar-sticky { top: 88px; border: 1px solid #dce6ef; background: rgba(255,255,255,.96); border-radius: 18px; padding: 20px; box-shadow: 0 8px 28px rgba(16,47,80,.06); z-index: 15; }
+    .search-input-box input { border-radius: 12px; background: #f5f8fb; }
+    .search-row { flex-wrap: wrap; }
+    .search-input-box { min-width: min(100%,260px); }
+    .store-floor-label select { padding: 13px 28px 13px 12px; border-radius: 12px; border: 1px solid #dce6ef; background: #fff; font: inherit; font-size: 12px; color: #102f50; cursor: pointer; }
+    .store-reset { border: 0; background: transparent; font: inherit; font-size: 12px; color: #246b9e; cursor: pointer; padding: 10px; }
+    .cat-pill { padding: 9px 14px; background: #f2f6fa; border-radius: 10px; }
+    .cat-pill.active { background: #102f50; box-shadow: none; }
+    .stores-grid { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 20px; }
+    .store-card { border: 1px solid #dce6ef !important; border-radius: 20px; padding: 0; align-items: stretch; gap: 0; backdrop-filter: none; box-shadow: 0 4px 16px rgba(16,47,80,.035) !important; transition: box-shadow .25s, border-color .25s; }
+    .store-card:hover { transform: none; border-color: #86b0cc !important; box-shadow: 0 14px 32px rgba(16,47,80,.09) !important; }
+    .store-card-header { padding: 24px 22px 18px; align-items: flex-start; margin-bottom: 0; }
+    .store-card-logo-wrap { width: 64px; height: 64px; padding: 8px; border-radius: 16px; background: #fff; }
+    .store-card-name { font-size: 18px; line-height: 1.3; white-space: normal; overflow: visible; margin-top: 3px; }
+    .store-card-unit-badge { white-space: normal; font-size: 10px; line-height: 1.6; }
+    .store-card-unit-badge span { font-size: 10px; color: #607487; }
+    .store-card .store-mini-tag { font-size: 10px; }
+    .store-action-btn span { font-size: 11px; color: inherit; }
+    .store-card-body { padding: 0 22px 22px; }
+    .store-card-desc { font-size: 13px; line-height: 1.75; min-height: 46px; -webkit-line-clamp: 3; }
+    .store-mini-tag { font-size: 10px; border-radius: 7px; padding: 5px 9px; }
+    .store-card-footer { background: #f7f9fc; padding: 14px 22px; }
+    .store-action-btn:hover, .store-card:hover .store-action-btn { color: #102f50; }
+    .store-action-btn { font-family: inherit; }
+    .store-empty { grid-column: 1/-1; padding: 64px 24px; border: 1px dashed #bfd0df; border-radius: 20px; text-align: center; background: white; color: #607487; }
+    .store-empty h3 { font-size: 24px; color: #102f50; margin-bottom: 12px; }
+    .store-empty button { margin-top: 18px; background: #102f50; color: white; border: 0; border-radius: 30px; padding: 12px 24px; cursor: pointer; }
+    .store-modal-card { border: 1px solid #dce6ef; }
+    button:focus-visible, a:focus-visible, select:focus-visible, .spotlight-card:focus-visible, .svg-store-zone:focus-visible { outline: 3px solid #62b7e0; outline-offset: 4px; }
+    @media (max-width: 1100px) { .spotlight-grid, .stores-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } .store-hero-summary { grid-template-columns: repeat(3,1fr); } .store-hero-summary > div:first-child { grid-column: 1/-1; } .store-stat:first-of-type { border: 0; } }
+    @media (max-width: 700px) {
+      .subpage-content { padding: 88px 16px 28px; scroll-padding-top: 88px; }
+      .store-hero { border-radius: 20px; margin-bottom: 36px; }
+      .store-hero .subpage-hero-stage { height: 490px; }
+      .store-hero-copy { padding: 28px 22px; }
+      .store-hero-copy h1 { font-size: clamp(38px,9vw,58px); }
+      .store-hero-copy .store-kicker { font-size: 8px; }
+      .store-hero-copy p { font-size: 13px; }
+      .store-hero-label { font-size: 7px; margin-top: 28px; }
+      .store-hero-actions { gap: 16px; }
+      .store-primary-link { padding: 14px 18px; }
+      .store-hero-summary { padding: 22px; gap: 22px 12px; }
+      .store-stat { padding-left: 12px; }
+      .store-stat strong { font-size: 25px; }
+      .store-stat span { font-size: 9px; }
+      .spotlight-grid { gap: 12px; }
+      .spotlight-media { height: 140px; }
+      .spotlight-content { padding: 16px 14px; }
+      .spotlight-title { font-size: 16px !important; }
+      .spotlight-badge { font-size: 8px; top: 10px; left: 8px; padding: 4px 7px; }
+      .spotlight-desc { font-size: 11px !important; }
+      .spotlight-section, .floor-map-section { margin-bottom: 36px; }
+      .blueprint-tabs { flex-wrap: nowrap; overflow-x: auto; width: 100%; }
+      .blueprint-stage { min-height: 250px; }
+      .floor-map-section > div:last-child { gap: 12px; flex-wrap: wrap; }
+      .directory-heading { display: block; }
+      .directory-heading p { margin-top: 14px; }
+      .filter-bar-sticky { top: 74px; padding: 14px; }
+      .search-input-box { flex-basis: 100%; }
+      .store-floor-label { flex: 1; }
+      .store-floor-label select { width: 100%; padding: 10px; }
+      .cat-pill { font-size: 10px; padding: 8px 12px; }
+      .stores-grid { grid-template-columns: 1fr; gap: 14px; }
+      .store-card-header { padding: 20px 18px 16px; }
+      .store-card-body { padding: 0 18px 18px; }
+      .store-card-footer { padding: 12px 18px; }
+    }
+    @media (max-width: 380px) { .spotlight-grid { grid-template-columns: 1fr; } }
+    @media (prefers-reduced-motion: reduce) { .subpage-content { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
   </style>
+  <link rel="stylesheet" href="./css/store-directory.css">
 </head>
 <body class="subpage">
 
@@ -1073,47 +1197,13 @@
   <div id="selection-shell">
     <nav id="selection-menu" aria-hidden="true" aria-label="Our floors">
       <div class="selection-cards">
-        <a href="./stores.html" class="selection-card">
-          <span class="selection-card__panel">
-            <span class="selection-card__eyebrow">Floor G — Retail</span>
-            <span class="selection-card__title">Ground<br>Floor</span>
-            <span class="selection-card__desc">Anchor Retail, Banking<br>&amp; Essential Services</span>
-          </span>
-          <span class="selection-card__cover" aria-hidden="true">
-            <img data-selection-cover="./assets/Logo/Shops Logo/Naivasmain.jpeg" alt="" decoding="async">
-          </span>
-        </a>
-        <a href="./news-events.html" class="selection-card">
-          <span class="selection-card__panel">
-            <span class="selection-card__eyebrow">Floors 2 &amp; 3 — Dining</span>
-            <span class="selection-card__title">Food Court<br>&amp; Events</span>
-            <span class="selection-card__desc">Restaurants, Cafés<br>&amp; Live Entertainment</span>
-          </span>
-          <span class="selection-card__cover" aria-hidden="true">
-            <img data-selection-cover="./assets/Logo/Shops Logo/Payless.jpg" alt="" decoding="async">
-          </span>
-        </a>
-        <a href="./led-advertising/index.html" class="selection-card">
-          <span class="selection-card__panel">
-            <span class="selection-card__eyebrow">Media — Billboard</span>
-            <span class="selection-card__title">LED<br>Advertising</span>
-            <span class="selection-card__desc">Premium Digital<br>Screen Inventory</span>
-          </span>
-          <span class="selection-card__cover" aria-hidden="true">
-            <img data-selection-cover="./assets/Logo/Mall Logo/MOMBASA MALL2.0.png" alt="" decoding="async">
-          </span>
-        </a>
-        <a href="./play-on.html" class="selection-card">
-          <span class="selection-card__panel">
-            <span class="selection-card__eyebrow">Entertainment</span>
-            <span class="selection-card__title">Play On<br>Arena</span>
-            <span class="selection-card__desc">Family Fun, Kids Zone<br>&amp; Brand Activations</span>
-          </span>
-          <span class="selection-card__cover" aria-hidden="true">
-            <img data-selection-cover="./assets/Logo/Shops Logo/West 11.jpg" alt="" decoding="async">
-          </span>
-        </a>
-      </div>
+<a href="./stores.html#ground-floor" class="selection-card" data-category="ground-floor"><span class="selection-card__cover" aria-hidden="true"><img src="./assets/lifestyle/naivas.webp" alt="" decoding="async"></span><span class="selection-card__panel"><span class="selection-card__eyebrow">Ground / Shopping</span><span class="selection-card__title">Ground Floor</span><span class="selection-card__desc">Groceries &amp; dining</span><span class="selection-card__arrow" aria-hidden="true">↗</span></span></a>
+<a href="./stores.html#first-floor" class="selection-card" data-category="first-floor"><span class="selection-card__cover" aria-hidden="true"><img src="./assets/lifestyle/grand-computer.webp" alt="" decoding="async"></span><span class="selection-card__panel"><span class="selection-card__eyebrow">First / Shopping</span><span class="selection-card__title">1st Floor</span><span class="selection-card__desc">Fashion, banking &amp; technology</span><span class="selection-card__arrow" aria-hidden="true">↗</span></span></a>
+<a href="./stores.html#second-floor" class="selection-card" data-category="second-floor"><span class="selection-card__cover" aria-hidden="true"><img src="./assets/lifestyle/rudra.webp" alt="" decoding="async"></span><span class="selection-card__panel"><span class="selection-card__eyebrow">Second / Shopping</span><span class="selection-card__title">2nd Floor</span><span class="selection-card__desc">Beauty, boutiques &amp; family play</span><span class="selection-card__arrow" aria-hidden="true">↗</span></span></a>
+<a href="./stores.html#third-floor" class="selection-card" data-category="third-floor"><span class="selection-card__cover" aria-hidden="true"><img src="./assets/store-previews/t-02.webp" alt="" decoding="async"></span><span class="selection-card__panel"><span class="selection-card__eyebrow">Third / Lifestyle</span><span class="selection-card__title">3rd Floor</span><span class="selection-card__desc">Gaming, fitness, work &amp; healthcare</span><span class="selection-card__arrow" aria-hidden="true">↗</span></span></a>
+<a href="./led-advertising/index.html" class="selection-card" data-category="led"><span class="selection-card__cover" aria-hidden="true"><img src="./led-advertising/assets/outdoor-screen.webp" alt="" decoding="async"></span><span class="selection-card__panel"><span class="selection-card__eyebrow">Rooftop / 6AM</span><span class="selection-card__title">LED Advertising</span><span class="selection-card__desc">Explore screens &amp; book a campaign</span><span class="selection-card__arrow" aria-hidden="true">↗</span></span></a>
+<a href="./playon/index.html" class="selection-card" data-category="play-on"><span class="selection-card__cover" aria-hidden="true"><img src="./assets/store-previews/s-01.webp" alt="" decoding="async"></span><span class="selection-card__panel"><span class="selection-card__eyebrow">Second / Entertainment</span><span class="selection-card__title">Play On</span><span class="selection-card__desc">Indoor play &amp; birthday parties</span><span class="selection-card__arrow" aria-hidden="true">↗</span></span></a>
+</div>
       <button class="selection-close" id="selection-close" aria-label="Close">
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M1.5 1.5L16.5 16.5M16.5 1.5L1.5 16.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
       </button>
@@ -1133,14 +1223,14 @@
       <a href="./stores.html">Store Directory</a>
       <a href="./news-events.html">Events &amp; News</a>
       <a href="./gallery.html">Gallery</a>
-      <a href="./play-on.html">Play On</a>
+      <a href="./playon/index.html">Play On</a>
       <a href="./led-advertising/index.html">LED Advertising</a>
       <a href="./about-us.html">About Us</a>
-      <a href="./admin/login.html" class="sys-btn" style="align-self:flex-start; margin-top:8px;">sys.</a>
     </nav>
     <div class="offcanvas-footer">
       <p>Mwembe Tayari, Mombasa</p>
       <p>+254 790 964 002</p>
+      <a href="./admin/login.html" class="sys-btn" aria-label="Open dashboard sign in">SYS</a>
     </div>
   </div>
   <div class="offcanvas-backdrop" id="offcanvas-backdrop"></div>
@@ -1188,18 +1278,26 @@
       <div class="subpage-content">
 
         <!-- CINEMATIC SUBPAGE HERO -->
-        <div class="subpage-cinematic-hero">
+        <div class="store-hero" id="storeHero">
           <div class="subpage-hero-stage">
             <img src="./assets/Logo/Random pics/MOMBASA MALL.jpg" alt="Mombasa Mall Stores" class="subpage-hero-bg-img">
             <div class="subpage-hero-overlay"></div>
-            <div class="subpage-hero-split-title">
-              <span class="split-part split-left">STORE</span>
-              <span class="split-part split-right">DIRECTORY</span>
+            <div class="store-hero-copy">
+              <span class="store-kicker">Mombasa Mall / Discover your next stop</span>
+              <h1><span>Every floor.</span><span>A new discovery.</span></h1>
+              <p>Find your favourites, explore somewhere new, and make a day of it.</p>
+              <div class="store-hero-actions">
+                <a href="#directorySection" class="store-primary-link">Explore the stores <span aria-hidden="true">↗</span></a>
+                <a href="#floorMapSection" class="store-secondary-link">Find your floor <span aria-hidden="true">↓</span></a>
+              </div>
+              <span class="store-hero-label">SHOPPING · DINING · EVERYDAY ESSENTIALS</span>
             </div>
           </div>
-          <div class="subpage-hero-bottom-flow">
-            <span class="subpage-eyebrow">Interactive Mall Wayfinding &amp; Store Directory</span>
-            <p class="subpage-lead">Discover 46+ verified retail brands, 24/7 anchor hypermarket, rooftop dining, esports gaming, and tier-1 banking facilities across 5 architectural levels.</p>
+          <div class="store-hero-summary">
+            <div><span class="store-kicker">Your mall, at a glance</span><p>One place. So many possibilities.</p></div>
+            <div class="store-stat"><strong id="directoryTotal">46+</strong><span>Stores &amp; services</span></div>
+            <div class="store-stat"><strong>3</strong><span>Upper shopping floors + ground</span></div>
+            <div class="store-stat"><strong>24/7</strong><span>Naivas hypermarket</span></div>
           </div>
         </div>
 
@@ -1218,9 +1316,9 @@
           <div class="spotlight-grid">
             
             <!-- Anchor 1: Naivas 24/7 -->
-            <div class="spotlight-card" onclick="window.triggerStoreByName('Naivas')">
+            <a class="spotlight-card" href="./stores.html#store-g-01">
               <div class="spotlight-media">
-                <img class="spotlight-bg" src="./assets/Logo/Shops Logo/Naivasmain.jpeg" alt="Naivas Supermarket">
+                <img class="spotlight-bg" src="./assets/lifestyle/fresh-market.webp" alt="Fresh produce at Naivas">
                 <span class="spotlight-badge" style="color:#D62828;">Ground &amp; 1F Anchor</span>
               </div>
               <div class="spotlight-content">
@@ -1231,12 +1329,12 @@
                   <span>Explore Unit G-01 &rarr;</span>
                 </div>
               </div>
-            </div>
+            </a>
 
             <!-- Anchor 2: Play-On Arena -->
-            <div class="spotlight-card" onclick="window.triggerStoreByName('Play On (Game Area)')">
+            <a class="spotlight-card" href="./playon/index.html">
               <div class="spotlight-media">
-                <img class="spotlight-bg" src="./assets/Logo/Random pics/events - Copy.jpeg" alt="Play On Arena">
+                <img class="spotlight-bg" src="./assets/store-previews/s-01.webp" alt="Play On Arena">
                 <span class="spotlight-badge" style="color:#0284C7;">2nd Floor Entertainment</span>
               </div>
               <div class="spotlight-content">
@@ -1247,12 +1345,12 @@
                   <span>Explore Unit S-01 &rarr;</span>
                 </div>
               </div>
-            </div>
+            </a>
 
             <!-- Anchor 3: Westerwelle Startup Haus -->
-            <div class="spotlight-card" onclick="window.triggerStoreByName('Westerwelle Foundation')">
+            <a class="spotlight-card" href="./stores.html#store-t-03">
               <div class="spotlight-media">
-                <img class="spotlight-bg" src="./assets/Logo/Random pics/Staff.jpeg" alt="Westerwelle Startup Haus">
+                <img class="spotlight-bg" src="./assets/store-photos/t-03.webp" alt="Westerwelle entrance">
                 <span class="spotlight-badge" style="color:#7C3AED;">3rd Floor Tech Hub</span>
               </div>
               <div class="spotlight-content">
@@ -1263,23 +1361,23 @@
                   <span>Explore Unit T-03 &rarr;</span>
                 </div>
               </div>
-            </div>
+            </a>
 
             <!-- Anchor 4: West 11 -->
-            <div class="spotlight-card" onclick="window.triggerStoreByName('West 11')">
+            <a class="spotlight-card" href="./stores.html#store-f-09">
               <div class="spotlight-media">
-                <img class="spotlight-bg" src="./assets/Logo/Shops Logo/West 11.jpg" alt="West 11 Lifestyle">
+                <img class="spotlight-bg" src="./assets/store-photos/f-09.webp" alt="West 11 storefront">
                 <span class="spotlight-badge" style="color:#D97706;">1st &amp; 2nd Floor Fashion</span>
               </div>
               <div class="spotlight-content">
-                <h3 class="spotlight-title">West 11 Lifestyle &amp; Rooftop</h3>
+                <h3 class="spotlight-title">West 11 Fashion &amp; Lifestyle</h3>
                 <p class="spotlight-desc">Trendsetting coastal streetwear, activewear, and exclusive boutique collections.</p>
                 <div class="spotlight-foot">
                   <span>👗 Units F-09 &amp; S-12</span>
                   <span>Explore Brand &rarr;</span>
                 </div>
               </div>
-            </div>
+            </a>
 
           </div>
         </section>
@@ -1311,35 +1409,18 @@
             </svg>
           </div>
           <div style="margin-top:14px;display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:#64748B;">
-            <span>💡 <em>Click any blue unit box on the blueprint above to view full store details.</em></span>
+            <span>💡 <em>Select a unit for store details. This is a directory guide, not a scaled floor plan.</em></span>
             <span id="blueprintUnitCount">4 Active Stores on this Floor</span>
           </div>
         </section>
 
         <!-- ══════════════════════════════════════
-             STICKY SEARCH & CATEGORY FILTER BAR
+             STORE DIRECTORY
              ══════════════════════════════════════ -->
-        <div class="filter-bar-sticky">
-          <div class="search-row">
-            <div class="search-input-box">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-              <input type="text" id="storeSearchInput" placeholder="Search 46+ stores, unit numbers, products (e.g. Naivas, NCBA, Gaming, Kaftan)...">
-            </div>
-            <div style="font-size:13px;font-weight:700;color:var(--store-navy);white-space:nowrap;padding:0 8px;" id="storesCountBadge">
-              46 Stores
-            </div>
-          </div>
-          <div class="category-pills-row">
-            <button class="cat-pill active" data-cat="all">✨ All Categories</button>
-            <button class="cat-pill" data-cat="retail">🛒 Supermarket &amp; Retail</button>
-            <button class="cat-pill" data-cat="fashion">👗 Fashion &amp; Shoes</button>
-            <button class="cat-pill" data-cat="dining">🍔 Dining &amp; Food Kiosks</button>
-            <button class="cat-pill" data-cat="tech">💻 Tech, ICT &amp; Gaming</button>
-            <button class="cat-pill" data-cat="beauty">💇 Salon, Spa &amp; Beauty</button>
-            <button class="cat-pill" data-cat="services">🏦 Banking, Healthcare &amp; Services</button>
-          </div>
+        <div class="directory-heading" id="directorySection">
+          <div><span class="store-kicker">The store directory</span><h2>Find exactly your kind of place.</h2></div>
+          <p>Browse our stores.<br>Choose a store for details and directions.</p>
         </div>
-
         <!-- ══════════════════════════════════════
              STORES DIRECTORY CARDS GRID
              ══════════════════════════════════════ -->
@@ -1400,7 +1481,7 @@
 
         <div class="store-modal-actions">
           <a id="modalCallBtn" href="tel:+254790964002" class="modal-cta-btn call">📞 Call Store</a>
-          <button id="modalLocateMapBtn" class="modal-cta-btn map">📍 Highlight on Map</button>
+          <button id="modalLocateMapBtn" class="modal-cta-btn map">📍 Find this floor</button>
         </div>
       </div>
     </div>
@@ -1419,236 +1500,8 @@
     (function () {
       'use strict';
 
-      // ── 1. BLUEPRINT DATA DEFINITIONS (SCRAPED SHOPS REMOVED) ──
-      const floorBlueprints = {
-        "Ground Floor": {
-          title: "Ground Floor (Level G) — Hypermarket & Fast Food",
-          count: "4 Active Stores",
-          svg: `
-            <g class="svg-store-zone" data-store-name="Naivas">
-              <rect class="map-unit" x="40" y="40" width="340" height="320"/>
-              <text class="map-unit-text" x="210" y="195" style="font-size:14px;fill:#FFD166;">G-01 · NAIVAS 24/7</text>
-              <text class="map-unit-sub" x="210" y="218" style="font-size:10px;">Anchor Hypermarket (Ground & Level 1)</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="Chicken Inn">
-              <rect class="map-unit" x="420" y="40" width="340" height="95"/>
-              <text class="map-unit-text" x="590" y="85">G-02 · CHICKEN INN</text>
-              <text class="map-unit-sub" x="590" y="105">Fast Food, Fried Chicken & Meals</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="Creamy Inn">
-              <rect class="map-unit" x="420" y="150" width="340" height="95"/>
-              <text class="map-unit-text" x="590" y="195">G-03 · CREAMY INN</text>
-              <text class="map-unit-sub" x="590" y="215">Ice Creams, Shakes & Desserts</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="Pizza Inn">
-              <rect class="map-unit" x="420" y="260" width="340" height="100"/>
-              <text class="map-unit-text" x="590" y="305">G-04 · PIZZA INN</text>
-              <text class="map-unit-sub" x="590" y="325">Fresh Hot Artisan Pizzas</text>
-            </g>
-          `
-        },
-        "1st Floor": {
-          title: "1st Floor (Level 1) — Fashion, Shoes, Tech & NCBA Bank",
-          count: "17 Active Stores",
-          svg: `
-            <g class="svg-store-zone" data-store-name="Naivas First Floor">
-              <rect class="map-unit" x="480" y="40" width="290" height="335"/>
-              <text class="map-unit-text" x="625" y="195">F-01 · NAIVAS LEVEL 1</text>
-              <text class="map-unit-sub" x="625" y="215">Homeware & Appliances</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="Hallahulah Game Shop">
-              <rect class="map-unit" x="40" y="40" width="95" height="75"/>
-              <text class="map-unit-text" x="87" y="80">F-02 · HALLAHULAH</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="Daliah Human Wigs">
-              <rect class="map-unit" x="145" y="40" width="95" height="75"/>
-              <text class="map-unit-text" x="192" y="80">F-03 · DALIAH</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="Payless">
-              <rect class="map-unit" x="250" y="40" width="95" height="75"/>
-              <text class="map-unit-text" x="297" y="80">F-04 · PAYLESS</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="Grand Computer">
-              <rect class="map-unit" x="355" y="40" width="95" height="75"/>
-              <text class="map-unit-text" x="402" y="80">F-05 · GRAND ICT</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="Tickles and Giggles">
-              <rect class="map-unit" x="40" y="125" width="95" height="75"/>
-              <text class="map-unit-text" x="87" y="165">F-06 · TICKLES</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="Namada Healthcare">
-              <rect class="map-unit" x="145" y="125" width="95" height="75"/>
-              <text class="map-unit-text" x="192" y="165">F-07 · NAMADA</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="Online Holidays">
-              <rect class="map-unit" x="250" y="125" width="95" height="75"/>
-              <text class="map-unit-text" x="297" y="165">F-08 · TOURS</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="West 11">
-              <rect class="map-unit" x="355" y="125" width="95" height="75"/>
-              <text class="map-unit-text" x="402" y="165">F-09 · WEST 11</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="7day Mensware">
-              <rect class="map-unit" x="40" y="210" width="95" height="75"/>
-              <text class="map-unit-text" x="87" y="250">F-10 · 7DAY</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="KG Cosmetics">
-              <rect class="map-unit" x="145" y="210" width="95" height="75"/>
-              <text class="map-unit-text" x="192" y="250">F-11 · KG BEAUTY</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="Lovisa">
-              <rect class="map-unit" x="250" y="210" width="95" height="75"/>
-              <text class="map-unit-text" x="297" y="250">F-12 · LOVISA</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="Fakri Timezone">
-              <rect class="map-unit" x="355" y="210" width="95" height="75"/>
-              <text class="map-unit-text" x="402" y="250">F-13 · FAKRI</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="Dendri">
-              <rect class="map-unit" x="40" y="295" width="95" height="80"/>
-              <text class="map-unit-text" x="87" y="340">F-14 · DENRI</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="NCBA Bank">
-              <rect class="map-unit" x="145" y="295" width="95" height="80"/>
-              <text class="map-unit-text" x="192" y="340">F-15 · NCBA</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="Diamond Tech">
-              <rect class="map-unit" x="250" y="295" width="95" height="80"/>
-              <text class="map-unit-text" x="297" y="340">F-16 · DIAMOND</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="Africa Collectives (Pop shop)">
-              <rect class="map-unit" x="355" y="295" width="95" height="80"/>
-              <text class="map-unit-text" x="402" y="340">F-17 · AFRICA</text>
-            </g>
-          `
-        },
-        "2nd Floor": {
-          title: "2nd Floor (Level 2) — Play-On Arena, Food Kiosk, Spas & Boutiques",
-          count: "19 Active Stores",
-          svg: `
-            <g class="svg-store-zone" data-store-name="Play On (Game Area)">
-              <rect class="map-unit" x="240" y="140" width="320" height="235" style="fill:rgba(0,180,216,0.25);stroke:#00B4D8;stroke-width:2;"/>
-              <text class="map-unit-text" x="400" y="245" style="font-size:14px;fill:#00B4D8;">S-01 · PLAY-ON KIDS ARENA</text>
-              <text class="map-unit-sub" x="400" y="270" style="font-size:10px;fill:#E2E8F0;">Soft Play, Arcade & VR Lounge</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="Creamy Inn, Chicken Inn, Pizza Inn (kiosk)">
-              <rect class="map-unit" x="240" y="40" width="320" height="80"/>
-              <text class="map-unit-text" x="400" y="80">S-02 · FOOD COURT KIOSK</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="Jumia / Skyve shot / Xtigi Service Center">
-              <rect class="map-unit" x="40" y="40" width="90" height="60"/>
-              <text class="map-unit-text" x="85" y="75">S-03 · JUMIA</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="World Designers">
-              <rect class="map-unit" x="40" y="105" width="90" height="60"/>
-              <text class="map-unit-text" x="85" y="140">S-04 · WORLD</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="SAS Beauty">
-              <rect class="map-unit" x="40" y="170" width="90" height="60"/>
-              <text class="map-unit-text" x="85" y="205">S-05 · SAS</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="Novum">
-              <rect class="map-unit" x="40" y="235" width="90" height="60"/>
-              <text class="map-unit-text" x="85" y="270">S-06 · NOVUM</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="Ident Smile">
-              <rect class="map-unit" x="40" y="300" width="90" height="75"/>
-              <text class="map-unit-text" x="85" y="340">S-07 · SMILE</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="Tawal ICT Solution">
-              <rect class="map-unit" x="140" y="40" width="90" height="60"/>
-              <text class="map-unit-text" x="185" y="75">S-08 · TAWALA</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="Mintos Salon Spa Barbershop">
-              <rect class="map-unit" x="140" y="105" width="90" height="60"/>
-              <text class="map-unit-text" x="185" y="140">S-09 · MINTOS</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="SSB">
-              <rect class="map-unit" x="140" y="170" width="90" height="60"/>
-              <text class="map-unit-text" x="185" y="205">S-10 · SSB</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="Rudra">
-              <rect class="map-unit" x="140" y="235" width="90" height="60"/>
-              <text class="map-unit-text" x="185" y="270">S-11 · RUDRA</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="West 11 Sports">
-              <rect class="map-unit" x="140" y="300" width="90" height="75"/>
-              <text class="map-unit-text" x="185" y="340">S-12 · WEST 11</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="Osona Yarns">
-              <rect class="map-unit" x="570" y="40" width="95" height="60"/>
-              <text class="map-unit-text" x="617" y="75">S-13 · OSONA</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="Afribot Robotics">
-              <rect class="map-unit" x="675" y="40" width="95" height="60"/>
-              <text class="map-unit-text" x="722" y="75">S-14 · AFRIBOT</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="Luxe Kaftan">
-              <rect class="map-unit" x="570" y="105" width="95" height="60"/>
-              <text class="map-unit-text" x="617" y="140">S-15 · LUXE</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="Malkia">
-              <rect class="map-unit" x="675" y="105" width="95" height="60"/>
-              <text class="map-unit-text" x="722" y="140">S-16 · MALKIA</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="Michael Boutique">
-              <rect class="map-unit" x="570" y="170" width="95" height="60"/>
-              <text class="map-unit-text" x="617" y="205">S-17 · MICHAELS</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="Oraimo (upcoming)">
-              <rect class="map-unit" x="675" y="170" width="95" height="60"/>
-              <text class="map-unit-text" x="722" y="205">S-18 · ORAIMO</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="Keswick">
-              <rect class="map-unit" x="570" y="240" width="200" height="135"/>
-              <text class="map-unit-text" x="670" y="300">S-19 · KESWICK BOOKS</text>
-              <text class="map-unit-sub" x="670" y="320">Books, Gifts & Bibles</text>
-            </g>
-          `
-        },
-        "3rd Floor": {
-          title: "3rd Floor (Level 3) — Coworking, Gym, Esports & Clinic",
-          count: "4 Active Anchors",
-          svg: `
-            <g class="svg-store-zone" data-store-name="Gamers Vault">
-              <rect class="map-unit" x="40" y="40" width="280" height="150"/>
-              <text class="map-unit-text" x="180" y="110">T-01 · GAMERS VAULT</text>
-              <text class="map-unit-sub" x="180" y="130">Esports & PS5 Arena</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="Legacy Gym">
-              <rect class="map-unit" x="40" y="210" width="280" height="165"/>
-              <text class="map-unit-text" x="180" y="285">T-02 · LEGACY FITNESS</text>
-              <text class="map-unit-sub" x="180" y="305">Gym, Sauna & Weights</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="Westerwelle Foundation">
-              <rect class="map-unit" x="480" y="40" width="280" height="150"/>
-              <text class="map-unit-text" x="620" y="110">T-03 · WESTERWELLE HAUS</text>
-              <text class="map-unit-sub" x="620" y="130">Tech Coworking Incubator</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="Equity Afia CBD">
-              <rect class="map-unit" x="480" y="210" width="280" height="165"/>
-              <text class="map-unit-text" x="620" y="285">T-04 · EQUITY AFIA CLINIC</text>
-              <text class="map-unit-sub" x="620" y="305">Medical Care & Pharmacy</text>
-            </g>
-          `
-        },
-        "Basement": {
-          title: "Basement Level (B1) — Secure Parking & Valet Services",
-          count: "2 Active Services",
-          svg: `
-            <g class="svg-store-zone" data-store-name="Valet & Parking Services">
-              <rect class="map-unit" x="40" y="40" width="340" height="335"/>
-              <text class="map-unit-text" x="210" y="200">B-01 · VALET DESK</text>
-              <text class="map-unit-sub" x="210" y="220">Concierge Services & Drop-off</text>
-            </g>
-            <g class="svg-store-zone" data-store-name="Secure Basement Parking Deck">
-              <rect class="map-unit" x="420" y="40" width="340" height="335"/>
-              <text class="map-unit-text" x="590" y="200">B-02 · PARKING DECK</text>
-              <text class="map-unit-sub" x="590" y="220">400+ Secure CCTV Bays</text>
-            </g>
-          `
-        }
-      };
+      // ── 1. UNIT GUIDE GENERATED FROM THE CONFIRMED DIRECTORY ──
+      const floorBlueprints = {};
 
       // ── 2. DATA HYDRATION ─────────────────────────────────────
       let allStores = [];
@@ -1668,6 +1521,7 @@
               phone: shop.phone || '+254 790 964 002',
               email: shop.email || 'info@mombasamall.co.ke',
               description: shop.description || 'Visit store for seasonal offerings.',
+              photo: shop.photo, photoFit: shop.photoFit, website: shop.website,
               logoUrl: shop.logo || './assets/Logo/Mall Logo/MOMBASA MALL 1.0.png',
               socialHandle: shop.social || '@mombasamall_',
               facebook: shop.facebook || '',
@@ -1680,42 +1534,68 @@
 
       // ── 3. RENDER STORES GRID ─────────────────────────────────
       const gridContainer = document.getElementById('storesGridContainer');
-      const searchInput = document.getElementById('storeSearchInput');
-      const countBadge = document.getElementById('storesCountBadge');
-      let currentCategory = 'all';
-      let currentFloor = 'all';
-      let currentSearch = '';
+      const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      allStores = allStores.filter(store => store.isActive !== false);
+      const floorMeta = [
+        ['Ground Floor', 'ground-floor', 'Groceries & dining'],
+        ['1st Floor', 'first-floor', 'Fashion, banking & technology'],
+        ['2nd Floor', 'second-floor', 'Beauty, boutiques & family entertainment'],
+        ['3rd Floor', 'third-floor', 'Gaming, fitness, coworking & healthcare'],
+        ['Basement', 'basement', 'Parking & guest services']
+      ];
+      const knownStores = (window.MOMBASA_DEFAULT_STORES?.floors || []).flatMap(f => f.shops.map(shop => ({...shop, floor: f.name})));
+      const assetPath = value => value && value.startsWith('/') ? '.' + value : value;
+      const storePhotos = {'G-02': './assets/store-photos/g-02.webp', 'G-03': './assets/store-photos/g-03.webp', 'G-04': './assets/store-photos/g-04.webp', 'F-05': './assets/store-photos/f-05.webp', 'F-06': './assets/store-photos/f-06.webp', 'F-09': './assets/store-photos/f-09.webp', 'F-12': './assets/store-photos/f-12.webp', 'S-11': './assets/store-photos/s-11.webp', 'S-12': './assets/store-photos/s-12.webp', 'S-16': './assets/store-photos/s-16.webp', 'S-17': './assets/store-photos/s-17.webp', 'T-01': './assets/store-photos/t-01.webp', 'T-02': './assets/store-photos/t-02.webp', 'T-03': './assets/store-photos/t-03.webp'};
+      const floorAliases = {'First Floor':'1st Floor', 'Second Floor':'2nd Floor', 'Third Floor':'3rd Floor', 'Basement Parking':'Basement'};
+      allStores = allStores.map(store => {
+        const normalizeName = name => String(name || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+        const known = knownStores.find(shop => normalizeName(shop.name) === normalizeName(store.name));
+        return {...store, room: known?.room || store.room || '—', floor: known?.floor || floorAliases[store.floor] || store.floor,
+          photo: ['G-01','F-01'].includes(known?.room || store.room) ? assetPath(known?.logo || store.logoUrl) : storePhotos[known?.room || store.room] || assetPath(known?.photo || store.photo || '/assets/lifestyle/mall-day.webp'),
+          photoFit: ['G-01','F-01'].includes(known?.room || store.room) ? 'contain' : storePhotos[known?.room || store.room] ? 'cover' : known?.photoFit || store.photoFit || 'contain',
+          logoUrl: assetPath(known?.logo || store.logoUrl), website: assetPath(known?.website || store.website)};
+      });
+      const escapeText = text => String(text).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+      floorMeta.forEach(([floor, slug]) => {
+        const stores = allStores.filter(store => store.floor === floor).sort((a,b) => a.room.localeCompare(b.room));
+        const height = Math.max(400, Math.ceil(stores.length / 4) * 90 + 50);
+        floorBlueprints[floor] = {title: floor + ' — Unit Guide', count: stores.length + ' stores / facilities', height,
+          svg: stores.map((store,index) => {
+            const x = 20 + (index % 4) * 195, y = 25 + Math.floor(index / 4) * 90;
+            return `<g class="svg-store-zone" data-store-name="${escapeText(store.name)}"><rect x="${x}" y="${y}" width="175" height="70" rx="10" fill="#173f60" stroke="#7caecb"/><text x="${x+12}" y="${y+25}" fill="white" font-size="15">${escapeText(store.room)}</text><text x="${x+12}" y="${y+49}" fill="#cee8f8" font-size="11">${escapeText(store.name.length>23?store.name.slice(0,21)+'…':store.name)}</text></g>`;
+          }).join('')};
+      });
+
+      document.getElementById('directoryTotal').textContent = allStores.length;
 
       function renderStores() {
         if (!gridContainer) return;
+        if (window.cleanupStoreCardMotion) window.cleanupStoreCardMotion();
         gridContainer.innerHTML = '';
 
-        const filtered = allStores.filter(store => {
-          const matchCat = currentCategory === 'all' || (store.category || '').toLowerCase() === currentCategory.toLowerCase();
-          const matchFloor = currentFloor === 'all' || store.floor === currentFloor;
-          const matchSearch = !currentSearch ||
-            store.name.toLowerCase().includes(currentSearch) ||
-            store.room.toLowerCase().includes(currentSearch) ||
-            store.description.toLowerCase().includes(currentSearch);
-          return matchCat && matchFloor && matchSearch;
-        });
-
-        countBadge.textContent = `${filtered.length} Store${filtered.length === 1 ? '' : 's'}`;
-
-        if (filtered.length === 0) {
-          gridContainer.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:#64748B;">No matching stores found. Try adjusting your search query or category filters.</div>`;
+        if (allStores.length === 0) {
+          gridContainer.innerHTML = '<div class="store-empty"><h3>Our store directory is being updated.</h3><p>Please check back soon for store details.</p></div>';
+          if (window.ScrollTrigger) ScrollTrigger.refresh();
           return;
         }
 
-        filtered.forEach(store => {
+        const floorGrids = {};
+        floorMeta.forEach(([floor, slug, description]) => {
+          const stores = allStores.filter(store => store.floor === floor);
+          if (!stores.length) return;
+          const section = document.createElement('section'); section.className = 'directory-floor'; section.id = slug;
+          section.setAttribute('aria-labelledby', slug + '-title');
+          section.innerHTML = `<header class="directory-floor-header"><div><span class="store-kicker">${escapeText(description)}</span><h2 id="${slug}-title">${floor}</h2></div><p>${stores.length} ${floor === 'Basement' ? 'facilities' : 'stores'} · Choose a store for details</p></header><div class="directory-floor-grid"></div>`;
+          gridContainer.appendChild(section); floorGrids[floor] = section.querySelector('.directory-floor-grid');
+        });
+        allStores.sort((a,b) => (a.room || '').localeCompare(b.room || '')).forEach(store => {
           const card = document.createElement('div');
           card.className = 'store-card';
+          card.id = 'store-' + store.room.toLowerCase();
           card.setAttribute('data-name', store.name);
           card.innerHTML = `
+            <div class="store-card-photo"><img src="${store.photo}" alt="${escapeText(store.name)}" class="${store.photoFit === 'cover' ? 'is-photo' : ''}" loading="lazy" decoding="async"></div>
             <div class="store-card-header">
-              <div class="store-card-logo-wrap">
-                <img src="${store.logoUrl || './assets/Logo/Mall Logo/MOMBASA MALL 1.0.png'}" alt="${store.name}" onerror="this.src='./assets/Logo/Mall Logo/MOMBASA MALL 1.0.png'">
-              </div>
               <div class="store-card-title-group">
                 <h4 class="store-card-name">${store.name}</h4>
                 <div class="store-card-unit-badge">
@@ -1726,33 +1606,34 @@
             </div>
             <div class="store-card-body">
               <p class="store-card-desc">${store.description}</p>
+              ${store.website ? `<a class="store-site-link" href="${store.website}">Visit ${escapeText(store.name)} ↗</a>` : ''}
               <div class="store-card-tags">
                 <span class="store-mini-tag">${store.category}</span>
                 <span class="store-mini-tag floor">${store.floor}</span>
               </div>
             </div>
             <div class="store-card-footer">
-              <button class="locate-map-btn" onclick="event.stopPropagation(); window.highlightUnitOnMap('${store.name}', '${store.floor}')" title="Locate on Floor Map">
+              <button type="button" class="locate-map-btn" title="Find store floor">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                <span>View on Map</span>
+                <span>Find this floor</span>
               </button>
-              <span class="store-action-btn">
+              <button type="button" class="store-action-btn" aria-label="View store details">
                 <span>Details</span>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-              </span>
+              </button>
             </div>
           `;
 
-          card.addEventListener('click', () => openStoreModal(store));
-          gridContainer.appendChild(card);
+          card.addEventListener('click', event => { if (!event.target.closest('a')) openStoreModal(store); });
+          card.querySelector('.store-action-btn').setAttribute('aria-label', `View ${store.name} details`);
+          card.querySelector('.locate-map-btn').addEventListener('click', event => {
+            event.stopPropagation();
+            window.highlightUnitOnMap(store.name, store.floor);
+          });
+          (floorGrids[store.floor] || gridContainer).appendChild(card);
         });
 
-        if (window.gsap) {
-          gsap.fromTo('.store-card', 
-            { opacity: 0, y: 15 }, 
-            { opacity: 1, y: 0, duration: 0.35, stagger: 0.04, ease: 'power2.out' }
-          );
-        }
+        if (window.animateStoreCards) window.animateStoreCards();
       }
 
       // ── 4. BLUEPRINT SWITCHER ─────────────────────────────────
@@ -1765,17 +1646,26 @@
         currentMapTitle.textContent = bp.title;
         blueprintCount.textContent = bp.count;
         svgUnitsGroup.innerHTML = bp.svg;
+        document.getElementById('blueprintSvg').setAttribute('viewBox', `0 0 800 ${bp.height || 400}`);
+        document.querySelectorAll('.blueprint-tab').forEach(tab => tab.setAttribute('aria-pressed', String(tab.dataset.mapFloor === floorKey)));
 
         document.querySelectorAll('.svg-store-zone').forEach(zone => {
+          zone.setAttribute('tabindex', '0');
+          zone.setAttribute('role', 'button');
+          zone.setAttribute('aria-label', `View ${zone.getAttribute('data-store-name')} details`);
+          zone.addEventListener('keydown', event => {
+            if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); zone.dispatchEvent(new MouseEvent('click')); }
+          });
           zone.addEventListener('click', function () {
             const storeName = zone.getAttribute('data-store-name');
             const found = allStores.find(s => s.name.toLowerCase() === storeName.toLowerCase()) || { name: storeName, floor: floorKey, room: 'Unit', category: 'Retail', description: 'Explore this premier brand at Mombasa Mall.' };
             openStoreModal(found);
           });
         });
+        if (window.animateStoreMap) window.animateStoreMap();
 
         if (targetStoreName) {
-          const matchedZone = document.querySelector(`.svg-store-zone[data-store-name="${targetStoreName}"]`);
+          const matchedZone = [...document.querySelectorAll('.svg-store-zone')].find(zone => zone.dataset.storeName === targetStoreName);
           if (matchedZone) {
             document.querySelectorAll('.svg-store-zone').forEach(z => z.classList.remove('is-spotlight'));
             matchedZone.classList.add('is-spotlight');
@@ -1790,7 +1680,7 @@
           t.classList.toggle('active', t.getAttribute('data-map-floor') === targetFloor);
         });
         switchFloorBlueprint(targetFloor, storeName);
-        document.getElementById('floorMapSection')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        document.getElementById('floorMapSection')?.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block: 'start' });
       };
 
       document.querySelectorAll('.blueprint-tab').forEach(tab => {
@@ -1800,21 +1690,6 @@
           const floorKey = tab.getAttribute('data-map-floor');
           switchFloorBlueprint(floorKey);
         });
-      });
-
-      // ── 5. FILTER HANDLERS ────────────────────────────────────
-      document.querySelectorAll('.cat-pill').forEach(pill => {
-        pill.addEventListener('click', function () {
-          document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
-          pill.classList.add('active');
-          currentCategory = pill.getAttribute('data-cat');
-          renderStores();
-        });
-      });
-
-      searchInput?.addEventListener('input', function (e) {
-        currentSearch = e.target.value.trim().toLowerCase();
-        renderStores();
       });
 
       // ── 6. POP-UP MODAL CONTROLLER ───────────────────────────
@@ -1836,8 +1711,13 @@
       const modalLocateMapBtn = document.getElementById('modalLocateMapBtn');
 
       let currentModalStore = null;
+      let modalReturnFocus = null;
+      modalBackdrop.setAttribute('role', 'dialog');
+      modalBackdrop.setAttribute('aria-modal', 'true');
+      modalBackdrop.setAttribute('aria-labelledby', 'modalTitle');
 
       function openStoreModal(store) {
+        modalReturnFocus = document.activeElement;
         currentModalStore = store;
         modalTitle.textContent = store.name;
         modalUnit.textContent = `${store.floor || 'Ground'} · Unit ${store.room || '—'}`;
@@ -1850,7 +1730,10 @@
         modalLocVal.textContent = `Unit ${store.room || '—'}, ${store.floor || 'Ground'}`;
 
         modalLogoImg.src = store.logoUrl || './assets/Logo/Mall Logo/MOMBASA MALL 1.0.png';
-        modalHeroImg.src = store.logoUrl || './assets/Logo/Random pics/MOMBASA MALL.jpg';
+        modalHeroImg.src = store.photo || store.logoUrl;
+        modalHeroImg.classList.toggle('is-photo', store.photoFit === 'cover');
+        modalHeroImg.alt = store.name;
+        modalLogoImg.alt = store.name;
 
         const phoneClean = (store.phone || '+254790964002').replace(/[^0-9+]/g, '');
         modalCallBtn.href = `tel:${phoneClean}`;
@@ -1872,6 +1755,10 @@
 
         modalBackdrop.classList.add('is-open');
         modalBackdrop.setAttribute('aria-hidden', 'false');
+        modalCloseBtn.focus({ preventScroll: true });
+        if (window.gsap && !prefersReducedMotion()) {
+          gsap.fromTo('.store-modal-body > *', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: .4, stagger: .04, overwrite: true, clearProps: 'opacity,transform' });
+        }
       }
 
       window.triggerStoreByName = function (storeName) {
@@ -1882,6 +1769,7 @@
       function closeModal() {
         modalBackdrop.classList.remove('is-open');
         modalBackdrop.setAttribute('aria-hidden', 'true');
+        if (modalReturnFocus && modalReturnFocus.isConnected) modalReturnFocus.focus({ preventScroll: true });
       }
 
       modalCloseBtn?.addEventListener('click', closeModal);
@@ -1890,6 +1778,12 @@
       });
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && modalBackdrop.classList.contains('is-open')) closeModal();
+        if (e.key === 'Tab' && modalBackdrop.classList.contains('is-open')) {
+          const controls = [...modalBackdrop.querySelectorAll('button, a[href]')].filter(el => el.getClientRects().length);
+          const first = controls[0], last = controls[controls.length - 1];
+          if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+          else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+        }
       });
 
       modalLocateMapBtn?.addEventListener('click', () => {
@@ -1902,6 +1796,122 @@
       // ── 7. INITIALIZATION ─────────────────────────────────────
       switchFloorBlueprint("Ground Floor");
       renderStores();
+      function revealLinkedFloor() {
+        const slug = location.hash.slice(1);
+        const section = document.getElementById(slug);
+        if (!section) return;
+        const floorSection = section.closest('.directory-floor');
+        if (!floorSection) return;
+        section.scrollIntoView({behavior: 'auto', block: 'start'});
+        const meta = floorMeta.find(floor => floor[1] === floorSection.id);
+        if (meta) switchFloorBlueprint(meta[0]);
+      }
+      window.addEventListener('hashchange', revealLinkedFloor);
+      requestAnimationFrame(revealLinkedFloor);
+    })();
+  </script>
+  <script>
+    // Local motion controller: ScrollTrigger uses the nested page scroller.
+    (function () {
+      const scroller = document.querySelector('.subpage-content');
+      document.querySelectorAll('.spotlight-card').forEach(card => {
+        card.setAttribute('role', 'button'); card.tabIndex = 0;
+        card.setAttribute('aria-label', `Explore ${card.querySelector('.spotlight-title').textContent}`);
+        card.addEventListener('keydown', event => {
+          if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); card.click(); }
+        });
+      });
+      document.querySelectorAll('.store-hero-actions a').forEach(link => {
+        link.addEventListener('click', event => {
+          event.preventDefault();
+          document.querySelector(link.getAttribute('href')).scrollIntoView({
+            behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start'
+          });
+        });
+      });
+      if (!window.gsap || !window.ScrollTrigger) return;
+      gsap.registerPlugin(ScrollTrigger);
+      const media = gsap.matchMedia();
+      media.add('(prefers-reduced-motion: no-preference)', () => {
+        const progress = document.createElement('div');
+        progress.className = 'store-scroll-progress'; progress.setAttribute('aria-hidden', 'true');
+        document.body.appendChild(progress);
+        gsap.to(progress, { scaleX: 1, ease: 'none', scrollTrigger: { scroller, trigger: scroller, start: 0, end: () => scroller.scrollHeight - scroller.clientHeight, scrub: .25, invalidateOnRefresh: true } });
+
+        gsap.timeline({ defaults: { ease: 'power3.out', duration: .85 } })
+          .from('.store-hero-copy .store-kicker', { y: 16, opacity: 0 })
+          .from('.store-hero-copy h1 span', { y: 48, opacity: 0, stagger: .13 }, '-=.6')
+          .from('.store-hero-copy p, .store-hero-actions, .store-hero-label', { y: 22, opacity: 0, stagger: .1 }, '-=.5');
+        gsap.fromTo('.store-hero .subpage-hero-bg-img', { scale: 1.05, yPercent: -3 }, {
+          scale: 1.17, yPercent: 8, ease: 'none', scrollTrigger: { scroller, trigger: '.store-hero', start: 'top top', end: 'bottom top', scrub: 1 }
+        });
+        gsap.from('.store-hero-summary > div', { y: 20, opacity: 0, stagger: .1, duration: .6,
+          scrollTrigger: { scroller, trigger: '.store-hero-summary', start: 'top 92%', once: true } });
+        document.querySelectorAll('.spotlight-header, .directory-heading, .blueprint-header-bar').forEach(section => {
+          gsap.from(section.children, { y: 24, opacity: 0, duration: .65, stagger: .1,
+            scrollTrigger: { scroller, trigger: section, start: 'top 91%', once: true } });
+        });
+        gsap.from('.spotlight-card', { y: 36, opacity: 0, duration: .75, stagger: .12,
+          scrollTrigger: { scroller, trigger: '.spotlight-grid', start: 'top 90%', once: true } });
+        gsap.from('.blueprint-stage', { y: 30, opacity: 0, duration: .8,
+          scrollTrigger: { scroller, trigger: '.blueprint-stage', start: 'top 90%', once: true } });
+
+        // Revert the previous grid context before a search replaces its DOM.
+        let cardContext;
+        let cardTriggers = [];
+        let cardHoverCleanups = [];
+        window.cleanupStoreCardMotion = () => {
+          cardTriggers.forEach(trigger => trigger.kill()); cardTriggers = [];
+          cardHoverCleanups.forEach(cleanup => cleanup()); cardHoverCleanups = [];
+          gsap.killTweensOf('#storesGridContainer .store-card');
+          if (cardContext) { cardContext.revert(); cardContext = null; }
+        };
+        window.animateStoreCards = () => {
+          window.cleanupStoreCardMotion();
+          cardContext = gsap.context(() => {
+            const cards = gsap.utils.toArray('#storesGridContainer .store-card');
+            cards.forEach(card => {
+              cardTriggers.push(ScrollTrigger.create({ scroller, trigger: card, start: 'top 96%', once: true,
+                onEnter: () => gsap.fromTo(card, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: .55, ease: 'power3.out', clearProps: 'opacity,transform' })
+              }));
+            });
+            if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+              cards.forEach(card => {
+                const logo = card.querySelector('.store-card-logo-wrap');
+                const enter = () => gsap.to(logo, { y: -3, duration: .25, overwrite: true });
+                const leave = () => gsap.to(logo, { y: 0, duration: .3, overwrite: true });
+                card.addEventListener('mouseenter', enter); card.addEventListener('mouseleave', leave);
+                cardHoverCleanups.push(() => { card.removeEventListener('mouseenter', enter); card.removeEventListener('mouseleave', leave); gsap.killTweensOf(logo); gsap.set(logo, {clearProps: 'transform'}); });
+              });
+            }
+          });
+          ScrollTrigger.refresh();
+        };
+        window.animateStoreMap = () => {
+          gsap.fromTo('#svgUnitsGroup .svg-store-zone', { opacity: 0, y: 8 }, {
+            opacity: 1, y: 0, duration: .45, stagger: { amount: .25 }, ease: 'power2.out', clearProps: 'opacity,transform'
+          });
+        };
+        const hoverCleanups = [];
+        if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+          document.querySelectorAll('.spotlight-card').forEach(card => {
+            const photo = card.querySelector('.spotlight-bg');
+            const enter = () => gsap.to(photo, { scale: 1.08, duration: .7, ease: 'power2.out', overwrite: true });
+            const leave = () => gsap.to(photo, { scale: 1, duration: .7, ease: 'power2.out', overwrite: true });
+            card.addEventListener('mouseenter', enter); card.addEventListener('mouseleave', leave);
+            hoverCleanups.push(() => { card.removeEventListener('mouseenter', enter); card.removeEventListener('mouseleave', leave); gsap.set(photo, { clearProps: 'transform' }); });
+          });
+        }
+        window.animateStoreCards();
+        const refresh = () => ScrollTrigger.refresh();
+        window.addEventListener('load', refresh, { once: true });
+        if (document.fonts) document.fonts.ready.then(refresh);
+        return () => {
+          window.cleanupStoreCardMotion(); hoverCleanups.forEach(cleanup => cleanup());
+          window.removeEventListener('load', refresh); progress.remove();
+          delete window.animateStoreCards; delete window.animateStoreMap; delete window.cleanupStoreCardMotion;
+        };
+      });
     })();
   </script>
 </body>

@@ -35,6 +35,37 @@
       {
         "source": "/activations",
         "destination": "/activations/index.html"
+      },
+      {
+        "source": "/playon",
+        "destination": "/playon/index.html"
+      }
+    ],
+    "redirects": [
+      {
+        "source": "/play-on.html",
+        "destination": "/playon/index.html",
+        "type": 301
+      },
+      {
+        "source": "/led.html",
+        "destination": "/led-advertising/index.html",
+        "type": 301
+      },
+      {
+        "source": "/Play-On",
+        "destination": "/playon/index.html",
+        "type": 301
+      },
+      {
+        "source": "/Play-On/",
+        "destination": "/playon/index.html",
+        "type": 301
+      },
+      {
+        "source": "/Play-On/index.html",
+        "destination": "/playon/index.html",
+        "type": 301
       }
     ]
   }

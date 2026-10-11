@@ -18,18 +18,24 @@
      ACTIVE NAVIGATION HIGHLIGHT
      ============================================================ */
   function highlightActiveNav() {
-    const path = window.location.pathname.split('/').pop() || 'index.html';
+    const normalizePath = path => {
+      const resolved = path.replace(/\/index\.html$/, '/').replace(/\/$/, '') || '/';
+      return resolved === '/stores' ? '/stores.html' : resolved;
+    };
+    const path = normalizePath(window.location.pathname);
     const navLinks = document.querySelectorAll('.site-nav__link, .offcanvas-nav a');
 
     navLinks.forEach((link) => {
       const href = link.getAttribute('href');
       if (!href) return;
-      const linkPath = href.split('/').pop().split('#')[0];
-
-      if (linkPath === path || (path === '' && linkPath === 'index.html')) {
+      const destination = new URL(href, document.baseURI);
+      const active = destination.origin === location.origin && normalizePath(destination.pathname) === path;
+      if (active) {
         link.classList.add('is-active');
+        link.setAttribute('aria-current', 'page');
       } else {
         link.classList.remove('is-active');
+        link.removeAttribute('aria-current');
       }
     });
   }

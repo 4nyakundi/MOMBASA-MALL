@@ -20,6 +20,9 @@
 
   function openSelection() {
     if (!menu) return;
+    menu.querySelectorAll('.selection-card__cover img').forEach(function (img) {
+      if (img.decode) img.decode().catch(function () {});
+    });
     menu.classList.add('is-open');
     menu.setAttribute('aria-hidden', 'false');
     if (openBtn) openBtn.setAttribute('aria-expanded', 'true');
@@ -45,6 +48,9 @@
   if (closeBtn) {
     closeBtn.addEventListener('click', closeSelection);
   }
+  $$('.selection-card').forEach(function (card) {
+    card.addEventListener('click', closeSelection);
+  });
 
   // Close on clicking the menu background (not the cards)
   if (menu) {

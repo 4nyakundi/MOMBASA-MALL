@@ -1,0 +1,46 @@
+#storesGridContainer { display: block; }
+.directory-floor { scroll-margin-top: 0; margin-bottom: 64px; }
+.directory-floor-header { display: flex; justify-content: space-between; align-items: center; gap: 24px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid #dce6ef; }
+.directory-floor-header h2 { font-family: var(--font-display); font-size: clamp(28px, 4vw, 44px); color: #102f50; margin: 6px 0 0; letter-spacing: -.025em; }
+.directory-floor-header p { color: #607487; font-size: 13px; }
+.directory-floor-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.directory-floor-grid .store-card { display: flex; flex-direction: column; min-width: 0; height: 100%; }
+.store-card-photo { aspect-ratio: 16/10; overflow: hidden; background: #f1f5f9; border-bottom: 1px solid #e5edf3; }
+.store-card-photo img { display: block; width: 100%; height: 100%; object-fit: contain; padding: 14px; transition: transform .5s ease; }
+.store-card-photo img.is-photo { object-fit: cover; padding: 0; }
+.store-card:hover .store-card-photo img { transform: scale(1.035); }
+.directory-floor-grid .store-card-header { gap: 14px; }
+.directory-floor-grid .store-card-logo-wrap { flex-shrink: 0; }
+.directory-floor-grid .store-card-logo-wrap img { width: 100%; height: 100%; object-fit: contain !important; }
+.directory-floor-grid .store-card-title-group { min-width: 0; }
+.directory-floor-grid .store-card-name { overflow-wrap: anywhere; }
+.directory-floor-grid .store-card-body { flex: 1; }
+.directory-floor-grid .store-card-footer { margin-top: auto; flex-wrap: wrap; gap: 12px; }
+.store-site-link { color: #185bf6; font-size: 12px; font-weight: 700; display: inline-block; margin-top: 12px; }
+.directory-floor.is-spotlight { outline: 2px solid #185bf6; outline-offset: 12px; border-radius: 8px; }
+.store-modal-hero > img { object-fit: contain !important; background: #f1f5f9; padding: 20px; }
+.store-modal-hero > img.is-photo { object-fit: cover !important; padding: 0; }
+.store-card-photo img { box-sizing: border-box; }
+.directory-floor-grid { align-items: stretch; }
+.directory-floor-grid .store-card-header { min-height: 112px; padding: 22px 24px 14px; }
+.directory-floor-grid .store-card-title-group { width: 100%; }
+.directory-floor-grid .store-card-name { min-height: 48px; font-size: 18px; line-height: 24px; margin: 0 0 10px; }
+.directory-floor-grid .store-card-unit-badge { white-space: normal; line-height: 1.5; }
+.directory-floor-grid .store-card-body { display: flex; flex-direction: column; padding: 0 24px 20px; }
+.directory-floor-grid .store-card-desc { height: 68px; margin: 0 0 18px; line-height: 22px; overflow: hidden; }
+.directory-floor-grid .store-card-tags { margin-top: auto; display: flex; flex-wrap: wrap; gap: 6px; }
+.directory-floor-grid .store-card-footer { padding: 16px 24px; min-height: 76px; }
+.store-card-photo { position: relative; flex-shrink: 0; }
+.store-card-photo img { position: absolute; inset: 0; }
+.spotlight-grid { align-items: stretch; }
+.spotlight-media { flex-shrink: 0; }
+.spotlight-content { min-width: 0; }
+.spotlight-foot { flex-wrap: wrap; gap: 8px; min-height: 48px; }
+.store-card[id] { scroll-margin-top: 0; }
+.store-card:target { outline: 2px solid #185bf6; outline-offset: 4px; }
+.spotlight-card { text-decoration: none; }
+.spotlight-card:focus-visible { outline: 3px solid #185bf6; outline-offset: 4px; }
+.spotlight-bg[src$="t-03.webp"] { object-fit: contain; background: white; padding: 24px; box-sizing: border-box; }
+@media (max-width: 1000px) { .directory-floor-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .directory-floor-grid { grid-template-columns: minmax(0, 1fr); } .directory-floor-header { align-items: flex-start; flex-direction: column; gap: 8px; } }
+@media (prefers-reduced-motion: reduce) { .store-card-photo img { transition: none; } }

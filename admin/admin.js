@@ -675,7 +675,7 @@
     });
 
     if (list.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:48px;color:var(--admin-text-muted);">No LED inquiries match your search. Submissions from the <a href="../led-advertising/index.html" target="_blank" style="color:var(--coral);font-weight:600;">LED Advertising Estimator ↗</a> appear here.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:48px;color:var(--admin-text-muted);">No LED inquiries match your search. Submissions from the <a href="/led-advertising/index.html" target="_blank" style="color:var(--coral);font-weight:600;">LED Advertising Estimator ↗</a> appear here.</td></tr>`;
       return;
     }
 

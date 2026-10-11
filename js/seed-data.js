@@ -199,15 +199,15 @@ export async function seedFirestoreDatabase(onProgress = console.log) {
   await setDoc(homepageRef, {
     siteName: siteData.siteName || "Mombasa Mall",
     tagline: siteData.tagline || "The Coastal Luxury Flagship",
-    description: siteData.description || "Mombasa Mall is the premier shopping, dining, and lifestyle destination in the heart of Mombasa. Retail, dining, entertainment, and events across 5 floors.",
+    description: siteData.description || "Mombasa Mall is the premier shopping, dining, and lifestyle destination in the heart of Mombasa. Retail, dining, entertainment, and events across the ground floor and three upper shopping floors.",
     heroHeading: "Where Retail Meets The Indian Ocean.",
-    heroSub: "Open Daily · Mwembe Tayari, Mombasa · 5 Floors",
+    heroSub: "Open Daily · Mwembe Tayari, Mombasa · Ground + 3 Shopping Floors",
     marqueeItems: [
       "The Coastal Lifestyle",
       "Premium Shopping",
       "Mombasa's Landmark",
       "120+ Brands",
-      "5 Floors of Possibility"
+      "Ground + Three Shopping Floors"
     ],
     address: siteData.address || "Mombasa Mall, Jomo Kenyatta Avenue, Mwembe Tayari, Mombasa, Kenya",
     phone: siteData.phone || "+254 790 964 002",
