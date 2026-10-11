@@ -212,7 +212,7 @@
     .blueprint-grid-bg {
       position: absolute;
       inset: 0;
-      background-image: 
+      background-image:
         linear-gradient(rgba(0, 180, 216, 0.08) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0, 180, 216, 0.08) 1px, transparent 1px);
       background-size: 30px 30px;
@@ -1189,8 +1189,10 @@
     @media (prefers-reduced-motion: reduce) { .subpage-content { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
   </style>
   <link rel="stylesheet" href="./css/store-directory.css">
+  <link rel="stylesheet" href="./css/site-polish.css">
+  <script defer src="./js/site-polish.js"></script>
 </head>
-<body class="subpage">
+<body class="subpage mall-public">
 
   <!-- OUR FLOORS OVERLAY -->
   <div id="selection-shell">
@@ -1313,7 +1315,7 @@
           </div>
 
           <div class="spotlight-grid">
-            
+
             <!-- Anchor 1: Naivas 24/7 -->
             <a class="spotlight-card" href="./stores.html#store-g-01">
               <div class="spotlight-media">
@@ -1452,7 +1454,7 @@
           <span id="modalHoursPill" class="store-modal-pill status">Open Today</span>
         </div>
         <p id="modalDesc" class="store-modal-desc">Detailed store overview and product offerings.</p>
-        
+
         <div class="store-modal-info-grid">
           <div class="store-modal-info-item">
             <span class="store-modal-info-label">Operating Hours</span>
@@ -1489,8 +1491,8 @@
   <div class="ambient-light" aria-hidden="true"></div>
 
   <!-- Scripts -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="./assets/vendor/gsap.min.js"></script>
+  <script src="./assets/vendor/ScrollTrigger.min.js"></script>
   <script src="./js/selectionMenu.js"></script>
   <script src="./js/main.js"></script>
   <script src="./admin/default-data.js"></script>

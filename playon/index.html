@@ -27,7 +27,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Fredoka:wght@400;500;600;700;800;900&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
 
   <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/vendor/fontawesome/css/all.min.css" />
 
   <!-- Custom Stylesheet -->
   <link rel="stylesheet" href="css/style.css" />
@@ -76,9 +76,11 @@
     ]
   }
   </script>
+  <link rel="stylesheet" href="../css/site-polish.css">
+  <script defer src="../js/site-polish.js"></script>
 </head>
 
-<body id="top">
+<body id="top" class="mall-public playon-page">
 
   <!-- Playful Scroll Progress Bar with Moving Kart -->
   <div class="scroll-progress-track">
@@ -110,6 +112,10 @@
   <!-- 1. Sticky Theme Park Navigation Header -->
   <header>
     <div class="nav-container">
+      <a href="#top" class="playon-header-brand" aria-label="Play On home">
+        <img src="images/logo.png" alt="Play On">
+        <span>At Mombasa Mall</span>
+      </a>
       <!-- Desktop Nav Links (In Nav Order) -->
       <nav class="desktop-nav" aria-label="Primary Navigation">
         <a href="#top" class="active">Home</a>
@@ -122,7 +128,7 @@
         <a href="#testimonials">Testimonials</a>
         <a href="#booking">Book Now</a>
         <a href="#contact">Contact</a>
-        <a href="/index.html" rel="noopener noreferrer" class="nav-link-mall" title="Visit Mombasa Mall Website">
+        <a href="../index.html" rel="noopener noreferrer" class="nav-link-mall" title="Visit Mombasa Mall Website">
           <i class="fas fa-store"></i> Mombasa Mall
         </a>
       </nav>
@@ -152,7 +158,7 @@
       </button>
     </div>
     <div class="mobile-nav-links">
-      <a href="/index.html" rel="noopener noreferrer" class="nav-mall-pill">
+      <a href="../index.html" rel="noopener noreferrer" class="nav-mall-pill">
         <i class="fas fa-store"></i> Mombasa Mall Website
       </a>
       <a href="#top">🏠 Home</a>
@@ -1296,7 +1302,7 @@
         <div class="footer-col">
           <h4>Quick Links</h4>
           <ul class="footer-links-list">
-            <li><a href="/index.html"><i class="fas fa-chevron-right"></i> Mombasa Mall</a></li>
+            <li><a href="../index.html"><i class="fas fa-chevron-right"></i> Mombasa Mall</a></li>
             <li><a href="#top"><i class="fas fa-chevron-right"></i> Home</a></li>
             <li><a href="#features"><i class="fas fa-chevron-right"></i> Why Kids Love Us</a></li>
             <li><a href="#activities"><i class="fas fa-chevron-right"></i> 9 Play Zones</a></li>
@@ -1346,10 +1352,10 @@
 
           <!-- Embedded Google Map -->
           <div class="footer-map-container">
-            <iframe 
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3979.799738012658!2d39.66102147497543!3d-4.054700095919077!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x184012db3b7239ef%3A0x9a888c3a598c39db!2sMombasa%20Mall!5e0!3m2!1sen!2ske!4v1700000000000!5m2!1sen!2ske" 
-              allowfullscreen="" 
-              loading="lazy" 
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3979.799738012658!2d39.66102147497543!3d-4.054700095919077!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x184012db3b7239ef%3A0x9a888c3a598c39db!2sMombasa%20Mall!5e0!3m2!1sen!2ske!4v1700000000000!5m2!1sen!2ske"
+              allowfullscreen=""
+              loading="lazy"
               referrerpolicy="no-referrer-when-downgrade"
               title="Play-On Location at Mombasa Mall 2nd Floor">
             </iframe>
@@ -1401,8 +1407,8 @@
   </nav>
 
   <!-- Scripts: GSAP 3.12, ScrollTrigger, Lenis, Canvas Confetti, and Main.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="../assets/vendor/gsap.min.js"></script>
+  <script src="../assets/vendor/ScrollTrigger.min.js"></script>
   <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <script src="js/main.js"></script>

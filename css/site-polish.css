@@ -1,0 +1,69 @@
+/* Shared finishing details for the mall's public pages. */
+.mall-public { --mall-line: #d6e2ec; --mall-ink: #102f50; }
+.mall-icon { width: 20px; height: 20px; display: inline-block; vertical-align: middle; flex-shrink: 0; }
+.mall-icon-slot { display: inline-flex; align-items: center; vertical-align: -.2em; margin-right: .25em; color: inherit; }
+.amenity-icon .mall-icon { width: 30px; height: 30px; }
+.mall-public :focus-visible { outline: 3px solid #548db6; outline-offset: 4px; }
+.mall-skip-link { position: fixed; top: 12px; left: 12px; z-index: 20000; padding: 14px 20px; color: #fff; background: #102f50; transform: translateY(-200%); border-radius: 6px; text-decoration: none; }
+.mall-skip-link:focus { transform: none; }
+.mall-public .floating-header .site-logo { background: #102f50; padding: 8px 14px; border-radius: 8px; }
+.mall-public .floating-header .site-logo img { height: 30px; filter: brightness(0) invert(1) !important; }
+.mall-public .our-selection-btn { background: #102f50 !important; border-color: #102f50 !important; color: #fff !important; border-radius: 8px; box-shadow: 0 4px 14px #102f501a !important; }
+.mall-public .our-selection-btn span { color: inherit; }
+.mall-public .menu-btn { background: #fff !important; color: #102f50 !important; border-color: #d6e2ec !important; border-radius: 8px; }
+.mall-public .offcanvas-nav a { letter-spacing: -.02em; line-height: 1.25; padding-block: 15px; }
+.mall-public .offcanvas-nav a.is-active { box-shadow: inset 3px 0 #a3cef1; padding-left: 14px; }
+.mall-public .bento, .mall-public .activation-card { min-width: 0; }
+.mall-public .grid-2, .mall-public .grid-3, .mall-public .lp-event-grid { align-items: stretch; }
+.mall-public .section-header { gap: 12px; }
+.mall-public .section-h2 { line-height: 1.15; }
+.mall-public .site-footer a { transition: color .2s; }
+.mall-public .site-footer a:hover { color: #fff !important; }
+.mall-public input,.mall-public select,.mall-public textarea { font-size: max(16px,1em); }
+.mall-public .lp-link, .mall-public .cta-btn, .mall-public .btn { min-height: 44px; }
+.mall-public .lp-carousel-controls button { min-height: 44px; }
+.mall-public .lp-carousel-controls .lp-dot { min-height: 0; }
+.mall-public .lp-slide figcaption { max-width: calc(100% - 64px); }
+.mall-public .lp-event-copy h3 { line-height: 1.25; }
+.mall-public .category-next-banner { overflow: hidden; }
+.activation-page .subpage-content { background: #f4f7fa !important; padding: 108px clamp(20px,5vw,80px) 0; }
+.activation-page .subpage-cinematic-hero { border: 0; border-radius: 24px; overflow: hidden; background: #fff; }
+.activation-page .subpage-hero-stage { min-height: 440px; height: auto; }
+.activation-page .subpage-hero-split-title { position: relative; width: 100%; display: block; padding: 60px; }
+.activation-page .split-part { display: block; position: static; text-align: left; white-space: normal; font-size: clamp(38px,5vw,70px); line-height: 1.05; transform: none !important; opacity: 1 !important; }
+.activation-page .split-left { color: white; }
+.activation-page .split-right { color: #b9dcf2; margin-top: 12px; }
+.activation-page .subpage-hero-bottom-flow { padding: 32px; }
+.activation-page .activation-card { background: #fff; border: 1px solid #d6e2ec; border-radius: 16px; padding: 28px; }
+.activation-page .zone-badge { color: #246b9e; background: #eaf2f8; }
+.activation-page .ambient-light { display: none; }
+.playon-header-brand { display: none; }
+@media(max-width:992px) {
+ .playon-page .nav-container { justify-content: space-between; }
+ .playon-header-brand { display: flex; align-items: center; gap: 10px; color: #064e2d; font-size: 11px; font-weight: 800; text-decoration: none; }
+ .playon-header-brand img { width: 62px; height: 44px; object-fit: contain; }
+}
+@media(max-width:600px) {
+ .mall-public .floating-header .site-logo { padding: 8px 10px; }
+ .mall-public .floating-header .site-logo img { height: 26px; }
+ .mall-public .site-footer { padding: 40px 22px 28px !important; }
+ .mall-public .site-footer > div { gap: 28px !important; }
+ .mall-public .site-footer img { max-width: 100%; object-fit: contain; }
+ .mall-public .lp-carousel-controls { flex-wrap: wrap; gap: 12px; }
+ .mall-public .lp-section-heading { align-items: flex-start; }
+ .activation-page .subpage-content { padding-top: 88px; }
+ .activation-page .subpage-hero-stage { min-height: 360px; }
+ .activation-page .subpage-hero-split-title { padding: 32px 24px; }
+ .activation-page .split-part { font-size: clamp(28px,8vw,38px); }
+ .activation-page .subpage-hero-bottom-flow { padding: 24px; }
+ .activation-page .subpage-lead { font-size: 14px; }
+}
+@media(max-width:360px) {
+ .mall-public .floating-header { left: 12px; right: 12px; width: auto; gap: 8px; }
+ .mall-public .floating-header .site-logo { min-width: 0; padding: 8px; flex-shrink: 1; }
+ .mall-public .floating-header .site-logo img { width: 118px; height: auto; max-width: 100%; }
+ .mall-public .floating-header-actions { gap: 6px; flex-shrink: 0; }
+ .mall-public .our-selection-btn { padding: 10px; gap: 6px; font-size: 8px; }
+ .mall-public .menu-btn { width: 44px; height: 44px; min-width: 44px; }
+}
+@media(prefers-reduced-motion:reduce) { .mall-public *, .mall-public *::before,.mall-public *::after { scroll-behavior: auto !important; } .mall-public .mall-icon { animation: none; } }

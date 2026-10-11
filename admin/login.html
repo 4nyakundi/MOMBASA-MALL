@@ -123,17 +123,7 @@
       display: none;
       line-height: 1.4;
     }
-    .login-info {
-      background: rgba(245, 158, 11, 0.12);
-      border: 1px solid rgba(245, 158, 11, 0.25);
-      color: #fcd34d;
-      padding: 12px 16px;
-      border-radius: 12px;
-      font-size: 12.5px;
-      margin-top: 22px;
-      line-height: 1.6;
-      text-align: center;
-    }
+
     .login-footer-links {
       text-align: center;
       margin-top: 20px;
@@ -147,6 +137,9 @@
     .login-footer-links a:hover {
       color: var(--coral, #FF6F59);
     }
+      .login-title { color: #fff !important; }
+    .login-btn, .login-btn span { color: #fff !important; }
+    .login-btn { background: #246b9e; }
   </style>
 </head>
 <body class="login-page">
@@ -166,24 +159,22 @@
     <form id="loginForm">
       <div class="form-group">
         <label for="adminEmail">Email Address</label>
-        <input 
-          type="email" 
-          id="adminEmail" 
-          class="form-input" 
-          value="mombasamall01@gmail.com" 
-          required 
+        <input
+          type="email"
+          autocomplete="username" id="adminEmail"
+          class="form-input"
+          required
           placeholder="admin@mombasamall.co.ke"
         />
       </div>
 
       <div class="form-group">
         <label for="adminPassword">Password</label>
-        <input 
-          type="password" 
-          id="adminPassword" 
-          class="form-input" 
-          value="Mall@2024" 
-          required 
+        <input
+          type="password"
+          autocomplete="current-password" id="adminPassword"
+          class="form-input"
+          required
           placeholder="Enter password"
         />
       </div>
@@ -198,11 +189,7 @@
       </button>
     </form>
 
-    <div class="login-info">
-      <strong>Default Admin Account:</strong><br>
-      <code>mombasamall01@gmail.com</code> · <code>Mall@2024</code><br>
-      <span style="font-size:11px; opacity:0.85;">Connected to Mombasa Mall Live Database.</span>
-    </div>
+
 
     <div class="login-footer-links">
       <a href="../index.html">← Back to Public Website</a>
@@ -211,9 +198,9 @@
 
   <script type="module">
     import { auth } from '../js/firebase-config.js';
-    import { 
-      signInWithEmailAndPassword, 
-      createUserWithEmailAndPassword, 
+    import {
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword,
       onAuthStateChanged,
       setPersistence,
       browserLocalPersistence,
@@ -291,7 +278,7 @@
           window.location.replace('./index.html');
         }, 300);
       } else {
-        errorBox.textContent = 'Incorrect credentials. Please verify your email and password (Default: mombasamall01@gmail.com / Mall@2024).';
+        errorBox.textContent = 'Incorrect credentials. Please verify your email and password .';
         errorBox.style.display = 'block';
         submitBtn.disabled = false;
         submitBtnText.textContent = 'Sign In to Dashboard';

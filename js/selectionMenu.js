@@ -17,9 +17,12 @@
   var menu      = $('selection-menu');
   var closeBtn  = $('selection-close');
   var shell     = $('selection-shell');
+  if (menu) menu.inert = true;
 
   function openSelection() {
     if (!menu) return;
+    closeOffcanvas();
+    menu.inert = false;
     menu.querySelectorAll('.selection-card__cover img').forEach(function (img) {
       if (img.decode) img.decode().catch(function () {});
     });
@@ -28,14 +31,18 @@
     if (openBtn) openBtn.setAttribute('aria-expanded', 'true');
     // Enable pointer events on shell
     if (shell) shell.style.pointerEvents = 'all';
+    if (closeBtn) closeBtn.focus({preventScroll:true});
   }
 
   function closeSelection() {
     if (!menu) return;
+    var wasOpen = menu.classList.contains('is-open');
     menu.classList.remove('is-open');
     menu.setAttribute('aria-hidden', 'true');
     if (openBtn) openBtn.setAttribute('aria-expanded', 'false');
     if (shell) shell.style.pointerEvents = 'none';
+    menu.inert = true;
+    if (wasOpen && openBtn) openBtn.focus({preventScroll:true});
   }
 
   if (openBtn) {
@@ -78,6 +85,7 @@
 
     // Cards entrance animation when overlay opens
     function animateCardsIn() {
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       gsap.fromTo(cards,
         { y: 40, opacity: 0 },
         { y: 0, opacity: 1, stagger: 0.08, duration: 0.55, ease: 'power3.out' }
@@ -106,22 +114,17 @@
     var marquee = document.querySelector('.marquee-reveal');
     var footer = document.querySelector('.site-footer');
 
-    document.body.addEventListener('is-ready', revealHero);
+    var heroRevealed = false;
+    document.body.addEventListener('is-ready', revealHero, {once:true});
 
     // If body already has is-ready class (page reload), trigger immediately
-    if (document.body.classList.contains('is-ready')) {
+    if (document.body.classList.contains('is-ready') || !document.getElementById('site-preloader')) {
       revealHero();
-    } else {
-      // Poll for is-ready — preloader adds it
-      var readyCheck = setInterval(function () {
-        if (document.body.classList.contains('is-ready')) {
-          clearInterval(readyCheck);
-          revealHero();
-        }
-      }, 50);
     }
 
     function revealHero() {
+      if (heroRevealed || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      heroRevealed = true;
       var tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
       if (floatingHeader) {
@@ -181,33 +184,50 @@
   var offcanvas     = $('offcanvas-menu');
   var backdrop      = $('offcanvas-backdrop');
   var offcanvasClose = $('offcanvas-close');
+  if (offcanvas) offcanvas.inert = true;
 
   function openOffcanvas() {
+    closeSelection();
     if (offcanvas) {
+      offcanvas.inert = false;
       offcanvas.classList.add('is-open');
       offcanvas.setAttribute('aria-hidden', 'false');
     }
     if (backdrop) backdrop.classList.add('is-open');
     if (hamburger) hamburger.setAttribute('aria-expanded', 'true');
     document.body.style.overflow = 'hidden';
+    if (offcanvasClose) offcanvasClose.focus({preventScroll:true});
   }
 
   function closeOffcanvas() {
+    var wasOpen = offcanvas && offcanvas.classList.contains('is-open');
     if (offcanvas) {
       offcanvas.classList.remove('is-open');
       offcanvas.setAttribute('aria-hidden', 'true');
+      offcanvas.inert = true;
     }
     if (backdrop) backdrop.classList.remove('is-open');
     if (hamburger) hamburger.setAttribute('aria-expanded', 'false');
     document.body.style.overflow = '';
+    if (wasOpen && hamburger) hamburger.focus({preventScroll:true});
   }
 
   if (hamburger) hamburger.addEventListener('click', openOffcanvas);
   if (offcanvasClose) offcanvasClose.addEventListener('click', closeOffcanvas);
   if (backdrop) backdrop.addEventListener('click', closeOffcanvas);
+  if (offcanvas) offcanvas.querySelectorAll('a').forEach(function(link) { link.addEventListener('click',closeOffcanvas); });
 
   /* ---- Keyboard: Escape closes both overlays ---- */
   document.addEventListener('keydown', function (e) {
+    if (e.key === 'Tab') {
+      var activeMenu = menu && menu.classList.contains('is-open') ? menu : offcanvas && offcanvas.classList.contains('is-open') ? offcanvas : null;
+      if (activeMenu) {
+        var focusables = activeMenu.querySelectorAll('a[href],button:not([disabled])');
+        var first=focusables[0],last=focusables[focusables.length-1];
+        if (e.shiftKey && document.activeElement===first) { e.preventDefault();last.focus(); }
+        else if (!e.shiftKey && document.activeElement===last) { e.preventDefault();first.focus(); }
+      }
+    }
     if (e.key === 'Escape') {
       closeSelection();
       closeOffcanvas();

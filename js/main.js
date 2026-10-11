@@ -44,7 +44,7 @@
      3D PERSPECTIVE TILT ON CARDS
      ============================================================ */
   function init3DTilt() {
-    if (typeof gsap === 'undefined') return;
+    if (typeof gsap === 'undefined' || !matchMedia('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)').matches) return;
     const cards = document.querySelectorAll('.bento');
 
     cards.forEach((card) => {
@@ -77,46 +77,10 @@
   }
 
   /* ============================================================
-     GENERIC LIGHTBOX (for Gallery & Media)
-     ============================================================ */
-  window.openLightbox = function (src) {
-    let modal = document.getElementById('lightbox-modal');
-    if (!modal) {
-      modal = document.createElement('div');
-      modal.id = 'lightbox-modal';
-      modal.className = 'lightbox-modal';
-      modal.innerHTML = `
-        <div class="lightbox-img-wrap">
-          <button class="lightbox-close-btn" onclick="closeLightbox()">&times;</button>
-          <img id="lightbox-img" src="" alt="Preview">
-        </div>
-      `;
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeLightbox();
-      });
-      document.body.appendChild(modal);
-    }
-
-    const img = modal.querySelector('#lightbox-img');
-    if (img) img.src = src;
-    modal.classList.add('is-open');
-  };
-
-  window.closeLightbox = function () {
-    const modal = document.getElementById('lightbox-modal');
-    if (modal) modal.classList.remove('is-open');
-  };
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      window.closeLightbox();
-    }
-  });
-
-  /* ============================================================
      SUBPAGE CINEMATIC HERO SPLIT-PAN & PARALLAX ENGINE
      ============================================================ */
   function initCinematicSubpageHero() {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches || document.body.classList.contains('activation-page')) return;
     const hero = document.querySelector('.subpage-cinematic-hero');
     if (!hero) return;
 
