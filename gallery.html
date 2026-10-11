@@ -3,8 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Explore Mombasa Mall through photography, image slideshows and our video walkthrough." />
   <title>Gallery — Mombasa Mall</title>
   <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="./css/lifestyle-pages.css" />
+  <link rel="stylesheet" href="./css/gallery-experience.css" />
   <style>
     .lightbox-modal {
       position: fixed;
@@ -53,13 +56,13 @@
     }
   </style>
 </head>
-<body class="subpage">
+<body class="subpage lifestyle-page gallery-page">
 
   <!-- OUR FLOORS OVERLAY -->
   <div id="selection-shell">
     <nav id="selection-menu" aria-hidden="true" aria-label="Our floors">
       <div class="selection-cards">
-        <a href="./stores/index.html" class="selection-card">
+        <a href="./stores.html" class="selection-card">
           <span class="selection-card__panel">
             <span class="selection-card__eyebrow">Floor G — Retail</span>
             <span class="selection-card__title">Ground<br>Floor</span>
@@ -116,7 +119,7 @@
     </div>
     <nav class="offcanvas-nav">
       <a href="./index.html">Home</a>
-      <a href="./stores/index.html">Store Directory</a>
+      <a href="./stores.html">Store Directory</a>
       <a href="./news-events.html">Events &amp; News</a>
       <a href="./gallery.html">Gallery</a>
       <a href="./play-on.html">Play On</a>
@@ -136,128 +139,59 @@
   <div id="page-stage">
     <div class="subpage-grid">
 
-      <!-- LEFT NAV -->
-      <nav class="subpage-nav site-nav" aria-label="Primary">
-        <header class="site-logo">
+      <!-- FLOATING DUAL-ACTION HEADER -->
+      <header class="floating-header" aria-label="Primary Navigation">
+        <div class="site-logo">
           <a href="./index.html" aria-label="Mombasa Mall — Home">
             <img src="./assets/Logo/Mall Logo/MOMBASA MALL2.0.png" alt="Mombasa Mall" width="160" decoding="async">
           </a>
-        </header>
-        <a href="./about-us.html" class="site-nav__link link-underline">About</a>
-        <a href="./stores/index.html" class="site-nav__link link-underline">Stores</a>
-        <a href="./gallery.html" class="site-nav__link link-underline is-active">Gallery</a>
-        <a href="./activations/index.html" class="site-nav__link link-underline">Activations</a>
-        <a href="./about-us.html#contact" class="site-nav__link link-underline">Contact</a>
-        <a href="./admin/login.html" class="sys-btn" title="Staff System Portal">sys.</a>
-        <div class="site-nav__actions">
-          <button type="button" class="our-selection-btn" id="open-selection" aria-haspopup="true" aria-expanded="false" aria-controls="selection-menu">
+        </div>
+
+        <div class="floating-header-actions">
+          <button
+            type="button"
+            class="our-selection-btn"
+            id="open-selection"
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-controls="selection-menu"
+          >
             <span>Our Floors</span>
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-              <rect width="4" height="4" fill="currentColor"/>
-              <rect x="9" width="4" height="4" fill="currentColor"/>
-              <rect y="9" width="4" height="4" fill="currentColor"/>
-              <rect x="9" y="9" width="4" height="4" fill="currentColor"/>
+            <svg width="14" height="14" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+              <rect width="4.5" height="4.5" rx="1" fill="currentColor"/>
+              <rect x="8.5" width="4.5" height="4.5" rx="1" fill="currentColor"/>
+              <rect y="8.5" width="4.5" height="4.5" rx="1" fill="currentColor"/>
+              <rect x="8.5" y="8.5" width="4.5" height="4.5" rx="1" fill="currentColor"/>
             </svg>
           </button>
+
           <button type="button" class="menu-btn" id="hamburger" aria-label="Open menu" aria-expanded="false">
             <svg width="22" height="12" viewBox="0 0 22 12" fill="none" aria-hidden="true">
-              <rect width="22" height="3" fill="currentColor"/>
-              <rect y="9" width="12" height="3" fill="currentColor"/>
+              <rect width="22" height="3" rx="1.5" fill="currentColor"/>
+              <rect y="9" width="13" height="3" rx="1.5" fill="currentColor"/>
             </svg>
           </button>
         </div>
-      </nav>
+      </header>
 
       <!-- RIGHT SCROLLABLE CONTENT -->
       <div class="subpage-content">
 
-        <!-- CINEMATIC SUBPAGE HERO -->
-        <div class="subpage-cinematic-hero">
-          <div class="subpage-hero-stage">
-            <img src="./assets/Logo/Random pics/MOMBASA MALL.jpg" alt="Gallery and Media" class="subpage-hero-bg-img">
-            <div class="subpage-hero-overlay"></div>
-            <div class="subpage-hero-split-title">
-              <span class="split-part split-left">GALLERY &amp;</span>
-              <span class="split-part split-right">MEDIA</span>
-            </div>
-          </div>
-          <div class="subpage-hero-bottom-flow">
-            <span class="subpage-eyebrow">Visual Tour &amp; Architectural Moments</span>
-            <p class="subpage-lead">Take a visual tour of Mombasa Mall — our retail spaces, events, architectural details and the vibrant life of Mombasa's central business district.</p>
-          </div>
-        </div>
+        <div class="gallery-progress" aria-hidden="true"><span></span></div>
+        <section class="lp-hero gallery-hero">
+          <img src="./assets/lifestyle/mall-night.webp" alt="Mombasa Mall illuminated at night" fetchpriority="high" decoding="async">
+          <div class="gallery-hero-top"><span>MOMBASA MALL — VISUAL JOURNAL</span><span>MWEMBE TAYARI, KE</span></div>
+          <div class="lp-hero-copy"><span class="lp-kicker">The places. The people. The feeling.</span><h1>A city of<span>little moments.</span></h1><p>Look a little closer. Discover the everyday energy, familiar faces, and unexpected views that make this place yours.</p><div class="lp-links"><a href="#photos" class="lp-link">Discover the collection <span aria-hidden="true">↗</span></a><a href="#videos" class="lp-link secondary">Watch the film <span aria-hidden="true">↗</span></a></div></div>
+          <div class="gallery-hero-bottom"><span>01 / THE VISUAL JOURNAL</span><span>SCROLL TO EXPLORE ↓</span></div>
+        </section>
+        <nav class="gallery-chapters" aria-label="Gallery chapters"><a href="#highlights">01 <span>In focus</span></a><a href="#photos">02 <span>The collection</span></a><a href="#videos">03 <span>In motion</span></a><span class="gallery-location">Mombasa, Kenya / Coastal life</span></nav>
+        <div class="gallery-intro"><span class="lp-kicker">A place to make memories</span><h2>More than a destination.<br><em>A feeling you take with you.</em></h2><p>The glow after dark. A favourite find. A moment shared. This is Mombasa Mall, through a different lens.</p></div>
 
-        <!-- PHOTO GALLERY -->
-        <div id="photos" class="section-header"><h2 class="section-h2">Photo Albums</h2></div>
-        <div class="grid-3" id="photoGalleryGrid" style="margin-bottom:48px;">
-
-          <div class="bento" style="padding:0;overflow:hidden;aspect-ratio:4/3;cursor:pointer;" onclick="openLightbox('./assets/Logo/Random pics/MOMBASA MALL.jpg')">
-            <img src="./assets/Logo/Random pics/MOMBASA MALL.jpg" alt="Mombasa Mall Exterior" style="width:100%;height:100%;object-fit:cover;transition:transform 0.4s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-          </div>
-
-          <div class="bento" style="padding:0;overflow:hidden;aspect-ratio:4/3;cursor:pointer;" onclick="openLightbox('./assets/Logo/Random pics/events - Copy.jpeg')">
-            <img src="./assets/Logo/Random pics/events - Copy.jpeg" alt="Atrium Events" style="width:100%;height:100%;object-fit:cover;transition:transform 0.4s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-          </div>
-
-          <div class="bento" style="padding:0;overflow:hidden;aspect-ratio:4/3;cursor:pointer;" onclick="openLightbox('./assets/Logo/Random pics/Staff.jpeg')">
-            <img src="./assets/Logo/Random pics/Staff.jpeg" alt="Mall Staff & Hospitality" style="width:100%;height:100%;object-fit:cover;transition:transform 0.4s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-          </div>
-
-          <div class="bento" style="padding:0;overflow:hidden;aspect-ratio:4/3;cursor:pointer;" onclick="openLightbox('./assets/Logo/Random pics/fruits and vegetabls.jpeg')">
-            <img src="./assets/Logo/Random pics/fruits and vegetabls.jpeg" alt="Fresh Supermarket Market" style="width:100%;height:100%;object-fit:cover;transition:transform 0.4s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-          </div>
-
-          <div class="bento" style="padding:0;overflow:hidden;aspect-ratio:4/3;cursor:pointer;" onclick="openLightbox('./assets/Logo/Random pics/Rounder about.jpeg')">
-            <img src="./assets/Logo/Random pics/Rounder about.jpeg" alt="Mwembe Tayari Roundabout View" style="width:100%;height:100%;object-fit:cover;transition:transform 0.4s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-          </div>
-
-          <div class="bento" style="padding:0;overflow:hidden;aspect-ratio:4/3;cursor:pointer;" onclick="openLightbox('./assets/Logo/Shops Logo/Naivasmain.jpeg')">
-            <img src="./assets/Logo/Shops Logo/Naivasmain.jpeg" alt="Naivas 24/7 Supermarket" style="width:100%;height:100%;object-fit:cover;transition:transform 0.4s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-          </div>
-
-          <div class="bento" style="padding:0;overflow:hidden;aspect-ratio:4/3;cursor:pointer;" onclick="openLightbox('./assets/Logo/Shops Logo/West 11.jpg')">
-            <img src="./assets/Logo/Shops Logo/West 11.jpg" alt="West 11 Rooftop Dining" style="width:100%;height:100%;object-fit:cover;transition:transform 0.4s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-          </div>
-
-          <div class="bento" style="padding:0;overflow:hidden;aspect-ratio:4/3;cursor:pointer;" onclick="openLightbox('./assets/Logo/Shops Logo/Payless.jpg')">
-            <img src="./assets/Logo/Shops Logo/Payless.jpg" alt="Payless Shoes Store" style="width:100%;height:100%;object-fit:cover;transition:transform 0.4s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-          </div>
-
-          <div class="bento" style="display:flex;align-items:center;justify-content:center;aspect-ratio:4/3;flex-direction:column;gap:12px;background:rgba(163,206,241,0.08);">
-            <span style="font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:0.14em;color:var(--steel-blue);">HD Media Archive</span>
-            <span style="font-family:var(--font-display);font-size:24px;font-weight:700;color:var(--dusk-blue);">400+ Photos</span>
-            <span style="font-size:11px;color:var(--text-muted);">Updated Weekly</span>
-          </div>
-
-        </div>
-
-        <!-- VIDEO SECTION -->
-        <div id="videos" class="section-header"><h2 class="section-h2">Videos &amp; Drone Tour</h2></div>
-        <div class="bento" style="padding:0;overflow:hidden;margin-bottom:48px;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;background:rgba(10,29,55,0.06);border-radius:16px;">
-          <video autoplay muted loop playsinline controls style="width:100%;height:100%;object-fit:cover;display:none;" id="galleryVideo">
-            <!-- Video file will be added when available -->
-          </video>
-          <div id="galleryVideoPlaceholder" style="text-align:center;padding:48px;">
-            <span style="font-size:40px;display:block;margin-bottom:12px;">🎬</span>
-            <p style="font-family:'Clash Display',sans-serif;font-size:18px;font-weight:700;color:var(--dusk-blue,#0A1D37);margin:0 0 6px;">Drone Tour &amp; Walkthrough</p>
-            <p style="font-size:13px;color:var(--text-muted,#4B5966);margin:0;">Video content coming soon</p>
-          </div>
-        </div>
-
-
-      </div><!-- /.subpage-content -->
-    </div><!-- /.subpage-grid -->
-  </div><!-- /#page-stage -->
-
-  <!-- LIGHTBOX MODAL -->
-  <div id="lightboxModal" class="lightbox-modal" aria-hidden="true" role="dialog" aria-modal="true" onclick="closeLightbox()">
-    <div class="lightbox-img-wrap" onclick="event.stopPropagation()">
-      <button class="lightbox-close-btn" onclick="closeLightbox()" aria-label="Close image">&times;</button>
-      <img id="lightboxImg" src="" alt="Enlarged view" loading="lazy">
-    </div>
-  </div>
-
-
+<section class="lp-section gallery-highlights" id="highlights"><div class="lp-section-heading"><div><span class="lp-kicker">The mall in focus</span><h2>A different view, every slide.</h2></div><p>Swipe through, use the arrows, or play the slideshow.</p></div><div class="lp-carousel" data-carousel role="region" aria-roledescription="carousel" aria-label="Mall in focus"><div class="lp-carousel-track" tabindex="0" aria-label="Mall in focus. Use left and right arrow keys to browse."><figure class="lp-slide"><img src="./assets/lifestyle/facade-night.webp" alt="A brighter welcome" loading="lazy" decoding="async"><figcaption><small>Architecture / Nightfall</small><strong>A brighter welcome</strong></figcaption></figure><figure class="lp-slide"><img src="./assets/lifestyle/city-night.webp" alt="The city, from a new perspective" loading="lazy" decoding="async"><figcaption><small>Mombasa / From above</small><strong>The city, from a new perspective</strong></figcaption></figure><figure class="lp-slide"><img src="./assets/lifestyle/community.webp" alt="Moments that bring us together" loading="lazy" decoding="async"><figcaption><small>Community / At the mall</small><strong>Moments that bring us together</strong></figcaption></figure><figure class="lp-slide"><img src="./assets/lifestyle/rudra.webp" alt="Find something that feels like you" loading="lazy" decoding="async"><figcaption><small>Shopping / Rudra</small><strong>Find something that feels like you</strong></figcaption></figure><figure class="lp-slide"><img src="./assets/lifestyle/mall-day.webp" alt="Your destination in the city" loading="lazy" decoding="async"><figcaption><small>Architecture / Daylight</small><strong>Your destination in the city</strong></figcaption></figure><figure class="lp-slide"><img src="./assets/lifestyle/team.webp" alt="A warm welcome, every day" loading="lazy" decoding="async"><figcaption><small>People / Our team</small><strong>A warm welcome, every day</strong></figcaption></figure></div><div class="lp-carousel-controls"><div class="lp-control-group"><button type="button" data-prev aria-label="Previous slide in Mall in focus">←</button><button type="button" data-next aria-label="Next slide in Mall in focus">→</button><span class="lp-carousel-status" aria-live="off"></span></div><div class="lp-dots"></div><button type="button" data-play aria-pressed="false">Play slideshow</button></div></div></section>
+<section class="lp-section" id="photos"><div class="lp-section-heading"><div><span class="lp-kicker">Explore the collection</span><h2>Stories in every frame.</h2></div><p>Tap a photo to enlarge it. Browse the collection by theme.</p></div><div class="lp-gallery-toolbar"><button class="lp-filter" data-gallery-filter="all" aria-pressed="true">All photos</button><button class="lp-filter" data-gallery-filter="spaces" aria-pressed="false">Spaces &amp; architecture</button><button class="lp-filter" data-gallery-filter="shopping" aria-pressed="false">Shopping</button><button class="lp-filter" data-gallery-filter="people" aria-pressed="false">People &amp; moments</button><span id="galleryCount" class="lp-gallery-count" aria-live="polite"></span></div><div class="lp-photo-grid" id="photoGalleryGrid"></div><noscript><p>View <a href="./assets/lifestyle/facade-night.webp">the mall at night</a> or <a href="./assets/lifestyle/community.webp">community moments</a>.</p></noscript></section>
+<section class="gallery-postcard" aria-label="Mombasa after dark"><div class="gallery-postcard-image"><img src="./assets/lifestyle/city-night.webp" alt="The lights of Mombasa seen from above" loading="lazy"></div><div class="gallery-postcard-copy"><span class="lp-kicker">Postcards from Mombasa / 001</span><h2>When the city lights up,<br>we come alive.</h2><p>A different perspective on the place we call home. Right here, in the heart of Mwembe Tayari.</p><a href="./about-us.html" class="lp-link">Discover our story <span aria-hidden="true">↗</span></a></div></section>
+<section class="lp-section" id="videos"><div class="lp-section-heading"><div><span class="lp-kicker">A closer look</span><h2>Take the walkthrough.</h2></div><p>Explore the mall in motion. Press play to begin.</p></div><div class="gallery-film"><span class="gallery-film-label">MOMBASA MALL / THE WALKTHROUGH</span><video class="lp-video" id="galleryVideo" controls playsinline preload="none" poster="./assets/lifestyle/mall-day.webp"><source src="./assets/home.mp4.mp4" type="video/mp4">Your browser does not support video playback.</video></div></section>
+<section class="gallery-visit"><span class="lp-kicker">Your next moment starts here</span><h2>Come for a look.<br>Stay for the experience.</h2><a href="./stores.html" class="lp-link">Find your next favourite <span aria-hidden="true">↗</span></a></section>
   <!-- FOOTER -->
   <footer class="site-footer" style="background:#071527; color:#fff; border-top:1px solid rgba(255,255,255,0.08); padding:60px 48px 32px;">
     <div style="max-width:1200px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:space-between; gap:40px; margin-bottom:40px;">
@@ -272,7 +206,7 @@
           <h4 style="color:#fff; font-size:13px; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:14px; border-left:3px solid var(--coral); padding-left:8px;">Quick Links</h4>
           <div style="display:flex; flex-direction:column; gap:8px; font-size:14px;">
             <a href="./index.html" style="color:rgba(255,255,255,0.65); text-decoration:none;">Home</a>
-            <a href="./stores/index.html" style="color:rgba(255,255,255,0.65); text-decoration:none;">Store Directory</a>
+            <a href="./stores.html" style="color:rgba(255,255,255,0.65); text-decoration:none;">Store Directory</a>
             <a href="./news-events.html" style="color:rgba(255,255,255,0.65); text-decoration:none;">News &amp; Events</a>
             <a href="./gallery.html" style="color:rgba(255,255,255,0.65); text-decoration:none;">Photo Gallery</a>
           </div>
@@ -292,70 +226,30 @@
       <p>© 2026 Mombasa Mall. All rights reserved. Mwembe Tayari, Mombasa, Kenya.</p>
     </div>
   </footer>
+      </div><!-- /.subpage-content -->
+    </div><!-- /.subpage-grid -->
+  </div><!-- /#page-stage -->
+
+<div id="lightboxModal" class="lightbox-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Gallery image viewer" hidden>
+  <div class="lightbox-img-wrap">
+    <div class="gallery-viewer-header"><span>MOMBASA MALL / THE COLLECTION</span><button id="lightboxClose" aria-label="Close image">Close ×</button></div>
+    <div class="gallery-viewer-stage"><img id="lightboxImg" alt=""></div>
+    <div class="gallery-viewer-footer"><p id="lightboxCaption" class="lp-lightbox-caption" aria-live="polite"></p><div class="lp-control-group"><button type="button" class="lp-filter" id="lightboxPrev" aria-label="Previous image">←</button><button type="button" class="lp-filter" id="lightboxZoom" aria-pressed="false">Zoom in +</button><button type="button" class="lp-filter" id="lightboxNext" aria-label="Next image">→</button></div></div>
+    <div id="galleryThumbnails" class="gallery-thumbnails" aria-label="Choose an image"></div>
+  </div>
+</div>
+
+
 
   <div class="ambient-light" aria-hidden="true"></div>
-  <div class="cursor"></div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="./js/selectionMenu.js"></script>
   <script src="./js/main.js"></script>
   <script src="./js/site-data-init.js"></script>
 
-  <script>
-    window.openLightbox = function(src) {
-      const modal = document.getElementById('lightboxModal');
-      const img = document.getElementById('lightboxImg');
-      if (modal && img) {
-        img.src = src;
-        modal.classList.add('is-open', 'is-active');
-        modal.setAttribute('aria-hidden', 'false');
-        document.body.style.overflow = 'hidden';
-      }
-    };
-    window.closeLightbox = function() {
-      const modal = document.getElementById('lightboxModal');
-      if (modal) {
-        modal.classList.remove('is-open', 'is-active');
-        modal.setAttribute('aria-hidden', 'true');
-        document.body.style.overflow = '';
-      }
-    };
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeLightbox();
-    });
-  </script>
-
-
-  <!-- Live Firestore Gallery Populator -->
-  <script type="module">
-    import { db } from './js/firebase-config.js';
-    import { collection, getDocs } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
-
-    async function loadFirestoreGallery() {
-      try {
-        const snap = await getDocs(collection(db, 'gallery'));
-        if (!snap.empty) {
-          const items = snap.docs.map(d => d.data()).sort((a, b) => (a.sortOrder || 99) - (b.sortOrder || 99));
-          const grid = document.getElementById('photoGalleryGrid');
-          if (grid && items.length > 0) {
-            grid.innerHTML = items.map(item => `
-              <div class="bento" style="padding:0;overflow:hidden;aspect-ratio:4/3;cursor:pointer;" onclick="openLightbox('${item.imageUrl}')">
-                <img src="${item.imageUrl}" alt="${item.caption || 'Mombasa Mall'}" style="width:100%;height:100%;object-fit:cover;transition:transform 0.4s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-              </div>
-            `).join('') + `
-              <div class="bento" style="display:flex;align-items:center;justify-content:center;aspect-ratio:4/3;flex-direction:column;gap:12px;background:rgba(163,206,241,0.08);">
-                <span style="font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:0.14em;color:var(--steel-blue);">HD Media Archive</span>
-                <span style="font-family:var(--font-display);font-size:24px;font-weight:700;color:var(--dusk-blue);">${items.length}+ Photos</span>
-                <span style="font-size:11px;color:var(--text-muted);">Updated Weekly</span>
-              </div>
-            `;
-          }
-        }
-      } catch (e) {
-        console.warn('Gallery live load skipped (using static photos):', e);
-      }
-    }
-    document.addEventListener('DOMContentLoaded', loadFirestoreGallery);
-  </script>
+  <script src="./js/lifestyle-pages.js"></script>
+  <script src="./js/gallery-experience.js"></script>
 </body>
 </html>

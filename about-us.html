@@ -3,23 +3,25 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Meet Mombasa Mall: shopping, dining, community and essential services in the heart of Mwembe Tayari." />
   <title>About Us — Mombasa Mall</title>
   <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="./css/lifestyle-pages.css" />
 </head>
-<body class="subpage">
+<body class="subpage lifestyle-page">
 
   <!-- OUR FLOORS OVERLAY -->
   <div id="selection-shell">
     <nav id="selection-menu" aria-hidden="true" aria-label="Our floors">
       <div class="selection-cards">
-        <a href="./stores/index.html" class="selection-card">
+        <a href="./stores.html" class="selection-card">
           <span class="selection-card__panel">
             <span class="selection-card__eyebrow">Floor G — Retail</span>
             <span class="selection-card__title">Ground<br>Floor</span>
             <span class="selection-card__desc">Anchor Retail, Banking<br>&amp; Essential Services</span>
           </span>
           <span class="selection-card__cover" aria-hidden="true">
-            <img data-selection-cover="./assets/Logo/Shops Logo/Naivasmain.jpeg" alt="" decoding="async">
+            <img data-selection-cover="./assets/lifestyle/naivas.webp" alt="" decoding="async">
           </span>
         </a>
         <a href="./news-events.html" class="selection-card">
@@ -69,7 +71,7 @@
     </div>
     <nav class="offcanvas-nav">
       <a href="./index.html">Home</a>
-      <a href="./stores/index.html">Store Directory</a>
+      <a href="./stores.html">Store Directory</a>
       <a href="./news-events.html">Events &amp; News</a>
       <a href="./gallery.html">Gallery</a>
       <a href="./play-on.html">Play On</a>
@@ -88,70 +90,57 @@
   <div id="page-stage">
     <div class="subpage-grid">
 
-      <!-- LEFT NAV -->
-      <nav class="subpage-nav site-nav" aria-label="Primary">
-        <header class="site-logo">
+      <!-- FLOATING DUAL-ACTION HEADER -->
+      <header class="floating-header" aria-label="Primary Navigation">
+        <div class="site-logo">
           <a href="./index.html" aria-label="Mombasa Mall — Home">
             <img src="./assets/Logo/Mall Logo/MOMBASA MALL2.0.png" alt="Mombasa Mall" width="160" decoding="async">
           </a>
-        </header>
-        <a href="./about-us.html" class="site-nav__link link-underline is-active">About</a>
-        <a href="./stores/index.html" class="site-nav__link link-underline">Stores</a>
-        <a href="./gallery.html" class="site-nav__link link-underline">Gallery</a>
-        <a href="./about-us.html#contact" class="site-nav__link link-underline">Contact</a>
-        <a href="./admin/login.html" class="sys-btn" title="Staff System Portal">sys.</a>
-        <div class="site-nav__actions">
-          <button type="button" class="our-selection-btn" id="open-selection" aria-haspopup="true" aria-expanded="false" aria-controls="selection-menu">
+        </div>
+
+        <div class="floating-header-actions">
+          <button
+            type="button"
+            class="our-selection-btn"
+            id="open-selection"
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-controls="selection-menu"
+          >
             <span>Our Floors</span>
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-              <rect width="4" height="4" fill="currentColor"/><rect x="9" width="4" height="4" fill="currentColor"/>
-              <rect y="9" width="4" height="4" fill="currentColor"/><rect x="9" y="9" width="4" height="4" fill="currentColor"/>
+            <svg width="14" height="14" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+              <rect width="4.5" height="4.5" rx="1" fill="currentColor"/>
+              <rect x="8.5" width="4.5" height="4.5" rx="1" fill="currentColor"/>
+              <rect y="8.5" width="4.5" height="4.5" rx="1" fill="currentColor"/>
+              <rect x="8.5" y="8.5" width="4.5" height="4.5" rx="1" fill="currentColor"/>
             </svg>
           </button>
+
           <button type="button" class="menu-btn" id="hamburger" aria-label="Open menu" aria-expanded="false">
             <svg width="22" height="12" viewBox="0 0 22 12" fill="none" aria-hidden="true">
-              <rect width="22" height="3" fill="currentColor"/><rect y="9" width="12" height="3" fill="currentColor"/>
+              <rect width="22" height="3" rx="1.5" fill="currentColor"/>
+              <rect y="9" width="13" height="3" rx="1.5" fill="currentColor"/>
             </svg>
           </button>
         </div>
-      </nav>
+      </header>
 
       <!-- CONTENT -->
       <div class="subpage-content">
 
-        <!-- CINEMATIC SUBPAGE HERO -->
-        <div class="subpage-cinematic-hero">
-          <div class="subpage-hero-stage">
-            <img src="./assets/Logo/Random pics/Rounder about.jpeg" alt="About Mombasa Mall" class="subpage-hero-bg-img">
-            <div class="subpage-hero-overlay"></div>
-            <div class="subpage-hero-split-title">
-              <span class="split-part split-left">ABOUT</span>
-              <span class="split-part split-right">US</span>
-            </div>
-          </div>
-          <div class="subpage-hero-bottom-flow">
-            <span class="subpage-eyebrow">Our Story, Journal &amp; Visitor Reviews</span>
-            <p class="subpage-lead">Mombasa's premier shopping, dining, entertainment and lifestyle destination — positioned at the heart of Mwembe Tayari along Jomo Kenyatta Avenue, serving the Coast since 2012.</p>
-          </div>
-        </div>
+        <section class="lp-hero"><img src="./assets/lifestyle/facade-night.webp" alt="Mombasa Mall" fetchpriority="high" decoding="async"><div class="lp-hero-copy"><span class="lp-kicker">Mombasa Mall / Our story</span><h1>At the heart<span>of everyday life.</span></h1><p>Shopping, dining, community, and a warm coastal welcome. Discover the people and places that make Mombasa Mall.</p><div class="lp-links"><a href="#our-story" class="lp-link ">Meet your mall <span aria-hidden="true">↗</span></a><a href="#contact" class="lp-link secondary">Get in touch <span aria-hidden="true">↗</span></a></div></div></section>
 
-        <!-- REALEVATE EVERGREEN INTRO SECTION -->
-        <div class="category-gallery-intro">
-          <span class="category-gallery-intro__line" aria-hidden="true"></span>
-          <h2>Where Commerce, Culture &amp; Coastal Luxury Converge</h2>
-          <p>Mombasa Mall was engineered as a dynamic vertical urban destination — uniting everyday essentials, tier-1 banking, international retail, vibrant entertainment, and panoramic rooftop dining under one architectural roof.</p>
-        </div>
-
+<section class="lp-about-intro" id="our-story"><div><span class="lp-kicker">Rooted in Mombasa</span><h2>Your everyday destination.<br>A place to belong.</h2><p>In the heart of Mwembe Tayari, Mombasa Mall brings shopping, dining, entertainment and essential services together under one roof.</p><p>Pick up the everyday essentials, discover a local favourite, or spend time with friends and family. From the first visit to your weekly routine, there is always another corner to explore.</p><a class="lp-link" href="./stores.html">Discover our stores <span aria-hidden="true">↗</span></a></div><img src="./assets/lifestyle/mall-day.webp" alt="Mombasa Mall facade in daylight" loading="lazy" decoding="async"></section>
         <!-- REALEVATE ALTERNATING VALUES / STATS ROWS -->
         <div class="category-values">
           
           <!-- Row 1 -->
           <article class="category-values__row">
             <figure class="category-values__figure">
-              <img src="./assets/Logo/Shops Logo/Naivasmain.jpeg" alt="Retail Brands" loading="lazy">
+              <img src="./assets/lifestyle/naivas.webp" alt="Retail Brands" loading="lazy">
             </figure>
             <div class="category-values__copy">
-              <h3 class="category-values__stat">120+<br/><span>Brands</span></h3>
+              <h3 class="category-values__stat">24/7<br/><span>Naivas Hypermarket</span></h3>
               <p class="category-values__desc">From East Africa's flagship 24/7 Naivas Hypermarket to bespoke jewellery at Lovisa and artisan leather at Denri, we curate premier retail for every lifestyle need.</p>
             </div>
           </article>
@@ -159,18 +148,18 @@
           <!-- Row 2 (Reversed) -->
           <article class="category-values__row category-values__row--reverse">
             <div class="category-values__copy">
-              <h3 class="category-values__stat">150,000<br/><span>Daily Footfall</span></h3>
+              <h3 class="category-values__stat">City Centre<br/><span>Mwembe Tayari</span></h3>
               <p class="category-values__desc">Positioned at the prime transit nexus of Mwembe Tayari and Jomo Kenyatta Avenue, capturing Mombasa's highest commuter and shopper density day and night.</p>
             </div>
             <figure class="category-values__figure">
-              <img src="./assets/Logo/Random pics/Rounder about.jpeg" alt="Daily Footfall" loading="lazy">
+              <img src="./assets/lifestyle/mall-day.webp" alt="Daily Footfall" loading="lazy">
             </figure>
           </article>
 
           <!-- Row 3 -->
           <article class="category-values__row">
             <figure class="category-values__figure">
-              <img src="./assets/Logo/Random pics/events - Copy.jpeg" alt="Shopping Floors" loading="lazy">
+              <img src="./assets/lifestyle/community.webp" alt="Shopping Floors" loading="lazy">
             </figure>
             <div class="category-values__copy">
               <h3 class="category-values__stat">5 Zoned<br/><span>Floors</span></h3>
@@ -188,12 +177,13 @@
           <div>
             <h2 class="category-quote__text">&ldquo;From 24-hour hypermarkets to rooftop ocean breezes, Mombasa Mall sets the standard for modern coastal urban life.&rdquo;</h2>
             <div class="category-quote__attrib">
-              <p class="category-quote__name">East Africa Commercial Review</p>
-              <p class="category-quote__source">/ Coastal Lifestyle Report / 2026</p>
+              <p class="category-quote__name">Our promise</p>
+              <p class="category-quote__source">/ Shopping · Community · Coastal Life</p>
             </div>
           </div>
         </div>
 
+<section class="lp-section"><div class="lp-section-heading"><div><span class="lp-kicker">A day at your mall</span><h2>Come for one thing. Discover more.</h2></div><p>A few of the spaces and experiences that shape our everyday story.</p></div><div class="lp-carousel" data-carousel role="region" aria-roledescription="carousel" aria-label="A day at Mombasa Mall"><div class="lp-carousel-track" tabindex="0" aria-label="A day at Mombasa Mall. Use left and right arrow keys to browse."><figure class="lp-slide"><img src="./assets/lifestyle/naivas.webp" alt="A little everyday convenience" loading="lazy" decoding="async"><figcaption><small>Shop / Naivas</small><strong>A little everyday convenience</strong></figcaption></figure><figure class="lp-slide"><img src="./assets/lifestyle/community.webp" alt="Room for a shared moment" loading="lazy" decoding="async"><figcaption><small>Experience / Community</small><strong>Room for a shared moment</strong></figcaption></figure><figure class="lp-slide"><img src="./assets/lifestyle/grand-computer.webp" alt="Discover your next favourite" loading="lazy" decoding="async"><figcaption><small>Explore / Our stores</small><strong>Discover your next favourite</strong></figcaption></figure><figure class="lp-slide"><img src="./assets/lifestyle/mall-night.webp" alt="Stay a little longer" loading="lazy" decoding="async"><figcaption><small>Visit / Day to night</small><strong>Stay a little longer</strong></figcaption></figure></div><div class="lp-carousel-controls"><div class="lp-control-group"><button type="button" data-prev aria-label="Previous slide in A day at Mombasa Mall">←</button><button type="button" data-next aria-label="Next slide in A day at Mombasa Mall">→</button><span class="lp-carousel-status" aria-live="off"></span></div><div class="lp-dots"></div><button type="button" data-play aria-pressed="false">Play slideshow</button></div></div></section>
         <!-- VISION & MISSION -->
         <div class="section-header"><h2 class="section-h2">Vision &amp; Mission</h2></div>
         <div class="grid-2" style="margin-bottom:52px;">
@@ -349,7 +339,7 @@
         </div>
 
         <!-- NEXT CATEGORY TRANSITION BANNER -->
-        <a href="./stores/index.html" class="category-next-banner">
+        <a href="./stores.html" class="category-next-banner">
           <div>
             <span class="category-next-label">Next Destination</span>
             <h2 class="category-next-title">Explore Store Directory &amp; Interactive Floor Map</h2>
@@ -420,10 +410,6 @@
           </form>
         </div>
 
-      </div><!-- /.subpage-content -->
-    </div><!-- /.subpage-grid -->
-  </div><!-- /#page-stage -->
-
   <!-- FOOTER -->
   <footer class="site-footer" style="background:#071527; color:#fff; border-top:1px solid rgba(255,255,255,0.08); padding:60px 48px 32px;">
     <div style="max-width:1200px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:space-between; gap:40px; margin-bottom:40px;">
@@ -438,7 +424,7 @@
           <h4 style="color:#fff; font-size:13px; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:14px; border-left:3px solid var(--coral); padding-left:8px;">Quick Links</h4>
           <div style="display:flex; flex-direction:column; gap:8px; font-size:14px;">
             <a href="./index.html" style="color:rgba(255,255,255,0.65); text-decoration:none;">Home</a>
-            <a href="./stores/index.html" style="color:rgba(255,255,255,0.65); text-decoration:none;">Store Directory</a>
+            <a href="./stores.html" style="color:rgba(255,255,255,0.65); text-decoration:none;">Store Directory</a>
             <a href="./news-events.html" style="color:rgba(255,255,255,0.65); text-decoration:none;">News &amp; Events</a>
             <a href="./gallery.html" style="color:rgba(255,255,255,0.65); text-decoration:none;">Photo Gallery</a>
           </div>
@@ -458,11 +444,16 @@
       <p>© 2026 Mombasa Mall. All rights reserved. Mwembe Tayari, Mombasa, Kenya.</p>
     </div>
   </footer>
+      </div><!-- /.subpage-content -->
+    </div><!-- /.subpage-grid -->
+  </div><!-- /#page-stage -->
+
+
 
   <div class="ambient-light" aria-hidden="true"></div>
-  <div class="cursor"></div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="./js/selectionMenu.js"></script>
   <script src="./js/main.js"></script>
   <script src="./js/site-data-init.js"></script>
@@ -526,5 +517,6 @@
       }
     });
   </script>
+  <script src="./js/lifestyle-pages.js"></script>
 </body>
 </html>

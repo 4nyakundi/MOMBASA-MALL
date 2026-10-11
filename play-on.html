@@ -32,25 +32,40 @@
 
   <div id="page-stage">
     <div class="subpage-grid">
-      <nav class="subpage-nav site-nav" aria-label="Primary">
-        <header class="site-logo"><a href="./index.html"><img src="./assets/Logo/Mall Logo/MOMBASA MALL2.0.png" alt="Mombasa Mall" width="160" decoding="async"></a></header>
-        <a href="./about-us.html" class="site-nav__link link-underline">About</a>
-        <a href="./stores/index.html" class="site-nav__link link-underline">Stores</a>
-        <a href="./gallery.html" class="site-nav__link link-underline">Gallery</a>
-        <a href="./play-on.html" class="site-nav__link link-underline is-active">Play On</a>
-        <a href="./activations/index.html" class="site-nav__link link-underline">Activations</a>
-        <a href="./about-us.html#contact" class="site-nav__link link-underline">Contact</a>
-        <a href="./admin/login.html" class="sys-btn" title="Staff System Portal">sys.</a>
-        <div class="site-nav__actions">
-          <button type="button" class="our-selection-btn" id="open-selection" aria-haspopup="true" aria-expanded="false" aria-controls="selection-menu">
+      <!-- FLOATING DUAL-ACTION HEADER -->
+      <header class="floating-header" aria-label="Primary Navigation">
+        <div class="site-logo">
+          <a href="./index.html" aria-label="Mombasa Mall — Home">
+            <img src="./assets/Logo/Mall Logo/MOMBASA MALL2.0.png" alt="Mombasa Mall" width="160" decoding="async">
+          </a>
+        </div>
+
+        <div class="floating-header-actions">
+          <button
+            type="button"
+            class="our-selection-btn"
+            id="open-selection"
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-controls="selection-menu"
+          >
             <span>Our Floors</span>
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><rect width="4" height="4" fill="currentColor"/><rect x="9" width="4" height="4" fill="currentColor"/><rect y="9" width="4" height="4" fill="currentColor"/><rect x="9" y="9" width="4" height="4" fill="currentColor"/></svg>
+            <svg width="14" height="14" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+              <rect width="4.5" height="4.5" rx="1" fill="currentColor"/>
+              <rect x="8.5" width="4.5" height="4.5" rx="1" fill="currentColor"/>
+              <rect y="8.5" width="4.5" height="4.5" rx="1" fill="currentColor"/>
+              <rect x="8.5" y="8.5" width="4.5" height="4.5" rx="1" fill="currentColor"/>
+            </svg>
           </button>
+
           <button type="button" class="menu-btn" id="hamburger" aria-label="Open menu" aria-expanded="false">
-            <svg width="22" height="12" viewBox="0 0 22 12" fill="none"><rect width="22" height="3" fill="currentColor"/><rect y="9" width="12" height="3" fill="currentColor"/></svg>
+            <svg width="22" height="12" viewBox="0 0 22 12" fill="none" aria-hidden="true">
+              <rect width="22" height="3" rx="1.5" fill="currentColor"/>
+              <rect y="9" width="13" height="3" rx="1.5" fill="currentColor"/>
+            </svg>
           </button>
         </div>
-      </nav>
+      </header>
 
       <div class="subpage-content">
 
@@ -183,7 +198,7 @@
   </footer>
 
   <div class="ambient-light" aria-hidden="true"></div>
-  <div class="cursor"></div>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="./js/selectionMenu.js"></script>
   <script src="./js/main.js"></script>

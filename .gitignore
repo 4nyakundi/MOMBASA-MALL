@@ -5,3 +5,20 @@ ui-debug.log
 .gemini/
 .DS_Store
 Thumbs.db
+
+# Large media files (host on Firebase Storage / CDN instead)
+*.mp4
+*.mov
+*.avi
+*.mkv
+
+# RAW camera files (too large for git — 20-30 MB each)
+*.CR2
+*.CR3
+*.NEF
+*.ARW
+*.RAF
+
+# Temp files
+tmp/
+led-6am-check.cjs

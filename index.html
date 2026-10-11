@@ -1,10 +1,41 @@
 <!doctype html>
-<html lang="en" class="site-preloader-pending">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mombasa Mall | The Coastal Luxury Flagship</title>
   <meta name="description" content="Mombasa Mall is the premier shopping, dining, and lifestyle destination in the heart of Mombasa. Retail, dining, entertainment, and events across 5 floors.">
+  <link rel="icon" type="image/png" href="./assets/Logo/Mall Logo/MOMBASA MALL 1.0.png" />
+  <link rel="apple-touch-icon" href="./assets/Logo/Mall Logo/MOMBASA MALL 1.0.png" />
+  <link rel="manifest" href="./manifest.json" />
+  <meta name="theme-color" content="#003049" />
+
+  <!-- Open Graph / Facebook / WhatsApp -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://mombasamall.firebaseapp.com/" />
+  <meta property="og:title" content="Mombasa Mall | The Coastal Luxury Flagship" />
+  <meta property="og:description" content="Discover 120+ verified stores, anchor dining, digital billboard advertising, and live events in Mombasa." />
+  <meta property="og:image" content="./assets/Logo/Random pics/MOMBASA MALL.jpg" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Mombasa Mall | The Coastal Luxury Flagship" />
+  <meta name="twitter:description" content="Discover 120+ verified stores, anchor dining, digital billboard advertising, and live events in Mombasa." />
+  <meta name="twitter:image" content="./assets/Logo/Random pics/MOMBASA MALL.jpg" />
+
+  <script>
+    // Start the safety timer before any remote scripts can delay the page.
+    document.documentElement.classList.add('site-preloader-pending');
+    setTimeout(function () {
+      document.documentElement.classList.remove('site-preloader-pending');
+      if (document.body && !document.body.classList.contains('is-ready')) {
+        document.body.classList.add('is-ready');
+        document.body.dispatchEvent(new CustomEvent('is-ready'));
+      }
+      var overlay = document.getElementById('site-preloader');
+      if (overlay) overlay.remove();
+    }, 3000);
+  </script>
   <link rel="stylesheet" href="./css/style.css" />
   <style>
     html.site-preloader-pending,
@@ -12,17 +43,850 @@
       background: #003049;
       overflow: hidden;
     }
-    body:not(.is-ready) #page-stage .site-logo,
-    body:not(.is-ready) #page-stage .site-nav__link,
-    body:not(.is-ready) #page-stage .site-nav__actions,
-    body:not(.is-ready) #page-stage .hero-content,
-    body:not(.is-ready) #page-stage .site-footer,
-    body:not(.is-ready) #page-stage .marquee-reveal {
+    html.site-preloader-pending #page-stage .site-logo,
+    html.site-preloader-pending #page-stage .floating-header,
+    html.site-preloader-pending #page-stage .hero-content,
+    html.site-preloader-pending #page-stage .site-footer,
+    html.site-preloader-pending #page-stage .marquee-reveal {
       visibility: hidden;
+    }
+
+    /* Homepage-only white and blue visual refresh. */
+    #page-stage {
+      background: #fff;
+      color: #102f50;
+    }
+
+    .ambient-mesh-bg .mesh-glow-1 {
+      background: radial-gradient(circle, rgba(91, 153, 207, 0.13), transparent 68%);
+    }
+
+    .ambient-mesh-bg .mesh-glow-2 {
+      background: radial-gradient(circle, rgba(16, 66, 112, 0.1), transparent 68%);
+    }
+
+    .ambient-mesh-bg .mesh-glow-3 {
+      background: radial-gradient(circle, rgba(167, 204, 235, 0.2), transparent 68%);
+    }
+
+    #banner {
+      align-items: flex-end;
+      justify-content: flex-start;
+      min-height: min(900px, 100svh);
+      padding: 0 clamp(24px, 7vw, 104px) clamp(64px, 10vh, 112px);
+      isolation: isolate;
+      background: #082b4c;
+    }
+
+    #banner::before {
+      content: "";
+      position: absolute;
+      z-index: 2;
+      width: min(52vw, 720px);
+      aspect-ratio: 1;
+      right: -14vw;
+      top: 10%;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      box-shadow:
+        0 0 0 54px rgba(255, 255, 255, 0.035),
+        0 0 0 108px rgba(255, 255, 255, 0.025);
+      pointer-events: none;
+    }
+
+    #banner .banner__overlay {
+      background:
+        linear-gradient(180deg, rgba(7, 34, 61, 0.24) 0%, rgba(7, 34, 61, 0.12) 35%, rgba(7, 34, 61, 0.88) 100%),
+        linear-gradient(90deg, rgba(7, 34, 61, 0.52), transparent 78%);
+    }
+
+    #banner .banner__content {
+      max-width: min(900px, 74vw);
+      margin: 0;
+      padding: 0;
+      text-align: left;
+      align-items: flex-start;
+    }
+
+    #banner .banner__eyebrow {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.28);
+      box-shadow: none;
+    }
+
+    #banner .banner__eyebrow::before {
+      background: #b9dcfa;
+      box-shadow: 0 0 12px rgba(185, 220, 250, 0.8);
+    }
+
+    #banner .banner__title {
+      max-width: 900px;
+      margin: 0 0 18px;
+      font-size: clamp(40px, 6vw, 76px);
+      font-weight: 700;
+      line-height: 0.98;
+      letter-spacing: -0.055em;
+      text-transform: none;
+      color: #fff;
+      text-shadow: 0 6px 28px rgba(0, 18, 37, 0.3);
+    }
+
+    #banner .banner__title-line {
+      display: block;
+      overflow: hidden;
+      padding: 0.04em 0 0.1em;
+    }
+
+    #banner .banner__title-line:last-child {
+      color: #d7eaff;
+    }
+
+    #banner .banner__title .char {
+      display: inline-block;
+      color: #fff;
+      transform: translateY(115%);
+    }
+
+    #banner .banner__title-line:last-child .char {
+      color: #d7eaff;
+    }
+
+    #banner .banner__subtitle {
+      max-width: 590px;
+      margin: 0 0 26px;
+      color: rgba(255, 255, 255, 0.88);
+      font-size: clamp(15px, 1.35vw, 18px);
+      line-height: 1.7;
+    }
+
+    #banner .btn--primary {
+      color: #0c3154 !important;
+      background: #fff;
+      border-color: rgba(255, 255, 255, 0.8);
+      box-shadow: 0 8px 24px rgba(0, 18, 37, 0.2);
+    }
+
+    #banner .btn--primary:hover {
+      background: #e8f3ff;
+      box-shadow: 0 12px 30px rgba(0, 18, 37, 0.28);
+    }
+
+    #banner .btn--ghost {
+      color: #fff !important;
+      border-color: rgba(255, 255, 255, 0.55);
+      background: rgba(10, 43, 76, 0.48);
+    }
+
+    #banner .hero-event-dock {
+      right: clamp(24px, 5vw, 72px);
+      bottom: clamp(32px, 7vh, 76px);
+      max-width: 300px;
+      padding: 18px 20px;
+      border-color: rgba(255, 255, 255, 0.24);
+      border-radius: 18px;
+      background: rgba(7, 34, 61, 0.74);
+      box-shadow: 0 18px 52px rgba(0, 18, 37, 0.22);
+    }
+
+    #banner #heroEventTitle,
+    #banner .hero-event-badge,
+    #banner .hero-event-cta {
+      color: #fff !important;
+    }
+
+    #banner .hero-event-dot {
+      background: #b9dcfa !important;
+    }
+
+    .kinetic-scrub-section,
+    .kinetic-level-panels-section,
+    .brands-marquee-section,
+    .amenities-bento-section {
+      background-color: #fff;
+    }
+
+    #kineticGallery {
+      padding: 76px 0 58px;
+    }
+
+    #kineticGallery .scrub-intro,
+    #levelPanels .level-panel-wrap,
+    #brandCloud .brands-container,
+    #amenities .amenities-container,
+    #metrics .metrics-container {
+      width: min(100% - 48px, 1280px);
+      max-width: none;
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    #kineticGallery .scrub-intro {
+      margin-bottom: 30px;
+    }
+
+    #kineticGallery .scrub-card {
+      width: clamp(250px, 27vw, 340px);
+      border-radius: 18px;
+    }
+
+    #kineticGallery .scrub-card-img-wrap {
+      aspect-ratio: 16 / 9;
+    }
+
+    #kineticGallery .scrub-card-body {
+      padding: 16px 18px;
+    }
+
+    #kineticGallery .scrub-card-title {
+      font-size: 17px;
+    }
+
+    #levelPanels,
+    #amenities {
+      padding: 76px 0;
+    }
+
+    #levelPanels .level-panel-wrap {
+      gap: 30px;
+    }
+
+    #levelPanels .level-panel-item {
+      width: 100%;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: clamp(22px, 3vw, 40px);
+      padding: clamp(24px, 3vw, 38px);
+      border-radius: 24px;
+    }
+
+    #levelPanels .level-panel-num {
+      margin-bottom: 10px;
+      font-size: clamp(52px, 6vw, 82px);
+    }
+
+    #levelPanels .level-panel-title {
+      font-size: clamp(23px, 2.2vw, 32px);
+      text-transform: none;
+    }
+
+    #levelPanels .level-panel-desc {
+      margin-bottom: 18px;
+      font-size: 14px;
+    }
+
+    #levelPanels .level-panel-tenants {
+      margin-bottom: 18px;
+    }
+
+    #levelPanels .level-panel-visual {
+      aspect-ratio: 4 / 3;
+      max-height: 340px;
+    }
+
+    #brandCloud {
+      padding: 58px 0;
+    }
+
+    #brandCloud .brands-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    #brandCloud .brand-tile {
+      height: 76px;
+      padding: 12px;
+      border-radius: 14px;
+    }
+
+    #metrics {
+      padding: 76px 24px;
+    }
+
+    #metrics .metrics-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    #metrics .metric-card {
+      min-width: 0;
+      padding: 26px 20px;
+      border-radius: 18px;
+    }
+
+    #metrics .metric-number-wrap {
+      font-size: clamp(34px, 4vw, 54px);
+    }
+
+    #amenities .amenities-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 30px;
+    }
+
+    #amenities .amenity-card {
+      min-width: 0;
+      min-height: 200px;
+      padding: 24px;
+      border-radius: 18px;
+    }
+
+    #amenities .amenity-title {
+      font-size: 17px;
+      text-transform: none;
+    }
+
+    #amenities .amenity-text {
+      font-size: 13px;
+    }
+
+    #planVisit {
+      padding: 58px 0;
+    }
+
+    #media {
+      padding: 76px 24px;
+    }
+
+    #media .media-spotlight-card {
+      width: min(100%, 1280px);
+      padding: clamp(28px, 4vw, 48px);
+      gap: clamp(24px, 4vw, 48px);
+      border-radius: 24px;
+    }
+
+    .kinetic-scrub-section::before {
+      background-image:
+        radial-gradient(circle at 12% 22%, rgba(121, 178, 225, 0.11), transparent 36%),
+        radial-gradient(circle at 88% 76%, rgba(16, 66, 112, 0.06), transparent 38%);
+    }
+
+    .scrub-eyebrow,
+    .level-panel-eyebrow,
+    .level-panel-btn {
+      color: #356d9e;
+    }
+
+    .scrub-card {
+      border-color: rgba(16, 66, 112, 0.12);
+      box-shadow: 0 12px 34px rgba(16, 48, 80, 0.08);
+    }
+
+    .scrub-card:hover,
+    .brand-tile:hover {
+      border-color: #5b99cf;
+      box-shadow: 0 16px 40px rgba(16, 66, 112, 0.14);
+    }
+
+    .scrub-card-badge {
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.25);
+      background: rgba(11, 47, 82, 0.84);
+    }
+
+    .scrub-text-strip {
+      background: linear-gradient(110deg, #0b2e50, #174e7d);
+      box-shadow: none;
+    }
+
+    .scrub-huge-text {
+      -webkit-text-stroke-color: rgba(226, 241, 255, 0.78);
+    }
+
+    .kinetic-level-panels-section {
+      border-top-color: rgba(16, 66, 112, 0.1);
+    }
+
+    .kinetic-level-panels-section::before {
+      background: radial-gradient(ellipse at 50% 0%, rgba(151, 195, 232, 0.16), transparent 70%);
+    }
+
+    .level-panel-item,
+    .brand-tile,
+    .amenity-card {
+      border-color: rgba(16, 66, 112, 0.12);
+      box-shadow: 0 10px 30px rgba(16, 48, 80, 0.06);
+    }
+
+    .level-panel-item::after {
+      background: linear-gradient(135deg, rgba(91, 153, 207, 0.34), transparent 55%, rgba(16, 66, 112, 0.12));
+    }
+
+    .level-panel-item:hover {
+      border-color: rgba(53, 109, 158, 0.36);
+      box-shadow: 0 18px 42px rgba(16, 48, 80, 0.1);
+    }
+
+    .level-panel-num {
+      background: linear-gradient(135deg, #1b5a8d, #8dbce2);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: none;
+    }
+
+    .tenant-tag {
+      background: #f1f7fc;
+      border-color: rgba(16, 66, 112, 0.1);
+    }
+
+    .level-panel-item:hover .tenant-tag {
+      background: #e7f2fc;
+      border-color: rgba(53, 109, 158, 0.24);
+    }
+
+    .amenity-icon {
+      background: #edf5fc;
+      border-color: rgba(53, 109, 158, 0.15);
+    }
+
+    #metrics {
+      background: #f4f8fc;
+      color: #102f50;
+      border-top-color: rgba(16, 66, 112, 0.1);
+    }
+
+    #metrics .metrics-eyebrow,
+    #metrics .metric-label {
+      color: #52718d;
+    }
+
+    #metrics .metric-card {
+      background: #fff;
+      border-color: rgba(16, 66, 112, 0.12);
+      box-shadow: 0 10px 30px rgba(16, 48, 80, 0.06);
+    }
+
+    #metrics .metric-card:hover {
+      background: #fafdff;
+      border-color: rgba(53, 109, 158, 0.35);
+    }
+
+    #metrics .metric-number-wrap,
+    #metrics .metric-number-wrap span.accent {
+      color: #174e7d;
+    }
+
+    #media {
+      background: #fff;
+      color: #102f50;
+      border-top-color: rgba(16, 66, 112, 0.1);
+    }
+
+    #media .media-spotlight-card {
+      background: linear-gradient(135deg, #f5f9fd, #eaf3fb);
+      border-color: rgba(16, 66, 112, 0.12);
+      box-shadow: 0 16px 42px rgba(16, 48, 80, 0.08);
+    }
+
+    #media .media-spotlight-copy h3 {
+      color: #123d64;
+    }
+
+    #media .media-spotlight-copy p {
+      color: #52718d;
+    }
+
+    #media .media-spotlight-eyebrow {
+      color: #356d9e;
+    }
+
+    .plan-visit-section {
+      background: linear-gradient(135deg, #0b2e50, #174e7d);
+    }
+
+    .plan-visit-section::before {
+      background: radial-gradient(circle, rgba(185, 220, 250, 0.18), transparent 65%);
+    }
+
+    #kineticGallery .scrub-title,
+    #levelPanels .statement-title,
+    #amenities .statement-title,
+    #metrics .metrics-title {
+      --text-fill: 0%;
+      color: #a9bfd3;
+      background: linear-gradient(
+        90deg,
+        #123d64 0%,
+        #123d64 var(--text-fill),
+        #a9bfd3 var(--text-fill),
+        #a9bfd3 100%
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    #planVisit .plan-title {
+      --text-fill: 0%;
+      color: rgba(255, 255, 255, 0.42);
+      background: linear-gradient(
+        90deg,
+        #fff 0%,
+        #fff var(--text-fill),
+        rgba(255, 255, 255, 0.42) var(--text-fill),
+        rgba(255, 255, 255, 0.42) 100%
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    #levelPanels .level-panel-visual {
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    #levelPanels .level-panel-visual img {
+      position: relative;
+      z-index: 0;
+      filter: saturate(calc(0.68 + var(--progress, 1) * 0.32))
+        blur(calc((1 - var(--progress, 1)) * 5px));
+      will-change: transform, filter;
+    }
+
+    #levelPanels .level-panel-visual::before {
+      content: attr(data-floor-number);
+      position: absolute;
+      z-index: 1;
+      top: 12px;
+      left: 18px;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(255, 255, 255, 0.78);
+      font-size: clamp(88px, 14vw, 168px);
+      font-weight: 700;
+      line-height: 0.85;
+      letter-spacing: -0.08em;
+      opacity: calc(0.12 + var(--progress, 0.5) * 0.38);
+      pointer-events: none;
+      transform: translateY(calc((1 - var(--progress, 0.5)) * 18px));
+      transition: opacity 0.2s ease;
+    }
+
+    #levelPanels .level-panel-title {
+      overflow: hidden;
+    }
+
+    #levelPanels .level-panel-title-word {
+      display: inline-block;
+      will-change: transform, opacity;
+    }
+
+    #brandCloud .mall-flip-mark {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-content: center;
+      align-items: center;
+      width: min(100%, 760px);
+      min-height: 190px;
+      margin: 0 auto 28px;
+      overflow: hidden;
+      border-top: 1px solid rgba(16, 66, 112, 0.12);
+      border-bottom: 1px solid rgba(16, 66, 112, 0.12);
+      color: #fff;
+    }
+
+    #brandCloud .mall-flip-mark .letter {
+      display: flex;
+      flex: 0 0 50%;
+      align-items: center;
+      justify-content: center;
+      min-height: 76px;
+      padding: 4px 8px;
+      color: #fff;
+      font-size: clamp(34px, 6vw, 62px);
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    #brandCloud .mall-flip-mark .letter:nth-child(4n + 1) {
+      background: #174e7d;
+    }
+
+    #brandCloud .mall-flip-mark .letter:nth-child(4n + 2) {
+      background: #356d9e;
+    }
+
+    #brandCloud .mall-flip-mark .letter:nth-child(4n + 3) {
+      background: #83afd3;
+    }
+
+    #brandCloud .mall-flip-mark .letter:nth-child(4n) {
+      background: #102f50;
+    }
+
+    #brandCloud .mall-flip-mark .for,
+    #brandCloud .mall-flip-mark .gsap {
+      display: none;
+      margin: 0;
+      padding: 4px 10px;
+      color: #174e7d;
+      font-size: clamp(12px, 1.5vw, 18px);
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    #brandCloud .mall-flip-mark .gsap {
+      color: #102f50;
+      font-size: clamp(26px, 5vw, 48px);
+      letter-spacing: 0.08em;
+    }
+
+    #brandCloud .mall-flip-mark.final .letter,
+    #brandCloud .mall-flip-mark.plain .letter {
+      flex: 0 0 auto;
+      min-height: 0;
+      padding: 0;
+      background: transparent;
+      color: #174e7d;
+      font-size: clamp(34px, 6vw, 62px);
+    }
+
+    #brandCloud .mall-flip-mark.final .for,
+    #brandCloud .mall-flip-mark.final .gsap {
+      display: block;
+    }
+
+    #brandCloud .mall-flip-mark.plain .letter {
+      color: #174e7d;
+    }
+
+    #brandCloud .mall-flip-mark.columns .letter {
+      flex-basis: 25%;
+    }
+
+    #brandCloud .mall-flip-mark.final .for {
+      padding-left: clamp(14px, 3vw, 34px);
+    }
+
+    @media (max-width: 900px) {
+      #banner {
+        min-height: min(820px, 100svh);
+        padding: 0 28px 72px;
+      }
+
+      #banner .banner__content {
+        max-width: 100%;
+      }
+
+      #banner .hero-event-dock {
+        display: none;
+      }
+
+      #levelPanels .level-panel-item {
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+        padding: 24px;
+      }
+
+      #amenities .amenities-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      #metrics .metrics-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 600px) {
+      #banner {
+        min-height: min(760px, 100svh);
+        padding: 0 22px 54px;
+      }
+
+      #banner::before {
+        width: 92vw;
+        right: -48vw;
+        top: 18%;
+      }
+
+      #banner .banner__title {
+        font-size: clamp(34px, 9.5vw, 48px);
+      }
+
+      #banner .banner__subtitle {
+        font-size: 15px;
+      }
+
+      #kineticGallery,
+      #levelPanels,
+      #amenities,
+      #media {
+        padding-top: 56px;
+        padding-bottom: 56px;
+      }
+
+      #kineticGallery .scrub-intro,
+      #levelPanels .level-panel-wrap,
+      #brandCloud .brands-container,
+      #amenities .amenities-container,
+      #metrics .metrics-container {
+        width: min(100% - 36px, 1280px);
+      }
+
+      #levelPanels .level-panel-item {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 22px;
+      }
+
+      #levelPanels .level-panel-visual {
+        max-height: none;
+      }
+
+      #brandCloud .mall-flip-mark {
+        min-height: 150px;
+        margin-bottom: 22px;
+      }
+
+      #brandCloud .brands-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      #brandCloud .brands-title {
+        font-size: 10px;
+        line-height: 1.6;
+      }
+
+      #amenities .amenities-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+      }
+
+      #amenities .amenity-card {
+        min-height: 0;
+      }
+
+      #metrics .metrics-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      #metrics .metric-card {
+        padding: 22px 16px;
+      }
+
+      #media {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      #media .media-spotlight-card {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 22px;
+        border-radius: 20px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .ambient-mesh-bg .ambient-mesh-glow {
+        animation: none;
+      }
+
+      #levelPanels .level-panel-visual img {
+        filter: none;
+        will-change: auto;
+      }
+
+      #levelPanels .level-panel-visual::before {
+        opacity: 0.3;
+        transform: none;
+      }
+    }
+
+    /* === AMBIENT BACKGROUND PHOTO === */
+    .ambient-bg-photo {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background: url('./assets/Logo/Random pics/MOMBASA MALL.jpg') center/cover no-repeat;
+      opacity: 0.06;
+      pointer-events: none;
+    }
+
+    /* === ENHANCED GSAP REVEAL BASE STATES === */
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    /* === METRIC CARD GLOW === */
+    .metric-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .metric-card:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 20px 50px rgba(16, 66, 112, 0.15) !important;
+    }
+
+    /* === BRAND TILE SHIMMER === */
+    .brand-tile {
+      position: relative;
+      overflow: hidden;
+    }
+    .brand-tile::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.18) 50%, transparent 60%);
+      transform: translateX(-100%);
+      transition: none;
+    }
+    .brand-tile:hover::after {
+      animation: shimmerSlide 0.5s ease forwards;
+    }
+    @keyframes shimmerSlide {
+      to { transform: translateX(100%); }
+    }
+
+    /* === AMENITY CARD POLISH === */
+    .amenity-card {
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .amenity-card:hover {
+      transform: translateY(-4px);
+    }
+
+    /* === SCRUB CARD INNER PARALLAX PREP === */
+    .scrub-card-img-wrap img {
+      will-change: transform;
+    }
+
+    /* === PLAN VISIT GLOW === */
+    .plan-visit-section {
+      position: relative;
+      overflow: hidden;
+    }
+    .plan-visit-section::after {
+      content: '';
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(185,220,250,0.12), transparent 70%);
+      top: -100px;
+      right: -100px;
+      pointer-events: none;
+      animation: floatGlow 6s ease-in-out infinite alternate;
+    }
+    @keyframes floatGlow {
+      from { transform: translate(0,0) scale(1); }
+      to { transform: translate(-30px, 20px) scale(1.1); }
     }
   </style>
 </head>
 <body>
+
+  <!-- Ambient Background Image -->
+  <div class="ambient-bg-photo" aria-hidden="true"></div>
+
+  <!-- LIVING ANIMATED AMBIENT CANVAS -->
+  <div class="ambient-mesh-bg" aria-hidden="true">
+    <div class="ambient-mesh-glow mesh-glow-1"></div>
+    <div class="ambient-mesh-glow mesh-glow-2"></div>
+    <div class="ambient-mesh-glow mesh-glow-3"></div>
+  </div>
+  <div class="ambient-noise-film" aria-hidden="true"></div>
 
   <!-- ============================
        RECONSTRUCTED CINEMATIC PRELOADER
@@ -53,7 +917,7 @@
         <img src="./assets/Logo/Shops Logo/West 11.jpg" alt="" decoding="async">
       </div>
       <div class="site-preloader__frame" data-index="4">
-        <img src="./assets/Logo/Shops Logo/Lovisa.jpg" alt="" decoding="async">
+        <img src="./assets/Logo/Shops Logo/Lovisa.jpeg" alt="" decoding="async">
       </div>
       <div class="site-preloader__frame" data-index="5">
         <img src="./assets/Logo/Mall Logo/MOMBASA MALL2.0.png" alt="" decoding="async">
@@ -67,37 +931,7 @@
         <div class="site-preloader__counter-mask">
           <div class="site-preloader__number-wrapper">
             
-            <!-- Tens column (0-9) -->
-            <div class="site-preloader__digit site-preloader__digit--tens">
-              <div class="site-preloader__digit-inner" id="preloaderTens">
-                <span class="site-preloader__number">0</span>
-                <span class="site-preloader__number">1</span>
-                <span class="site-preloader__number">2</span>
-                <span class="site-preloader__number">3</span>
-                <span class="site-preloader__number">4</span>
-                <span class="site-preloader__number">5</span>
-                <span class="site-preloader__number">6</span>
-                <span class="site-preloader__number">7</span>
-                <span class="site-preloader__number">8</span>
-                <span class="site-preloader__number">9</span>
-              </div>
-            </div>
-
-            <!-- Ones column (0-9) -->
-            <div class="site-preloader__digit site-preloader__digit--ones">
-              <div class="site-preloader__digit-inner" id="preloaderOnes">
-                <span class="site-preloader__number">0</span>
-                <span class="site-preloader__number">1</span>
-                <span class="site-preloader__number">2</span>
-                <span class="site-preloader__number">3</span>
-                <span class="site-preloader__number">4</span>
-                <span class="site-preloader__number">5</span>
-                <span class="site-preloader__number">6</span>
-                <span class="site-preloader__number">7</span>
-                <span class="site-preloader__number">8</span>
-                <span class="site-preloader__number">9</span>
-              </div>
-            </div>
+            <span class="site-preloader__number" id="preloaderCount">00</span>
 
             <span class="preloader-percent-symbol">%</span>
 
@@ -125,6 +959,8 @@
 
   </div>
 
+  <script src="./js/preloader.js"></script>
+
   <!-- ============================
        OUR FLOORS SELECTION OVERLAY
        ============================ -->
@@ -132,7 +968,7 @@
     <nav id="selection-menu" aria-hidden="true" aria-label="Our floors">
       <div class="selection-cards">
 
-        <a href="./stores/index.html" class="selection-card" data-category="ground-floor">
+        <a href="./stores.html" class="selection-card" data-category="ground-floor">
           <span class="selection-card__panel">
             <span class="selection-card__eyebrow">Floor G — Retail</span>
             <span class="selection-card__title">Ground<br>Floor</span>
@@ -154,7 +990,7 @@
           </span>
         </a>
 
-        <a href="./led-advertising/index.html" class="selection-card" data-category="led">
+        <a href="./led.html" class="selection-card" data-category="led">
           <span class="selection-card__panel">
             <span class="selection-card__eyebrow">Media — Billboard</span>
             <span class="selection-card__title">LED<br>Advertising</span>
@@ -192,22 +1028,15 @@
     <main>
       <div class="page-grid">
 
-        <!-- LEFT NAVIGATION COLUMN -->
-        <nav class="site-nav" aria-label="Primary">
-
-          <header class="site-logo">
+        <!-- FLOATING DUAL-ACTION HEADER (PRESERVED UNTOUCHED) -->
+        <header class="floating-header" aria-label="Primary Navigation">
+          <div class="site-logo">
             <a href="./index.html" aria-label="Mombasa Mall — Home">
               <img src="./assets/Logo/Mall Logo/MOMBASA MALL2.0.png" alt="Mombasa Mall" width="160" decoding="async">
             </a>
-          </header>
+          </div>
 
-          <a href="./about-us.html" class="site-nav__link link-underline">About</a>
-          <a href="./stores/index.html" class="site-nav__link link-underline">Stores</a>
-          <a href="./gallery.html" class="site-nav__link link-underline">Gallery</a>
-          <a href="./about-us.html#contact" class="site-nav__link link-underline">Contact</a>
-          <a href="./admin/login.html" class="sys-btn" title="Staff System Portal">sys.</a>
-
-          <div class="site-nav__actions">
+          <div class="floating-header-actions">
             <button
               type="button"
               class="our-selection-btn"
@@ -217,87 +1046,537 @@
               aria-controls="selection-menu"
             >
               <span>Our Floors</span>
-              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-                <rect width="4" height="4" fill="currentColor"/>
-                <rect x="9" width="4" height="4" fill="currentColor"/>
-                <rect y="9" width="4" height="4" fill="currentColor"/>
-                <rect x="9" y="9" width="4" height="4" fill="currentColor"/>
+              <svg width="14" height="14" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+                <rect width="4.5" height="4.5" rx="1" fill="currentColor"/>
+                <rect x="8.5" width="4.5" height="4.5" rx="1" fill="currentColor"/>
+                <rect y="8.5" width="4.5" height="4.5" rx="1" fill="currentColor"/>
+                <rect x="8.5" y="8.5" width="4.5" height="4.5" rx="1" fill="currentColor"/>
               </svg>
             </button>
 
             <button type="button" class="menu-btn" id="hamburger" aria-label="Open menu" aria-expanded="false">
               <svg width="22" height="12" viewBox="0 0 22 12" fill="none" aria-hidden="true">
-                <rect width="22" height="3" fill="currentColor"/>
-                <rect y="9" width="12" height="3" fill="currentColor"/>
+                <rect width="22" height="3" rx="1.5" fill="currentColor"/>
+                <rect y="9" width="13" height="3" rx="1.5" fill="currentColor"/>
               </svg>
             </button>
           </div>
+        </header>
 
-        </nav>
+        <!-- CINEMATIC VIDEO HERO WITH WORDS ON THE BOTTOM LEFT -->
+        <section class="hero-section banner" id="banner">
+          <div class="banner__bg" data-parallax="0.08">
+            <video id="heroVideo" autoplay muted loop playsinline class="banner__video" poster="./assets/Logo/Random pics/MOMBASA MALL.jpg">
+              <source src="./assets/home.mp4.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="banner__overlay"></div>
+          <div class="hero-noise" aria-hidden="true"></div>
 
-        <!-- HERO CENTER COLUMN -->
-        <div class="hero-section">
-          <div class="hero-top">
+          <!-- Bottom-Left Docked Hero Words -->
+          <div class="banner__content">
+            <span class="banner__eyebrow" data-reveal>Mombasa, Kenya</span>
+            <h1 class="banner__title">
+              <span class="banner__title-line" data-split>Where retail</span>
+              <span class="banner__title-line" data-split>meets the</span>
+              <span class="banner__title-line" data-split>Indian Ocean.</span>
+            </h1>
+            <p class="banner__subtitle" data-reveal>
+              Five curated floors. Ocean rooftop. 120+ brands. All in the heart of Mombasa.
+            </p>
 
-            <!-- Video / Visual -->
-            <div class="hero-visual">
-              <video id="heroVideo" autoplay muted loop playsinline class="hero-video">
-                <source src="./assets/home.mp4.mp4" type="video/mp4">
-              </video>
-              <!-- Noise grain overlay -->
-              <div class="hero-noise" aria-hidden="true"></div>
+            <div class="banner__cta" data-reveal>
+              <a href="./stores.html" class="btn btn--primary">
+                <span>Start Exploring</span>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+              </a>
+              <button type="button" class="btn btn--ghost" id="bannerOurFloorsBtn">
+                <span>Our Floors</span>
+                <svg width="14" height="14" viewBox="0 0 13 13" fill="none" aria-hidden="true"><rect width="4.5" height="4.5" rx="1" fill="currentColor"/><rect x="8.5" width="4.5" height="4.5" rx="1" fill="currentColor"/><rect y="8.5" width="4.5" height="4.5" rx="1" fill="currentColor"/><rect x="8.5" y="8.5" width="4.5" height="4.5" rx="1" fill="currentColor"/></svg>
+              </button>
             </div>
+          </div>
 
-            <!-- Marquee strip (top of hero) -->
-            <div class="marquee" aria-hidden="true">
-              <div class="marquee-reveal">
-                <div class="marquee-scroll">
-                  <div class="marquee-collection">
-                    <span class="marquee-text">The Coastal Lifestyle</span>
-                    <span class="marquee-text">Premium Shopping</span>
-                    <span class="marquee-text">Mombasa's Landmark</span>
-                    <span class="marquee-text">120+ Brands</span>
-                    <span class="marquee-text">5 Floors of Possibility</span>
-                    <span class="marquee-text">The Coastal Lifestyle</span>
-                    <span class="marquee-text">Premium Shopping</span>
-                    <span class="marquee-text">Mombasa's Landmark</span>
-                    <span class="marquee-text">120+ Brands</span>
-                    <span class="marquee-text">5 Floors of Possibility</span>
-                  </div>
+          <!-- Upcoming Event Dock (Bottom-Right) -->
+          <a href="./news-events.html" id="heroUpcomingEventCard" class="hero-event-dock" aria-label="Upcoming Event Details" data-reveal>
+            <div class="hero-event-card-header" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+              <span class="hero-event-badge" style="display:inline-flex; align-items:center; gap:6px; font-family:var(--font-mono); font-size:10px; text-transform:uppercase; color:var(--sunflower-gold);">
+                <span class="hero-event-dot" style="width:6px;height:6px;border-radius:50%;background:var(--tangerine);"></span>
+                <span>Live Happening</span>
+              </span>
+              <span class="hero-event-cta" style="font-family:var(--font-mono); font-size:11px; color:var(--tangerine);">Explore ↗</span>
+            </div>
+            <h4 class="hero-event-title" id="heroEventTitle" style="font-family:var(--font-display); font-size:16px; color:#ffffff; margin:0 0 6px 0; font-weight:700;">Coastal Vibes Music Weekend</h4>
+            <div class="hero-event-meta" style="font-family:var(--font-mono); font-size:11px; color:rgba(255,255,255,0.7); display:flex; flex-direction:column; gap:2px;">
+              <span id="heroEventSchedule">📅 Sat, 30 Aug · 5:00 PM – 10:00 PM</span>
+              <span id="heroEventVenue">📍 Central Void Grand Atrium</span>
+            </div>
+          </a>
+        </section>
+
+        <!-- ==========================================
+             1. KINETIC SCROLLTRIGGER HORIZONTAL SCRUB GALLERY
+             ========================================== -->
+        <section class="kinetic-scrub-section" id="kineticGallery">
+          <div class="scrub-intro">
+            <span class="scrub-eyebrow">// VISUAL DISCOVERY</span>
+            <h2 class="scrub-title">Explore Mombasa's Finest</h2>
+          </div>
+
+          <!-- Row 1: Left-to-Right Image Scrub -->
+          <div class="scrub-gallery-row" id="scrubRow1">
+            <div class="scrub-gallery-track">
+              
+              <a href="./stores.html" class="scrub-card">
+                <div class="scrub-card-img-wrap">
+                  <img src="./assets/Logo/Shops Logo/Naivasmain.jpeg" alt="Naivas 24/7 Supermarket" loading="lazy">
+                  <span class="scrub-card-badge">Ground Floor · G-01</span>
                 </div>
-              </div>
-            </div>
+                <div class="scrub-card-body">
+                  <h3 class="scrub-card-title">Naivas Hypermarket</h3>
+                  <p class="scrub-card-desc">24/7 anchor hypermarket with fresh bakery, butchery, groceries &amp; pharmacy.</p>
+                </div>
+              </a>
 
+              <a href="./stores.html" class="scrub-card">
+                <div class="scrub-card-img-wrap">
+                  <img src="./assets/Logo/Shops Logo/NCBA.png" alt="NCBA Banking Hall" loading="lazy">
+                  <span class="scrub-card-badge">Ground Floor · G-05</span>
+                </div>
+                <div class="scrub-card-body">
+                  <h3 class="scrub-card-title">NCBA Premier Banking</h3>
+                  <p class="scrub-card-desc">Full-service retail &amp; corporate branch with 24-hour ATM concourse.</p>
+                </div>
+              </a>
+
+              <a href="./stores.html" class="scrub-card">
+                <div class="scrub-card-img-wrap">
+                  <img src="./assets/Logo/Shops Logo/Lovisa.jpg" alt="Lovisa Jewellery" loading="lazy">
+                  <span class="scrub-card-badge">1st Floor · F-07</span>
+                </div>
+                <div class="scrub-card-body">
+                  <h3 class="scrub-card-title">Lovisa Jewellery</h3>
+                  <p class="scrub-card-desc">Trending fashion jewellery and statement accessories at accessible prices.</p>
+                </div>
+              </a>
+
+              <a href="./stores.html" class="scrub-card">
+                <div class="scrub-card-img-wrap">
+                  <img src="./assets/Logo/Shops Logo/West 11.jpg" alt="West 11 Swahili Dining" loading="lazy">
+                  <span class="scrub-card-badge">3rd Floor · T-03</span>
+                </div>
+                <div class="scrub-card-body">
+                  <h3 class="scrub-card-title">West 11 Rooftop Dining</h3>
+                  <p class="scrub-card-desc">Panoramic coastal rooftop dining with Swahili delicacies and grills.</p>
+                </div>
+              </a>
+
+              <a href="./play-on.html" class="scrub-card">
+                <div class="scrub-card-img-wrap">
+                  <img src="./assets/Logo/Random pics/Staff.jpeg" alt="Play-On VR Arena" loading="lazy">
+                  <span class="scrub-card-badge">2nd Floor · S-04</span>
+                </div>
+                <div class="scrub-card-body">
+                  <h3 class="scrub-card-title">Play-On VR &amp; Family Arena</h3>
+                  <p class="scrub-card-desc">VR racing simulators, toddler soft-play, and weekend family activities.</p>
+                </div>
+              </a>
+
+            </div>
           </div>
 
-          <!-- Hero text (bottom of hero) -->
-          <div class="hero-bottom hero-bottom-flex">
-            <div class="hero-content">
-              <h1 class="hero-h1">Where Retail Meets<br>The Indian Ocean.</h1>
-              <p class="hero-sub">Open Daily · Mwembe Tayari, Mombasa · 5 Floors</p>
+          <!-- Giant Typography Scrub Strip -->
+          <div class="scrub-text-strip" id="scrubTextSection">
+            <div class="scrub-text-track">
+              <span class="scrub-huge-text">MOMBASA MALL · 5 CURATED FLOORS · 120+ BRANDS · 24/7 HYPERMARKET · OCEAN ROOFTOP ·</span>
+              <span class="scrub-huge-text">MOMBASA MALL · 5 CURATED FLOORS · 120+ BRANDS · 24/7 HYPERMARKET · OCEAN ROOFTOP ·</span>
+            </div>
+          </div>
+
+          <!-- Row 2: Right-to-Left Image Scrub -->
+          <div class="scrub-gallery-row" id="scrubRow2">
+            <div class="scrub-gallery-track">
+              
+              <a href="./led.html" class="scrub-card">
+                <div class="scrub-card-img-wrap">
+                  <img src="./assets/Logo/Mall Logo/MOMBASA MALL2.0.png" alt="4K LED Billboard" loading="lazy">
+                  <span class="scrub-card-badge">Exterior Facade</span>
+                </div>
+                <div class="scrub-card-body">
+                  <h3 class="scrub-card-title">4K Facade LED Screen</h3>
+                  <p class="scrub-card-desc">Commanding 150,000+ daily commuter impressions across Mombasa CBD.</p>
+                </div>
+              </a>
+
+              <a href="./stores.html" class="scrub-card">
+                <div class="scrub-card-img-wrap">
+                  <img src="./assets/Logo/Random pics/Rounder about.jpeg" alt="Basement Parking & EV Bays" loading="lazy">
+                  <span class="scrub-card-badge">Basement · B-01</span>
+                </div>
+                <div class="scrub-card-body">
+                  <h3 class="scrub-card-title">Basement Valet &amp; EV Bays</h3>
+                  <p class="scrub-card-desc">400+ vehicle capacity, 8 EV chargers, automated security &amp; direct lift access.</p>
+                </div>
+              </a>
+
+              <a href="./news-events.html" class="scrub-card">
+                <div class="scrub-card-img-wrap">
+                  <img src="./assets/Logo/Random pics/events - Copy.jpeg" alt="Central Atrium Events" loading="lazy">
+                  <span class="scrub-card-badge">Grand Atrium</span>
+                </div>
+                <div class="scrub-card-body">
+                  <h3 class="scrub-card-title">Live Concerts &amp; Activations</h3>
+                  <p class="scrub-card-desc">1,200sqm central void hosting brand pop-ups, concerts, and festivals.</p>
+                </div>
+              </a>
+
+              <a href="./about-us.html" class="scrub-card">
+                <div class="scrub-card-img-wrap">
+                  <img src="./assets/Logo/Random pics/MOMBASA MALL.jpg" alt="About Mombasa Mall" loading="lazy">
+                  <span class="scrub-card-badge">Landmark Hub</span>
+                </div>
+                <div class="scrub-card-body">
+                  <h3 class="scrub-card-title">Coastal Urban Heritage</h3>
+                  <p class="scrub-card-desc">Connecting coastal culture and modern retail excellence at Mwembe Tayari.</p>
+                </div>
+              </a>
+
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             2. CURATED NUMBERED ARCHITECTURAL LEVEL PANELS (Adam Kuhn inspired)
+             ========================================== -->
+        <section class="kinetic-level-panels-section" id="levelPanels">
+          <div class="level-panel-wrap">
+            
+            <div class="statement-header" style="margin-bottom: 12px;">
+              <div>
+                <span class="statement-eyebrow">// ARCHITECTURAL ZONING</span>
+                <h2 class="statement-title">Five Curated Floors of Possibility</h2>
+              </div>
+              <p class="statement-desc">
+                Distinct retail zones engineered for discovery, comfort, and natural flow.
+              </p>
             </div>
 
-            <!-- Sleek Upcoming Event Teaser -->
-            <a href="./news-events.html" id="heroUpcomingEventCard" class="hero-event-card" aria-label="Upcoming Event Details">
-              <div class="hero-event-card-header">
-                <span class="hero-event-badge">
-                  <span class="hero-event-dot"></span>
-                  <span>Upcoming Event</span>
-                </span>
-                <span class="hero-event-cta">Explore ↗</span>
+            <!-- Panel 01: Ground Floor -->
+            <article class="level-panel-item" data-panel="1">
+              <div>
+                <div class="level-panel-num">01</div>
+                <span class="level-panel-eyebrow">Level G · Ground Floor</span>
+                <h3 class="level-panel-title">Anchor Essentials &amp; Premier Banking</h3>
+                <p class="level-panel-desc">
+                  Featuring East Africa's flagship 24/7 Naivas Supermarket, tier-1 banking branches (NCBA, Stanbic, DTB), Goodlife Pharmacy, and fast casual artisan cafés.
+                </p>
+                <div class="level-panel-tenants">
+                  <span class="tenant-tag">Naivas 24/7</span>
+                  <span class="tenant-tag">NCBA Bank</span>
+                  <span class="tenant-tag">Stanbic Bank</span>
+                  <span class="tenant-tag">Goodlife</span>
+                  <span class="tenant-tag">ATM Concourse</span>
+                </div>
+                <a href="./stores.html" class="level-panel-btn">Explore Ground Floor Units →</a>
               </div>
-              <h4 class="hero-event-title" id="heroEventTitle">Coastal Designers &amp; Pop-up Fair</h4>
-              <div class="hero-event-meta">
-                <span id="heroEventSchedule">📅 Sat, 12 Sep · 10:00 AM – 7:00 PM</span>
-                <span id="heroEventVenue">📍 Ground Floor Central Grand Atrium</span>
+              <div class="level-panel-visual" data-floor-number="01">
+                <img src="./assets/Logo/Shops Logo/Naivasmain.jpeg" alt="Ground Floor Naivas Hypermarket" loading="lazy">
               </div>
-            </a>
-          </div>
-        </div>
+            </article>
 
-        <!-- FOOTER (bottom-right) -->
-        <footer class="site-footer">
-          <span data-footer-copyright>Mombasa Mall® 2026</span>
+            <!-- Panel 02: 1st & 2nd Floors (Reversed) -->
+            <article class="level-panel-item level-panel-item--reverse" data-panel="2">
+              <div>
+                <div class="level-panel-num">02</div>
+                <span class="level-panel-eyebrow">Levels 1 &amp; 2 · Fashion, Beauty &amp; Play</span>
+                <h3 class="level-panel-title">Contemporary Fashion &amp; VR Gaming Arena</h3>
+                <p class="level-panel-desc">
+                  Boutique coastal streetwear, bespoke jewellery, professional beauty salons, and Mombasa's leading family gaming zone with VR simulators and toddler soft play.
+                </p>
+                <div class="level-panel-tenants">
+                  <span class="tenant-tag">Lovisa</span>
+                  <span class="tenant-tag">7days Menswear</span>
+                  <span class="tenant-tag">Denri Leather</span>
+                  <span class="tenant-tag">Play-On VR</span>
+                  <span class="tenant-tag">Gamers Vault</span>
+                </div>
+                <a href="./stores.html" class="level-panel-btn">Explore Lifestyle Floors →</a>
+              </div>
+              <div class="level-panel-visual" data-floor-number="02">
+                <img src="./assets/Logo/Shops Logo/Lovisa.jpg" alt="Lovisa Fashion & Jewellery" loading="lazy">
+              </div>
+            </article>
+
+            <!-- Panel 03: 3rd Floor -->
+            <article class="level-panel-item" data-panel="3">
+              <div>
+                <div class="level-panel-num">03</div>
+                <span class="level-panel-eyebrow">Level 3 · Innovation &amp; Tech</span>
+                <h3 class="level-panel-title">Westerwelle Innovation Haus &amp; Suites</h3>
+                <p class="level-panel-desc">
+                  Mombasa's leading startup acceleration center, private executive conference rooms, high-speed coworking desks, and commercial tech services.
+                </p>
+                <div class="level-panel-tenants">
+                  <span class="tenant-tag">Westerwelle Haus</span>
+                  <span class="tenant-tag">Grand Computer</span>
+                  <span class="tenant-tag">Tawala ICT</span>
+                  <span class="tenant-tag">Jumia Pick-Up</span>
+                </div>
+                <a href="./stores.html" class="level-panel-btn">Explore Tech &amp; Offices →</a>
+              </div>
+              <div class="level-panel-visual" data-floor-number="03">
+                <img src="./assets/Logo/Random pics/Staff.jpeg" alt="Westerwelle Startup Haus" loading="lazy">
+              </div>
+            </article>
+
+            <!-- Panel 04: Rooftop Terrace (Reversed) -->
+            <article class="level-panel-item level-panel-item--reverse" data-panel="4">
+              <div>
+                <div class="level-panel-num">04</div>
+                <span class="level-panel-eyebrow">Level 4 · Rooftop Skyline</span>
+                <h3 class="level-panel-title">Ocean-View Gastronomy &amp; Sunset Lounge</h3>
+                <p class="level-panel-desc">
+                  Open-air terrace dining overlooking the Mombasa skyline. Enjoy Swahili seafood grills, artisanal coffees, sunset cocktails, and live weekend acoustic performances.
+                </p>
+                <div class="level-panel-tenants">
+                  <span class="tenant-tag">West 11 Restaurant</span>
+                  <span class="tenant-tag">Coastal Grills</span>
+                  <span class="tenant-tag">Sunset Terrace</span>
+                  <span class="tenant-tag">Live Stage</span>
+                </div>
+                <a href="./news-events.html" class="level-panel-btn">Discover Rooftop Dining →</a>
+              </div>
+              <div class="level-panel-visual" data-floor-number="04">
+                <img src="./assets/Logo/Shops Logo/West 11.jpg" alt="West 11 Rooftop Dining" loading="lazy">
+              </div>
+            </article>
+
+          </div>
+        </section>
+
+        <!-- ==========================================
+             3. PREMIER ANCHOR BRANDS MARQUEE CLOUD
+             ========================================== -->
+        <section class="brands-marquee-section" id="brandCloud">
+          <div class="brands-container">
+            <h3 class="brands-title">HOME TO OVER 120+ VERIFIED COASTAL &amp; INTERNATIONAL BRANDS</h3>
+            <div class="mall-flip-mark final" aria-hidden="true">
+              <span class="letter">M</span>
+              <span class="letter">A</span>
+              <span class="letter">L</span>
+              <span class="letter">L</span>
+              <span class="for">in</span>
+              <span class="gsap">Mombasa</span>
+            </div>
+            <div class="brands-grid">
+              
+              <a href="./stores.html" class="brand-tile">
+                <img src="./assets/Logo/Shops Logo/Naivasmain.jpeg" alt="Naivas Supermarket" loading="lazy">
+              </a>
+              <a href="./stores.html" class="brand-tile">
+                <img src="./assets/Logo/Shops Logo/NCBA.png" alt="NCBA Bank" loading="lazy">
+              </a>
+              <a href="./stores.html" class="brand-tile">
+                <img src="./assets/Logo/Shops Logo/Lovisa.jpg" alt="Lovisa" loading="lazy">
+              </a>
+              <a href="./stores.html" class="brand-tile">
+                <img src="./assets/Logo/Shops Logo/West 11.jpg" alt="West 11" loading="lazy">
+              </a>
+              <a href="./stores.html" class="brand-tile">
+                <img src="./assets/Logo/Shops Logo/JUMIA.jpg" alt="Jumia" loading="lazy">
+              </a>
+              <a href="./stores.html" class="brand-tile">
+                <img src="./assets/Logo/Shops Logo/Payless.jpg" alt="Payless Shoes" loading="lazy">
+              </a>
+              <a href="./stores.html" class="brand-tile">
+                <img src="./assets/Logo/Shops Logo/Grand Computer.jpg" alt="Grand Computer" loading="lazy">
+              </a>
+              <a href="./stores.html" class="brand-tile">
+                <img src="./assets/Logo/Shops Logo/7days mensware.jpg" alt="7days Menswear" loading="lazy">
+              </a>
+
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             4. MONUMENTAL LIVE METRICS
+             ========================================== -->
+        <section class="metrics-noir-section" id="metrics">
+          <div class="metrics-container">
+            <div class="metrics-header">
+              <span class="metrics-eyebrow">// LANDMARK METRICS</span>
+              <h2 class="metrics-title">Scale &amp; Impact</h2>
+            </div>
+
+            <div class="metrics-grid">
+              
+              <div class="metric-card">
+                <div class="metric-number-wrap">
+                  <span class="metric-counter" data-target="120">0</span><span class="accent">+</span>
+                </div>
+                <span class="metric-label">Verified Retail &amp; Food Brands</span>
+              </div>
+
+              <div class="metric-card">
+                <div class="metric-number-wrap">
+                  <span class="metric-counter" data-target="150">0</span><span class="accent">K</span>
+                </div>
+                <span class="metric-label">Daily Commuter &amp; Visitor Footfall</span>
+              </div>
+
+              <div class="metric-card">
+                <div class="metric-number-wrap">
+                  <span class="accent">24/7</span>
+                </div>
+                <span class="metric-label">Round-the-Clock Anchor Hypermarket</span>
+              </div>
+
+              <div class="metric-card">
+                <div class="metric-number-wrap">
+                  <span class="metric-counter" data-target="5">0</span><span class="accent">FL</span>
+                </div>
+                <span class="metric-label">Master-Planned Architectural Levels</span>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             5. CONCIERGE & WORLD-CLASS AMENITIES BENTO
+             ========================================== -->
+        <section class="amenities-bento-section" id="amenities">
+          <div class="amenities-container">
+            <div class="statement-header" style="margin-bottom:0;">
+              <div>
+                <span class="statement-eyebrow">// VISITOR EXPERIENCE</span>
+                <h2 class="statement-title">World-Class Facilities &amp; Security</h2>
+              </div>
+              <p class="statement-desc">
+                Everything designed for seamless comfort, safety, and convenience.
+              </p>
+            </div>
+
+            <div class="amenities-grid">
+              
+              <div class="amenity-card">
+                <div class="amenity-icon">🚗</div>
+                <h3 class="amenity-title">400+ Covered Parking Bays</h3>
+                <p class="amenity-text">Secure multi-level basement parking with automated license plate ticketing and valet concierge service.</p>
+              </div>
+
+              <div class="amenity-card">
+                <div class="amenity-icon">⚡</div>
+                <h3 class="amenity-title">High-Speed EV Charging</h3>
+                <p class="amenity-text">8 dedicated electric vehicle charging bays in Level B1 compatible with all major EV vehicle standards.</p>
+              </div>
+
+              <div class="amenity-card">
+                <div class="amenity-icon">📶</div>
+                <h3 class="amenity-title">Free Gigabit Guest WiFi</h3>
+                <p class="amenity-text">Ultra-fast complimentary fiber WiFi coverage across all retail concourses, atrium, and food courts.</p>
+              </div>
+
+              <div class="amenity-card">
+                <div class="amenity-icon">🛡️</div>
+                <h3 class="amenity-title">24/7 Monitored Surveillance</h3>
+                <p class="amenity-text">Full-perimeter HD CCTV coverage, electronic access control, and uniformed security officers round the clock.</p>
+              </div>
+
+              <div class="amenity-card">
+                <div class="amenity-icon">♿</div>
+                <h3 class="amenity-title">Full Accessibility</h3>
+                <p class="amenity-text">Wheelchair-friendly lifts, ramps, wide concourses, and dedicated accessible facilities on every level.</p>
+              </div>
+
+              <div class="amenity-card">
+                <div class="amenity-icon">🏧</div>
+                <h3 class="amenity-title">Multi-Bank ATM Concourse</h3>
+                <p class="amenity-text">NCBA, Stanbic, DTB, Equity, and M-Pesa agents available 24/7 on Ground and First Floors.</p>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             6. REAL-TIME "PLAN YOUR VISIT" CONCIERGE STRIP
+             ========================================== -->
+        <section class="plan-visit-section" id="planVisit">
+          <div class="plan-visit-container">
+            <div class="plan-visit-left">
+              <span class="plan-status-pill">
+                <span class="plan-status-dot"></span>
+                <span>OPEN TODAY · 8:00 AM – 11:00 PM</span>
+              </span>
+              <h2 class="plan-title">Plan Your Visit to Mombasa Mall</h2>
+              <p class="plan-desc">
+                Mwembe Tayari &amp; Jomo Kenyatta Avenue, Mombasa CBD. Naivas Hypermarket open 24/7.
+              </p>
+            </div>
+
+            <div class="plan-actions">
+              <a href="https://maps.google.com/?q=Mombasa+Mall+Mwembe+Tayari" target="_blank" rel="noopener" class="plan-btn-maps">
+                <span>Get Directions 📍</span>
+              </a>
+              <a href="https://wa.me/254790964002" target="_blank" rel="noopener" class="plan-btn-wa">
+                <span>WhatsApp Concierge 💬</span>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             7. 4K LED BILLBOARD SPOTLIGHT
+             ========================================== -->
+        <section class="media-spotlight-section" id="media">
+          <div class="media-spotlight-card">
+            <div class="media-spotlight-copy">
+              <span class="statement-eyebrow">// DIGITAL BILLBOARD NETWORK</span>
+              <h3>High-Impact 4K LED Screen Network</h3>
+              <p>150,000+ daily commuters pass our 4K corner LED screen. Reserve your slot.</p>
+              
+              <div class="media-pills-row">
+                <span class="media-spec-pill">180° Curved Corner</span>
+                <span class="media-spec-pill">Ultra-HD Pixel Pitch</span>
+                <span class="media-spec-pill">Day &amp; Night Calibrated</span>
+              </div>
+
+              <a href="./led.html" class="btn btn--primary">
+                <span>Explore Screen Inventory</span>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+              </a>
+            </div>
+
+            <div class="media-visual-frame">
+              <img src="./assets/Logo/Mall Logo/MOMBASA MALL2.0.png" alt="Mombasa Mall LED Network" loading="lazy">
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             8. MINIMAL LUXURY FOOTER
+             ========================================== -->
+        <footer class="minimal-luxury-footer" id="siteFooter">
+          <div class="footer-watermark" aria-hidden="true">MOMBASA MALL</div>
+
+          <nav class="footer-classy-nav" aria-label="Footer navigation">
+            <a href="./stores.html" class="footer-classy-link">Store Directory</a>
+            <a href="./stores.html#floorMapSection" class="footer-classy-link">Floor Blueprint</a>
+            <a href="./led.html" class="footer-classy-link">LED Billboard</a>
+            <a href="./news-events.html" class="footer-classy-link">Events &amp; News</a>
+            <a href="./about-us.html" class="footer-classy-link">About Us</a>
+            <a href="./about-us.html#blog" class="footer-classy-link">Journal</a>
+            <a href="./about-us.html#reviews" class="footer-classy-link">Reviews</a>
+            <a href="./admin/login.html" class="sys-btn" style="margin-left: 6px;">sys.</a>
+          </nav>
+
+          <div class="footer-meta-strip">
+            <span>04°03'S · 39°40'E · MWEMBE TAYARI, MOMBASA CBD, KENYA</span>
+            <span>+254 790 964 002 &nbsp;·&nbsp; <a href="mailto:info@mombasamall.co.ke">INFO@MOMBASAMALL.CO.KE</a></span>
+            <span style="margin-top: 10px; color: rgba(255,255,255,0.25);">© 2026 MOMBASA MALL · THE COASTAL LUXURY FLAGSHIP. ALL RIGHTS RESERVED.</span>
+          </div>
         </footer>
 
       </div>
@@ -305,7 +1584,7 @@
   </div>
 
   <!-- ============================
-       OFF-CANVAS MENU
+       OFF-CANVAS MENU (PRESERVED UNTOUCHED)
        ============================ -->
   <div id="offcanvas-menu" class="offcanvas-menu" aria-hidden="true">
     <button class="offcanvas-close" id="offcanvas-close" aria-label="Close menu">
@@ -324,7 +1603,7 @@
       <a href="./news-events.html">Events &amp; News</a>
       <a href="./gallery.html">Gallery</a>
       <a href="./play-on.html">Play On</a>
-      <a href="./led-advertising/index.html">LED Advertising</a>
+      <a href="./led.html">LED Advertising</a>
       <a href="./about-us.html">About Us</a>
       <a href="./admin/login.html" class="sys-btn" style="align-self:flex-start; margin-top:8px;">sys.</a>
     </nav>
@@ -341,29 +1620,15 @@
   <!-- Ambient lights (behind page-stage via z-index) -->
   <div class="ambient-light" aria-hidden="true"></div>
   <div class="ambient-light-bottom" aria-hidden="true"></div>
-  <div class="cursor"></div>
 
   <!-- Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="./js/preloader.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Flip.min.js"></script>
   <script src="./js/selectionMenu.js"></script>
   <script src="./js/main.js"></script>
   <script src="./js/site-data-init.js"></script>
   <script type="module" src="./js/firebase-config.js"></script>
-
-  <!-- Auto Safety Unlock Handler -->
-  <script>
-    (function () {
-      setTimeout(function () {
-        document.documentElement.classList.remove('site-preloader-pending');
-        if (document.body && !document.body.classList.contains('is-ready')) {
-          document.body.classList.add('is-ready');
-          var p = document.getElementById('site-preloader');
-          if (p) p.classList.add('is-done');
-        }
-      }, 2500);
-    })();
-  </script>
 
   <!-- Live Upcoming Event Handler for Homepage -->
   <script>
@@ -414,5 +1679,503 @@
     })();
   </script>
 
+  <!-- ============================
+       CINEMATIC HERO & SCROLLTRIGGER SCRUB ENGINE
+       ============================ -->
+  <script>
+    (function () {
+      const banner = document.getElementById('banner');
+      if (!banner) return;
+
+      // 1. Split text into characters for staggered reveal
+      const splitTargets = banner.querySelectorAll('[data-split]');
+      splitTargets.forEach(function (el) {
+        const words = el.textContent.trim().split(/\s+/);
+        el.textContent = '';
+        words.forEach(function (word, index) {
+          const span = document.createElement('span');
+          span.className = 'char';
+          span.textContent = word;
+          el.appendChild(span);
+          if (index < words.length - 1) {
+            el.appendChild(document.createTextNode(' '));
+          }
+        });
+      });
+
+      const chars = banner.querySelectorAll('.char');
+      const revealEls = banner.querySelectorAll('[data-reveal]');
+      const bg = banner.querySelector('.banner__bg');
+
+      let hasPlayed = false;
+      function playEntrance() {
+        if (hasPlayed) return;
+        hasPlayed = true;
+
+        if (typeof gsap === 'undefined') {
+          chars.forEach(function (c) { c.style.transform = 'translateY(0%)'; });
+          revealEls.forEach(function (r) { r.style.opacity = '1'; r.style.transform = 'translateY(0px)'; });
+          return;
+        }
+
+        const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+        if (bg) {
+          tl.fromTo(bg, { scale: 1.15 }, { scale: 1.05, duration: 1.8, ease: 'power2.out' }, 0);
+        }
+
+        if (chars.length > 0) {
+          tl.to(chars, {
+            y: '0%',
+            duration: 1,
+            stagger: 0.1,
+            ease: 'power4.out',
+          }, 0.2);
+        }
+
+        if (revealEls.length > 0) {
+          tl.to(revealEls, {
+            opacity: 1,
+            y: 0,
+            duration: 0.9,
+            stagger: 0.12,
+            ease: 'power2.out',
+          }, 0.55);
+        }
+      }
+
+      if (document.body.classList.contains('is-ready')) {
+        playEntrance();
+      } else {
+        document.body.addEventListener('is-ready', playEntrance, { once: true });
+        setTimeout(playEntrance, 2500);
+      }
+
+      // 2. Mouse-driven parallax on background
+      if (bg && typeof gsap !== 'undefined') {
+        const parallaxStrength = parseFloat(bg.dataset.parallax || '0.08');
+        let mouseX = 0, mouseY = 0;
+        let currentX = 0, currentY = 0;
+
+        const onMove = function (e) {
+          const rect = banner.getBoundingClientRect();
+          mouseX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+          mouseY = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+        };
+
+        banner.addEventListener('mousemove', onMove);
+        banner.addEventListener('mouseleave', function () { mouseX = 0; mouseY = 0; });
+
+        gsap.ticker.add(function () {
+          currentX += (mouseX - currentX) * 0.08;
+          currentY += (mouseY - currentY) * 0.08;
+          gsap.set(bg, {
+            x: -currentX * parallaxStrength * 60,
+            y: -currentY * parallaxStrength * 60,
+          });
+        });
+      }
+
+      // 3. Connect "Our Floors" CTA
+      const ourFloorsBtn = document.getElementById('bannerOurFloorsBtn');
+      if (ourFloorsBtn) {
+        ourFloorsBtn.addEventListener('click', function () {
+          const menuBtn = document.getElementById('open-selection');
+          if (menuBtn) menuBtn.click();
+        });
+      }
+
+      // 4. Floating Header Glass on Scroll
+      window.addEventListener('scroll', function () {
+        const header = document.querySelector('.floating-header');
+        if (!header) return;
+        if (window.scrollY > 40) {
+          header.classList.add('is-scrolled');
+        } else {
+          header.classList.remove('is-scrolled');
+        }
+      }, { passive: true });
+
+      // 5. GSAP ScrollTrigger Scrub Gallery & Dynamic Counter Animations
+      if (typeof ScrollTrigger !== 'undefined') {
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Horizontal Scrub Row 1 (Left to Right scrub with smooth inertia)
+        const row1 = document.getElementById('scrubRow1');
+        if (row1) {
+          const track1 = row1.querySelector('.scrub-gallery-track');
+          if (track1) {
+            gsap.fromTo(track1, 
+              { x: 0 },
+              {
+                x: () => -(track1.scrollWidth - row1.offsetWidth) + 30,
+                ease: 'none',
+                scrollTrigger: {
+                  trigger: row1,
+                  start: 'top bottom',
+                  end: 'bottom top',
+                  scrub: 0.8
+                }
+              }
+            );
+          }
+        }
+
+        // Giant Typography Scrub
+        const textSection = document.getElementById('scrubTextSection');
+        if (textSection) {
+          const textTrack = textSection.querySelector('.scrub-text-track');
+          if (textTrack) {
+            gsap.fromTo(textTrack,
+              { x: 0 },
+              {
+                x: () => -(textTrack.scrollWidth - textSection.offsetWidth),
+                ease: 'none',
+                scrollTrigger: {
+                  trigger: textSection,
+                  start: 'top bottom',
+                  end: 'bottom top',
+                  scrub: 0.7
+                }
+              }
+            );
+          }
+        }
+
+        // Horizontal Scrub Row 2 (Right to Left scrub with smooth inertia)
+        const row2 = document.getElementById('scrubRow2');
+        if (row2) {
+          const track2 = row2.querySelector('.scrub-gallery-track');
+          if (track2) {
+            gsap.fromTo(track2, 
+              { x: () => -(track2.scrollWidth - row2.offsetWidth) + 30 },
+              {
+                x: 0,
+                ease: 'none',
+                scrollTrigger: {
+                  trigger: row2,
+                  start: 'top bottom',
+                  end: 'bottom top',
+                  scrub: 0.8
+                }
+              }
+            );
+          }
+        }
+
+        // Animated Number Counters for Metric Cards
+        const counters = document.querySelectorAll('.metric-counter');
+        counters.forEach(function (counter) {
+          const target = parseInt(counter.dataset.target || '0', 10);
+          const obj = { val: 0 };
+          ScrollTrigger.create({
+            trigger: counter,
+            start: 'top 85%',
+            once: true,
+            onEnter: function () {
+              gsap.to(obj, {
+                val: target,
+                duration: 1.8,
+                ease: 'power2.out',
+                onUpdate: function () {
+                  counter.textContent = Math.floor(obj.val).toLocaleString();
+                }
+              });
+            }
+          });
+        });
+
+        // Staggered Level Panels Entrance
+        const panelItems = document.querySelectorAll('.level-panel-item');
+        panelItems.forEach(function (panel) {
+          gsap.from(panel, {
+            y: 45,
+            opacity: 0.2,
+            duration: 1,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: panel,
+              start: 'top 85%',
+              toggleActions: 'play none none none'
+            }
+          });
+
+          ScrollTrigger.create({
+            trigger: panel,
+            start: 'top 85%',
+            end: 'bottom 25%',
+            scrub: 0.4,
+            onUpdate: function (self) {
+              panel.style.setProperty('--progress', self.progress);
+            }
+          });
+
+          const image = panel.querySelector('.level-panel-visual img');
+          if (image && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            gsap.to(image, {
+              yPercent: -7,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: panel,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 0.8
+              }
+            });
+          }
+
+          const title = panel.querySelector('.level-panel-title');
+          if (title && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            const label = title.textContent.trim();
+            const words = label.split(/\s+/);
+            title.setAttribute('aria-label', label);
+            title.textContent = '';
+            words.forEach(function (word, index) {
+              const span = document.createElement('span');
+              span.className = 'level-panel-title-word';
+              span.setAttribute('aria-hidden', 'true');
+              span.textContent = word;
+              title.appendChild(span);
+              if (index < words.length - 1) {
+                title.appendChild(document.createTextNode(' '));
+              }
+            });
+            gsap.fromTo(title.querySelectorAll('.level-panel-title-word'),
+              { yPercent: 115, autoAlpha: 0 },
+              {
+                yPercent: 0,
+                autoAlpha: 1,
+                duration: 0.8,
+                stagger: 0.07,
+                ease: 'power3.out',
+                scrollTrigger: {
+                  trigger: panel,
+                  start: 'top 78%',
+                  once: true
+                }
+              }
+            );
+          }
+        });
+
+        // Staggered Brand Tiles Entrance
+        const brands = document.querySelectorAll('.brand-tile');
+        if (brands.length > 0) {
+          gsap.from(brands, {
+            y: 25,
+            opacity: 0,
+            duration: 0.7,
+            stagger: 0.06,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: '.brands-grid',
+              start: 'top 85%'
+            }
+          });
+        }
+
+        // Staggered Amenities Cards Entrance
+        const amenities = document.querySelectorAll('.amenity-card');
+        if (amenities.length > 0) {
+          gsap.from(amenities, {
+            y: 40,
+            opacity: 0,
+            duration: 0.8,
+            stagger: 0.08,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: '.amenities-grid',
+              start: 'top 85%'
+            }
+          });
+        }
+
+        // Staggered Scrub Card entrance (initial load reveal)
+        const scrubCards = document.querySelectorAll('.scrub-card');
+        if (scrubCards.length > 0) {
+          gsap.from(scrubCards, {
+            y: 30,
+            opacity: 0,
+            duration: 0.7,
+            stagger: 0.07,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: '#kineticGallery',
+              start: 'top 80%',
+              once: true
+            }
+          });
+        }
+
+        // Metric Cards staggered entrance
+        gsap.from('.metric-card', {
+          scale: 0.95,
+          opacity: 0,
+          y: 20,
+          stagger: 0.1,
+          duration: 0.7,
+          ease: 'back.out(1.4)',
+          scrollTrigger: {
+            trigger: '.metrics-grid',
+            start: 'top 85%'
+          }
+        });
+
+        // Section header reveals
+        const sectionHeaders = document.querySelectorAll(
+          '.scrub-intro, .statement-header, .metrics-header, .plan-visit-left, .media-spotlight-copy'
+        );
+        sectionHeaders.forEach(function (hdr) {
+          gsap.fromTo(hdr,
+            { y: 28, autoAlpha: 0 },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 0.9,
+              ease: 'power3.out',
+              scrollTrigger: {
+                trigger: hdr,
+                start: 'top 85%',
+                once: true
+              }
+            }
+          );
+        });
+
+        // Plan Visit section background parallax glow
+        const planVisit = document.getElementById('planVisit');
+        if (planVisit) {
+          gsap.fromTo(planVisit,
+            { backgroundPositionY: '40%' },
+            {
+              backgroundPositionY: '60%',
+              ease: 'none',
+              scrollTrigger: {
+                trigger: planVisit,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 1
+              }
+            }
+          );
+        }
+
+        // Auto Refresh on load to ensure exact measurements
+        window.addEventListener('load', function () {
+          setTimeout(function () {
+            ScrollTrigger.refresh();
+          }, 500);
+        });
+      }
+    })();
+  </script>
+
+  <script>
+    (function () {
+      if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      var fillHeadings = document.querySelectorAll(
+        '#kineticGallery .scrub-title, #levelPanels .statement-title, #amenities .statement-title, #metrics .metrics-title, #planVisit .plan-title'
+      );
+      var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      fillHeadings.forEach(function (heading) {
+        if (prefersReducedMotion) {
+          heading.style.setProperty('--text-fill', '100%');
+          return;
+        }
+
+        gsap.to(heading, {
+          '--text-fill': '100%',
+          ease: 'none',
+          scrollTrigger: {
+            trigger: heading,
+            start: 'top 88%',
+            end: 'bottom 58%',
+            scrub: 0.6
+          }
+        });
+      });
+
+      if (!prefersReducedMotion) {
+        gsap.fromTo(
+          '#kineticGallery .scrub-intro',
+          { y: 28, autoAlpha: 0 },
+          {
+            y: 0,
+            autoAlpha: 1,
+            duration: 0.8,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: '#kineticGallery',
+              start: 'top 82%',
+              once: true
+            }
+          }
+        );
+      }
+
+      window.addEventListener('load', function () {
+        ScrollTrigger.refresh();
+      }, { once: true });
+    })();
+  </script>
+  <script>
+    (function () {
+      var mark = document.querySelector('#brandCloud .mall-flip-mark');
+      var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!mark || prefersReducedMotion || typeof gsap === 'undefined' || typeof Flip === 'undefined') return;
+
+      gsap.registerPlugin(Flip);
+      var layouts = ['final', 'plain', 'columns', 'grid'];
+      var currentLayout = 0;
+      var hasStarted = false;
+
+      function nextState() {
+        var state = Flip.getState(mark.querySelectorAll('.letter, .for, .gsap'), {
+          props: 'color,backgroundColor',
+          simple: true
+        });
+
+        mark.classList.remove(layouts[currentLayout]);
+        currentLayout = (currentLayout + 1) % layouts.length;
+        mark.classList.add(layouts[currentLayout]);
+
+        Flip.from(state, {
+          absolute: true,
+          stagger: 0.07,
+          duration: 0.7,
+          ease: 'power2.inOut',
+          spin: currentLayout === 0,
+          simple: true,
+          onEnter: function (elements, animation) {
+            gsap.fromTo(elements, { opacity: 0 }, {
+              opacity: 1,
+              delay: animation.duration() - 0.1
+            });
+          },
+          onLeave: function (elements) {
+            gsap.to(elements, { opacity: 0 });
+          }
+        });
+
+        gsap.delayedCall(currentLayout === 0 ? 3.5 : 1.5, nextState);
+      }
+
+      function start() {
+        if (hasStarted) return;
+        hasStarted = true;
+        gsap.delayedCall(1, nextState);
+      }
+
+      if (document.body.classList.contains('is-ready')) {
+        start();
+      } else {
+        document.body.addEventListener('is-ready', start, { once: true });
+      }
+    })();
+  </script>
 </body>
 </html>

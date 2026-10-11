@@ -1,0 +1,119 @@
+/* Shared only by Events, Gallery and About Us. */
+body.lifestyle-page { --coral: #246b9e; --tangerine: #246b9e; --sunflower-gold: #246b9e; }
+.lifestyle-page .subpage-content { background: #f4f7fa !important; padding: 108px clamp(20px,5vw,80px) 0; scroll-padding-top: 100px; overflow-x: hidden; }
+.lifestyle-page .ambient-light { display: none; }
+.lifestyle-page .floating-header .site-logo { background: #102f50; padding: 8px 14px; border-radius: 12px; }
+.lifestyle-page .floating-header .site-logo img { height: 30px; filter: brightness(0) invert(1) !important; }
+.lifestyle-page .our-selection-btn { background: #102f50 !important; color: #fff !important; border-color: #102f50 !important; box-shadow: 0 4px 14px #102f501a !important; }
+.lifestyle-page .our-selection-btn span { color: inherit; }
+.lifestyle-page .menu-btn { background: white !important; color: #102f50 !important; border-color: #dce6ef !important; }
+.lp-kicker { display: block; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .16em; color: #246b9e; }
+.lp-hero { position: relative; isolation: isolate; overflow: hidden; border-radius: 28px; background: #102f50; min-height: 540px; display: flex; align-items: flex-end; margin-bottom: 48px; }
+.lp-hero > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; }
+.lp-hero::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg,#071d32de,#071d3270 65%,#071d3220),linear-gradient(0deg,#071d329e,transparent); }
+.lp-hero-copy { padding: clamp(28px,5vw,70px); max-width: 950px; }
+.lp-hero .lp-kicker { color: #c0dff2; margin-bottom: 24px; }
+.lp-hero h1 { color: #fff !important; font-size: clamp(44px,5.8vw,82px); line-height: 1.08; letter-spacing: -.025em; margin: 0 0 24px; font-weight: 600; }
+.lp-hero h1 span { display: block; color: #b9dcf2; }
+.lp-hero p { color: #e4edf4; font-size: 15px; line-height: 1.8; max-width: 490px; margin-bottom: 28px; }
+.lp-links { display: flex; flex-wrap: wrap; gap: 12px; }
+.lp-link { display: inline-flex; align-items: center; justify-content: space-between; gap: 26px; border-radius: 100px; background: white; color: #102f50; padding: 14px 22px; font-size: 12px; font-weight: 700; text-decoration: none; }
+.lp-link span { color: inherit; }
+.lp-link.secondary { background: #ffffff15; color: white; border: 1px solid #ffffff66; }
+.lp-section-heading { display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; margin: 0 0 24px; }
+.lp-section-heading h2 { color: #102f50 !important; font-size: clamp(28px,3.5vw,44px); letter-spacing: -.02em; margin-top: 10px; }
+.lp-section-heading p { color: #607487; font-size: 13px; line-height: 1.8; max-width: 360px; }
+.lp-section { margin: 0 0 64px; }
+.lifestyle-page .section-header { margin-top: 48px; margin-bottom: 24px; }
+.lifestyle-page .section-h2 { font-size: clamp(26px,3vw,38px); letter-spacing: -.02em; }
+.lifestyle-page .bento { background: #fff !important; border: 1px solid #dce6ef !important; border-radius: 20px !important; box-shadow: 0 5px 22px #102f5007 !important; padding: 28px; }
+.lifestyle-page .bento:hover { box-shadow: 0 12px 30px #102f5010 !important; border-color: #a7c6dc !important; }
+.lifestyle-page .bento-text { color: #526b80 !important; font-size: 14px; line-height: 1.8; }
+.lifestyle-page .bento-title { font-size: 22px; line-height: 1.3; margin-bottom: 14px; }
+.lifestyle-page .bento-eyebrow { color: #246b9e !important; font-size: 10px; line-height: 1.7; margin-bottom: 14px; }
+.lp-carousel { position: relative; min-width: 0; }
+.lp-carousel-track { display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; position: relative; border-radius: 24px; overscroll-behavior-x: contain; }
+.lp-carousel-track::-webkit-scrollbar { display: none; }
+.lp-slide { flex: 0 0 100%; scroll-snap-align: start; position: relative; min-width: 0; margin: 0; border-radius: 24px; overflow: hidden; background: #102f50; }
+.lp-slide img { display: block; width: 100%; height: clamp(300px,46vw,560px); object-fit: cover; }
+.lp-slide::after { content: ''; position: absolute; inset: 40% 0 0; background: linear-gradient(0deg,#061e36dc,transparent); pointer-events: none; }
+.lp-slide figcaption { position: absolute; left: clamp(24px,4vw,52px); bottom: 34px; z-index: 1; color: white; }
+.lp-slide figcaption small { display: block; font-size: 10px; letter-spacing: .15em; text-transform: uppercase; color: #c0dff2; margin-bottom: 12px; }
+.lp-slide figcaption strong { font: 600 clamp(24px,3vw,42px)/1.15 var(--font-display); color: white; }
+.lp-carousel-controls { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 18px 0; }
+.lp-carousel-controls button, .lp-filter { background: #fff; border: 1px solid #d5e2ed; border-radius: 100px; padding: 10px 16px; color: #102f50; font: 700 12px var(--font-body); cursor: pointer; }
+.lp-carousel-controls button:hover { background: #e6f1f8; }
+.lp-carousel-controls .lp-dot { width: 8px; height: 8px; padding: 0; border: 0; background: #bfd0df; }
+.lp-dot[aria-current="true"] { background: #246b9e; width: 24px; }
+.lp-dots { display: flex; gap: 8px; align-items: center; }
+.lp-carousel-status { color: #607487; font: 11px var(--font-mono); }
+.lp-control-group { display: flex; gap: 8px; align-items: center; }
+.lp-gallery-toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 24px; }
+.lp-filter[aria-pressed="true"] { background: #102f50; color: white; border-color: #102f50; }
+.lp-gallery-count { margin-left: auto; color: #607487; font-size: 12px; }
+.lp-photo-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 20px; }
+.lp-photo { display: block; text-align: left; width: 100%; padding: 0; border: 1px solid #dce6ef; border-radius: 18px; overflow: hidden; background: white; cursor: pointer; }
+.lp-photo[hidden] { display: none; }
+.lp-photo img { display: block; width: 100%; aspect-ratio: 4/3; object-fit: cover; transition: transform .6s ease; }
+.lp-photo:hover img { transform: scale(1.035); }
+.lp-photo-caption { display: block; padding: 16px 18px; color: #102f50; font: 700 14px var(--font-body); }
+.lp-photo-caption small { display: block; margin-top: 5px; color: #607487; font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: .08em; }
+.lp-event-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 20px; }
+.lp-event-card { background: white; border: 1px solid #dce6ef; border-radius: 20px; overflow: hidden; }
+.lp-event-card img { display: block; width: 100%; aspect-ratio: 16/10; object-fit: cover; }
+.lp-event-copy { padding: 24px; }
+.lp-event-copy time { color: #246b9e; font-size: 11px; font-weight: 800; text-transform: uppercase; }
+.lp-event-copy h3 { font-size: 23px; line-height: 1.25; margin: 12px 0; }
+.lp-event-copy p { font-size: 13px; line-height: 1.8; color: #607487; }
+.lp-event-copy small { display: block; margin-top: 16px; color: #246b9e; font-size: 11px; }
+.lp-empty { padding: 36px; border: 1px dashed #bad0e0; border-radius: 20px; background: #fff; grid-column: 1/-1; }
+.lp-empty h3 { margin-bottom: 12px; font-size: 24px; }
+.lp-empty p { font-size: 14px; line-height: 1.8; color: #607487; }
+.lp-about-intro { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(24px,5vw,70px); align-items: center; margin-bottom: 56px; }
+.lp-about-intro img { width: 100%; aspect-ratio: 4/5; object-fit: cover; border-radius: 24px; }
+.lp-about-intro h2 { font-size: clamp(30px,3.5vw,48px); line-height: 1.16; margin: 20px 0; letter-spacing: -.025em; }
+.lp-about-intro p { font-size: 15px; line-height: 1.9; color: #607487; margin-bottom: 18px; }
+.lifestyle-page .category-values__figure { border-radius: 24px; overflow: hidden; }
+.lifestyle-page .category-values__desc { font-size: 15px; line-height: 1.9; }
+.lifestyle-page .category-quote { background: #102f50; border-radius: 24px; padding: clamp(24px,5vw,64px); }
+.lifestyle-page .category-quote__text { color: #fff !important; }
+.lifestyle-page .category-quote__name,.lifestyle-page .category-quote__source { color: #c0dff2 !important; }
+.lifestyle-page .category-next-banner { background: #e4eff7; border-radius: 24px; }
+.lifestyle-page .site-footer { position: relative !important; display: block !important; height: auto !important; margin: 64px calc(-1 * clamp(20px,5vw,80px)) 0; padding: 44px clamp(20px,5vw,80px) !important; background: #102f50 !important; }
+.lifestyle-page .site-footer h4 { color: white !important; }
+.lifestyle-page :is(button,a,input,select,textarea):focus-visible { outline: 3px solid #55a8dc; outline-offset: 4px; }
+.lifestyle-page .lightbox-img-wrap { display: block; max-width: min(1100px,90vw); max-height: none; position: relative; }
+.lifestyle-page .lightbox-modal.is-active { visibility: visible; }
+.lifestyle-page .lightbox-modal[hidden] { display: none !important; }
+.lifestyle-page #lightboxImg { display: block; max-width: 100%; max-height: 78vh; object-fit: contain; border-radius: 16px; }
+.lifestyle-page .lightbox-close-btn { top: -18px; right: -18px; }
+.lp-lightbox-caption { text-align: center; color: #fff; padding: 14px; font-size: 13px; }
+.lp-video { width: 100%; display: block; border-radius: 24px; background: #102f50; max-height: 650px; }
+@media (max-width:1000px) { .lp-event-grid,.lp-photo-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+@media (max-width:700px) {
+ .lifestyle-page .subpage-content { padding: 88px 16px 0; scroll-padding-top: 85px; }
+ .lifestyle-page .floating-header .site-logo { padding: 8px 10px; }
+ .lifestyle-page .floating-header .site-logo img { height: 25px; }
+ .lp-hero { min-height: 460px; border-radius: 20px; margin-bottom: 36px; }
+ .lp-hero-copy { padding: 32px 24px; }
+ .lp-hero h1 { font-size: clamp(38px,9vw,56px); }
+ .lp-hero p { font-size: 13px; }
+ .lp-section { margin-bottom: 40px; }
+ .lp-section-heading { display: block; }
+ .lp-section-heading p { margin-top: 16px; }
+ .lp-slide img { height: 360px; }
+ .lp-slide figcaption { bottom: 26px; left: 24px; right: 20px; }
+ .lp-carousel-controls { flex-wrap: wrap; }
+ .lp-carousel-controls button { padding: 10px 12px; }
+ .lp-dots { gap: 6px; }
+ .lp-photo-grid { gap: 12px; }
+ .lp-photo-caption { padding: 12px; font-size: 12px; }
+ .lp-photo-caption small { font-size: 8px; }
+ .lp-event-grid { grid-template-columns: 1fr; }
+ .lp-about-intro { grid-template-columns: 1fr; }
+ .lp-about-intro img { aspect-ratio: 4/3; }
+ .lifestyle-page .grid-2,.lifestyle-page .grid-3,.lifestyle-page .grid-auto { grid-template-columns: 1fr; }
+ .lifestyle-page .bento { padding: 24px; }
+ .lifestyle-page .site-footer { margin-left: -16px; margin-right: -16px; padding: 40px 24px !important; }
+}
+@media(prefers-reduced-motion:reduce) { .lifestyle-page *, .lifestyle-page *::before,.lifestyle-page *::after { transition: none !important; animation: none !important; } }

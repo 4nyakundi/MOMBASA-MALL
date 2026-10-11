@@ -1,6 +1,6 @@
 /**
  * main.js — Mombasa Mall
- * Global micro-interactions, custom cursor, 3D tilt, and active navigation.
+ * Global micro-interactions, 3D tilt, and active navigation.
  * Uses the refined coastal palette (#e7ecef, #274c77, #6096ba, #a3cef1).
  */
 
@@ -12,75 +12,6 @@
     if (typeof ScrollTrigger !== 'undefined') {
       gsap.registerPlugin(ScrollTrigger);
     }
-  }
-
-  /* ============================================================
-     CUSTOM CURSOR (Coastal Blue Palette)
-     ============================================================ */
-  const cursor = document.querySelector('.cursor');
-  if (cursor) {
-    let follower = document.querySelector('.cursor-follower');
-    if (!follower) {
-      follower = document.createElement('div');
-      follower.className = 'cursor-follower';
-      document.body.appendChild(follower);
-    }
-
-    let mx = 0, my = 0, cx = 0, cy = 0, fx = 0, fy = 0;
-
-    document.addEventListener('mousemove', (e) => {
-      mx = e.clientX;
-      my = e.clientY;
-    });
-
-    (function animateCursor() {
-      cx += (mx - cx) * 0.28;
-      cy += (my - cy) * 0.28;
-      cursor.style.left = cx + 'px';
-      cursor.style.top = cy + 'px';
-
-      fx += (mx - fx) * 0.1;
-      fy += (my - fy) * 0.1;
-      follower.style.left = fx + 'px';
-      follower.style.top = fy + 'px';
-
-      requestAnimationFrame(animateCursor);
-    })();
-
-    const hoverSelectors = 'a, button, .bento, .floor-pill, .category-pill, .selection-card, input, select, textarea, [role="button"]';
-
-    function updateHoverListeners() {
-      if (typeof gsap === 'undefined') return;
-      document.querySelectorAll(hoverSelectors).forEach((el) => {
-        if (el.dataset.cursorBound) return;
-        el.dataset.cursorBound = 'true';
-
-        el.addEventListener('mouseenter', () => {
-          gsap.to(cursor, { width: 5, height: 5, backgroundColor: '#d62828', duration: 0.2 });
-          gsap.to(follower, {
-            width: 44,
-            height: 44,
-            borderColor: '#f77f00',
-            backgroundColor: 'rgba(252, 191, 73, 0.18)',
-            duration: 0.25
-          });
-        });
-
-        el.addEventListener('mouseleave', () => {
-          gsap.to(cursor, { width: 8, height: 8, backgroundColor: '#f77f00', duration: 0.2 });
-          gsap.to(follower, {
-            width: 28,
-            height: 28,
-            borderColor: 'rgba(247, 127, 0, 0.45)',
-            backgroundColor: 'transparent',
-            duration: 0.25
-          });
-        });
-      });
-    }
-
-    updateHoverListeners();
-    setInterval(updateHoverListeners, 2000);
   }
 
   /* ============================================================
@@ -264,4 +195,3 @@
   });
 
 })();
-

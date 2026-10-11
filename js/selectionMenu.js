@@ -96,6 +96,7 @@
     var navLinks = $$('.site-nav__link');
     var logoEl = document.querySelector('.site-logo');
     var navActions = document.querySelector('.site-nav__actions');
+    var floatingHeader = document.querySelector('.floating-header');
     var marquee = document.querySelector('.marquee-reveal');
     var footer = document.querySelector('.site-footer');
 
@@ -117,7 +118,9 @@
     function revealHero() {
       var tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-      if (logoEl) {
+      if (floatingHeader) {
+        tl.fromTo(floatingHeader, { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.8 }, 0);
+      } else if (logoEl) {
         tl.fromTo(logoEl, { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 0.6 }, 0);
       }
 
