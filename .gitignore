@@ -8,6 +8,7 @@ Thumbs.db
 
 # Large media files (host on Firebase Storage / CDN instead)
 *.mp4
+!assets/hero.mp4
 *.mov
 *.avi
 *.mkv
