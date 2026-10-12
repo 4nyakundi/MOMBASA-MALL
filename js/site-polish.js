@@ -47,6 +47,47 @@
     });
   }
   function init() {
+    // A native single-row carousel keeps logos usable without animation libraries.
+    const brandSection = document.getElementById('brandCloud');
+    if (brandSection) {
+      const track = brandSection.querySelector('.brands-grid');
+      const play = brandSection.querySelector('[data-brand-play]');
+      const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      let playing = !motion.matches, visible = false, hovered = false, timer;
+      function move(direction) {
+        const step = track.firstElementChild.getBoundingClientRect().width + 16;
+        const end = track.scrollWidth - track.clientWidth;
+        let left = track.scrollLeft + direction * step;
+        if (left > end + 2) left = 0;
+        if (left < -2) left = end;
+        track.scrollTo({ left, behavior: motion.matches ? 'auto' : 'smooth' });
+      }
+      function schedule() {
+        clearInterval(timer);
+        play.textContent = playing ? 'Pause' : 'Play';
+        play.setAttribute('aria-label', playing ? 'Pause logo slider' : 'Play logo slider');
+        play.setAttribute('aria-pressed', String(playing));
+        if (playing && visible && !hovered && !document.hidden && !brandSection.contains(document.activeElement) && !motion.matches) timer = setInterval(() => move(1), 3500);
+      }
+      function stop() { playing = false; schedule(); }
+      brandSection.querySelector('[data-brand-prev]').addEventListener('click', () => { stop(); move(-1); });
+      brandSection.querySelector('[data-brand-next]').addEventListener('click', () => { stop(); move(1); });
+      play.addEventListener('click', () => { playing = !playing; schedule(); });
+      track.addEventListener('pointerdown', stop);
+      track.addEventListener('wheel', stop, { passive: true });
+      track.addEventListener('keydown', event => {
+        if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') { event.preventDefault(); stop(); move(event.key === 'ArrowRight' ? 1 : -1); }
+      });
+      brandSection.addEventListener('mouseenter', () => { hovered = true; schedule(); });
+      brandSection.addEventListener('mouseleave', () => { hovered = false; schedule(); });
+      brandSection.addEventListener('focusin', schedule);
+      brandSection.addEventListener('focusout', () => setTimeout(schedule, 0));
+      document.addEventListener('visibilitychange', schedule);
+      motion.addEventListener('change', () => { if (motion.matches) playing = false; schedule(); });
+      new IntersectionObserver(entries => { visible = entries[0].isIntersecting; schedule(); }, { threshold: .15 }).observe(brandSection);
+      schedule();
+    }
+    document.querySelectorAll('[data-mall-year]').forEach(el => { el.textContent = new Date().getFullYear(); });
     replaceEmoji(document.body);
     new MutationObserver(records => records.forEach(record => record.addedNodes.forEach(node => {
       if (node.nodeType===1 && !node.closest('svg,.mall-icon-slot')) replaceEmoji(node);
