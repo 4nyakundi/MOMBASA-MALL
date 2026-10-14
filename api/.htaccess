@@ -1,0 +1,12 @@
+# Mombasa Mall API Apache Configuration
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # Prevent direct access to config
+    RewriteRule ^config\.php$ - [F,L]
+</IfModule>
+
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+</IfModule>

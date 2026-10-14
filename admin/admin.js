@@ -392,6 +392,152 @@
     }
   }
 
+  // ── SQL BACKEND RELAY & REST API BRIDGE ──────────────────
+  async function apiFetch(url, options = {}) {
+    const token = localStorage.getItem('mombasa_admin_token') || '';
+    const headers = { ...options.headers };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    const opts = {
+      credentials: 'include',
+      ...options,
+      headers
+    };
+    return fetch(url, opts);
+  }
+
+  function updateBackendStatusBadge(isOnline, text) {
+    const badge = document.getElementById('backendStatusBadge');
+    const dot = document.getElementById('backendStatusDot');
+    const label = document.getElementById('backendStatusText');
+    if (!badge || !dot || !label) return;
+
+    if (isOnline) {
+      badge.style.background = 'rgba(16,185,129,0.12)';
+      badge.style.color = '#059669';
+      badge.style.borderColor = 'rgba(16,185,129,0.25)';
+      dot.style.background = '#10B981';
+      dot.style.boxShadow = '0 0 6px #10B981';
+      label.textContent = text || 'Live SQL: mombasam_mall';
+    } else {
+      badge.style.background = 'rgba(100,116,139,0.12)';
+      badge.style.color = '#475569';
+      badge.style.borderColor = 'rgba(100,116,139,0.25)';
+      dot.style.background = '#94A3B8';
+      dot.style.boxShadow = 'none';
+      label.textContent = text || 'Local State Bus';
+    }
+  }
+
+  async function syncFromBackendSQL(silent = true) {
+    if (window.location.protocol === 'file:') {
+      updateBackendStatusBadge(false, 'Local File Protocol');
+      return;
+    }
+
+    try {
+      // 1. Verify connection and fetch dashboard metrics
+      const dashRes = await apiFetch('../api/admin/dashboard.php');
+      if (!dashRes.ok) throw new Error(`HTTP ${dashRes.status}`);
+      const dashData = await dashRes.json();
+      if (!dashData.success) throw new Error(dashData.error || 'Backend error');
+
+      // 2. Fetch stores & photos
+      const storesRes = await apiFetch('../api/admin/stores.php');
+      if (storesRes.ok) {
+        const sData = await storesRes.json();
+        if (sData.success && Array.isArray(sData.stores) && sData.stores.length > 0) {
+          shopsCache = sData.stores;
+          localStorage.setItem('mombasa_live_shops', JSON.stringify(shopsCache));
+        }
+      }
+
+      // 3. Fetch events
+      const eventsRes = await apiFetch('../api/admin/events.php');
+      if (eventsRes.ok) {
+        const eData = await eventsRes.json();
+        if (eData.success && Array.isArray(eData.events)) {
+          eventsCache = eData.events;
+          localStorage.setItem('mombasa_live_events', JSON.stringify(eventsCache));
+        }
+      }
+
+      // 4. Fetch blog posts
+      const blogRes = await apiFetch('../api/admin/blog.php');
+      if (blogRes.ok) {
+        const bData = await blogRes.json();
+        if (bData.success && Array.isArray(bData.posts)) {
+          blogCache = bData.posts;
+          localStorage.setItem('mombasa_live_blog', JSON.stringify(blogCache));
+        }
+      }
+
+      // 5. Fetch reviews
+      const reviewsRes = await apiFetch('../api/admin/reviews.php');
+      if (reviewsRes.ok) {
+        const rData = await reviewsRes.json();
+        if (rData.success && Array.isArray(rData.reviews)) {
+          reviewsCache = rData.reviews;
+          localStorage.setItem('mombasa_live_reviews', JSON.stringify(reviewsCache));
+        }
+      }
+
+      // 6. Fetch gallery
+      const galleryRes = await apiFetch('../api/admin/gallery.php');
+      if (galleryRes.ok) {
+        const gData = await galleryRes.json();
+        if (gData.success && Array.isArray(gData.gallery)) {
+          galleryCache = gData.gallery;
+          localStorage.setItem('mombasa_live_gallery', JSON.stringify(galleryCache));
+        }
+      }
+
+      // 7. Fetch all leads (LED, Activation, Contact)
+      const leadsRes = await apiFetch('../api/admin/leads.php?type=all');
+      if (leadsRes.ok) {
+        const lData = await leadsRes.json();
+        if (lData.success) {
+          if (Array.isArray(lData.ledLeads)) {
+            ledLeadsCache = lData.ledLeads;
+            localStorage.setItem('mombasa_live_led_leads', JSON.stringify(ledLeadsCache));
+          }
+          if (Array.isArray(lData.activationLeads)) {
+            activLeadsCache = lData.activationLeads;
+            localStorage.setItem('mombasa_live_activation_leads', JSON.stringify(activLeadsCache));
+          }
+          if (Array.isArray(lData.contactLeads)) {
+            contactLeadsCache = lData.contactLeads;
+            localStorage.setItem('mombasa_live_contact_leads', JSON.stringify(contactLeadsCache));
+          }
+        }
+      }
+
+      // 8. Fetch users & roles
+      const usersRes = await apiFetch('../api/admin/users.php');
+      if (usersRes.ok) {
+        const uData = await usersRes.json();
+        if (uData.success && Array.isArray(uData.users)) {
+          usersCache = uData.users;
+          localStorage.setItem('mombasa_live_users', JSON.stringify(usersCache));
+        }
+      }
+
+      updateAllBadges();
+      updateOverviewMetrics();
+      renderCurrentTab();
+      updateBackendStatusBadge(true, 'Live SQL: mombasam_mall');
+      if (!silent) {
+        showToast('Live data successfully relayed from mombasam_mall MySQL database!', 'success');
+      }
+    } catch (err) {
+      console.warn('[SQL Sync] Notice connecting to PHP/MySQL backend:', err.message);
+      updateBackendStatusBadge(false, 'Local State Bus');
+      if (!silent) {
+        showToast('Could not reach SQL backend: ' + err.message + '. Showing cached data.', 'warning');
+      }
+    }
+  }
+  window.syncFromBackendSQL = syncFromBackendSQL;
+
   // ── DATA INITIALIZATION ────────────────────────────────────
   function initData() {
     // 1. SHOPS
@@ -691,7 +837,10 @@
     broadcastChange('delete_shop', shopId);
     showToast(`Deleted "${shopName}"`, 'success');
 
-
+    if (window.location.protocol !== 'file:') {
+      apiFetch(`../api/admin/stores.php?id=${encodeURIComponent(shopId)}`, { method: 'DELETE' })
+        .catch(e => console.warn('SQL store delete note:', e.message));
+    }
   };
 
   // ── 2. GALLERY RENDER ──────────────────────────────────────
@@ -724,7 +873,10 @@
     broadcastChange('delete_gallery', id);
     showToast('Photo removed from gallery', 'success');
 
-
+    if (window.location.protocol !== 'file:') {
+      apiFetch(`../api/admin/gallery.php?id=${encodeURIComponent(id)}`, { method: 'DELETE' })
+        .catch(e => console.warn('SQL gallery delete note:', e.message));
+    }
   };
 
   // ── 3. LED LEADS RENDER ────────────────────────────────────
@@ -1187,8 +1339,16 @@
       if (collName === 'contactLeads') localStorage.setItem('mombasa_live_contact_leads', JSON.stringify(contactLeadsCache));
       broadcastChange(`update_status_${collName}`, id);
       updateAllBadges(); updateOverviewMetrics(); renderCurrentTab();
-      showToast('Status saved; synchronizing with cloud.', 'info');
-  
+      showToast('Status saved; synchronizing with database.', 'info');
+
+      if (window.location.protocol !== 'file:') {
+        const typeMap = { ledLeads: 'led', activationLeads: 'activation', contactLeads: 'contact' };
+        apiFetch('../api/admin/leads.php', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type: typeMap[collName] || 'contact', id: id, status: status })
+        }).catch(e => console.warn('SQL lead status note:', e.message));
+      }
     }
   };
 
@@ -1216,6 +1376,11 @@
     broadcastChange(`delete_${collName}`, id);
     showToast('Record deleted', 'success');
 
+    if (window.location.protocol !== 'file:') {
+      const typeMap = { ledLeads: 'led', activationLeads: 'activation', contactLeads: 'contact' };
+      apiFetch(`../api/admin/leads.php?type=${typeMap[collName] || 'contact'}&id=${encodeURIComponent(id)}`, { method: 'DELETE' })
+        .catch(e => console.warn('SQL lead delete note:', e.message));
+    }
   };
 
   // ── 6. EVENTS RENDER ───────────────────────────────────────
@@ -1326,6 +1491,10 @@
     broadcastChange('delete_event', id);
     showToast('Event deleted', 'success');
 
+    if (window.location.protocol !== 'file:') {
+      apiFetch(`../api/admin/events.php?id=${encodeURIComponent(id)}`, { method: 'DELETE' })
+        .catch(e => console.warn('SQL event delete note:', e.message));
+    }
   };
 
   // ── 7. BLOG RENDER ─────────────────────────────────────────
@@ -1380,6 +1549,11 @@
     renderBlog();
     broadcastChange('delete_blog', id);
     showToast('Article deleted', 'success');
+
+    if (window.location.protocol !== 'file:') {
+      apiFetch(`../api/admin/blog.php?id=${encodeURIComponent(id)}`, { method: 'DELETE' })
+        .catch(e => console.warn('SQL blog delete note:', e.message));
+    }
   };
 
   // ── 8. REVIEWS RENDER ──────────────────────────────────────
@@ -1424,6 +1598,14 @@
     renderReviews();
     broadcastChange('toggle_review', id);
     showToast(`Review ${approveStatus ? 'Approved' : 'Unapproved'}`, 'info');
+
+    if (window.location.protocol !== 'file:') {
+      apiFetch('../api/admin/reviews.php', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: id, approved: approveStatus })
+      }).catch(e => console.warn('SQL review approval note:', e.message));
+    }
   };
 
   window.deleteReview = function(id) {
@@ -1435,6 +1617,11 @@
     renderReviews();
     broadcastChange('delete_review', id);
     showToast('Review deleted', 'success');
+
+    if (window.location.protocol !== 'file:') {
+      apiFetch(`../api/admin/reviews.php?id=${encodeURIComponent(id)}`, { method: 'DELETE' })
+        .catch(e => console.warn('SQL review delete note:', e.message));
+    }
   };
 
   // ── 9. USERS & ROLES RENDER ────────────────────────────────
@@ -1561,6 +1748,11 @@
     renderUsers();
     broadcastChange('delete_user', id);
     showToast(`User "${target.name}" removed`, 'success');
+
+    if (window.location.protocol !== 'file:') {
+      apiFetch(`../api/admin/users.php?id=${encodeURIComponent(id)}`, { method: 'DELETE' })
+        .catch(e => console.warn('SQL user delete note:', e.message));
+    }
   };
 
   function updateRolePermissionsHelp(role) {
@@ -1847,7 +2039,19 @@
       renderShops();
       broadcastChange('save_shop', data.id);
 
-  
+      if (window.location.protocol !== 'file:') {
+        apiFetch('../api/admin/stores.php', {
+          method: docId ? 'PUT' : 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        }).then(res => res.json()).then(resJson => {
+          if (resJson.store_id && !docId) {
+            data.id = String(resJson.store_id);
+            data.numeric_id = resJson.store_id;
+            localStorage.setItem('mombasa_live_shops', JSON.stringify(shopsCache));
+          }
+        }).catch(e => console.warn('SQL store save note:', e.message));
+      }
     });
 
     // 7. Modals - Event
@@ -1957,7 +2161,19 @@
       renderEvents();
       broadcastChange('save_event', data.id);
 
-  
+      if (window.location.protocol !== 'file:') {
+        apiFetch('../api/admin/events.php', {
+          method: editingEventId ? 'PUT' : 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        }).then(res => res.json()).then(resJson => {
+          if (resJson.event_id && !editingEventId) {
+            data.id = String(resJson.event_id);
+            data.numeric_id = resJson.event_id;
+            localStorage.setItem('mombasa_live_events', JSON.stringify(eventsCache));
+          }
+        }).catch(e => console.warn('SQL event save note:', e.message));
+      }
     });
 
     // 8. Modals - Blog
@@ -2008,6 +2224,19 @@
       updateCountBadge('blogCountBadge', blogCache.length);
       renderBlog();
       broadcastChange('save_blog', savedBlogId);
+
+      if (window.location.protocol !== 'file:') {
+        apiFetch('../api/admin/blog.php', {
+          method: editingBlogId ? 'PUT' : 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        }).then(res => res.json()).then(resJson => {
+          if (resJson.post_id && !editingBlogId) {
+            data.numeric_id = resJson.post_id;
+            localStorage.setItem('mombasa_live_blog', JSON.stringify(blogCache));
+          }
+        }).catch(e => console.warn('SQL blog save note:', e.message));
+      }
     });
 
     // 9. Modals - Gallery
@@ -2073,7 +2302,19 @@
       showToast('Photo added to gallery', 'success');
       broadcastChange('save_gallery', newDoc.id);
 
-  
+      if (window.location.protocol !== 'file:') {
+        apiFetch('../api/admin/gallery.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newDoc)
+        }).then(res => res.json()).then(resJson => {
+          if (resJson.photo_id) {
+            newDoc.id = String(resJson.photo_id);
+            newDoc.numeric_id = resJson.photo_id;
+            localStorage.setItem('mombasa_live_gallery', JSON.stringify(galleryCache));
+          }
+        }).catch(e => console.warn('SQL gallery save note:', e.message));
+      }
     });
 
     // Synchronize acknowledged writes rather than just refreshing browser storage.
@@ -2190,6 +2431,20 @@
       updateCountBadge('usersCountBadge', usersCache.length);
       renderUsers();
       broadcastChange('save_user', userData.id);
+
+      if (window.location.protocol !== 'file:') {
+        apiFetch('../api/admin/users.php', {
+          method: docId ? 'PUT' : 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(userData)
+        }).then(res => res.json()).then(resJson => {
+          if (resJson.user_id && !docId) {
+            userData.id = String(resJson.user_id);
+            userData.numeric_id = resJson.user_id;
+            localStorage.setItem('mombasa_live_users', JSON.stringify(usersCache));
+          }
+        }).catch(e => console.warn('SQL user save note:', e.message));
+      }
     });
 
     // 13. Password Modal
@@ -2265,7 +2520,12 @@
       }
     });
 
-    // 17. Real-Time Cross-Tab / Public Site Listener
+    // 17. Sync SQL Button Listener
+    document.getElementById('syncSqlBtn')?.addEventListener('click', () => {
+      syncFromBackendSQL(false);
+    });
+
+    // 18. Real-Time Cross-Tab / Public Site Listener
     if (syncBus) {
       syncBus.onmessage = (e) => {
         if (e.data && e.data.action) {
@@ -2307,7 +2567,7 @@
 
   // Initialize once even when the script is loaded after DOM readiness.
   function startDashboard() {
-    checkAuth(); initData(); attachEventListeners(); renderShops(); initCloudFirebase();
+    checkAuth(); initData(); attachEventListeners(); renderShops(); syncFromBackendSQL(true); initCloudFirebase();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', startDashboard, { once: true });
   else startDashboard();

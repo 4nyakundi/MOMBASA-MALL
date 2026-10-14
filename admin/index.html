@@ -129,6 +129,13 @@
         <div class="admin-topbar-title" id="topbarTitle">Dashboard</div>
       </div>
       <div class="admin-topbar-actions">
+        <div id="backendStatusBadge" style="display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700;padding:6px 12px;border-radius:20px;background:rgba(16,185,129,0.12);color:#059669;border:1px solid rgba(16,185,129,0.25);">
+          <span id="backendStatusDot" style="width:8px;height:8px;border-radius:50%;background:#10B981;box-shadow:0 0 6px #10B981;display:inline-block;"></span>
+          <span id="backendStatusText">Relaying SQL: mombasam_mall</span>
+        </div>
+        <button id="syncSqlBtn" class="btn-secondary btn-sm" title="Reload live data directly from mombasam_mall SQL database" style="display:inline-flex;align-items:center;gap:6px;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg> Sync SQL
+        </button>
         <a href="../stores/index.html" target="_blank" class="btn-secondary btn-sm" title="Open live public store directory" style="display:inline-flex;align-items:center;gap:6px;">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h20v4H2z"/><path d="M4 7v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V7"/><path d="M9 11v6"/><path d="M15 11v6"/></svg> Directory ↗
         </a>
