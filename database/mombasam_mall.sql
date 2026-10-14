@@ -17,6 +17,26 @@ CREATE DATABASE IF NOT EXISTS `mombasam_mall`
 USE `mombasam_mall`;
 
 -- ============================================================
+-- CLEAN RE-INSTALL SUPPORT (DROP EXISTING TABLES SAFELY)
+-- ============================================================
+SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS `activity_log`;
+DROP TABLE IF EXISTS `reviews`;
+DROP TABLE IF EXISTS `blog_posts`;
+DROP TABLE IF EXISTS `event_photos`;
+DROP TABLE IF EXISTS `events`;
+DROP TABLE IF EXISTS `playon_bookings`;
+DROP TABLE IF EXISTS `activation_leads`;
+DROP TABLE IF EXISTS `led_leads`;
+DROP TABLE IF EXISTS `contact_leads`;
+DROP TABLE IF EXISTS `store_photos`;
+DROP TABLE IF EXISTS `stores`;
+DROP TABLE IF EXISTS `admin_users`;
+DROP VIEW IF EXISTS `v_all_leads`;
+DROP VIEW IF EXISTS `v_dashboard_metrics`;
+SET FOREIGN_KEY_CHECKS = 1;
+
+-- ============================================================
 -- TABLE 1: admin_users
 -- Stores dashboard administrator accounts
 -- ============================================================
