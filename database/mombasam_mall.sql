@@ -495,7 +495,7 @@ UNION ALL
 -- ============================================================
 
 -- SEED STORES & PHOTOS
-INSERT INTO `stores` (`id`, `name`, `unit_number`, `floor`, `category`, `phone`, `email`, `website`, `description`, `logo_url`, `status`, `sort_order`) VALUES
+INSERT IGNORE INTO `stores` (`id`, `name`, `unit_number`, `floor`, `category`, `phone`, `email`, `website`, `description`, `logo_url`, `status`, `sort_order`) VALUES
 (1, 'Naivas', 'G-01', 'Ground Floor', 'retail', '+254 790 964 002', 'customercare@naivas.co.ke', 'https://www.instagram.com/naivas_supermarket', '24/7 anchor hypermarket featuring fresh bakery, organic produce, butchery, pharmacy, liquor store and home essentials.', '/assets/store-previews/g-01.webp', 'active', 1),
 (2, 'Chicken Inn', 'G-02', 'Ground Floor', 'food', '+254 790 964 002', 'info@chickeninn.co.ke', 'https://www.instagram.com/chickeninnke/', 'Famous crisp, juicy fried chicken, delicious burgers, seasoned chips and signature family meal combos.', '/assets/store-previews/g-02.webp', 'active', 2),
 (3, 'Creamy Inn', 'G-03', 'Ground Floor', 'food', '+254 790 964 002', 'info@creamyinn.co.ke', 'https://www.instagram.com/CreamyInn_ke', 'Indulgent soft-serve ice creams, decadent sundaes, thick milkshakes, Belgian waffles and dessert treats.', '/assets/store-previews/g-03.webp', 'active', 3),
@@ -543,7 +543,7 @@ INSERT INTO `stores` (`id`, `name`, `unit_number`, `floor`, `category`, `phone`,
 (45, 'Valet & Parking Services', 'B-01', 'Basement Parking', 'services', '+254 790 964 002', 'parking@mombasamall.co.ke', 'https://www.instagram.com/mombasamall_/', 'Professional valet concierge desk, contactless ticket validation, accessible parking assistance and guest transport drop-off.', '/assets/store-previews/b-01.webp', 'active', 45),
 (46, 'Secure Basement Parking Deck', 'B-02', 'Basement Parking', 'services', '+254 790 964 002', 'parking@mombasamall.co.ke', 'https://www.instagram.com/mombasamall_/', 'Over 400+ well-lit, secure vehicle parking bays with 24/7 CCTV surveillance, automated access booms and firefighting systems.', '/assets/store-previews/b-02.webp', 'active', 46);
 
-INSERT INTO `store_photos` (`store_id`, `image_url`, `caption`, `sort_order`) VALUES
+INSERT IGNORE INTO `store_photos` (`store_id`, `image_url`, `caption`, `sort_order`) VALUES
 (1, '/assets/lifestyle/naivas.webp', 'Storefront / Display', 1),
 (2, '/assets/store-previews/g-02.webp', 'Storefront / Display', 1),
 (3, '/assets/store-previews/g-03.webp', 'Storefront / Display', 1),
@@ -593,7 +593,7 @@ INSERT INTO `store_photos` (`store_id`, `image_url`, `caption`, `sort_order`) VA
 
 
 -- SEED EVENTS
-INSERT INTO `events` (`id`, `title`, `venue`, `event_date`, `event_end_date`, `description`, `image_url`, `status`, `created_by`) VALUES
+INSERT IGNORE INTO `events` (`id`, `title`, `venue`, `event_date`, `event_end_date`, `description`, `image_url`, `status`, `created_by`) VALUES
 (1, 'Summer Family Day & Kids Carnival', 'Mombasa Mall Atrium', '2026-09-05 10:00:00', NULL, 'Join us at the Play-On Kids Zone for free face painting, magic shows, bouncy castles, and local youth music performances.', NULL, 'upcoming', 1),
 (2, 'East African Fashion Pop-up Weekend', 'Mombasa Mall Atrium', '2026-09-18 10:00:00', NULL, 'Browse and buy collections from over 15 local and regional designers showcasing custom-made apparel, kaftans, and hand-woven bags.', NULL, 'upcoming', 1),
 (3, 'Swahili Foodie & Spice Market', 'Mombasa Mall Atrium', '2026-10-02 10:00:00', NULL, 'Savor authentic coastal dishes, spicy street food, and chef-led cooking demos in our main atrium and food court.', NULL, 'upcoming', 1),
@@ -601,14 +601,14 @@ INSERT INTO `events` (`id`, `title`, `venue`, `event_date`, `event_end_date`, `d
 (5, 'Mombasa Tech Innovation Night', 'Mombasa Mall', '2026-06-22 10:00:00', NULL, 'Co-hosted by Westerwelle Startup Haus, bringing together over 120 tech developers and startup founders in Mombasa.', NULL, 'past', 1);
 
 -- SEED BLOG POSTS
-INSERT INTO `blog_posts` (`id`, `title`, `slug`, `excerpt`, `body`, `image_url`, `author`, `published_date`, `status`, `created_by`) VALUES
+INSERT IGNORE INTO `blog_posts` (`id`, `title`, `slug`, `excerpt`, `body`, `image_url`, `author`, `published_date`, `status`, `created_by`) VALUES
 (1, 'Welcome to Westerwelle Startup Haus Mombasa', 'westerwelle-coworking-launch', 'Discover the newly launched co-working space and tech incubator on the third floor of Mombasa Mall, offering prime office suites, meeting rooms, and startup support.', 'Discover the newly launched co-working space and tech incubator on the third floor of Mombasa Mall, offering prime office suites, meeting rooms, and startup support.', NULL, 'Mombasa Mall Editorial', '2026-08-10', 'published', 1),
 (2, 'Fresh Grocery Shopping Made Easy at Naivas Anchor', 'naivas-grocery-shopping', 'Explore the massive Naivas Supermarket on the ground floor of Mombasa Mall, featuring fresh produce, a bakery, butchery, and a fully-stocked homeware section.', 'Explore the massive Naivas Supermarket on the ground floor of Mombasa Mall, featuring fresh produce, a bakery, butchery, and a fully-stocked homeware section.', NULL, 'Mombasa Mall Editorial', '2026-08-01', 'published', 1),
 (3, 'Planning the Perfect Family Weekend at Play-On Zone', 'family-weekend-play-on', 'From indoor soft playgrounds to child-safe ball pits and interactive crafts, discover why Play-On at Mombasa Mall is the family destination of choice.', 'From indoor soft playgrounds to child-safe ball pits and interactive crafts, discover why Play-On at Mombasa Mall is the family destination of choice.', NULL, 'Mombasa Mall Editorial', '2026-07-22', 'published', 1),
 (4, 'How Digital LED Screens Can Boost Your Brand Exposure', 'boost-brand-led-screens', 'Learn about our dual-sided high-definition digital billboards in the main atrium and food court, and how flexible advertising loops can scale your business.', 'Learn about our dual-sided high-definition digital billboards in the main atrium and food court, and how flexible advertising loops can scale your business.', NULL, 'Mombasa Mall Editorial', '2026-07-08', 'published', 1);
 
 -- SEED REVIEWS
-INSERT INTO `reviews` (`id`, `reviewer_name`, `reviewer_email`, `store_id`, `store_name_typed`, `rating`, `review_text`, `status`, `admin_notes`) VALUES
+INSERT IGNORE INTO `reviews` (`id`, `reviewer_name`, `reviewer_email`, `store_id`, `store_name_typed`, `rating`, `review_text`, `status`, `admin_notes`) VALUES
 (1, 'Aisha Omar', NULL, NULL, 'Mombasa Mall', 5, 'Mombasa Mall has completely transformed my shopping routine. Naivas on the ground floor is incredibly convenient, and NCBA bank is right next door.', 'approved', 'Featured customer testimonial'),
 (2, 'Peter Mwangi', NULL, NULL, 'Mombasa Mall', 4, 'Basement parking is spacious, safe, and secure. The automated entry ticketer is fast, and security guards are always helpful.', 'approved', 'Featured customer testimonial'),
 (3, 'Joy Kerubo', NULL, NULL, 'Mombasa Mall', 5, 'Westerwelle Startup Haus on the third floor is Mombasa''s best coworking incubator! Superfast internet, quiet meeting rooms, and amazing tech events.', 'approved', 'Featured customer testimonial'),

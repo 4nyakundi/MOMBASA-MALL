@@ -37,6 +37,49 @@ test('database failures and file previews cannot produce a saved submission', as
   await assert.rejects(local.save('contactLeads', { id: 'test' }, 'contacts'), /web address/);
   assert.equal(local.writes.length, 0);
 });
+test('confirmation popup renders customer details as text and supports repeat opening and dismissal', () => {
+  const elements = new Map(), listeners = {};
+  let activeElement;
+  class Element {
+    constructor() {
+      this.style = {}; this.dataset = {}; this.attributes = {}; this.children = [];
+      const classes = new Set();
+      this.classList = { add: value => classes.add(value), remove: value => classes.delete(value), contains: value => classes.has(value) };
+    }
+    set innerHTML(value) {
+      this.html = value;
+      for (const [, id] of value.matchAll(/id="([^"]+)"/g)) elements.set(id, new Element());
+    }
+    get innerHTML() { return this.html || ''; }
+    setAttribute(key, value) { this.attributes[key] = value; }
+    append(...children) { this.children.push(...children); }
+    appendChild(child) { elements.set(child.id, child); this.append(child); }
+    replaceChildren(...children) { this.children = children; }
+    querySelector(selector) { return elements.get(selector === 'button' ? 'siteConfirmCloseBtn' : selector.slice(1)); }
+    addEventListener(name, handler) { this[name] = handler; }
+    focus() { activeElement = this; }
+  }
+  const button = new Element(); button.focus();
+  const body = new Element(); body.style.overflow = 'auto';
+  const context = { window: {}, document: { body, readyState: 'loading',
+    get activeElement() { return activeElement; }, createElement: () => new Element(),
+    getElementById: id => elements.get(id), addEventListener: (name, handler) => { listeners[name] = handler; } } };
+  vm.runInNewContext(read('js/site-polish.js'), context);
+  const value = '<img src=x onerror=alert(1)>';
+  context.window.showSubmissionConfirmationModal({ details: [{ label: 'Name', value }] });
+  const overlay = elements.get('globalConfirmModalOverlay');
+  const detailValue = elements.get('siteConfirmDetails').children[0].children[1];
+  assert.equal(detailValue.textContent, value);
+  assert.equal(detailValue.innerHTML, '');
+  assert.equal(overlay.attributes['aria-hidden'], 'false');
+  elements.get('siteConfirmCloseBtn').click();
+  assert.equal(overlay.attributes['aria-hidden'], 'true');
+  assert.equal(activeElement, button);
+  assert.equal(body.style.overflow, 'auto');
+  context.window.showSubmissionConfirmationModal({ title: 'Another request' });
+  listeners.keydown({ key: 'Escape' });
+  assert.equal(overlay.classList.contains('is-visible'), false);
+});
 function dashboard({ fail = false } = {}) {
   const writes = [], deletes = [], subscriptions = [];
   const context = { window: {}, localStorage: storage(), console, BroadcastChannel: undefined,

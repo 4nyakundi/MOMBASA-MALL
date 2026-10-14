@@ -91,8 +91,11 @@
       while (outbox.length) {
         const operation = outbox[0];
         const ref = fb.fsMod.doc(fb.db, operation.collection, operation.id);
-        if (operation.remove) await fb.fsMod.deleteDoc(ref);
-        else await fb.fsMod.setDoc(ref, operation.data);
+        let timer;
+        const write = operation.remove ? fb.fsMod.deleteDoc(ref) : fb.fsMod.setDoc(ref, operation.data);
+        await Promise.race([write, new Promise((_, reject) => {
+          timer = setTimeout(() => reject(new Error('Database acknowledgement timed out; changes remain queued')), 20000);
+        })]).finally(() => clearTimeout(timer));
         // Refresh after acknowledgement so skipped pending snapshots are not lost.
         outbox.shift();
         localStorage.setItem('mombasa_admin_outbox', JSON.stringify(outbox));
@@ -286,7 +289,10 @@
     };
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
-    toast.innerHTML = `<span style="display:inline-flex;align-items:center;">${icons[type] || icons.info}</span><span>${message}</span>`;
+    toast.innerHTML = `<span style="display:inline-flex;align-items:center;">${icons[type] || icons.info}</span>`;
+    const messageText = document.createElement('span');
+    messageText.textContent = message;
+    toast.append(messageText);
     container.appendChild(toast);
     setTimeout(() => {
       toast.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
