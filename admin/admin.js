@@ -17,12 +17,14 @@
   let eventsCache       = [];
   let blogCache         = [];
   let reviewsCache      = [];
+  let usersCache        = [];
+  let editingUserId     = null;
   let editingEventId    = null;
   let editingBlogId     = null;
   let currentShopPhotos = [];
   let pendingShopLogo   = null;
   let currentEventPhotos= [];
-  let calCurrentDate    = new Date(2026, 7, 1); // August 2026 baseline
+  let calCurrentDate    = new Date();
 
   // Firebase Module References (loaded dynamically if on HTTP/HTTPS)
   let fb = {
@@ -39,12 +41,67 @@
   const syncBus = (typeof BroadcastChannel !== 'undefined') ? new BroadcastChannel('mombasa_mall_sync_bus') : null;
 
   function broadcastChange(action, entity) {
+    queueCloudChange(action, entity);
     if (syncBus) {
       try {
         syncBus.postMessage({ action, entity, timestamp: Date.now() });
       } catch (e) {}
     }
   }
+
+  const cloudCollections = () => ({
+    shops: { key: 'mombasa_live_shops', rows: shopsCache, assign: rows => { shopsCache = rows; } },
+    gallery: { key: 'mombasa_live_gallery', rows: galleryCache, assign: rows => { galleryCache = rows; } },
+    events: { key: 'mombasa_live_events', rows: eventsCache, assign: rows => { eventsCache = rows; } },
+    blogPosts: { key: 'mombasa_live_blog', rows: blogCache, assign: rows => { blogCache = rows; } },
+    reviews: { key: 'mombasa_live_reviews', rows: reviewsCache, assign: rows => { reviewsCache = rows; } },
+    ledLeads: { key: 'mombasa_live_led_leads', rows: ledLeadsCache, assign: rows => { ledLeadsCache = rows; } },
+    activationLeads: { key: 'mombasa_live_activation_leads', rows: activLeadsCache, assign: rows => { activLeadsCache = rows; } },
+    contactLeads: { key: 'mombasa_live_contact_leads', rows: contactLeadsCache, assign: rows => { contactLeadsCache = rows; } },
+    users: { key: 'mombasa_live_users', rows: usersCache, assign: rows => { usersCache = rows; } }
+  });
+  let outbox = [];
+  try { outbox = JSON.parse(localStorage.getItem('mombasa_admin_outbox') || '[]'); } catch (error) {}
+  let flushing = null;
+  function queueCloudChange(action, id) {
+    const aliases = {shop: 'shops', gallery: 'gallery', event: 'events', blog: 'blogPosts', review: 'reviews', user: 'users'};
+    const groups = cloudCollections();
+    let collections = [];
+    if (['sync_public_site', 'seed_database'].includes(action)) collections = ['shops', 'gallery', 'events', 'blogPosts', 'reviews'];
+    else if (action === 'restore_database') collections = Object.keys(groups);
+    else {
+      const name = action.replace(/^(save_|delete_|toggle_|update_status_)/, '');
+      const collection = aliases[name] || name;
+      if (groups[collection]) collections = [collection];
+    }
+    for (const collection of collections) {
+      const rows = id === 'all' ? groups[collection].rows : groups[collection].rows.filter(row => row.id === id);
+      if (action.startsWith('delete_')) outbox.push({ collection, id, remove: true });
+      else for (const row of rows) outbox.push({ collection, id: row.id, data: JSON.parse(JSON.stringify(row)) });
+    }
+    if (collections.length) {
+      localStorage.setItem('mombasa_admin_outbox', JSON.stringify(outbox));
+      flushCloudChanges().catch(error => showToast('Changes are saved on this device; cloud sync failed: ' + error.message + '. Use Sync Live Site to retry.', 'error'));
+    }
+  }
+  async function flushCloudChanges() {
+    if (flushing) return flushing;
+    if (!fb.isCloudReady || !fb.auth?.currentUser) throw new Error('Sign in to Firebase to synchronize');
+    flushing = (async () => {
+      while (outbox.length) {
+        const operation = outbox[0];
+        const ref = fb.fsMod.doc(fb.db, operation.collection, operation.id);
+        if (operation.remove) await fb.fsMod.deleteDoc(ref);
+        else await fb.fsMod.setDoc(ref, operation.data);
+        // Refresh after acknowledgement so skipped pending snapshots are not lost.
+        outbox.shift();
+        localStorage.setItem('mombasa_admin_outbox', JSON.stringify(outbox));
+      }
+    })();
+    try { await flushing; } finally { flushing = null; }
+    if (cloudUnsubscribers.length) syncWithFirestoreCloud();
+  }
+  const cloudUnsubscribers = [];
 
   // ── CLIENT-SIDE IMAGE COMPRESSION (PREVENTS STORAGE OVERFLOW) ──
   function compressImage(file, maxWidth = 1400, quality = 0.82) {
@@ -150,7 +207,8 @@
         contactLeads: contactLeadsCache,
         events: eventsCache,
         blog: blogCache,
-        reviews: reviewsCache
+        reviews: reviewsCache,
+        users: usersCache
       }
     };
     const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
@@ -201,12 +259,16 @@
         reviewsCache = data.reviews;
         localStorage.setItem('mombasa_live_reviews', JSON.stringify(reviewsCache));
       }
+      if (Array.isArray(data.users)) {
+        usersCache = data.users;
+        localStorage.setItem('mombasa_live_users', JSON.stringify(usersCache));
+      }
 
       updateAllBadges();
       updateOverviewMetrics();
       renderCurrentTab();
       broadcastChange('restore_database', 'all');
-      showToast('Database successfully restored from backup! 🎉', 'success');
+      showToast('Backup restored on this device; synchronizing with cloud.', 'info');
     } catch (err) {
       showToast(`Restore failed: ${err.message}`, 'error');
     }
@@ -248,22 +310,27 @@
     modal.setAttribute('aria-hidden', 'true');
   }
 
+  window.closeModal = closeModal;
+
   // ── AUTH CHECK ─────────────────────────────────────────────
   function checkAuth() {
     const localSession = localStorage.getItem('mombasa_admin_session');
     if (localSession) {
       try {
         const s = JSON.parse(localSession);
-        currentUser = { email: s.email || 'mombasamall01@gmail.com', role: 'Administrator' };
+        currentUser = { email: s.email || 'admin@mombasamall.co.ke', role: s.role || 'Administrator' };
         const emailEl = document.getElementById('adminEmailDisplay');
         if (emailEl) emailEl.textContent = currentUser.email;
+        const roleEl = document.querySelector('.admin-user-role');
+        if (roleEl) roleEl.textContent = currentUser.role;
         return true;
       } catch (e) {}
     }
-    currentUser = { email: 'mombasamall01@gmail.com', role: 'Administrator' };
-    localStorage.setItem('mombasa_admin_session', JSON.stringify(currentUser));
-    const emailEl = document.getElementById('adminEmailDisplay');
-    if (emailEl) emailEl.textContent = currentUser.email;
+    // If on web protocol and no local session or Firebase user, redirect to login
+    if (window.location.protocol !== 'file:' && !fb.auth?.currentUser) {
+      window.location.replace('./login.html');
+      return false;
+    }
     return true;
   }
 
@@ -285,45 +352,37 @@
       fb.authMod = authMod;
       fb.fsMod = fsMod;
       fb.stMod = stMod;
-      fb.isCloudReady = true;
-
-      authMod.onAuthStateChanged(fb.auth, (user) => {
+      authMod.onAuthStateChanged(fb.auth, async (user) => {
+        if (!user && !localStorage.getItem('mombasa_admin_session')) {
+          window.location.replace('./login.html');
+          return;
+        }
         if (user) {
           currentUser = user;
           const emailEl = document.getElementById('adminEmailDisplay');
-          if (emailEl) emailEl.textContent = user.email || 'mombasamall01@gmail.com';
+          if (emailEl) emailEl.textContent = user.email || '';
         }
+        fb.isCloudReady = true;
+        try { await flushCloudChanges(); } catch (error) { showToast('Cloud sync needs attention: ' + error.message, 'error'); }
+        syncWithFirestoreCloud();
       });
 
-      syncWithFirestoreCloud();
     } catch (e) {
-      console.warn('[Mombasa Mall Admin] Cloud Firebase notice; operating in offline-first mode:', e.message);
+      showToast('Database connection unavailable: ' + e.message + '. Changes will remain on this device until synchronization succeeds.', 'error');
     }
   }
 
-  async function syncWithFirestoreCloud() {
+  function syncWithFirestoreCloud() {
     if (!fb.isCloudReady || !fb.db) return;
-    try {
-      const shopsSnap = await fb.fsMod.getDocs(fb.fsMod.collection(fb.db, 'shops'));
-      if (!shopsSnap.empty) {
-        shopsCache = shopsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-        localStorage.setItem('mombasa_live_shops', JSON.stringify(shopsCache));
-        updateCountBadge('shopsCountBadge', shopsCache.length);
-        updateOverviewMetrics();
-        if (activeTab === 'shops') renderShops();
-      }
-
-      const eventsSnap = await fb.fsMod.getDocs(fb.fsMod.collection(fb.db, 'events'));
-      if (!eventsSnap.empty) {
-        eventsCache = eventsSnap.docs.map(d => ({ id: d.id, ...d.data() }))
-          .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
-        localStorage.setItem('mombasa_live_events', JSON.stringify(eventsCache));
-        updateCountBadge('eventsCountBadge', eventsCache.length);
-        updateOverviewMetrics();
-        if (activeTab === 'events') renderEvents();
-      }
-    } catch (e) {
-      console.warn('[Mombasa Mall Admin] Cloud sync notice:', e.message);
+    cloudUnsubscribers.splice(0).forEach(unsubscribe => unsubscribe());
+    for (const [collection, group] of Object.entries(cloudCollections())) {
+      cloudUnsubscribers.push(fb.fsMod.onSnapshot(fb.fsMod.collection(fb.db, collection), snapshot => {
+        if (outbox.some(operation => operation.collection === collection)) return;
+        const rows = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+        group.assign(rows);
+        try { localStorage.setItem(group.key, JSON.stringify(rows)); } catch (error) { console.warn('Browser cache full', error); }
+        updateAllBadges(); updateOverviewMetrics(); renderCurrentTab();
+      }, error => showToast('Cannot read ' + collection + ' from database: ' + error.message, 'error')));
     }
   }
 
@@ -334,7 +393,7 @@
     if (savedShops) {
       try { shopsCache = JSON.parse(savedShops); } catch (e) {}
     }
-    if (!shopsCache.length && window.MOMBASA_DEFAULT_STORES && window.MOMBASA_DEFAULT_STORES.floors) {
+    if (!savedShops && window.MOMBASA_DEFAULT_STORES && window.MOMBASA_DEFAULT_STORES.floors) {
       const list = [];
       window.MOMBASA_DEFAULT_STORES.floors.forEach(floor => {
         (floor.shops || []).forEach(shop => {
@@ -365,7 +424,7 @@
     if (savedEvents) {
       try { eventsCache = JSON.parse(savedEvents); } catch (e) {}
     }
-    if (!eventsCache.length && window.MOMBASA_DEFAULT_EVENTS) {
+    if (!savedEvents && window.MOMBASA_DEFAULT_EVENTS) {
       const list = [];
       (window.MOMBASA_DEFAULT_EVENTS.upcoming || []).forEach(e => list.push({ id: 'up-' + (e.title || '').toLowerCase().replace(/[^a-z0-9]/g, '-').slice(0, 25), ...e, type: 'upcoming' }));
       (window.MOMBASA_DEFAULT_EVENTS.past || []).forEach(e => list.push({ id: 'past-' + (e.title || '').toLowerCase().replace(/[^a-z0-9]/g, '-').slice(0, 25), ...e, type: 'past' }));
@@ -378,7 +437,7 @@
     if (savedBlog) {
       try { blogCache = JSON.parse(savedBlog); } catch (e) {}
     }
-    if (!blogCache.length && window.MOMBASA_DEFAULT_BLOG && window.MOMBASA_DEFAULT_BLOG.posts) {
+    if (!savedBlog && window.MOMBASA_DEFAULT_BLOG && window.MOMBASA_DEFAULT_BLOG.posts) {
       blogCache = window.MOMBASA_DEFAULT_BLOG.posts.map(p => ({
         id: p.slug || (p.title || '').toLowerCase().replace(/[^a-z0-9]/g, '-'),
         ...p
@@ -391,7 +450,7 @@
     if (savedReviews) {
       try { reviewsCache = JSON.parse(savedReviews); } catch (e) {}
     }
-    if (!reviewsCache.length && window.MOMBASA_DEFAULT_REVIEWS) {
+    if (!savedReviews && window.MOMBASA_DEFAULT_REVIEWS) {
       const list = [];
       (window.MOMBASA_DEFAULT_REVIEWS.testimonials || []).forEach((t, i) => list.push({ id: `rev-t-${i}`, ...t, type: 'testimonial', approved: true }));
       (window.MOMBASA_DEFAULT_REVIEWS.customerFeedback || []).forEach((f, i) => list.push({ id: `rev-f-${i}`, author: f.author || f.name, quote: f.quote || f.comment, rating: 5, type: 'feedback', approved: false }));
@@ -404,7 +463,7 @@
     if (savedGallery) {
       try { galleryCache = JSON.parse(savedGallery); } catch (e) {}
     }
-    if (!galleryCache.length && window.MOMBASA_DEFAULT_GALLERY) {
+    if (!savedGallery && window.MOMBASA_DEFAULT_GALLERY) {
       galleryCache = window.MOMBASA_DEFAULT_GALLERY.map((g, i) => ({ id: `gal-def-${i}`, ...g }));
       localStorage.setItem('mombasa_live_gallery', JSON.stringify(galleryCache));
     }
@@ -419,6 +478,16 @@
     const sCnt = localStorage.getItem('mombasa_live_contact_leads');
     if (sCnt) { try { contactLeadsCache = JSON.parse(sCnt); } catch (e) {} }
 
+    // 7. SYSTEM USERS & ROLES
+    const sUsers = localStorage.getItem('mombasa_live_users');
+    if (sUsers) {
+      try { usersCache = JSON.parse(sUsers); } catch (e) {}
+    }
+    if (!sUsers && window.MOMBASA_DEFAULT_USERS) {
+      usersCache = JSON.parse(JSON.stringify(window.MOMBASA_DEFAULT_USERS));
+      localStorage.setItem('mombasa_live_users', JSON.stringify(usersCache));
+    }
+
     updateAllBadges();
     updateOverviewMetrics();
   }
@@ -432,6 +501,7 @@
     updateCountBadge('eventsCountBadge', eventsCache.length);
     updateCountBadge('blogCountBadge', blogCache.length);
     updateCountBadge('reviewsCountBadge', reviewsCache.length);
+    updateCountBadge('usersCountBadge', usersCache.length);
   }
 
   // ── TAB SWITCHING ──────────────────────────────────────────
@@ -454,7 +524,8 @@
       contactLeads:    'Contact & Leasing Inquiries',
       events:          'Events & News Management',
       blogPosts:       'Journal & Editorial Blog',
-      reviews:         'Reviews Moderation'
+      reviews:         'Reviews Moderation',
+      users:           'System Users & Roles'
     };
     if (titleEl) titleEl.textContent = titles[tabKey] || 'Admin Dashboard';
 
@@ -475,7 +546,8 @@
       contactLeads:     renderContactLeads,
       events:           renderEvents,
       blogPosts:        renderBlog,
-      reviews:          renderReviews
+      reviews:          renderReviews,
+      users:            renderUsers
     };
     loaders[activeTab]?.();
   }
@@ -613,9 +685,7 @@
     broadcastChange('delete_shop', shopId);
     showToast(`Deleted "${shopName}"`, 'success');
 
-    if (fb.isCloudReady && fb.db) {
-      try { await fb.fsMod.deleteDoc(fb.fsMod.doc(fb.db, 'shops', shopId)); } catch (e) {}
-    }
+
   };
 
   // ── 2. GALLERY RENDER ──────────────────────────────────────
@@ -648,9 +718,7 @@
     broadcastChange('delete_gallery', id);
     showToast('Photo removed from gallery', 'success');
 
-    if (fb.isCloudReady && fb.db) {
-      try { await fb.fsMod.deleteDoc(fb.fsMod.doc(fb.db, 'gallery', id)); } catch(e){}
-    }
+
   };
 
   // ── 3. LED LEADS RENDER ────────────────────────────────────
@@ -1112,10 +1180,9 @@
       if (collName === 'activationLeads') localStorage.setItem('mombasa_live_activation_leads', JSON.stringify(activLeadsCache));
       if (collName === 'contactLeads') localStorage.setItem('mombasa_live_contact_leads', JSON.stringify(contactLeadsCache));
       broadcastChange(`update_status_${collName}`, id);
-      showToast('Lead status updated', 'success');
-      if (fb.isCloudReady && fb.db) {
-        try { fb.fsMod.updateDoc(fb.fsMod.doc(fb.db, collName, id), { status }); } catch(e){}
-      }
+      updateAllBadges(); updateOverviewMetrics(); renderCurrentTab();
+      showToast('Status saved; synchronizing with cloud.', 'info');
+  
     }
   };
 
@@ -1142,9 +1209,7 @@
     updateOverviewMetrics();
     broadcastChange(`delete_${collName}`, id);
     showToast('Record deleted', 'success');
-    if (fb.isCloudReady && fb.db) {
-      try { fb.fsMod.deleteDoc(fb.fsMod.doc(fb.db, collName, id)); } catch(e){}
-    }
+
   };
 
   // ── 6. EVENTS RENDER ───────────────────────────────────────
@@ -1254,9 +1319,7 @@
     renderEvents();
     broadcastChange('delete_event', id);
     showToast('Event deleted', 'success');
-    if (fb.isCloudReady && fb.db) {
-      try { fb.fsMod.deleteDoc(fb.fsMod.doc(fb.db, 'events', id)); } catch(e){}
-    }
+
   };
 
   // ── 7. BLOG RENDER ─────────────────────────────────────────
@@ -1368,6 +1431,144 @@
     showToast('Review deleted', 'success');
   };
 
+  // ── 9. USERS & ROLES RENDER ────────────────────────────────
+  function renderUsers() {
+    const tbody = document.getElementById('usersTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+
+    const query = document.getElementById('userSearchInput')?.value.toLowerCase().trim() || '';
+    const roleFilter = document.getElementById('userRoleFilter')?.value || 'all';
+    const statusFilter = document.getElementById('userStatusFilter')?.value || 'all';
+
+    let filtered = usersCache.filter(u => {
+      const matchQuery = !query ||
+        (u.name && u.name.toLowerCase().includes(query)) ||
+        (u.email && u.email.toLowerCase().includes(query)) ||
+        (u.role && u.role.toLowerCase().includes(query));
+
+      const matchRole = roleFilter === 'all' || u.role === roleFilter;
+      const matchStatus = statusFilter === 'all' || u.status === statusFilter;
+
+      return matchQuery && matchRole && matchStatus;
+    });
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:48px;color:var(--admin-text-muted);">No system users found matching current filters.</td></tr>`;
+      return;
+    }
+
+    const roleBadges = {
+      superadmin: '<span class="status-pill status-approved" style="font-weight:700;">Super Admin</span>',
+      admin:      '<span class="status-pill status-contacted" style="font-weight:700;">Administrator</span>',
+      editor:     '<span class="status-pill status-new" style="font-weight:700;">Editor</span>',
+      moderator:  '<span class="status-pill" style="background:#f1f5f9; color:#475569; font-weight:700;">Moderator</span>'
+    };
+
+    const rolePerms = {
+      superadmin: 'Full unrestricted control • Roles & settings',
+      admin:      'Stores, media, events, leads & reviews',
+      editor:     'Blog articles, calendar events & directory',
+      moderator:  'Customer inquiries, bookings & reviews'
+    };
+
+    filtered.forEach(usr => {
+      const initials = (usr.name || 'User')
+        .split(' ')
+        .map(n => n[0])
+        .slice(0, 2)
+        .join('')
+        .toUpperCase();
+
+      const isActive = usr.status === 'active';
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>
+          <div style="width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg, var(--coral, #FF6F59), #246b9e); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px;">
+            ${escHtml(initials)}
+          </div>
+        </td>
+        <td>
+          <strong style="color:var(--admin-text); display:block; font-size:14px;">${escHtml(usr.name || 'Unnamed')}</strong>
+          <span style="font-size:12px; color:var(--admin-text-muted); display:block;">${escHtml(usr.email || '')}</span>
+          ${usr.phone ? `<span style="font-size:11.5px; color:var(--admin-text-muted);">${escHtml(usr.phone)}</span>` : ''}
+        </td>
+        <td>
+          ${roleBadges[usr.role] || `<span class="status-pill">${escHtml(usr.role)}</span>`}
+        </td>
+        <td>
+          <span style="font-size:12px; color:var(--admin-text);">${rolePerms[usr.role] || 'Standard Access'}</span>
+        </td>
+        <td>
+          <span class="status-pill ${isActive ? 'approved' : 'lost'}">
+            ${isActive ? 'Active' : 'Inactive'}
+          </span>
+        </td>
+        <td>
+          <span style="font-size:12px; color:var(--admin-text); display:block;">Created: ${formatDate(usr.createdAt)}</span>
+          <span style="font-size:11.5px; color:var(--admin-text-muted);">Active: ${formatDate(usr.lastLogin || usr.createdAt)}</span>
+        </td>
+        <td>
+          <div class="td-actions">
+            <button class="btn-secondary btn-sm" onclick="window.editUser('${usr.id}')" title="Edit user details & permissions">Edit</button>
+            <button class="btn-danger btn-sm" onclick="window.deleteUser('${usr.id}')" title="Remove user account" ${usr.role === 'superadmin' ? 'disabled style="opacity:0.4;cursor:not-allowed;"' : ''}>Delete</button>
+          </div>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+  window.renderUsers = renderUsers;
+
+  window.editUser = function(id) {
+    const user = usersCache.find(u => u.id === id);
+    if (!user) return;
+    editingUserId = id;
+
+    document.getElementById('userDocId').value = user.id;
+    document.getElementById('userNameInput').value = user.name || '';
+    document.getElementById('userEmailInput').value = user.email || '';
+    document.getElementById('userPasswordInput').value = '';
+    document.getElementById('userPhoneInput').value = user.phone || '';
+    document.getElementById('userRoleInput').value = user.role || 'editor';
+    document.getElementById('userStatusInput').value = user.status || 'active';
+
+    updateRolePermissionsHelp(user.role || 'editor');
+
+    document.getElementById('userModalTitle').textContent = `Edit User: ${user.name}`;
+    document.getElementById('saveUserBtn').textContent = 'Update User';
+    openModal(document.getElementById('userModal'));
+  };
+
+  window.deleteUser = function(id) {
+    const target = usersCache.find(u => u.id === id);
+    if (!target) return;
+    if (target.role === 'superadmin') {
+      showToast('The primary Super Administrator account cannot be deleted.', 'warning');
+      return;
+    }
+    if (!confirm(`Are you sure you want to remove user "${target.name}" (${target.email})?`)) return;
+
+    usersCache = usersCache.filter(u => u.id !== id);
+    localStorage.setItem('mombasa_live_users', JSON.stringify(usersCache));
+    updateCountBadge('usersCountBadge', usersCache.length);
+    renderUsers();
+    broadcastChange('delete_user', id);
+    showToast(`User "${target.name}" removed`, 'success');
+  };
+
+  function updateRolePermissionsHelp(role) {
+    const helpBox = document.getElementById('rolePermissionsSummary');
+    if (!helpBox) return;
+    const summaries = {
+      superadmin: '<strong>Super Admin:</strong> Full unrestricted access to all modules, including user creation, database backups &amp; settings.',
+      admin:      '<strong>Administrator:</strong> Can manage store directory, media gallery, events, leads, customer inquiries &amp; reviews.',
+      editor:     '<strong>Editor / Content Manager:</strong> Can write &amp; publish blog articles, update calendar events &amp; modify store entries.',
+      moderator:  '<strong>Moderator:</strong> Can view, manage &amp; update status for LED leads, activations, contact submissions &amp; testimonials.'
+    };
+    helpBox.innerHTML = summaries[role] || summaries.editor;
+  }
+
   // ── ATTACH EVENT LISTENERS ─────────────────────────────────
   function attachEventListeners() {
     // 1. Navigation clicks
@@ -1409,7 +1610,25 @@
       el?.addEventListener('change', renderEvents);
     });
 
+    ['userSearchInput', 'userRoleFilter', 'userStatusFilter'].forEach(id => {
+      const el = document.getElementById(id);
+      el?.addEventListener('input', renderUsers);
+      el?.addEventListener('change', renderUsers);
+    });
+
     // 3. CSV Export Triggers
+    document.getElementById('exportUsersCsvBtn')?.addEventListener('click', () => {
+      const rows = usersCache.map(u => ({
+        Name: u.name,
+        Email: u.email,
+        Phone: u.phone || '—',
+        Role: u.role,
+        Status: u.status,
+        CreatedAt: u.createdAt,
+        LastLogin: u.lastLogin || '—'
+      }));
+      exportToCSV('Mombasa_Mall_System_Users', rows);
+    });
     document.getElementById('exportShopsCsvBtn')?.addEventListener('click', () => {
       const rows = shopsCache.map(s => ({
         Name: s.name,
@@ -1542,7 +1761,7 @@
     });
 
     // Store Multiple Photos Picker
-    const shopPhotosFileInput = document.getElementById('shopPhotosFileInput');
+    const shopPhotosFileInput = document.getElementById('shopPhotoFileInput');
     document.getElementById('addShopPhotoBtn')?.addEventListener('click', () => {
       shopPhotosFileInput?.click();
     });
@@ -1604,12 +1823,12 @@
         data.id = docId;
         const idx = shopsCache.findIndex(s => s.id === docId);
         if (idx >= 0) shopsCache[idx] = { ...shopsCache[idx], ...data };
-        showToast(`Updated "${data.name}" live!`, 'success');
+        showToast(`Saved "${data.name}"; synchronizing with cloud.`, 'success');
       } else {
         data.id = (data.room ? data.room.toLowerCase().replace(/[^a-z0-9]/g, '-') : data.name.toLowerCase().replace(/[^a-z0-9]/g, '-')) || `shop-${Date.now()}`;
         data.createdAt = new Date().toISOString();
         shopsCache.push(data);
-        showToast(`Created store "${data.name}"!`, 'success');
+        showToast(`Saved store "${data.name}"; synchronizing with cloud.`, 'success');
       }
 
       pendingShopLogo = null;
@@ -1622,15 +1841,7 @@
       renderShops();
       broadcastChange('save_shop', data.id);
 
-      if (fb.isCloudReady && fb.db) {
-        try {
-          if (docId) {
-            await fb.fsMod.updateDoc(fb.fsMod.doc(fb.db, 'shops', docId), data);
-          } else {
-            await fb.fsMod.setDoc(fb.fsMod.doc(fb.db, 'shops', data.id), data);
-          }
-        } catch (err) {}
-      }
+  
     });
 
     // 7. Modals - Event
@@ -1720,14 +1931,15 @@
       };
 
       if (editingEventId) {
+        data.id = editingEventId;
         const idx = eventsCache.findIndex(e => e.id === editingEventId);
         if (idx >= 0) eventsCache[idx] = { ...eventsCache[idx], ...data };
-        showToast('Event updated live!', 'success');
+        showToast('Event saved; synchronizing with cloud.', 'success');
       } else {
         data.id = `evt-${Date.now()}`;
         data.createdAt = new Date().toISOString();
         eventsCache.unshift(data);
-        showToast('Event created & published live!', 'success');
+        showToast('Event saved; synchronizing with cloud.', 'success');
       }
 
       editingEventId = null;
@@ -1739,15 +1951,7 @@
       renderEvents();
       broadcastChange('save_event', data.id);
 
-      if (fb.isCloudReady && fb.db) {
-        try {
-          if (editingEventId) {
-            await fb.fsMod.updateDoc(fb.fsMod.doc(fb.db, 'events', editingEventId), data);
-          } else {
-            await fb.fsMod.addDoc(fb.fsMod.collection(fb.db, 'events'), data);
-          }
-        } catch(e){}
-      }
+  
     });
 
     // 8. Modals - Blog
@@ -1785,18 +1989,19 @@
       if (editingBlogId) {
         const idx = blogCache.findIndex(p => p.id === editingBlogId);
         if (idx >= 0) blogCache[idx] = { ...blogCache[idx], ...data };
-        showToast('Article updated live!', 'success');
+        showToast('Article saved; synchronizing with cloud.', 'success');
       } else {
         data.id = slug;
         blogCache.unshift(data);
-        showToast('Article published live!', 'success');
+        showToast('Article saved; synchronizing with cloud.', 'success');
       }
+      const savedBlogId = editingBlogId || data.id;
       editingBlogId = null;
       closeModal(blogModal);
       localStorage.setItem('mombasa_live_blog', JSON.stringify(blogCache));
       updateCountBadge('blogCountBadge', blogCache.length);
       renderBlog();
-      broadcastChange('save_blog', slug);
+      broadcastChange('save_blog', savedBlogId);
     });
 
     // 9. Modals - Gallery
@@ -1862,65 +2067,149 @@
       showToast('Photo added to gallery', 'success');
       broadcastChange('save_gallery', newDoc.id);
 
-      if (fb.isCloudReady && fb.db) {
-        try { await fb.fsMod.addDoc(fb.fsMod.collection(fb.db, 'gallery'), newDoc); } catch(e){}
-      }
+  
     });
 
-    // 10. Sync Live Site Button
-    document.getElementById('syncLiveSiteBtn')?.addEventListener('click', () => {
+    // Synchronize acknowledged writes rather than just refreshing browser storage.
+    document.getElementById('syncLiveSiteBtn')?.addEventListener('click', async () => {
       const btn = document.getElementById('syncLiveSiteBtn');
-      btn.disabled = true;
-      btn.textContent = 'Synchronizing…';
-      localStorage.setItem('mombasa_live_shops', JSON.stringify(shopsCache));
-      localStorage.setItem('mombasa_live_events', JSON.stringify(eventsCache));
-      localStorage.setItem('mombasa_live_blog', JSON.stringify(blogCache));
-      localStorage.setItem('mombasa_live_reviews', JSON.stringify(reviewsCache));
-      broadcastChange('sync_public_site', 'all');
-      setTimeout(() => {
-        btn.disabled = false;
-        btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> Sync Live Site Now`;
-        showToast('Dashboard & Public Site fully synchronized! 🚀', 'success');
-      }, 350);
+      const label = btn.innerHTML; btn.disabled = true; btn.textContent = 'Synchronizing…';
+      try {
+        await flushCloudChanges();
+        syncWithFirestoreCloud();
+        showToast('Pending changes synchronized with the database.', 'success');
+      } catch (error) { showToast('Synchronization failed: ' + error.message, 'error'); }
+      finally { btn.disabled = false; btn.innerHTML = label; }
     });
-
-    // 11. Seed Button
     document.getElementById('seedDatabaseBtn')?.addEventListener('click', async () => {
-      const logBox = document.getElementById('seedProgressLog');
-      if (logBox) { logBox.style.display = 'block'; logBox.innerHTML = '<div>Syncing 51 stores, events, blog, reviews, and site data…</div>'; }
-      localStorage.setItem('mombasa_live_shops', JSON.stringify(shopsCache));
-      localStorage.setItem('mombasa_live_events', JSON.stringify(eventsCache));
-      localStorage.setItem('mombasa_live_blog', JSON.stringify(blogCache));
-      localStorage.setItem('mombasa_live_reviews', JSON.stringify(reviewsCache));
-      broadcastChange('seed_database', 'all');
-      setTimeout(() => {
-        if (logBox) {
-          logBox.innerHTML += '<div style="color:#10B981;font-weight:700;margin-top:6px;">✓ 51 Stores Synchronized successfully!</div>';
-        }
-        showToast('All collections synchronized successfully!', 'success');
-      }, 400);
+      const btn = document.getElementById('seedDatabaseBtn');
+      if (!confirm('Upload the current content to the live database? Existing records with matching IDs will be replaced.')) return;
+      btn.disabled = true;
+      const log = document.getElementById('seedProgressLog');
+      if (log) { log.style.display = 'block'; log.textContent = 'Uploading content…'; }
+      try {
+        if (!fb.auth?.currentUser) throw new Error('Sign in to Firebase first.');
+        await flushCloudChanges();
+        const { seedFirestoreDatabase } = await import('../js/seed-data.js');
+        await seedFirestoreDatabase(message => { if (log) log.textContent = message; });
+        syncWithFirestoreCloud();
+        if (log) log.textContent = 'Content successfully uploaded to the database.';
+      } catch (error) { if (log) log.textContent = 'Upload failed: ' + error.message; }
+      finally { btn.disabled = false; }
     });
 
-    // 12. Password Modal
+    // 12. Modals - User & Role Management
+    const userModal = document.getElementById('userModal');
+    const userForm  = document.getElementById('userForm');
+
+    document.getElementById('openAddUserBtn')?.addEventListener('click', () => {
+      userForm.reset();
+      editingUserId = null;
+      document.getElementById('userDocId').value = '';
+      document.getElementById('userRoleInput').value = 'editor';
+      document.getElementById('userStatusInput').value = 'active';
+      document.getElementById('userPasswordInput').required = false;
+      document.getElementById('userPasswordHelp').textContent = 'Manage sign-in accounts in Firebase Authentication. This form saves staff profile details only.';
+      document.getElementById('userModalTitle').textContent = 'Add New System User';
+      document.getElementById('saveUserBtn').textContent = 'Create User Account';
+      updateRolePermissionsHelp('editor');
+      openModal(userModal);
+    });
+
+    document.getElementById('closeUserModalBtn')?.addEventListener('click', () => {
+      editingUserId = null;
+      closeModal(userModal);
+    });
+
+    document.getElementById('cancelUserBtn')?.addEventListener('click', () => {
+      editingUserId = null;
+      closeModal(userModal);
+    });
+
+    document.getElementById('userRoleInput')?.addEventListener('change', (e) => {
+      updateRolePermissionsHelp(e.target.value);
+    });
+
+    userForm?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const saveBtn = document.getElementById('saveUserBtn');
+      const docId = document.getElementById('userDocId').value.trim();
+      const name = document.getElementById('userNameInput').value.trim();
+      const email = document.getElementById('userEmailInput').value.trim().toLowerCase();
+
+      const phone = document.getElementById('userPhoneInput').value.trim();
+      const role = document.getElementById('userRoleInput').value;
+      const status = document.getElementById('userStatusInput').value;
+
+      // Duplicate email check
+      const duplicate = usersCache.find(u => u.email.toLowerCase() === email && u.id !== docId);
+      if (duplicate) {
+        showToast('A user with this email address already exists.', 'error');
+        return;
+      }
+
+
+
+      if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Saving…'; }
+
+      const now = new Date().toISOString();
+      const userData = {
+        name,
+        email,
+        phone,
+        role,
+        status,
+        updatedAt: now
+      };
+
+      if (docId) {
+        userData.id = docId;
+        const idx = usersCache.findIndex(u => u.id === docId);
+        if (idx >= 0) {
+          usersCache[idx] = { ...usersCache[idx], ...userData };
+
+        }
+        showToast(`Updated user "${name}" successfully!`, 'success');
+      } else {
+        userData.id = `usr-${Date.now()}`;
+        userData.createdAt = now;
+        userData.lastLogin = null;
+        usersCache.unshift(userData);
+        showToast(`Saved staff profile for "${name}". Configure sign-in access in Firebase Authentication.`, 'success');
+      }
+
+      closeModal(userModal);
+      if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Save User'; }
+      localStorage.setItem('mombasa_live_users', JSON.stringify(usersCache));
+      updateCountBadge('usersCountBadge', usersCache.length);
+      renderUsers();
+      broadcastChange('save_user', userData.id);
+    });
+
+    // 13. Password Modal
     const changePwdModal = document.getElementById('changePasswordModal');
     document.getElementById('openChangePasswordBtn')?.addEventListener('click', () => openModal(changePwdModal));
     document.getElementById('closeChangePasswordBtn')?.addEventListener('click', () => closeModal(changePwdModal));
     document.getElementById('cancelChangePasswordBtn')?.addEventListener('click', () => closeModal(changePwdModal));
-    document.getElementById('changePasswordForm')?.addEventListener('submit', (e) => {
+    document.getElementById('changePasswordForm')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const p1 = document.getElementById('newPassword').value;
       const p2 = document.getElementById('confirmPassword').value;
       if (p1.length < 6) { showToast('Password must be at least 6 characters', 'error'); return; }
       if (p1 !== p2) { showToast('Passwords do not match', 'error'); return; }
-      localStorage.setItem('mombasa_admin_password', p1);
+      try {
+        if (!fb.auth?.currentUser) throw new Error('Please sign in first.');
+        await fb.authMod.updatePassword(fb.auth.currentUser, p1);
+      } catch (error) { showToast('Password change failed: ' + error.message + '. Sign in again if required.', 'error'); return; }
       showToast('Password updated successfully', 'success');
       closeModal(changePwdModal);
       e.target.reset();
     });
 
     // 13. Logout
-    document.getElementById('logoutBtn')?.addEventListener('click', () => {
+    document.getElementById('logoutBtn')?.addEventListener('click', async () => {
       if (confirm('Sign out of the admin portal?')) {
+        if (fb.auth) await fb.authMod.signOut(fb.auth);
         localStorage.removeItem('mombasa_admin_session');
         window.location.replace('./login.html');
       }
@@ -2010,21 +2299,10 @@
       .replace(/'/g, '&#39;');
   }
 
-  // ── DOM READY ENTRY POINT ──────────────────────────────────
-  document.addEventListener('DOMContentLoaded', () => {
-    checkAuth();
-    initData();
-    attachEventListeners();
-    renderShops();
-    initCloudFirebase();
-  });
-
-  if (document.readyState === 'interactive' || document.readyState === 'complete') {
-    checkAuth();
-    initData();
-    attachEventListeners();
-    renderShops();
-    initCloudFirebase();
+  // Initialize once even when the script is loaded after DOM readiness.
+  function startDashboard() {
+    checkAuth(); initData(); attachEventListeners(); renderShops(); initCloudFirebase();
   }
-
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', startDashboard, { once: true });
+  else startDashboard();
 })();

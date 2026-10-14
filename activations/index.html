@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -32,6 +32,7 @@
     }
   </style>
   <link rel="stylesheet" href="../css/site-polish.css">
+  <script src="../js/submissions.js"></script>
   <script defer src="../js/site-polish.js"></script>
 </head>
 <body class="subpage mall-public activation-page">
@@ -277,9 +278,8 @@
   <script src="../js/main.js"></script>
   <script src="../js/site-data-init.js"></script>
 
-  <script type="module">
-    import { db } from '../js/firebase-config.js';
-    import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+  <script>
+
 
     const actForm = document.getElementById('activation-booking-form');
     const successBox = document.getElementById('act-form-success');
@@ -287,10 +287,13 @@
 
     actForm?.addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (actForm.querySelector('button[type="submit"]').disabled || !actForm.reportValidity()) return;
       const submitBtn = actForm.querySelector('button[type="submit"]');
       submitBtn.disabled = true;
       submitBtn.innerHTML = '<span>Submitting Proposal…</span> <span class="btn-arrow">⏳</span>';
 
+      successBox.style.display = 'none';
+      errorBox.style.display = 'none';
       const phone = document.getElementById('act-phone').value.trim();
       const email = document.getElementById('act-email').value.trim();
       const companyName = document.getElementById('act-brand').value.trim();
@@ -313,28 +316,35 @@
         submittedAt:   new Date().toISOString()
       };
 
-      // Immediate local cache reflection for admin dashboard
-      try {
-        const raw = localStorage.getItem('mombasa_live_activation_leads');
-        const list = raw ? JSON.parse(raw) : [];
-        list.unshift(leadData);
-        localStorage.setItem('mombasa_live_activation_leads', JSON.stringify(list));
-      } catch(e) {}
+
 
       try {
-        if (window.location.protocol !== 'file:') {
-          await addDoc(collection(db, 'activationLeads'), leadData);
-        }
+        await window.saveMallSubmission('activationLeads', leadData, 'mombasa_live_activation_leads');
         if (successBox) {
           successBox.style.display = 'block';
           successBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
         if (errorBox) errorBox.style.display = 'none';
         actForm.reset();
+        if (window.showSubmissionConfirmationModal) {
+          window.showSubmissionConfirmationModal({
+            badge: 'Mombasa Mall - Activations',
+            title: 'Activation Proposal Received!',
+            message: 'Your activation and pop-up space proposal has been successfully registered. Our commercial activations team will review space availability and contact you with booking options.',
+            details: [
+              { label: 'Company / Brand', value: leadData.companyName },
+              { label: 'Contact Person', value: leadData.contactName + ' (' + leadData.phone + ')' },
+              { label: 'Format / Zone', value: leadData.activationType },
+              { label: 'Start Date', value: leadData.bookingStartDate },
+              { label: 'Duration', value: leadData.durationDays + ' Day(s)' }
+            ]
+          });
+        }
         setTimeout(() => { if (successBox) successBox.style.display = 'none'; }, 8000);
       } catch (err) {
         console.warn('Activation lead save error:', err);
         if (errorBox) {
+          errorBox.textContent = err.message + ' Your details are still here.';
           errorBox.style.display = 'block';
           errorBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }

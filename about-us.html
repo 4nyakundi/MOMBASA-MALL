@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="./css/style.css" />
   <link rel="stylesheet" href="./css/lifestyle-pages.css" />
   <link rel="stylesheet" href="./css/site-polish.css">
+  <script src="./js/submissions.js"></script>
   <script defer src="./js/site-polish.js"></script>
 </head>
 <body class="subpage lifestyle-page mall-public">
@@ -405,20 +406,22 @@
   <script src="./js/site-data-init.js"></script>
   <script type="module" src="./js/data-renderer.js"></script>
 
-  <script type="module">
-    import { db } from './js/firebase-config.js';
-    import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+  <script>
+
 
     const contactForm = document.getElementById('contact-enquiry-form');
     const successMsg = document.getElementById('contact-form-success');
 
     contactForm?.addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (contactForm.querySelector('button[type="submit"]').disabled || !contactForm.reportValidity()) return;
       const submitBtn = contactForm.querySelector('button[type="submit"]');
       submitBtn.disabled = true;
       submitBtn.innerHTML = '<span>Sending Message…</span> <span class="btn-arrow">⏳</span>';
 
       const errorMsg = document.getElementById('contact-form-error');
+      errorMsg.style.display = 'none';
+      successMsg.style.display = 'none';
 
       const leadData = {
         id: 'contact-' + Date.now(),
@@ -431,29 +434,34 @@
         submittedAt: new Date().toISOString()
       };
 
-      // Immediate local cache reflection for admin dashboard
-      try {
-        const raw = localStorage.getItem('mombasa_live_contact_leads');
-        const list = raw ? JSON.parse(raw) : [];
-        list.unshift(leadData);
-        localStorage.setItem('mombasa_live_contact_leads', JSON.stringify(list));
-      } catch(e) {}
+
 
       try {
-        if (window.location.protocol !== 'file:') {
-          await addDoc(collection(db, 'contactLeads'), leadData);
-        }
+        await window.saveMallSubmission('contactLeads', leadData, 'mombasa_live_contact_leads');
         if (successMsg) {
           successMsg.style.display = 'block';
           successMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
         if (errorMsg) errorMsg.style.display = 'none';
         contactForm.reset();
+        if (window.showSubmissionConfirmationModal) {
+          window.showSubmissionConfirmationModal({
+            badge: 'Mombasa Mall Management',
+            title: 'Message Received!',
+            message: 'Thank you for reaching out to Mombasa Mall Management. Your inquiry has been routed to our leasing and customer relations desk.',
+            details: [
+              { label: 'Name', value: leadData.name },
+              { label: 'Email', value: leadData.email },
+              { label: 'Phone', value: leadData.phone },
+              { label: 'Subject', value: leadData.subject }
+            ]
+          });
+        }
         setTimeout(() => { if (successMsg) successMsg.style.display = 'none'; }, 7000);
       } catch (err) {
         console.warn('Contact lead save error:', err);
         if (errorMsg) {
-          errorMsg.textContent = '⚠️ Sorry, something went wrong. Please try again or call us directly.';
+          errorMsg.textContent = err.message + ' Your details are still here.';
           errorMsg.style.display = 'block';
           errorMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }

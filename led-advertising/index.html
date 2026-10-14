@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -6,6 +6,7 @@
   <meta name="description" content="Put your brand on Mombasa Mall's outdoor and indoor LED screen network. Explore packages and request your campaign with 6:AM Kenya.">
   <link rel="stylesheet" href="../css/style.css"><link rel="stylesheet" href="./led-experience.css"><link rel="stylesheet" href="./6am-brand.css">
   <link rel="stylesheet" href="../css/site-polish.css">
+  <script src="../js/submissions.js"></script>
   <script defer src="../js/site-polish.js"></script>
 </head>
 <body class="led-page mall-public">
@@ -241,6 +242,7 @@
       // Form submission tied to Admin Dashboard
       form?.addEventListener('submit', async function (e) {
         e.preventDefault();
+      if (form.querySelector('button[type="submit"]').disabled || !form.reportValidity()) return;
         const submitBtn = form.querySelector('button[type="submit"]');
         submitBtn.disabled = true;
         submitBtn.textContent = 'Submitting Request…';
@@ -265,27 +267,15 @@
           submittedAt: new Date().toISOString()
         };
 
-        // 1. Save directly into localStorage for immediate Admin Dashboard reflection
         try {
-          const raw = localStorage.getItem('mombasa_live_led_leads');
-          const list = raw ? JSON.parse(raw) : [];
-          list.unshift(leadData);
-          localStorage.setItem('mombasa_live_led_leads', JSON.stringify(list));
-        } catch (err) {}
-
-        // 2. Push to Firestore if not file://
-        if (window.location.protocol !== 'file:') {
-          try {
-            const { db } = await import('../js/firebase-config.js');
-            const { collection, addDoc } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js');
-            let timeout;
-            await Promise.race([addDoc(collection(db, 'ledLeads'), leadData), new Promise((_, reject) => { timeout = setTimeout(() => reject(new Error('Delivery not confirmed')), 15000); })]).finally(() => clearTimeout(timeout));
-          } catch(e){
-            document.getElementById('led-submit-error').style.display = 'block';
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Submit LED Campaign Request →';
-            return;
-          }
+          await window.saveMallSubmission('ledLeads', leadData, 'mombasa_live_led_leads');
+        } catch (error) {
+          const errorBox = document.getElementById('led-submit-error');
+          errorBox.textContent = error.message + ' Your details are still here.';
+          errorBox.style.display = 'block';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Submit LED Campaign Request →';
+          return;
         }
 
         if (successBox) {
@@ -294,6 +284,21 @@
         }
         form.reset();
         updateEstimate();
+
+        if (window.showSubmissionConfirmationModal) {
+          window.showSubmissionConfirmationModal({
+            badge: '6AM Kenya - LED Advertising',
+            title: 'Campaign Request Received!',
+            message: 'Your billboard campaign brief has been received. The 6AM Kenya signage media team will review availability and contact you via WhatsApp or email within 24 hours.',
+            details: [
+              { label: 'Brand Name', value: leadData.businessName },
+              { label: 'Screen Package', value: leadData.packageRequested },
+              { label: 'Duration', value: leadData.durationRequested },
+              { label: 'Estimated Total (VAT incl.)', value: leadData.estimatedCost },
+              { label: 'Contact Person', value: leadData.contactName + ' (' + leadData.phone + ')' }
+            ]
+          });
+        }
         submitBtn.disabled = false;
         submitBtn.textContent = 'Submit LED Campaign Request →';
 

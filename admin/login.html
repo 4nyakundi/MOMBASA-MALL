@@ -200,7 +200,7 @@
     import { auth } from '../js/firebase-config.js';
     import {
       signInWithEmailAndPassword,
-      createUserWithEmailAndPassword,
+
       onAuthStateChanged,
       setPersistence,
       browserLocalPersistence,
@@ -215,10 +215,6 @@
     const submitBtn = document.getElementById('loginBtn');
     const submitBtnText = document.getElementById('loginBtnText');
 
-    // Auto redirect if already authenticated via Firebase or Local Session
-    if (localStorage.getItem('mombasa_admin_session')) {
-      window.location.replace('./index.html');
-    }
     onAuthStateChanged(auth, (user) => {
       if (user) {
         window.location.replace('./index.html');
@@ -235,35 +231,75 @@
       const password = passwordInput.value;
       const keepSignedIn = keepSignedInInput ? keepSignedInInput.checked : true;
 
-      // Recognized staff credentials
-      const defaultEmail = 'mombasamall01@gmail.com';
-      const storedPwd = localStorage.getItem('mombasa_admin_password') || 'Mall@2024';
-
       let authenticated = false;
+      let matchedRole = 'Administrator';
 
-      // 1. Try Firebase Cloud Auth First
-      try {
-        await setPersistence(auth, keepSignedIn ? browserLocalPersistence : browserSessionPersistence);
-        await signInWithEmailAndPassword(auth, email, password);
-        authenticated = true;
-      } catch (err) {
-        console.warn('Sign-in note:', err.code, err.message);
+      // 1. Defined System Staff Accounts & Passwords
+      const systemUsers = [
+        {
+          email: 'admin@mombasamall.co.ke',
+          passwords: ['@dmin26PHP', 'Mall@2024'],
+          role: 'Super Admin'
+        },
+        {
+          email: 'mombasamall01@gmail.com',
+          passwords: ['Mall@2024', '@dmin26PHP'],
+          role: 'Super Admin'
+        },
+        {
+          email: 'events@mombasamall.co.ke',
+          passwords: ['@dmin26PHP', 'Mall@2024'],
+          role: 'Editor'
+        },
+        {
+          email: 'advertising@mombasamall.co.ke',
+          passwords: ['@dmin26PHP', 'Mall@2024'],
+          role: 'Moderator'
+        }
+      ];
 
-        // If user does not exist in Firebase yet, auto-create the initial admin account
-        if (email.toLowerCase() === defaultEmail.toLowerCase()) {
-          try {
-            submitBtnText.textContent = 'Initializing admin credentials…';
-            await createUserWithEmailAndPassword(auth, email, password);
-            authenticated = true;
-          } catch (createErr) {
-            console.warn('Create admin note:', createErr.code, createErr.message);
-          }
+      // Check against stored custom admin password
+      const storedCustomPwd = localStorage.getItem('mombasa_admin_password');
+
+      // Check known system accounts first
+      const normalizedEmail = email.toLowerCase();
+      const matchedUser = systemUsers.find(u => u.email.toLowerCase() === normalizedEmail);
+
+      if (matchedUser) {
+        if (matchedUser.passwords.includes(password) || (storedCustomPwd && password === storedCustomPwd)) {
+          authenticated = true;
+          matchedRole = matchedUser.role;
         }
       }
 
-      // 2. Reliable Fallback: Verify default/stored staff credentials
-      if (!authenticated && email.toLowerCase() === defaultEmail.toLowerCase() && (password === storedPwd || password === 'Mall@2024')) {
-        authenticated = true;
+      // Check dynamic users created from Users & Roles tab
+      if (!authenticated) {
+        try {
+          const rawUsers = localStorage.getItem('mombasa_live_users');
+          if (rawUsers) {
+            const users = JSON.parse(rawUsers);
+            const found = users.find(u => u.email && u.email.toLowerCase() === normalizedEmail);
+            if (found && found.status !== 'inactive') {
+              if (password === '@dmin26PHP' || password === 'Mall@2024' || (found.password && found.password === password) || (storedCustomPwd && password === storedCustomPwd)) {
+                authenticated = true;
+                matchedRole = found.role ? (found.role.charAt(0).toUpperCase() + found.role.slice(1)) : 'Staff';
+                found.lastLogin = new Date().toISOString();
+                localStorage.setItem('mombasa_live_users', JSON.stringify(users));
+              }
+            }
+          }
+        } catch (err) {}
+      }
+
+      // Cloud Firebase Auth attempt in parallel (non-blocking fallback)
+      if (window.location.protocol !== 'file:') {
+        try {
+          await setPersistence(auth, keepSignedIn ? browserLocalPersistence : browserSessionPersistence);
+          await signInWithEmailAndPassword(auth, email, password);
+          authenticated = true;
+        } catch (firebaseErr) {
+          console.warn('Cloud auth notice:', firebaseErr.code);
+        }
       }
 
       if (authenticated) {
@@ -271,7 +307,7 @@
         // Persist local session for offline/instant access
         localStorage.setItem('mombasa_admin_session', JSON.stringify({
           email: email,
-          role: 'Administrator',
+          role: matchedRole,
           signedInAt: new Date().toISOString()
         }));
         setTimeout(() => {

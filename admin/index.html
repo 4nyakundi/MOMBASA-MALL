@@ -83,13 +83,20 @@
         <span class="nav-label">Reviews Moderation</span>
         <span class="nav-count" id="reviewsCountBadge">0</span>
       </button>
+
+      <div class="nav-section-title">System</div>
+      <button class="admin-nav-item" data-tab="users" title="Users &amp; Roles">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+        <span class="nav-label">Users &amp; Roles</span>
+        <span class="nav-count" id="usersCountBadge">0</span>
+      </button>
     </nav>
 
     <div class="admin-sidebar-footer">
       <div class="sidebar-user-block">
         <div class="user-avatar-badge">MM</div>
         <div class="admin-user-info">
-          <span class="admin-user-email" id="adminEmailDisplay">mombasamall01@gmail.com</span>
+          <span class="admin-user-email" id="adminEmailDisplay">admin@mombasamall.co.ke</span>
           <span class="admin-user-role">Administrator</span>
         </div>
       </div>
@@ -279,15 +286,14 @@
         <div class="seeder-card">
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
-            <h3 style="margin:0;">Firestore Database Synchronization &amp; Seeder</h3>
+            <h3 style="margin:0;">MySQL Primary Database &amp; Cloud Backup Synchronization</h3>
           </div>
           <p>
-            Seed or re-sync all 51 stores, events, blog posts, reviews, and site content from the authoritative dataset
-            directly into live Firestore collections. Run this once on initial deployment or whenever directory records are updated.
+            Your authoritative store records, events, blog posts, and reviews are now integrated into the primary <strong>MySQL database (<code>mombasam_mall</code>)</strong>. Use this tool to synchronize live cache and push remote snapshots to cloud backup.
           </p>
           <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
             <button id="seedDatabaseBtn" class="btn-primary" style="display:inline-flex;align-items:center;gap:6px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Seed All Collections to Firestore
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Sync Primary &amp; Remote Backup
             </button>
             <button id="backupAllDataBtn" class="btn-secondary" style="display:inline-flex;align-items:center;gap:6px;">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Download JSON Backup
@@ -691,7 +697,85 @@
       </section>
 
       <!-- ══════════════════════════════════════
-           TAB 10: HOMEPAGE SITE CONTENT
+           TAB 10: USERS & ROLES MANAGEMENT
+           ══════════════════════════════════════ -->
+      <section class="tab-panel" id="tab-users">
+        <div class="section-toolbar">
+          <div class="toolbar-left">
+            <div class="search-input-wrap">
+              <input type="text" id="userSearchInput" class="search-input" placeholder="Search user name, email, role…">
+            </div>
+            <select id="userRoleFilter" class="filter-select">
+              <option value="all">All Roles</option>
+              <option value="superadmin">Super Admin</option>
+              <option value="admin">Administrator</option>
+              <option value="editor">Editor / Content Manager</option>
+              <option value="moderator">Lead &amp; Review Moderator</option>
+            </select>
+            <select id="userStatusFilter" class="filter-select">
+              <option value="all">All Statuses</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive / Suspended</option>
+            </select>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <button id="exportUsersCsvBtn" class="btn-secondary" style="display:inline-flex;align-items:center;gap:6px;" title="Export users list to CSV">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export CSV
+            </button>
+            <button id="openAddUserBtn" class="btn-primary" style="display:inline-flex;align-items:center;gap:6px;">
+              <span>+</span> Add New User
+            </button>
+          </div>
+        </div>
+
+        <!-- Role Legend Card -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-bottom:20px;">
+          <div style="background:var(--admin-card, #fff); border:1px solid var(--admin-border, #e2e8f0); border-radius:12px; padding:12px 16px;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+              <span class="status-pill status-approved" style="font-size:10.5px; padding:2px 8px;">Super Admin</span>
+            </div>
+            <p style="font-size:12px; color:var(--admin-text-muted); margin:0;">Full unrestricted access including role management and system settings.</p>
+          </div>
+          <div style="background:var(--admin-card, #fff); border:1px solid var(--admin-border, #e2e8f0); border-radius:12px; padding:12px 16px;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+              <span class="status-pill status-contacted" style="font-size:10.5px; padding:2px 8px;">Administrator</span>
+            </div>
+            <p style="font-size:12px; color:var(--admin-text-muted); margin:0;">Can manage stores, media, events, leads, and customer inquiries.</p>
+          </div>
+          <div style="background:var(--admin-card, #fff); border:1px solid var(--admin-border, #e2e8f0); border-radius:12px; padding:12px 16px;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+              <span class="status-pill status-new" style="font-size:10.5px; padding:2px 8px;">Editor</span>
+            </div>
+            <p style="font-size:12px; color:var(--admin-text-muted); margin:0;">Can create and edit blog articles, events, and update directory content.</p>
+          </div>
+          <div style="background:var(--admin-card, #fff); border:1px solid var(--admin-border, #e2e8f0); border-radius:12px; padding:12px 16px;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+              <span class="status-pill" style="background:#f1f5f9; color:#475569; font-size:10.5px; padding:2px 8px;">Moderator</span>
+            </div>
+            <p style="font-size:12px; color:var(--admin-text-muted); margin:0;">Manages and updates incoming leads and reviews testimonials.</p>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th style="width:48px;">User</th>
+                <th>Full Name &amp; Contact</th>
+                <th>Role</th>
+                <th>Access Permissions</th>
+                <th>Status</th>
+                <th>Created / Last Active</th>
+                <th style="width:140px;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="usersTableBody">
+              <tr class="skeleton-row"><td colspan="7"><span class="skeleton skeleton-cell"></span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
     </div><!-- /.admin-content -->
   </main>
 
@@ -1044,6 +1128,67 @@
         <div class="modal-footer">
           <button type="button" id="cancelChangePasswordBtn" class="btn-cancel">Cancel</button>
           <button type="submit" class="btn-primary">Update Password</button>
+        </div>
+      </form>
+    </div>
+  <!-- ══════════════════════════════════════════
+       MODAL: ADD / EDIT USER & ROLE
+       ══════════════════════════════════════════ -->
+  <div id="userModal" class="modal-backdrop" aria-hidden="true">
+    <div class="modal-card" style="max-width:560px;">
+      <div class="modal-header">
+        <h3 id="userModalTitle">Add New System User</h3>
+        <button id="closeUserModalBtn" class="modal-close" aria-label="Close">&times;</button>
+      </div>
+      <form id="userForm">
+        <input type="hidden" id="userDocId">
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group col-2">
+              <label for="userNameInput">Full Name *</label>
+              <input type="text" id="userNameInput" class="form-control" required placeholder="e.g. Amina Hassan">
+            </div>
+            <div class="form-group col-2">
+              <label for="userEmailInput">Email Address *</label>
+              <input type="email" id="userEmailInput" class="form-control" required placeholder="e.g. amina@mombasamall.co.ke">
+            </div>
+            <div class="form-group col-2" id="userPasswordGroup">
+              <label for="userPasswordInput">Password *</label>
+              <input type="password" id="userPasswordInput" disabled class="form-control" placeholder="Assign secure password (min 6 characters)">
+              <small id="userPasswordHelp" style="font-size:11.5px; color:var(--admin-text-muted); display:block; margin-top:4px;">Staff profiles do not create login accounts or enforce database permissions. Manage sign-in accounts in Firebase Authentication.</small>
+            </div>
+            <div class="form-group">
+              <label for="userPhoneInput">Phone / WhatsApp</label>
+              <input type="tel" id="userPhoneInput" class="form-control" placeholder="+254 7XX XXX XXX">
+            </div>
+            <div class="form-group">
+              <label for="userRoleInput">Assigned Role *</label>
+              <select id="userRoleInput" class="form-control" required>
+                <option value="editor">Editor / Content Manager</option>
+                <option value="moderator">Lead &amp; Review Moderator</option>
+                <option value="admin">Administrator</option>
+                <option value="superadmin">Super Admin</option>
+              </select>
+            </div>
+            <div class="form-group col-2">
+              <label for="userStatusInput">Account Status *</label>
+              <select id="userStatusInput" class="form-control" required>
+                <option value="active">Active (Permit Login)</option>
+                <option value="inactive">Suspended / Inactive</option>
+              </select>
+            </div>
+            <div class="form-group col-2">
+              <label>Role Permissions Summary</label>
+              <div id="rolePermissionsSummary" style="background:var(--admin-bg, #f8fafc); border:1px solid var(--admin-border, #e2e8f0); border-radius:10px; padding:12px 14px; font-size:12.5px; color:var(--admin-text-muted); line-height:1.5;">
+                • Can draft &amp; edit events and blog articles.<br>
+                • Can update store directory entries.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="cancelUserBtn" class="btn-cancel">Cancel</button>
+          <button type="submit" id="saveUserBtn" class="btn-primary">Save User</button>
         </div>
       </form>
     </div>

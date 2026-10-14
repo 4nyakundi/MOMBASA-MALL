@@ -104,6 +104,107 @@
         document.querySelectorAll('.activation-card').forEach(card=>gsap.from(card,{y:20,opacity:0,duration:.55,clearProps:'opacity,transform',scrollTrigger:{scroller:document.querySelector('.subpage-content'),trigger:card,start:'top 93%',once:true}}));
       });
     }
+
+    document.querySelectorAll('.footer-newsletter-form').forEach(form => {
+      form.addEventListener('submit', async event => {
+        event.preventDefault();
+        const button = form.querySelector('button[type="submit"]');
+        if (button.disabled || !form.reportValidity()) return;
+        const email = form.querySelector('input[type="email"]').value.trim();
+        button.disabled = true;
+        let error = form.querySelector('[role="alert"]');
+        if (!error) { error = document.createElement('p'); error.setAttribute('role', 'alert'); form.append(error); }
+        error.textContent = '';
+        try {
+          await window.saveMallSubmission('contactLeads', {
+            id: 'newsletter-' + crypto.randomUUID(), name: 'Play-On subscriber', email,
+            subject: 'Play-On newsletter', message: 'Please subscribe me to Play-On updates.',
+            status: 'new', submittedAt: new Date().toISOString()
+          }, 'mombasa_live_contact_leads');
+          window.showSubmissionConfirmationModal({badge: 'Play-On Club', title: 'Subscription request received!',
+            message: 'Your request has been received by our team.', details: [{label: 'Email', value: email}]});
+          form.reset();
+        } catch (err) { error.textContent = err.message; }
+        finally { button.disabled = false; }
+      });
+    });
   }
+
+  // Global Confirmation Popup Utility
+  window.showSubmissionConfirmationModal = function (opts) {
+    let overlay = document.getElementById('globalConfirmModalOverlay');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = 'globalConfirmModalOverlay';
+      overlay.className = 'site-confirm-overlay';
+      overlay.innerHTML = `
+        <div class="site-confirm-card" role="dialog" aria-modal="true" aria-labelledby="siteConfirmTitle" aria-describedby="siteConfirmDesc">
+          <div class="site-confirm-icon-wrap">
+            <div class="site-confirm-icon">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+          </div>
+          <span class="site-confirm-badge" id="siteConfirmBadge">Booking Confirmed</span>
+          <h3 class="site-confirm-title" id="siteConfirmTitle">Request Received!</h3>
+          <p class="site-confirm-desc" id="siteConfirmDesc">Thank you! Your details have been securely logged.</p>
+          <div class="site-confirm-details" id="siteConfirmDetails"></div>
+          <div class="site-confirm-actions">
+            <button type="button" class="site-confirm-btn" id="siteConfirmCloseBtn">Done &amp; Continue</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+
+      overlay.setAttribute('aria-hidden', 'true');
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeConfirmModal();
+      });
+      overlay.querySelector('#siteConfirmCloseBtn')?.addEventListener('click', closeConfirmModal);
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Tab' && overlay.classList.contains('is-visible')) { e.preventDefault(); overlay.querySelector('button').focus(); }
+        if (e.key === 'Escape' && overlay.classList.contains('is-visible')) closeConfirmModal();
+      });
+    }
+
+    function closeConfirmModal() {
+      overlay.classList.remove('is-visible');
+      overlay.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = overlay.dataset.previousOverflow || '';
+      overlay.returnFocus?.focus();
+    }
+
+    const badgeEl = overlay.querySelector('#siteConfirmBadge');
+    const titleEl = overlay.querySelector('#siteConfirmTitle');
+    const descEl = overlay.querySelector('#siteConfirmDesc');
+    const detailsEl = overlay.querySelector('#siteConfirmDetails');
+
+    if (badgeEl) badgeEl.textContent = opts.badge || 'Confirmed';
+    if (titleEl) titleEl.textContent = opts.title || 'Submission Received!';
+    if (descEl) descEl.textContent = opts.message || 'Our team will contact you shortly.';
+
+    if (detailsEl) {
+      if (Array.isArray(opts.details) && opts.details.length > 0) {
+        detailsEl.style.display = 'block';
+        detailsEl.replaceChildren();
+        opts.details.forEach(item => {
+          const row = document.createElement('div'); row.className = 'site-confirm-row';
+          const label = document.createElement('span'); label.className = 'site-confirm-label'; label.textContent = item.label + ':';
+          const value = document.createElement('strong'); value.className = 'site-confirm-val'; value.textContent = String(item.value ?? '');
+          row.append(label, value); detailsEl.append(row);
+        });
+      } else {
+        detailsEl.style.display = 'none';
+        detailsEl.innerHTML = '';
+      }
+    }
+
+    overlay.returnFocus = document.activeElement;
+    overlay.dataset.previousOverflow = document.body.style.overflow;
+    overlay.setAttribute('aria-hidden', 'false');
+    overlay.classList.add('is-visible');
+    overlay.querySelector('button').focus();
+    document.body.style.overflow = 'hidden';
+  };
+
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();

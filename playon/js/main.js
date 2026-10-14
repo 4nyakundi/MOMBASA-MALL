@@ -769,7 +769,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const modalCloseBtn = document.getElementById('modalCloseBtn');
 
   if (bookingForm) {
-    bookingForm.addEventListener('submit', (e) => {
+    bookingForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const name = document.getElementById('parentName') ? document.getElementById('parentName').value.trim() : '';
@@ -788,6 +788,22 @@ document.addEventListener('DOMContentLoaded', () => {
       if (bType === 'birthday') typeLabel = 'Birthday Party Package';
       else if (bType === 'school') typeLabel = 'School / Kindergarten Group Trip';
       else if (bType === 'private') typeLabel = 'Exclusive Private Venue Hire';
+
+      const submitButton = bookingForm.querySelector('button[type="submit"]');
+      if (submitButton.disabled || !bookingForm.reportValidity()) return;
+      submitButton.disabled = true;
+      let error = bookingForm.querySelector('[role="alert"]');
+      if (!error) { error = document.createElement('p'); error.setAttribute('role', 'alert'); bookingForm.append(error); }
+      error.textContent = '';
+      try {
+        await window.saveMallSubmission('contactLeads', {
+          id: 'playon-' + crypto.randomUUID(), name, phone, email,
+          subject: 'Play-On booking: ' + typeLabel,
+          message: `Visit: ${date}; Session: ${session}; Children: ${kids}; Adults: ${adults}; Estimate: ${totalCost}. ${message}`,
+          bookingStartDate: date, session, status: 'new', submittedAt: new Date().toISOString()
+        }, 'mombasa_live_contact_leads');
+      } catch (err) { error.textContent = err.message + ' Your details are still here.'; return; }
+      finally { submitButton.disabled = false; }
 
       // Confetti Blast
       if (typeof confetti !== 'undefined') {
@@ -812,16 +828,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Populate Modal Summary
       if (modalSummary) {
-        modalSummary.innerHTML = `
-          <p><strong>Parent / Guardian:</strong> ${name}</p>
-          <p><strong>Phone / WhatsApp:</strong> ${phone}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Booking Type:</strong> ${typeLabel}</p>
-          <p><strong>Visit Date:</strong> ${date} (${session})</p>
-          <p><strong>Guests:</strong> ${kids} Child(ren), ${adults} Adult(s)</p>
-          <p><strong>Estimated Total:</strong> ${totalCost}</p>
-          ${message ? `<p><strong>Special Request / Notes:</strong> ${message}</p>` : ''}
-        `;
+        modalSummary.replaceChildren();
+        Object.entries({'Parent / Guardian': name, 'Phone / WhatsApp': phone, Email: email,
+          'Booking Type': typeLabel, 'Visit Date': date + ' (' + session + ')',
+          Guests: kids + ' Child(ren), ' + adults + ' Adult(s)', 'Estimated Total': totalCost,
+          Notes: message || 'None'}).forEach(([label, value]) => {
+            const row = document.createElement('p'); const strong = document.createElement('strong');
+            strong.textContent = label + ': '; row.append(strong, document.createTextNode(value)); modalSummary.append(row);
+          });
       }
 
       // 1. Format WhatsApp prefilled message
@@ -881,21 +895,43 @@ ${phone}`;
 
       // Show confirmation modal
       if (confirmationModal) {
+        confirmationModal.returnFocus = document.activeElement;
+        confirmationModal.previousOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        confirmationModal.setAttribute('aria-hidden', 'false');
         confirmationModal.classList.add('is-active');
+        modalCloseBtn?.focus();
       }
     });
   }
 
+  function closeBookingConfirmation() {
+    confirmationModal.classList.remove('is-active');
+    confirmationModal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = confirmationModal.previousOverflow || '';
+    confirmationModal.returnFocus?.focus();
+  }
+  document.addEventListener('keydown', event => {
+    if (!confirmationModal?.classList.contains('is-active')) return;
+    if (event.key === 'Escape') closeBookingConfirmation();
+    if (event.key === 'Tab') {
+      const controls = [...confirmationModal.querySelectorAll('a[href],button')];
+      const first = controls[0], last = controls.at(-1);
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    }
+  });
+
   if (modalCloseBtn && confirmationModal) {
     modalCloseBtn.addEventListener('click', () => {
-      confirmationModal.classList.remove('is-active');
+      closeBookingConfirmation();
     });
   }
 
   if (confirmationModal) {
     confirmationModal.addEventListener('click', (e) => {
       if (e.target === confirmationModal) {
-        confirmationModal.classList.remove('is-active');
+        closeBookingConfirmation();
       }
     });
   }
@@ -1001,25 +1037,4 @@ ${phone}`;
     window.addEventListener('resize', updateSlider);
   }
 
-  /* ------------------------------------------------------------------------
-     14. Newsletter Signup Celebration
-     ------------------------------------------------------------------------ */
-  const newsletterForm = document.querySelector('.footer-newsletter-form');
-  if (newsletterForm) {
-    newsletterForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const input = newsletterForm.querySelector('input');
-      if (input && input.value) {
-        if (typeof confetti !== 'undefined') {
-          confetti({
-            particleCount: 80,
-            spread: 60,
-            origin: { y: 0.9 },
-          });
-        }
-        alert('🎉 Asante! You are subscribed to Play-On VIP updates & discounts!');
-        input.value = '';
-      }
-    });
-  }
 });

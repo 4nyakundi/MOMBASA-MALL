@@ -78,6 +78,7 @@
   }
   </script>
   <link rel="stylesheet" href="../css/site-polish.css">
+  <script src="../js/submissions.js"></script>
   <script defer src="../js/site-polish.js"></script>
 </head>
 
@@ -1236,11 +1237,11 @@
   </section>
 
   <!-- Celebration Confetti Booking Confirmation Modal -->
-  <div class="modal-overlay" id="confirmationModal">
-    <div class="modal-card">
+  <div class="modal-overlay" id="confirmationModal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="playonConfirmationTitle">
       <div class="modal-icon-celebration">🎉</div>
-      <h3>You're Booked for Fun!</h3>
-      <p>Your Play-On reservation request has been prepared! Complete 1-click confirmation via WhatsApp or Email below.</p>
+      <h3 id="playonConfirmationTitle">Booking request received!</h3>
+      <p>Your request has been saved. The Play-On team will confirm availability. You can also follow up via WhatsApp or email below.</p>
 
       <div class="modal-summary-box" id="modalSummary">
         <!-- Injected via JavaScript -->

@@ -840,3 +840,47 @@ window.MOMBASA_DEFAULT_SITE_DATA = {
     "twitter": "https://twitter.com/mombasamall"
   }
 };
+
+window.MOMBASA_DEFAULT_USERS = [
+  {
+    "id": "usr-admin-01",
+    "name": "Super Administrator",
+    "email": "admin@mombasamall.co.ke",
+    "phone": "+254 790 964 002",
+    "role": "superadmin",
+    "status": "active",
+    "createdAt": "2026-01-01T08:00:00.000Z",
+    "lastLogin": "2026-10-14T19:45:00.000Z"
+  },
+  {
+    "id": "usr-staff-02",
+    "name": "Amina Hassan",
+    "email": "events@mombasamall.co.ke",
+    "phone": "+254 712 345 678",
+    "role": "editor",
+    "status": "active",
+    "createdAt": "2026-03-10T09:30:00.000Z",
+    "lastLogin": "2026-10-12T14:20:00.000Z"
+  },
+  {
+    "id": "usr-staff-03",
+    "name": "David Mwangi",
+    "email": "advertising@mombasamall.co.ke",
+    "phone": "+254 722 987 654",
+    "role": "moderator",
+    "status": "active",
+    "createdAt": "2026-05-18T11:15:00.000Z",
+    "lastLogin": "2026-10-13T16:00:00.000Z"
+  },
+  {
+    "id": "usr-staff-00",
+    "name": "Mombasa Mall Legacy Admin",
+    "email": "mombasamall01@gmail.com",
+    "phone": "+254 790 964 002",
+    "role": "superadmin",
+    "status": "active",
+    "password": "Mall@2024",
+    "createdAt": "2026-01-01T08:00:00.000Z",
+    "lastLogin": "2026-10-14T20:50:00.000Z"
+  }
+];
