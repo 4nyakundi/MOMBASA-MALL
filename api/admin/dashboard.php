@@ -6,6 +6,7 @@
 
 require_once __DIR__ . '/../config.php';
 
+authorize_resource('dashboard');
 $pdo = get_db_connection();
 
 try {
@@ -33,7 +34,8 @@ try {
 
     // 2. Fetch Recent Leads (Latest 10 across all channels)
     $leadsStmt = $pdo->query("SELECT * FROM v_all_leads ORDER BY submitted_at DESC LIMIT 10");
-    $recentLeads = $leadsStmt->fetchAll() ?: [];
+    $recentLeads = in_array($_SESSION['admin_user']['role'], ['superadmin','admin','moderator']) ? ($leadsStmt->fetchAll() ?: []) : [];
+    $metrics['upcoming_events'] = (int)$pdo->query("SELECT COUNT(*) FROM events WHERE status='upcoming' AND COALESCE(event_end_date,event_date) >= CURRENT_DATE")->fetchColumn();
 
     json_response([
         'success'      => true,
@@ -44,6 +46,6 @@ try {
 } catch (Exception $e) {
     json_response([
         'success' => false,
-        'error'   => $e->getMessage()
+        'error'   => 'Dashboard data unavailable.'
     ], 500);
 }

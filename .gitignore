@@ -23,4 +23,9 @@ Thumbs.db
 
 # Temp files
 tmp/
+uploads/*
+!uploads/.htaccess
+.env
+.env.*
+!api/.env.example
 led-6am-check.cjs

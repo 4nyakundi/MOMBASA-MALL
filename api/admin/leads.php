@@ -9,6 +9,7 @@
 
 require_once __DIR__ . '/../config.php';
 
+authorize_resource('leads');
 $pdo = get_db_connection();
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -49,10 +50,16 @@ if ($method === 'GET') {
                 'phone'                => $r['phone'],
                 'package'              => $r['package_requested'],
                 'package_requested'    => $r['package_requested'],
+                'packageRequested'     => $r['package_requested'],
                 'duration'             => $r['duration_requested'],
                 'duration_requested'   => $r['duration_requested'],
+                'durationRequested'    => $r['duration_requested'],
+                'durationMonths'       => $r['duration_code'],
                 'duration_code'        => $r['duration_code'],
                 'slot_length'          => $r['slot_length'],
+                'slotLength'           => $r['slot_length'],
+                'estimatedCost'        => 'KES ' . number_format((float)$r['estimated_cost_total'], 2),
+                'message'              => $r['notes'] ?: '',
                 'cost'                 => (float)$r['estimated_cost_total'],
                 'estimated_cost_kes'   => (float)$r['estimated_cost_kes'],
                 'estimated_cost_vat'   => (float)$r['estimated_cost_vat'],
@@ -83,12 +90,18 @@ if ($method === 'GET') {
                 'phone'               => $r['phone'],
                 'type'                => $r['activation_type'],
                 'activation_type'     => $r['activation_type'],
+                'activationType'      => $r['activation_type'],
                 'startDate'           => $r['booking_start_date'],
                 'booking_start_date'  => $r['booking_start_date'],
+                'bookingStartDate'    => $r['booking_start_date'],
+                'bookingEndDate'      => $r['booking_end_date'],
                 'duration'            => (int)$r['duration_days'],
                 'duration_days'       => (int)$r['duration_days'],
+                'durationDays'        => (int)$r['duration_days'],
                 'concept'             => $r['concept_description'],
                 'concept_description' => $r['concept_description'],
+                'message'             => $r['concept_description'],
+                'contactInfo'         => $r['phone'] . ' · ' . $r['email'],
                 'status'              => $r['status'] ?: 'new',
                 'admin_notes'         => $r['admin_notes'] ?: '',
                 'date'                => date('M d, Y', strtotime($r['submitted_at'])),
@@ -158,6 +171,7 @@ if ($method === 'PUT') {
     $id = (int)($input['numeric_id'] ?? $input['id'] ?? 0);
     $status = $input['status'] ?? null;
     $notes = $input['admin_notes'] ?? null;
+    if ($status !== null && !in_array($status, ['new','contacted','won','lost','in-progress','in_progress','reviewed','quoted','approved','confirmed','completed','closed','rejected','cancelled'])) json_response(['success' => false, 'error' => 'Invalid status.'], 422);
 
     if ($id <= 0) {
         json_response(['success' => false, 'error' => 'Valid lead ID is required'], 400);
@@ -170,7 +184,9 @@ if ($method === 'PUT') {
         'playon'     => 'playon_bookings'
     ];
 
-    $tableName = $tableMap[$type] ?? 'contact_leads';
+    if (!isset($tableMap[$type])) json_response(['success' => false, 'error' => 'Invalid lead type.'], 422);
+    $tableName = $tableMap[$type];
+    require_existing($pdo, $tableName, $id);
 
     $stmt = $pdo->prepare("
         UPDATE `{$tableName}` SET
@@ -214,7 +230,9 @@ if ($method === 'DELETE') {
         'playon'     => 'playon_bookings'
     ];
 
-    $tableName = $tableMap[$type] ?? 'contact_leads';
+    if (!isset($tableMap[$type])) json_response(['success' => false, 'error' => 'Invalid lead type.'], 422);
+    $tableName = $tableMap[$type];
+    require_existing($pdo, $tableName, $id);
 
     $stmt = $pdo->prepare("DELETE FROM `{$tableName}` WHERE id = :id");
     $stmt->execute([':id' => $id]);

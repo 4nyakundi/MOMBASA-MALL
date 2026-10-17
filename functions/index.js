@@ -11,6 +11,16 @@ if (!admin.apps.length) {
 // Body options: { topic: 'topicName' } OR { token: 'deviceToken' }, plus { title, body, data }
 exports.sendNotification = functions.https.onRequest(async (req, res) => {
   if (req.method !== 'POST') return res.status(405).send('Use POST');
+  // This optional service is separate from SQL staff sessions. It requires a
+  // verified Firebase service operator; public website visitors cannot send pushes.
+  try {
+    const token = (req.headers.authorization || '').match(/^Bearer (.+)$/)?.[1];
+    if (!token) return res.status(401).json({ error: 'Authentication required' });
+    const operator = await admin.auth().verifyIdToken(token, true);
+    if (operator.admin !== true) return res.status(403).json({ error: 'Permission denied' });
+  } catch {
+    return res.status(401).json({ error: 'Invalid authentication token' });
+  }
   const { topic, token, title = 'Mombasa Mall', body = '', data = {} } = req.body || {};
 
   try {

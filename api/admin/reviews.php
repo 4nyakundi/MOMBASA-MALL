@@ -5,6 +5,7 @@
 
 require_once __DIR__ . '/../config.php';
 
+authorize_resource('reviews');
 $pdo = get_db_connection();
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -47,12 +48,16 @@ if ($method === 'GET') {
             'store_id'     => $r['store_id'],
             'status'       => $r['status'],
             'approved'     => $r['status'] === 'approved',
-            'type'         => 'feedback',
+            'type'         => metadata_get($pdo, 'reviews', $r['id'])['reviewType'] ?? (stripos($r['admin_notes'] ?? '', 'testimonial') !== false ? 'testimonial' : 'feedback'),
             'date'         => date('M d, Y', strtotime($r['submitted_at'])),
             'submitted_at' => $r['submitted_at']
         ];
     }
 
+    if (defined('MALL_PUBLIC_READ')) {
+        foreach ($formatted as &$item) { unset($item['email'], $item['reviewer_email']); }
+        unset($item);
+    }
     json_response([
         'success' => true,
         'count'   => count($formatted),
@@ -67,6 +72,7 @@ if ($method === 'PUT') {
     if ($id <= 0) {
         json_response(['success' => false, 'error' => 'Valid review ID is required'], 400);
     }
+    require_existing($pdo, 'reviews', $id);
 
     $status = $input['status'] ?? null;
     if (isset($input['approved'])) {
@@ -74,7 +80,7 @@ if ($method === 'PUT') {
     }
 
     if (!in_array($status, ['pending', 'approved', 'rejected'])) {
-        $status = 'approved';
+        json_response(['success' => false, 'error' => 'Invalid review status.'], 422);
     }
 
     $adminNotes = $input['admin_notes'] ?? null;
@@ -110,6 +116,7 @@ if ($method === 'DELETE') {
     if ($id <= 0) {
         json_response(['success' => false, 'error' => 'Valid review ID is required'], 400);
     }
+    require_existing($pdo, 'reviews', $id);
 
     $stmt = $pdo->prepare("DELETE FROM reviews WHERE id = :id");
     $stmt->execute([':id' => $id]);

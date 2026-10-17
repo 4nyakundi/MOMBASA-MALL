@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     json_response(['success' => false, 'error' => 'POST method required'], 405);
 }
 
-$input = get_json_input();
+$input = input_aliases(get_json_input(), ['company' => ['companyName'], 'applicant' => ['contactName'], 'type' => ['activationType'], 'startDate' => ['bookingStartDate'], 'duration' => ['durationDays'], 'concept' => ['message']]);
 $companyName = trim($input['company'] ?? $input['company_name'] ?? '');
 $contactName = trim($input['applicant'] ?? $input['contact_name'] ?? '');
 $email = trim($input['email'] ?? '');
@@ -25,10 +25,13 @@ if (empty($companyName) || empty($contactName) || empty($email) || empty($phone)
 $activationType = trim($input['type'] ?? $input['activation_type'] ?? 'Central Atrium Showcase');
 $startDate = trim($input['startDate'] ?? $input['booking_start_date'] ?? date('Y-m-d'));
 $durationDays = max(1, (int)($input['duration'] ?? $input['duration_days'] ?? 1));
-$endDate = date('Y-m-d', strtotime("{$startDate} +{$durationDays} days"));
+validate_date($startDate);
+$endDate = date('Y-m-d', strtotime("{$startDate} +" . ($durationDays - 1) . " days"));
 $concept = trim($input['concept'] ?? $input['concept_description'] ?? '');
 
-$refCode = 'ACT-' . strtoupper(substr(uniqid(), -6));
+validate_email($email);
+$request = begin_submission($pdo, 'activation', $input);
+$refCode = 'ACT-' . strtoupper(bin2hex(random_bytes(10)));
 
 $stmt = $pdo->prepare("
     INSERT INTO activation_leads (
@@ -56,9 +59,9 @@ $stmt->execute([
 
 $leadId = (int)$pdo->lastInsertId();
 
-json_response([
+finish_submission($pdo, $request, [
     'success'  => true,
     'message'  => 'Your brand activation reservation request has been received. Our leasing team will contact you shortly.',
     'ref_code' => $refCode,
     'lead_id'  => $leadId
-], 201);
+]);

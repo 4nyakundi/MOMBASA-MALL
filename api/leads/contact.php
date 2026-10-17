@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     json_response(['success' => false, 'error' => 'POST method required'], 405);
 }
 
-$input = get_json_input();
+$input = input_aliases(get_json_input(), []);
 $name = trim($input['name'] ?? '');
 $email = trim($input['email'] ?? '');
 $phone = trim($input['phone'] ?? '');
@@ -23,7 +23,9 @@ if (empty($name) || empty($email) || empty($message)) {
     json_response(['success' => false, 'error' => 'Name, email, and message are required'], 400);
 }
 
-$refCode = 'CNT-' . strtoupper(substr(uniqid(), -6));
+validate_email($email);
+$request = begin_submission($pdo, 'contact', $input);
+$refCode = 'CNT-' . strtoupper(bin2hex(random_bytes(10)));
 
 $stmt = $pdo->prepare("
     INSERT INTO contact_leads (ref_code, name, email, phone, subject, message, status)
@@ -40,9 +42,9 @@ $stmt->execute([
 
 $leadId = (int)$pdo->lastInsertId();
 
-json_response([
+finish_submission($pdo, $request, [
     'success'  => true,
     'message'  => 'Your inquiry has been received. Our team will contact you shortly.',
     'ref_code' => $refCode,
     'lead_id'  => $leadId
-], 201);
+]);

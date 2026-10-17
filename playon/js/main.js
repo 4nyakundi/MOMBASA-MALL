@@ -796,12 +796,12 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!error) { error = document.createElement('p'); error.setAttribute('role', 'alert'); bookingForm.append(error); }
       error.textContent = '';
       try {
-        await window.saveMallSubmission('contactLeads', {
+        await window.saveMallSubmission('playonBookings', {
           id: 'playon-' + crypto.randomUUID(), name, phone, email,
           subject: 'Play-On booking: ' + typeLabel,
           message: `Visit: ${date}; Session: ${session}; Children: ${kids}; Adults: ${adults}; Estimate: ${totalCost}. ${message}`,
-          bookingStartDate: date, session, status: 'new', submittedAt: new Date().toISOString()
-        }, 'mombasa_live_contact_leads');
+          booking_type: bType, booking_date: date, session_time: session, child_count: Number(kids), adult_count: Number(adults), special_requests: message, status: 'new', submittedAt: new Date().toISOString()
+        }, 'mombasa_live_playon_bookings');
       } catch (err) { error.textContent = err.message + ' Your details are still here.'; return; }
       finally { submitButton.disabled = false; }
 

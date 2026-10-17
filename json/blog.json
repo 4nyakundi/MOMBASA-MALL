@@ -4,25 +4,33 @@
       "title": "Welcome to Westerwelle Startup Haus Mombasa",
       "date": "2026-08-10",
       "excerpt": "Discover the newly launched co-working space and tech incubator on the third floor of Mombasa Mall, offering prime office suites, meeting rooms, and startup support.",
-      "slug": "westerwelle-coworking-launch"
+      "slug": "westerwelle-coworking-launch",
+      "content": "Discover the newly launched co-working space and tech incubator on the third floor of Mombasa Mall, offering prime office suites, meeting rooms, and startup support.",
+      "status": "published"
     },
     {
       "title": "Fresh Grocery Shopping Made Easy at Naivas Anchor",
       "date": "2026-08-01",
       "excerpt": "Explore the massive Naivas Supermarket on the ground floor of Mombasa Mall, featuring fresh produce, a bakery, butchery, and a fully-stocked homeware section.",
-      "slug": "naivas-grocery-shopping"
+      "slug": "naivas-grocery-shopping",
+      "content": "Explore the massive Naivas Supermarket on the ground floor of Mombasa Mall, featuring fresh produce, a bakery, butchery, and a fully-stocked homeware section.",
+      "status": "published"
     },
     {
       "title": "Planning the Perfect Family Weekend at Play-On Zone",
       "date": "2026-07-22",
       "excerpt": "From indoor soft playgrounds to child-safe ball pits and interactive crafts, discover why Play-On at Mombasa Mall is the family destination of choice.",
-      "slug": "family-weekend-play-on"
+      "slug": "family-weekend-play-on",
+      "content": "From indoor soft playgrounds to child-safe ball pits and interactive crafts, discover why Play-On at Mombasa Mall is the family destination of choice.",
+      "status": "published"
     },
     {
       "title": "How Digital LED Screens Can Boost Your Brand Exposure",
       "date": "2026-07-08",
       "excerpt": "Learn about our dual-sided high-definition digital billboards in the main atrium and food court, and how flexible advertising loops can scale your business.",
-      "slug": "boost-brand-led-screens"
+      "slug": "boost-brand-led-screens",
+      "content": "Learn about our dual-sided high-definition digital billboards in the main atrium and food court, and how flexible advertising loops can scale your business.",
+      "status": "published"
     }
   ]
 }

@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     json_response(['success' => false, 'error' => 'POST method required'], 405);
 }
 
-$input = get_json_input();
+$input = input_aliases(get_json_input(), ['parent_name' => ['name'], 'booking_date' => ['bookingStartDate'], 'session_time' => ['session'], 'booking_type' => ['bookingType'], 'child_count' => ['kids'], 'adult_count' => ['adults'], 'special_requests' => ['message']]);
 $parentName = trim($input['parent_name'] ?? $input['name'] ?? '');
 $phone = trim($input['phone'] ?? '');
 $email = trim($input['email'] ?? '');
@@ -23,13 +23,19 @@ if (empty($parentName) || empty($phone) || empty($email)) {
 
 $bookingType = trim($input['booking_type'] ?? 'session');
 $bookingDate = trim($input['booking_date'] ?? date('Y-m-d'));
+validate_date($bookingDate);
 $sessionTime = trim($input['session_time'] ?? '10:00 AM - 12:00 PM');
 $childCount = max(1, (int)($input['child_count'] ?? 1));
 $adultCount = max(0, (int)($input['adult_count'] ?? 0));
-$estimatedTotal = (float)($input['estimated_total_kes'] ?? ($childCount * 1000 + $adultCount * 500));
+$weekday = (int)validate_date($bookingDate)->format('N');
+if (!in_array($bookingType,['session','birthday','school','private'])) json_response(['success'=>false,'error'=>'Invalid booking type.'],422);
+if ($childCount > 30 || $adultCount > 30) json_response(['success'=>false,'error'=>'For groups larger than 30, contact our team.'],422);
+$estimatedTotal = $bookingType === 'session' ? $childCount * ($weekday >= 6 ? 1500 : 1000) + $adultCount * 500 : 0;
 $specialRequests = trim($input['special_requests'] ?? '');
 
-$refCode = 'PLY-' . strtoupper(substr(uniqid(), -6));
+validate_email($email);
+$request = begin_submission($pdo, 'playon', $input);
+$refCode = 'PLY-' . strtoupper(bin2hex(random_bytes(10)));
 
 $stmt = $pdo->prepare("
     INSERT INTO playon_bookings (
@@ -58,9 +64,10 @@ $stmt->execute([
 
 $bookingId = (int)$pdo->lastInsertId();
 
-json_response([
+finish_submission($pdo, $request, [
     'success'    => true,
-    'message'    => 'Your Play On session booking has been confirmed! We have saved your reservation.',
+    'message'    => 'Your Play On booking request has been received. Our team will confirm availability.',
     'ref_code'   => $refCode,
-    'booking_id' => $bookingId
-], 201);
+    'booking_id' => $bookingId,
+    'lead_id' => $bookingId
+]);

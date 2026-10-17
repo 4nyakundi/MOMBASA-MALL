@@ -134,8 +134,11 @@
 
   function cached(key) {try{return JSON.parse(localStorage.getItem(key)||'[]')}catch{return []}}
   async function localEvents() {
-    const local=cached('mombasa_live_events');if(Array.isArray(local)&&local.length)return local;
-    try {const response=await fetch('./json/events.json');if(!response.ok)return [];const data=await response.json();return [...(data.upcoming||[]).map(e=>({...e,type:'upcoming'})),...(data.past||[]).map(e=>({...e,type:'past'}))]}catch{return []}
+    try { return (await MallAPI.content('events')).events; }
+    catch (error) {
+      const notice=document.createElement('p'); notice.setAttribute('role','status'); notice.textContent='Live events unavailable. Showing the published snapshot.'; $('eventsUpcomingGrid')?.before(notice);
+      try {const response=await fetch('./json/events.json'); const data=await response.json();return [...(data.upcoming||[]).map(e=>({...e,type:'upcoming'})),...(data.past||[]).map(e=>({...e,type:'past'}))]} catch {return []}
+    }
   }
   function renderEvents(events) {
     const upcoming=$('eventsUpcomingGrid'), past=$('eventsPastGrid');if(!upcoming)return;
@@ -143,7 +146,7 @@
     const eventDate=item=>String(item.eventDate||item.date||'').slice(0,10);
     const hasDate=item=>/^\d{4}-\d{2}-\d{2}$/.test(eventDate(item));
     const expired=item=>item.type==='past'||(hasDate(item)&&eventDate(item)<today);
-    const groups=[[upcoming,events.filter(item=>!expired(item)).sort((a,b)=>eventDate(a).localeCompare(eventDate(b)))],[past,events.filter(expired).sort((a,b)=>eventDate(b).localeCompare(eventDate(a)))]];
+    const groups=[[upcoming,events.filter(item=>item.type!=='cancelled'&&!expired(item)).sort((a,b)=>eventDate(a).localeCompare(eventDate(b)))],[past,events.filter(expired).sort((a,b)=>eventDate(b).localeCompare(eventDate(a)))]];
     groups.forEach(([container,items])=>{
       container.replaceChildren();
       if(!items.length){const empty=document.createElement('div');empty.className='lp-empty';const heading=document.createElement('h3');heading.textContent=container===upcoming?'Something new is on the way.':'More moments to come.';const text=document.createElement('p');text.textContent=container===upcoming?'New dates will appear here when announced. Explore our gallery or contact the events team to plan your own activation.':'Our event highlights will appear here.';empty.append(heading,text);container.appendChild(empty);return}
@@ -160,22 +163,17 @@
   }
   if($('eventsUpcomingGrid'))localEvents().then(renderEvents);
   // Local content renders first. Cloud failures never remove the curated assets.
-  async function loadCloud() {
-    if(!grid&&!$('eventsUpcomingGrid'))return;
+  async function loadGallery() {
+    if (!grid) return;
     try {
-      const request=(async()=>{
-        const {db}=await import('./firebase-config.js');
-        const {collection,getDocs}=await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js');
-        return getDocs(collection(db,grid?'gallery':'events'));
-      })();
-      let timeout;const snap=await Promise.race([request,new Promise((_,reject)=>{timeout=setTimeout(()=>reject(new Error('Cloud content timeout')),5000)})]).finally(()=>clearTimeout(timeout));
-      if(snap.empty)return;
-      const items=snap.docs.map(doc=>doc.data());
-      if(grid){const valid=items.filter(item=>item.imageUrl).map(item=>({...item,caption:item.caption||'Mombasa Mall',category:item.category||'spaces'}));galleryItems=[...photos,...valid.filter(item=>!photos.some(photo=>photo.imageUrl===item.imageUrl))];renderGallery()}
-      else renderEvents(items);
-    }catch(error){console.info('Using local page content:',error.message)}
+      const response = await MallAPI.content('gallery');
+      galleryItems = response.gallery.map(item=>({...item,caption:item.caption||item.title||'Mombasa Mall'}));
+      renderGallery();
+    } catch (error) {
+      const notice=document.createElement('p');notice.setAttribute('role','status');notice.textContent='Live gallery unavailable. Showing the published snapshot.';grid.before(notice);
+    }
   }
-  loadCloud();
+  loadGallery();
 
   if(!window.gsap||!window.ScrollTrigger)return;
   gsap.registerPlugin(ScrollTrigger);

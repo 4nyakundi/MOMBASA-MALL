@@ -1191,6 +1191,7 @@
   <link rel="stylesheet" href="./css/store-directory.css">
   <link rel="stylesheet" href="./css/site-polish.css">
   <script defer src="./js/site-polish.js"></script>
+<script src="./js/api-client.js"></script>
 </head>
 <body class="subpage mall-public">
 
@@ -1509,7 +1510,7 @@
   <script src="./admin/default-data.js"></script>
 
   <script>
-    (function () {
+    (async function () {
       'use strict';
 
       // ── 1. UNIT GUIDE GENERATED FROM THE CONFIRMED DIRECTORY ──
@@ -1517,31 +1518,17 @@
 
       // ── 2. DATA HYDRATION ─────────────────────────────────────
       let allStores = [];
-      const saved = localStorage.getItem('mombasa_live_shops');
-      if (saved) {
-        try { allStores = JSON.parse(saved); } catch(e){}
-      }
-      if (!allStores.length && window.MOMBASA_DEFAULT_STORES && window.MOMBASA_DEFAULT_STORES.floors) {
-        window.MOMBASA_DEFAULT_STORES.floors.forEach(floor => {
-          (floor.shops || []).forEach(shop => {
-            allStores.push({
-              id: (shop.room ? shop.room.toLowerCase().replace(/[^a-z0-9]/g, '-') : (shop.name || '').toLowerCase().replace(/[^a-z0-9]/g, '-')),
-              name: shop.name,
-              floor: floor.name,
-              room: shop.room || '—',
-              category: shop.category || 'retail',
-              phone: shop.phone || '+254 790 964 002',
-              email: shop.email || 'info@mombasamall.co.ke',
-              description: shop.description || 'Visit store for seasonal offerings.',
-              photo: shop.photo, photoFit: shop.photoFit, website: shop.website,
-              logoUrl: shop.logo || './assets/Logo/Mall Logo/MOMBASA MALL 1.0.png',
-              socialHandle: shop.social || '@mombasamall_',
-              facebook: shop.facebook || '',
-              instagram: shop.instagram || '',
-              tiktok: shop.tiktok || ''
-            });
-          });
-        });
+      try {
+        const response = await MallAPI.content('stores');
+        allStores = response.stores;
+      } catch (error) {
+        console.warn('Directory service unavailable:', error.message);
+        const notice = document.createElement('p');
+        notice.setAttribute('role','status'); notice.textContent = 'Live directory unavailable. Showing the published directory snapshot.';
+        document.getElementById('storesGridContainer')?.before(notice);
+        for (const floor of window.MOMBASA_DEFAULT_STORES?.floors || []) {
+          for (const shop of floor.shops || []) allStores.push({...shop, floor:floor.name, room:shop.room || '', logoUrl:shop.logo || '', photo:shop.photo || ''});
+        }
       }
 
       // ── 3. RENDER STORES GRID ─────────────────────────────────
@@ -1562,10 +1549,10 @@
       allStores = allStores.map(store => {
         const normalizeName = name => String(name || '').toLowerCase().replace(/[^a-z0-9]/g, '');
         const known = knownStores.find(shop => normalizeName(shop.name) === normalizeName(store.name));
-        return {...store, room: known?.room || store.room || '—', floor: known?.floor || floorAliases[store.floor] || store.floor,
-          photo: ['G-01','F-01'].includes(known?.room || store.room) ? assetPath(known?.logo || store.logoUrl) : storePhotos[known?.room || store.room] || assetPath(known?.photo || store.photo || '/assets/lifestyle/mall-day.webp'),
+        return {...store, room: store.room || '—', floor: floorAliases[store.floor] || store.floor,
+          photo: assetPath(store.photoUrls?.[0] || store.photo || store.logoUrl || '/assets/lifestyle/mall-day.webp'),
           photoFit: ['G-01','F-01'].includes(known?.room || store.room) ? 'contain' : storePhotos[known?.room || store.room] ? 'cover' : known?.photoFit || store.photoFit || 'contain',
-          logoUrl: assetPath(known?.logo || store.logoUrl), website: assetPath(known?.website || store.website)};
+          logoUrl: assetPath(store.logoUrl || store.logo), website: assetPath(store.website || store.socialMediaUrl)};
       });
       const escapeText = text => String(text).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
       floorMeta.forEach(([floor, slug]) => {

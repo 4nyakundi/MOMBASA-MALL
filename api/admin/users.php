@@ -6,6 +6,7 @@
 
 require_once __DIR__ . '/../config.php';
 
+authorize_resource('users');
 $pdo = get_db_connection();
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -28,6 +29,7 @@ if ($method === 'GET') {
             'is_active'  => (bool)$u['is_active'],
             'lastLogin'  => $u['last_login'] ? date('M d, Y H:i', strtotime($u['last_login'])) : 'Never',
             'created_at' => $u['created_at']
+            ,'createdAt' => date('c', strtotime($u['created_at']))
         ];
     }
 
@@ -53,7 +55,7 @@ if ($method === 'POST') {
     }
 
     if (empty($password)) {
-        $password = '@dmin26PHP'; // Default initial password
+        json_response(['success'=>false,'error'=>'An initial password is required.'],422);
     }
 
     if (!in_array($role, ['superadmin', 'admin', 'editor', 'moderator'])) {
@@ -67,6 +69,8 @@ if ($method === 'POST') {
         json_response(['success' => false, 'error' => 'A user with this email already exists'], 409);
     }
 
+    validate_email($email);
+    if (strlen($password) < 12) json_response(['success'=>false,'error'=>'Use at least 12 password characters.'],422);
     $hash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
     $stmt = $pdo->prepare("
         INSERT INTO admin_users (full_name, email, password_hash, phone, role, is_active)
@@ -98,6 +102,7 @@ if ($method === 'PUT') {
     if ($id <= 0) {
         json_response(['success' => false, 'error' => 'Valid user ID is required'], 400);
     }
+    require_existing($pdo, 'admin_users', $id);
 
     $name = trim($input['name'] ?? $input['full_name'] ?? '');
     $email = strtolower(trim($input['email'] ?? ''));
@@ -121,6 +126,9 @@ if ($method === 'PUT') {
         $sql .= ", is_active = :status";
         $params[':status'] = $status;
     }
+    validate_email($email);
+    if ($password !== '' && strlen($password) < 12) json_response(['success'=>false,'error'=>'Use at least 12 password characters.'],422);
+    if ($id === 1 && ($role !== 'superadmin' || $status === 0)) json_response(['success'=>false,'error'=>'Keep the primary administrator active with its current role.'],422);
     if (!empty($password)) {
         $sql .= ", password_hash = :hash";
         $params[':hash'] = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
@@ -149,6 +157,7 @@ if ($method === 'DELETE') {
     if ($id <= 0) {
         json_response(['success' => false, 'error' => 'Valid user ID is required'], 400);
     }
+    require_existing($pdo, 'admin_users', $id);
 
     // Safety guard: cannot delete user 1 (superadmin)
     if ($id === 1) {

@@ -1,7 +1,6 @@
 // admin/admin.js — Mombasa Mall Admin Dashboard Controller
-// Enterprise High-Performance & Resilient Real-Time Edition
-// Features: Client Image Optimization, Instant Multi-Entity Search, Real-Time Sync Bus,
-// CSV/JSON Export & Restore Suite, Non-Blocking Cloud/Local Storage Bus.
+// SQL-backed content and inquiry management. Browser state reflects acknowledged
+// server records; historical browser exports are imported only after a preview.
 
 (function () {
   'use strict';
@@ -26,85 +25,32 @@
   let currentEventPhotos= [];
   let calCurrentDate    = new Date();
 
-  // Firebase Module References (loaded dynamically if on HTTP/HTTPS)
-  let fb = {
-    auth: null,
-    db: null,
-    storage: null,
-    authMod: null,
-    fsMod: null,
-    stMod: null,
-    isCloudReady: false
-  };
-
-  // Real-Time Cross-Tab & Multi-Window Sync Bus
-  const syncBus = (typeof BroadcastChannel !== 'undefined') ? new BroadcastChannel('mombasa_mall_sync_bus') : null;
-
+  let playonBookingsCache = [];
+  let dashboardMetrics = {};
+  const syncBus = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('mombasa_mall_sync_bus') : null;
   function broadcastChange(action, entity) {
-    queueCloudChange(action, entity);
-    if (syncBus) {
-      try {
-        syncBus.postMessage({ action, entity, timestamp: Date.now() });
-      } catch (e) {}
-    }
+    syncBus?.postMessage({ action, entity });
+    syncFromBackendSQL(true);
   }
-
-  const cloudCollections = () => ({
-    shops: { key: 'mombasa_live_shops', rows: shopsCache, assign: rows => { shopsCache = rows; } },
-    gallery: { key: 'mombasa_live_gallery', rows: galleryCache, assign: rows => { galleryCache = rows; } },
-    events: { key: 'mombasa_live_events', rows: eventsCache, assign: rows => { eventsCache = rows; } },
-    blogPosts: { key: 'mombasa_live_blog', rows: blogCache, assign: rows => { blogCache = rows; } },
-    reviews: { key: 'mombasa_live_reviews', rows: reviewsCache, assign: rows => { reviewsCache = rows; } },
-    ledLeads: { key: 'mombasa_live_led_leads', rows: ledLeadsCache, assign: rows => { ledLeadsCache = rows; } },
-    activationLeads: { key: 'mombasa_live_activation_leads', rows: activLeadsCache, assign: rows => { activLeadsCache = rows; } },
-    contactLeads: { key: 'mombasa_live_contact_leads', rows: contactLeadsCache, assign: rows => { contactLeadsCache = rows; } },
-    users: { key: 'mombasa_live_users', rows: usersCache, assign: rows => { usersCache = rows; } }
-  });
-  let outbox = [];
-  try { outbox = JSON.parse(localStorage.getItem('mombasa_admin_outbox') || '[]'); } catch (error) {}
-  let flushing = null;
-  function queueCloudChange(action, id) {
-    const aliases = {shop: 'shops', gallery: 'gallery', event: 'events', blog: 'blogPosts', review: 'reviews', user: 'users'};
-    const groups = cloudCollections();
-    let collections = [];
-    if (['sync_public_site', 'seed_database'].includes(action)) collections = ['shops', 'gallery', 'events', 'blogPosts', 'reviews'];
-    else if (action === 'restore_database') collections = Object.keys(groups);
-    else {
-      const name = action.replace(/^(save_|delete_|toggle_|update_status_)/, '');
-      const collection = aliases[name] || name;
-      if (groups[collection]) collections = [collection];
-    }
-    for (const collection of collections) {
-      const rows = id === 'all' ? groups[collection].rows : groups[collection].rows.filter(row => row.id === id);
-      if (action.startsWith('delete_')) outbox.push({ collection, id, remove: true });
-      else for (const row of rows) outbox.push({ collection, id: row.id, data: JSON.parse(JSON.stringify(row)) });
-    }
-    if (collections.length) {
-      localStorage.setItem('mombasa_admin_outbox', JSON.stringify(outbox));
-      flushCloudChanges().catch(error => showToast('Changes are saved on this device; cloud sync failed: ' + error.message + '. Use Sync Live Site to retry.', 'error'));
-    }
+  const busyRecords = new Set();
+  async function saveRecord(resource, data, id, existing = {}) {
+    const key = resource + ':' + (id || 'new');
+    if (busyRecords.has(key)) return false;
+    busyRecords.add(key);
+    try {
+      const payload = { ...existing, ...data };
+      if (id) payload.id = id;
+      const response = await MallAPI.mutate('api/admin/' + resource + '.php', id ? 'PUT' : 'POST', payload);
+      const serverId = id || response.store_id || response.event_id || response.post_id || response.photo_id || response.user_id;
+      Object.assign(data, payload, { id: String(serverId), numeric_id: Number(serverId) });
+      return true;
+    } catch (error) { showToast(error.message, 'error'); return false; }
+    finally { busyRecords.delete(key); }
   }
-  async function flushCloudChanges() {
-    if (flushing) return flushing;
-    if (!fb.isCloudReady || !fb.auth?.currentUser) throw new Error('Sign in to Firebase to synchronize');
-    flushing = (async () => {
-      while (outbox.length) {
-        const operation = outbox[0];
-        const ref = fb.fsMod.doc(fb.db, operation.collection, operation.id);
-        let timer;
-        const write = operation.remove ? fb.fsMod.deleteDoc(ref) : fb.fsMod.setDoc(ref, operation.data);
-        await Promise.race([write, new Promise((_, reject) => {
-          timer = setTimeout(() => reject(new Error('Database acknowledgement timed out; changes remain queued')), 20000);
-        })]).finally(() => clearTimeout(timer));
-        // Refresh after acknowledgement so skipped pending snapshots are not lost.
-        outbox.shift();
-        localStorage.setItem('mombasa_admin_outbox', JSON.stringify(outbox));
-      }
-    })();
-    try { await flushing; } finally { flushing = null; }
-    if (cloudUnsubscribers.length) syncWithFirestoreCloud();
+  async function deleteRecord(resource, id, extra = '') {
+    try { await MallAPI.request('api/admin/' + resource + '.php?id=' + encodeURIComponent(id) + extra, { method:'DELETE' }); return true; }
+    catch (error) { showToast(error.message,'error'); return false; }
   }
-  const cloudUnsubscribers = [];
 
   // ── CLIENT-SIDE IMAGE COMPRESSION (PREVENTS STORAGE OVERFLOW) ──
   function compressImage(file, maxWidth = 1400, quality = 0.82) {
@@ -151,18 +97,10 @@
     return compressImage(file, 1400, 0.82);
   }
 
-  async function uploadFileToStorageOrDataUrl(file, pathPrefix = 'uploads') {
-    if (fb.isCloudReady && fb.storage && fb.stMod) {
-      try {
-        const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-        const fileRef = fb.stMod.ref(fb.storage, `${pathPrefix}/${Date.now()}_${safeName}`);
-        const snap = await fb.stMod.uploadBytes(fileRef, file);
-        return await fb.stMod.getDownloadURL(snap.ref);
-      } catch (err) {
-        console.warn('[Storage] Cloud upload note, using optimized DataURL fallback:', err.message);
-      }
-    }
-    return await compressImage(file, 1400, 0.82);
+  async function uploadFileToStorageOrDataUrl(file) {
+    const body = new FormData(); body.append('file', file);
+    const response = await MallAPI.request('api/admin/upload.php', { method:'POST', body });
+    return response.url;
   }
 
   // ── CSV & JSON EXPORT UTILITIES ────────────────────────────
@@ -179,6 +117,7 @@
       rows.map(row => {
         return keys.map(k => {
           let cell = row[k] === null || row[k] === undefined ? '' : row[k];
+          if(typeof cell==='string' && /^[=+@\t\r-]/.test(cell))cell="'"+cell;
           cell = Array.isArray(cell) ? cell.join('; ') : cell.toString().replace(/"/g, '""');
           if (cell.search(/("|,|\n)/g) >= 0) {
             cell = `"${cell}"`;
@@ -197,17 +136,24 @@
     showToast(`Exported ${rows.length} records to ${filename}.csv`, 'success');
   }
 
-  function downloadJSONBackup() {
+  async function downloadJSONBackup() {
+    if(!await syncFromBackendSQL(true))return;
+    let site;
+    try { site = (await MallAPI.request('api/public/content.php?resource=site')).site; }
+    catch (error) { showToast(error.message, 'error'); return; }
     const backup = {
       timestamp: new Date().toISOString(),
       source: 'Mombasa Mall Control Centre',
-      version: '2.0.0',
+      version: '3.0.0',
+      role: currentUser.role,
       data: {
+        site,
         shops: shopsCache,
         gallery: galleryCache,
         ledLeads: ledLeadsCache,
         activationLeads: activLeadsCache,
         contactLeads: contactLeadsCache,
+        playonBookings: playonBookingsCache,
         events: eventsCache,
         blog: blogCache,
         reviews: reviewsCache,
@@ -221,60 +167,18 @@
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    showToast('Complete JSON database backup downloaded!', 'success');
+    showToast('Live content snapshot downloaded. Keep your SQL and uploaded-media backups separately.', 'success');
   }
 
-  function restoreFromJSON(jsonText) {
+  async function restoreFromJSON(jsonText) {
     try {
-      const parsed = JSON.parse(jsonText);
-      const data = parsed.data || parsed;
-      if (!data) throw new Error('Invalid backup structure');
-
-      if (Array.isArray(data.shops)) {
-        shopsCache = data.shops;
-        localStorage.setItem('mombasa_live_shops', JSON.stringify(shopsCache));
-      }
-      if (Array.isArray(data.gallery)) {
-        galleryCache = data.gallery;
-        localStorage.setItem('mombasa_live_gallery', JSON.stringify(galleryCache));
-      }
-      if (Array.isArray(data.ledLeads)) {
-        ledLeadsCache = data.ledLeads;
-        localStorage.setItem('mombasa_live_led_leads', JSON.stringify(ledLeadsCache));
-      }
-      if (Array.isArray(data.activationLeads)) {
-        activLeadsCache = data.activationLeads;
-        localStorage.setItem('mombasa_live_activation_leads', JSON.stringify(activLeadsCache));
-      }
-      if (Array.isArray(data.contactLeads)) {
-        contactLeadsCache = data.contactLeads;
-        localStorage.setItem('mombasa_live_contact_leads', JSON.stringify(contactLeadsCache));
-      }
-      if (Array.isArray(data.events)) {
-        eventsCache = data.events;
-        localStorage.setItem('mombasa_live_events', JSON.stringify(eventsCache));
-      }
-      if (Array.isArray(data.blog)) {
-        blogCache = data.blog;
-        localStorage.setItem('mombasa_live_blog', JSON.stringify(blogCache));
-      }
-      if (Array.isArray(data.reviews)) {
-        reviewsCache = data.reviews;
-        localStorage.setItem('mombasa_live_reviews', JSON.stringify(reviewsCache));
-      }
-      if (Array.isArray(data.users)) {
-        usersCache = data.users;
-        localStorage.setItem('mombasa_live_users', JSON.stringify(usersCache));
-      }
-
-      updateAllBadges();
-      updateOverviewMetrics();
-      renderCurrentTab();
-      broadcastChange('restore_database', 'all');
-      showToast('Backup restored on this device; synchronizing with cloud.', 'info');
-    } catch (err) {
-      showToast(`Restore failed: ${err.message}`, 'error');
-    }
+      const backup=JSON.parse(jsonText);
+      const result=await MallAPI.mutate('api/admin/reconcile.php','POST',{data:backup.data||backup,dry_run:true});
+      const report=JSON.stringify(result.report,null,2);
+      if(!confirm('Review import: '+report+'\nMerge these records into the live database? No existing records will be deleted.'))return;
+      await MallAPI.mutate('api/admin/reconcile.php','POST',{data:backup.data||backup,dry_run:false});
+      await syncFromBackendSQL(false);
+    } catch(error){showToast('Import failed: '+error.message,'error');}
   }
 
   // ── TOAST NOTIFICATIONS (Enterprise SVG Icons) ────────────
@@ -318,342 +222,55 @@
 
   window.closeModal = closeModal;
 
-  // ── AUTH CHECK ─────────────────────────────────────────────
-  function checkAuth() {
-    const localSession = localStorage.getItem('mombasa_admin_session');
-    if (localSession) {
-      try {
-        const s = JSON.parse(localSession);
-        currentUser = { email: s.email || 'admin@mombasamall.co.ke', role: s.role || 'Administrator' };
-        const emailEl = document.getElementById('adminEmailDisplay');
-        if (emailEl) emailEl.textContent = currentUser.email;
-        const roleEl = document.querySelector('.admin-user-role');
-        if (roleEl) roleEl.textContent = currentUser.role;
-        return true;
-      } catch (e) {}
-    }
-    // If on web protocol and no local session or Firebase user, redirect to login
-    if (window.location.protocol !== 'file:' && !fb.auth?.currentUser) {
-      window.location.replace('./login.html');
-      return false;
-    }
-    return true;
-  }
-
-  // ── CLOUD FIREBASE INITIALIZATION ──────────────────────────
-  async function initCloudFirebase() {
-    if (window.location.protocol === 'file:') {
-      console.log('[Mombasa Mall Admin] Local protocol active. Utilizing high-speed local data bus.');
-      return;
-    }
+  async function checkAuth() {
     try {
-      const config = await import('../js/firebase-config.js');
-      const authMod = await import("https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js");
-      const fsMod   = await import("https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js");
-      const stMod   = await import("https://www.gstatic.com/firebasejs/9.22.1/firebase-storage.js");
-
-      fb.auth = config.auth;
-      fb.db = config.db;
-      fb.storage = config.storage;
-      fb.authMod = authMod;
-      fb.fsMod = fsMod;
-      fb.stMod = stMod;
-      authMod.onAuthStateChanged(fb.auth, async (user) => {
-        if (!user && !localStorage.getItem('mombasa_admin_session')) {
-          window.location.replace('./login.html');
-          return;
-        }
-        if (user) {
-          currentUser = user;
-          const emailEl = document.getElementById('adminEmailDisplay');
-          if (emailEl) emailEl.textContent = user.email || '';
-        }
-        fb.isCloudReady = true;
-        try { await flushCloudChanges(); } catch (error) { showToast('Cloud sync needs attention: ' + error.message, 'error'); }
-        syncWithFirestoreCloud();
-      });
-
-    } catch (e) {
-      showToast('Database connection unavailable: ' + e.message + '. Changes will remain on this device until synchronization succeeds.', 'error');
-    }
+      const response = await MallAPI.request('api/admin/auth.php?action=me');
+      if (!response.authenticated) { window.location.replace('./login.html'); return false; }
+      currentUser = response.user;
+      document.getElementById('adminEmailDisplay').textContent = currentUser.email;
+      document.querySelector('.admin-user-role').textContent = currentUser.role;
+      const allowed = resourcesForRole();
+      for(const id of ['seedDatabaseBtn','restoreBackupBtn']){const el=document.getElementById(id);if(el&&currentUser.role!=='superadmin')el.style.display='none';}
+      const tabs = { shops:'stores', events:'events', blogPosts:'blog', gallery:'gallery', reviews:'reviews', users:'users', ledLeads:'leads', activationLeads:'leads', contactLeads:'leads', playonBookings:'leads' };
+      document.querySelectorAll('.admin-nav-item').forEach(item => { if (tabs[item.dataset.tab] && !allowed.includes(tabs[item.dataset.tab])) item.hidden = true; });
+      return true;
+    } catch (error) { showToast(error.message,'error'); return false; }
   }
-
-  function syncWithFirestoreCloud() {
-    if (!fb.isCloudReady || !fb.db) return;
-    cloudUnsubscribers.splice(0).forEach(unsubscribe => unsubscribe());
-    for (const [collection, group] of Object.entries(cloudCollections())) {
-      cloudUnsubscribers.push(fb.fsMod.onSnapshot(fb.fsMod.collection(fb.db, collection), snapshot => {
-        if (outbox.some(operation => operation.collection === collection)) return;
-        const rows = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-        group.assign(rows);
-        try { localStorage.setItem(group.key, JSON.stringify(rows)); } catch (error) { console.warn('Browser cache full', error); }
-        updateAllBadges(); updateOverviewMetrics(); renderCurrentTab();
-      }, error => showToast('Cannot read ' + collection + ' from database: ' + error.message, 'error')));
-    }
+  function resourcesForRole() {
+    return {superadmin:['stores','events','blog','gallery','reviews','leads','users'],admin:['stores','events','blog','gallery','reviews','leads'],editor:['stores','events','blog','gallery'],moderator:['reviews','leads']}[currentUser?.role] || [];
   }
-
-  // ── SQL BACKEND RELAY & REST API BRIDGE ──────────────────
-  async function apiFetch(url, options = {}) {
-    const token = localStorage.getItem('mombasa_admin_token') || '';
-    const headers = { ...options.headers };
-    if (token) headers['Authorization'] = `Bearer ${token}`;
-    const opts = {
-      credentials: 'include',
-      ...options,
-      headers
-    };
-    return fetch(url, opts);
+  function updateBackendStatusBadge(online, text) {
+    const label = document.getElementById('backendStatusText'); if (label) label.textContent = text || (online ? 'Connected' : 'Connection unavailable');
+    const dot = document.getElementById('backendStatusDot'); if (dot) dot.style.background = online ? '#10B981' : '#ef4444';
   }
-
-  function updateBackendStatusBadge(isOnline, text) {
-    const badge = document.getElementById('backendStatusBadge');
-    const dot = document.getElementById('backendStatusDot');
-    const label = document.getElementById('backendStatusText');
-    if (!badge || !dot || !label) return;
-
-    if (isOnline) {
-      badge.style.background = 'rgba(16,185,129,0.12)';
-      badge.style.color = '#059669';
-      badge.style.borderColor = 'rgba(16,185,129,0.25)';
-      dot.style.background = '#10B981';
-      dot.style.boxShadow = '0 0 6px #10B981';
-      label.textContent = text || 'Live SQL: mombasam_mall';
-    } else {
-      badge.style.background = 'rgba(100,116,139,0.12)';
-      badge.style.color = '#475569';
-      badge.style.borderColor = 'rgba(100,116,139,0.25)';
-      dot.style.background = '#94A3B8';
-      dot.style.boxShadow = 'none';
-      label.textContent = text || 'Local State Bus';
-    }
-  }
-
+  let syncing = null;
+  let syncAgain = false;
   async function syncFromBackendSQL(silent = true) {
-    if (window.location.protocol === 'file:') {
-      updateBackendStatusBadge(false, 'Local File Protocol');
-      return;
-    }
-
-    try {
-      // 1. Verify connection and fetch dashboard metrics
-      const dashRes = await apiFetch('../api/admin/dashboard.php');
-      if (!dashRes.ok) throw new Error(`HTTP ${dashRes.status}`);
-      const dashData = await dashRes.json();
-      if (!dashData.success) throw new Error(dashData.error || 'Backend error');
-
-      // 2. Fetch stores & photos
-      const storesRes = await apiFetch('../api/admin/stores.php');
-      if (storesRes.ok) {
-        const sData = await storesRes.json();
-        if (sData.success && Array.isArray(sData.stores) && sData.stores.length > 0) {
-          shopsCache = sData.stores;
-          localStorage.setItem('mombasa_live_shops', JSON.stringify(shopsCache));
-        }
-      }
-
-      // 3. Fetch events
-      const eventsRes = await apiFetch('../api/admin/events.php');
-      if (eventsRes.ok) {
-        const eData = await eventsRes.json();
-        if (eData.success && Array.isArray(eData.events)) {
-          eventsCache = eData.events;
-          localStorage.setItem('mombasa_live_events', JSON.stringify(eventsCache));
-        }
-      }
-
-      // 4. Fetch blog posts
-      const blogRes = await apiFetch('../api/admin/blog.php');
-      if (blogRes.ok) {
-        const bData = await blogRes.json();
-        if (bData.success && Array.isArray(bData.posts)) {
-          blogCache = bData.posts;
-          localStorage.setItem('mombasa_live_blog', JSON.stringify(blogCache));
-        }
-      }
-
-      // 5. Fetch reviews
-      const reviewsRes = await apiFetch('../api/admin/reviews.php');
-      if (reviewsRes.ok) {
-        const rData = await reviewsRes.json();
-        if (rData.success && Array.isArray(rData.reviews)) {
-          reviewsCache = rData.reviews;
-          localStorage.setItem('mombasa_live_reviews', JSON.stringify(reviewsCache));
-        }
-      }
-
-      // 6. Fetch gallery
-      const galleryRes = await apiFetch('../api/admin/gallery.php');
-      if (galleryRes.ok) {
-        const gData = await galleryRes.json();
-        if (gData.success && Array.isArray(gData.gallery)) {
-          galleryCache = gData.gallery;
-          localStorage.setItem('mombasa_live_gallery', JSON.stringify(galleryCache));
-        }
-      }
-
-      // 7. Fetch all leads (LED, Activation, Contact)
-      const leadsRes = await apiFetch('../api/admin/leads.php?type=all');
-      if (leadsRes.ok) {
-        const lData = await leadsRes.json();
-        if (lData.success) {
-          if (Array.isArray(lData.ledLeads)) {
-            ledLeadsCache = lData.ledLeads;
-            localStorage.setItem('mombasa_live_led_leads', JSON.stringify(ledLeadsCache));
-          }
-          if (Array.isArray(lData.activationLeads)) {
-            activLeadsCache = lData.activationLeads;
-            localStorage.setItem('mombasa_live_activation_leads', JSON.stringify(activLeadsCache));
-          }
-          if (Array.isArray(lData.contactLeads)) {
-            contactLeadsCache = lData.contactLeads;
-            localStorage.setItem('mombasa_live_contact_leads', JSON.stringify(contactLeadsCache));
-          }
-        }
-      }
-
-      // 8. Fetch users & roles
-      const usersRes = await apiFetch('../api/admin/users.php');
-      if (usersRes.ok) {
-        const uData = await usersRes.json();
-        if (uData.success && Array.isArray(uData.users)) {
-          usersCache = uData.users;
-          localStorage.setItem('mombasa_live_users', JSON.stringify(usersCache));
-        }
-      }
-
-      updateAllBadges();
-      updateOverviewMetrics();
-      renderCurrentTab();
-      updateBackendStatusBadge(true, 'Live SQL: mombasam_mall');
-      if (!silent) {
-        showToast('Live data successfully relayed from mombasam_mall MySQL database!', 'success');
-      }
-    } catch (err) {
-      console.warn('[SQL Sync] Notice connecting to PHP/MySQL backend:', err.message);
-      updateBackendStatusBadge(false, 'Local State Bus');
-      if (!silent) {
-        showToast('Could not reach SQL backend: ' + err.message + '. Showing cached data.', 'warning');
-      }
-    }
-  }
-  window.syncFromBackendSQL = syncFromBackendSQL;
-
-  // ── DATA INITIALIZATION ────────────────────────────────────
-  function initData() {
-    // 1. SHOPS
-    const savedShops = localStorage.getItem('mombasa_live_shops');
-    if (savedShops) {
-      try { shopsCache = JSON.parse(savedShops); } catch (e) {}
-    }
-    if (!savedShops && window.MOMBASA_DEFAULT_STORES && window.MOMBASA_DEFAULT_STORES.floors) {
-      const list = [];
-      window.MOMBASA_DEFAULT_STORES.floors.forEach(floor => {
-        (floor.shops || []).forEach(shop => {
-          const docId = (shop.room ? shop.room.toLowerCase().replace(/[^a-z0-9]/g, '-') : (shop.name || '').toLowerCase().replace(/[^a-z0-9]/g, '-')) || `shop-${Math.random().toString(36).substr(2, 6)}`;
-          list.push({
-            id: docId,
-            name: shop.name || 'Store',
-            category: shop.category || 'retail',
-            floor: floor.name || 'Ground Floor',
-            room: shop.room || '',
-            description: shop.description || '',
-            phone: shop.phone || '+254 790 964 002',
-            email: shop.email || 'info@mombasamall.co.ke',
-            socialHandle: shop.social || '@mombasamall',
-            socialMediaUrl: shop.socialMediaUrl || '',
-            logoUrl: shop.logo || '../assets/Logo/Mall Logo/MOMBASA MALL 1.0.png',
-            photoUrls: shop.photos || [],
-            isActive: true
-          });
-        });
+    if (syncing) { syncAgain = true; return syncing; }
+    syncing = (async () => {
+      const groups = {stores:['stores', rows=>{shopsCache=rows}],events:['events', rows=>{eventsCache=rows}],blog:['posts',rows=>{blogCache=rows}],gallery:['gallery',rows=>{galleryCache=rows}],reviews:['reviews',rows=>{reviewsCache=rows}],users:['users',rows=>{usersCache=rows}]};
+      const requests = resourcesForRole().map(async resource => {
+        const response = await MallAPI.request('api/admin/' + resource + '.php');
+        if (resource === 'leads') {
+          ledLeadsCache=response.ledLeads;activLeadsCache=response.activationLeads;contactLeadsCache=response.contactLeads;playonBookingsCache=response.playonBookings;
+        } else { const [field,assign]=groups[resource]; assign(response[field]); }
       });
-      shopsCache = list;
-      localStorage.setItem('mombasa_live_shops', JSON.stringify(shopsCache));
-    }
-
-    // 2. EVENTS
-    const savedEvents = localStorage.getItem('mombasa_live_events');
-    if (savedEvents) {
-      try { eventsCache = JSON.parse(savedEvents); } catch (e) {}
-    }
-    if (!savedEvents && window.MOMBASA_DEFAULT_EVENTS) {
-      const list = [];
-      (window.MOMBASA_DEFAULT_EVENTS.upcoming || []).forEach(e => list.push({ id: 'up-' + (e.title || '').toLowerCase().replace(/[^a-z0-9]/g, '-').slice(0, 25), ...e, type: 'upcoming' }));
-      (window.MOMBASA_DEFAULT_EVENTS.past || []).forEach(e => list.push({ id: 'past-' + (e.title || '').toLowerCase().replace(/[^a-z0-9]/g, '-').slice(0, 25), ...e, type: 'past' }));
-      eventsCache = list;
-      localStorage.setItem('mombasa_live_events', JSON.stringify(eventsCache));
-    }
-
-    // 3. BLOG
-    const savedBlog = localStorage.getItem('mombasa_live_blog');
-    if (savedBlog) {
-      try { blogCache = JSON.parse(savedBlog); } catch (e) {}
-    }
-    if (!savedBlog && window.MOMBASA_DEFAULT_BLOG && window.MOMBASA_DEFAULT_BLOG.posts) {
-      blogCache = window.MOMBASA_DEFAULT_BLOG.posts.map(p => ({
-        id: p.slug || (p.title || '').toLowerCase().replace(/[^a-z0-9]/g, '-'),
-        ...p
-      }));
-      localStorage.setItem('mombasa_live_blog', JSON.stringify(blogCache));
-    }
-
-    // 4. REVIEWS
-    const savedReviews = localStorage.getItem('mombasa_live_reviews');
-    if (savedReviews) {
-      try { reviewsCache = JSON.parse(savedReviews); } catch (e) {}
-    }
-    if (!savedReviews && window.MOMBASA_DEFAULT_REVIEWS) {
-      const list = [];
-      (window.MOMBASA_DEFAULT_REVIEWS.testimonials || []).forEach((t, i) => list.push({ id: `rev-t-${i}`, ...t, type: 'testimonial', approved: true }));
-      (window.MOMBASA_DEFAULT_REVIEWS.customerFeedback || []).forEach((f, i) => list.push({ id: `rev-f-${i}`, author: f.author || f.name, quote: f.quote || f.comment, rating: 5, type: 'feedback', approved: false }));
-      reviewsCache = list;
-      localStorage.setItem('mombasa_live_reviews', JSON.stringify(reviewsCache));
-    }
-
-    // 5. GALLERY
-    const savedGallery = localStorage.getItem('mombasa_live_gallery');
-    if (savedGallery) {
-      try { galleryCache = JSON.parse(savedGallery); } catch (e) {}
-    }
-    if (!savedGallery && window.MOMBASA_DEFAULT_GALLERY) {
-      galleryCache = window.MOMBASA_DEFAULT_GALLERY.map((g, i) => ({ id: `gal-def-${i}`, ...g }));
-      localStorage.setItem('mombasa_live_gallery', JSON.stringify(galleryCache));
-    }
-
-    // 6. LEADS (LED, ACTIVATION, CONTACT)
-    const sLed = localStorage.getItem('mombasa_live_led_leads');
-    if (sLed) { try { ledLeadsCache = JSON.parse(sLed); } catch (e) {} }
-
-    const sAct = localStorage.getItem('mombasa_live_activation_leads');
-    if (sAct) { try { activLeadsCache = JSON.parse(sAct); } catch (e) {} }
-
-    const sCnt = localStorage.getItem('mombasa_live_contact_leads');
-    if (sCnt) { try { contactLeadsCache = JSON.parse(sCnt); } catch (e) {} }
-
-    // 7. SYSTEM USERS & ROLES
-    const sUsers = localStorage.getItem('mombasa_live_users');
-    if (sUsers) {
-      try { usersCache = JSON.parse(sUsers); } catch (e) {}
-    }
-    if (!sUsers && window.MOMBASA_DEFAULT_USERS) {
-      usersCache = JSON.parse(JSON.stringify(window.MOMBASA_DEFAULT_USERS));
-      localStorage.setItem('mombasa_live_users', JSON.stringify(usersCache));
-    }
-
-    updateAllBadges();
-    updateOverviewMetrics();
+      requests.push(MallAPI.request('api/admin/dashboard.php').then(response=>{dashboardMetrics=response.metrics}));
+      const results = await Promise.allSettled(requests);
+      const failure=results.find(result=>result.status==='rejected');
+      updateAllBadges();updateOverviewMetrics();renderCurrentTab();
+      if (failure) throw failure.reason;
+      updateBackendStatusBadge(true);
+      if(!silent)showToast('Live records refreshed.','success');
+      return true;
+    })();
+    try { return await syncing; }
+    catch(error) { updateBackendStatusBadge(false);showToast(error.message,'error');return false; }
+    finally { syncing=null; if(syncAgain){syncAgain=false;syncFromBackendSQL(true);} }
   }
-
+  window.syncFromBackendSQL=syncFromBackendSQL;
   function updateAllBadges() {
-    updateCountBadge('shopsCountBadge', shopsCache.length);
-    updateCountBadge('galleryCountBadge', galleryCache.length);
-    updateCountBadge('ledLeadsCountBadge', ledLeadsCache.length);
-    updateCountBadge('activationLeadsCountBadge', activLeadsCache.length);
-    updateCountBadge('contactLeadsCountBadge', contactLeadsCache.length);
-    updateCountBadge('eventsCountBadge', eventsCache.length);
-    updateCountBadge('blogCountBadge', blogCache.length);
-    updateCountBadge('reviewsCountBadge', reviewsCache.length);
-    updateCountBadge('usersCountBadge', usersCache.length);
+    for(const [id,rows] of Object.entries({shops:shopsCache,gallery:galleryCache,ledLeads:ledLeadsCache,activationLeads:activLeadsCache,contactLeads:contactLeadsCache,playonBookings:playonBookingsCache,events:eventsCache,blog:blogCache,reviews:reviewsCache,users:usersCache}))updateCountBadge(id+'CountBadge',rows.length);
   }
 
   // ── TAB SWITCHING ──────────────────────────────────────────
@@ -674,6 +291,7 @@
       ledLeads:        'LED Billboard Leads',
       activationLeads: 'Activation Leads & Schedule',
       contactLeads:    'Contact & Leasing Inquiries',
+      playonBookings:  'Play-On Bookings',
       events:          'Events & News Management',
       blogPosts:       'Journal & Editorial Blog',
       reviews:         'Reviews Moderation',
@@ -696,6 +314,7 @@
       ledLeads:         renderLedLeads,
       activationLeads:  renderActivationLeads,
       contactLeads:     renderContactLeads,
+      playonBookings:   renderPlayonBookings,
       events:           renderEvents,
       blogPosts:        renderBlog,
       reviews:          renderReviews,
@@ -715,10 +334,10 @@
       const el = document.getElementById(id);
       if (el) el.textContent = String(val);
     };
-    safe('metricTotalShops',     shopsCache.length || 51);
-    safe('metricTotalLeads',     ledLeadsCache.length + activLeadsCache.length + contactLeadsCache.length);
-    safe('metricUpcomingEvents', eventsCache.filter(e => e.type === 'upcoming').length || 3);
-    safe('metricPendingReviews', reviewsCache.filter(r => !r.approved).length);
+    safe('metricTotalShops', dashboardMetrics.total_active_stores ?? shopsCache.filter(s=>s.isActive!==false).length);
+    safe('metricTotalLeads', ['total_led_leads','total_activation_leads','total_contact_leads','total_playon_bookings'].reduce((sum,key)=>sum+Number(dashboardMetrics[key]||0),0));
+    safe('metricUpcomingEvents', dashboardMetrics.upcoming_events ?? eventsCache.filter(e => e.type === 'upcoming').length);
+    safe('metricPendingReviews', dashboardMetrics.pending_reviews ?? reviewsCache.filter(r => r.status === 'pending').length);
   }
 
   // ── 1. SHOPS / DIRECTORY RENDER ────────────────────────────
@@ -829,18 +448,16 @@
 
   window.deleteShop = async function(shopId, shopName) {
     if (!confirm(`Permanently delete "${shopName}"?`)) return;
+    if (!await deleteRecord('stores', shopId)) return;
     shopsCache = shopsCache.filter(s => s.id !== shopId);
-    localStorage.setItem('mombasa_live_shops', JSON.stringify(shopsCache));
+
     updateCountBadge('shopsCountBadge', shopsCache.length);
     updateOverviewMetrics();
     renderShops();
     broadcastChange('delete_shop', shopId);
     showToast(`Deleted "${shopName}"`, 'success');
 
-    if (window.location.protocol !== 'file:') {
-      apiFetch(`../api/admin/stores.php?id=${encodeURIComponent(shopId)}`, { method: 'DELETE' })
-        .catch(e => console.warn('SQL store delete note:', e.message));
-    }
+
   };
 
   // ── 2. GALLERY RENDER ──────────────────────────────────────
@@ -866,17 +483,15 @@
 
   window.deleteGalleryItem = async function(id) {
     if (!confirm('Remove this photo from gallery?')) return;
+    if (!await deleteRecord('gallery', id)) return;
     galleryCache = galleryCache.filter(g => g.id !== id);
-    localStorage.setItem('mombasa_live_gallery', JSON.stringify(galleryCache));
+
     updateCountBadge('galleryCountBadge', galleryCache.length);
     renderGallery();
     broadcastChange('delete_gallery', id);
     showToast('Photo removed from gallery', 'success');
 
-    if (window.location.protocol !== 'file:') {
-      apiFetch(`../api/admin/gallery.php?id=${encodeURIComponent(id)}`, { method: 'DELETE' })
-        .catch(e => console.warn('SQL gallery delete note:', e.message));
-    }
+
   };
 
   // ── 3. LED LEADS RENDER ────────────────────────────────────
@@ -1019,7 +634,7 @@
 
     gridEl.innerHTML = '';
 
-    const today = new Date(2026, 7, 31);
+    const today = new Date(new Intl.DateTimeFormat('en-CA',{timeZone:'Africa/Nairobi',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date()) + 'T12:00:00');
     const isThisMonth = (today.getFullYear() === curYear && today.getMonth() === curMonth);
 
     // Prev month trailing cells
@@ -1329,46 +944,42 @@
   }
   window.openContactDetails = openContactDetails;
 
-  window.updateLeadStatus = function(collName, id, status) {
-    const map = { ledLeads: ledLeadsCache, activationLeads: activLeadsCache, contactLeads: contactLeadsCache };
+  window.updateLeadStatus = async function(collName, id, status) {
+    const typeMap={ledLeads:'led',activationLeads:'activation',contactLeads:'contact',playonBookings:'playon'};
+    try { await MallAPI.mutate('api/admin/leads.php','PUT',{type:typeMap[collName],id,status}); }
+    catch(error){showToast(error.message,'error');renderCurrentTab();return;}
+    const map = { ledLeads: ledLeadsCache, activationLeads: activLeadsCache, contactLeads: contactLeadsCache, playonBookings: playonBookingsCache };
     const lead = (map[collName] || []).find(l => l.id === id);
     if (lead) {
       lead.status = status;
-      if (collName === 'ledLeads') localStorage.setItem('mombasa_live_led_leads', JSON.stringify(ledLeadsCache));
-      if (collName === 'activationLeads') localStorage.setItem('mombasa_live_activation_leads', JSON.stringify(activLeadsCache));
-      if (collName === 'contactLeads') localStorage.setItem('mombasa_live_contact_leads', JSON.stringify(contactLeadsCache));
       broadcastChange(`update_status_${collName}`, id);
       updateAllBadges(); updateOverviewMetrics(); renderCurrentTab();
-      showToast('Status saved; synchronizing with database.', 'info');
+      showToast('Status saved; saved to the database.', 'info');
 
-      if (window.location.protocol !== 'file:') {
-        const typeMap = { ledLeads: 'led', activationLeads: 'activation', contactLeads: 'contact' };
-        apiFetch('../api/admin/leads.php', {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ type: typeMap[collName] || 'contact', id: id, status: status })
-        }).catch(e => console.warn('SQL lead status note:', e.message));
-      }
+
     }
   };
 
-  window.deleteLead = function(collName, id) {
+  window.deleteLead = async function(collName, id) {
     if (!confirm('Delete this record?')) return;
+    const typeMap={ledLeads:'led',activationLeads:'activation',contactLeads:'contact',playonBookings:'playon'};
+    if(!await deleteRecord('leads',id,'&type='+typeMap[collName]))return;
+    if(collName==='playonBookings'){playonBookingsCache=playonBookingsCache.filter(row=>row.id!==id);renderPlayonBookings();}
     if (collName === 'ledLeads') {
       ledLeadsCache = ledLeadsCache.filter(l => l.id !== id);
-      localStorage.setItem('mombasa_live_led_leads', JSON.stringify(ledLeadsCache));
+
       updateCountBadge('ledLeadsCountBadge', ledLeadsCache.length);
       renderLedLeads();
     }
     if (collName === 'activationLeads') {
       activLeadsCache = activLeadsCache.filter(l => l.id !== id);
-      localStorage.setItem('mombasa_live_activation_leads', JSON.stringify(activLeadsCache));
+
       updateCountBadge('activationLeadsCountBadge', activLeadsCache.length);
       renderActivationLeads();
     }
     if (collName === 'contactLeads') {
       contactLeadsCache = contactLeadsCache.filter(l => l.id !== id);
-      localStorage.setItem('mombasa_live_contact_leads', JSON.stringify(contactLeadsCache));
+
       updateCountBadge('contactLeadsCountBadge', contactLeadsCache.length);
       renderContactLeads();
     }
@@ -1376,11 +987,7 @@
     broadcastChange(`delete_${collName}`, id);
     showToast('Record deleted', 'success');
 
-    if (window.location.protocol !== 'file:') {
-      const typeMap = { ledLeads: 'led', activationLeads: 'activation', contactLeads: 'contact' };
-      apiFetch(`../api/admin/leads.php?type=${typeMap[collName] || 'contact'}&id=${encodeURIComponent(id)}`, { method: 'DELETE' })
-        .catch(e => console.warn('SQL lead delete note:', e.message));
-    }
+
   };
 
   // ── 6. EVENTS RENDER ───────────────────────────────────────
@@ -1481,20 +1088,18 @@
     openModal(document.getElementById('eventModal'));
   };
 
-  window.deleteEvent = function(id) {
+  window.deleteEvent = async function(id) {
     if (!confirm('Delete this event permanently?')) return;
+    if (!await deleteRecord('events', id)) return;
     eventsCache = eventsCache.filter(e => e.id !== id);
-    localStorage.setItem('mombasa_live_events', JSON.stringify(eventsCache));
+
     updateCountBadge('eventsCountBadge', eventsCache.length);
     updateOverviewMetrics();
     renderEvents();
     broadcastChange('delete_event', id);
     showToast('Event deleted', 'success');
 
-    if (window.location.protocol !== 'file:') {
-      apiFetch(`../api/admin/events.php?id=${encodeURIComponent(id)}`, { method: 'DELETE' })
-        .catch(e => console.warn('SQL event delete note:', e.message));
-    }
+
   };
 
   // ── 7. BLOG RENDER ─────────────────────────────────────────
@@ -1536,24 +1141,23 @@
     document.getElementById('blogDateInput').value    = post.date    || '';
     document.getElementById('blogExcerptInput').value = post.excerpt || '';
     document.getElementById('blogContentInput').value = post.content || '';
+    document.getElementById('blogStatusInput').value = post.status || 'published';
     document.getElementById('blogModalTitle').textContent = `Edit: ${post.title}`;
     document.getElementById('saveBlogBtn').textContent = 'Update Article';
     openModal(document.getElementById('blogModal'));
   };
 
-  window.deleteBlogPost = function(id) {
+  window.deleteBlogPost = async function(id) {
     if (!confirm('Delete this article?')) return;
+    if (!await deleteRecord('blog', id)) return;
     blogCache = blogCache.filter(p => p.id !== id);
-    localStorage.setItem('mombasa_live_blog', JSON.stringify(blogCache));
+
     updateCountBadge('blogCountBadge', blogCache.length);
     renderBlog();
     broadcastChange('delete_blog', id);
     showToast('Article deleted', 'success');
 
-    if (window.location.protocol !== 'file:') {
-      apiFetch(`../api/admin/blog.php?id=${encodeURIComponent(id)}`, { method: 'DELETE' })
-        .catch(e => console.warn('SQL blog delete note:', e.message));
-    }
+
   };
 
   // ── 8. REVIEWS RENDER ──────────────────────────────────────
@@ -1590,38 +1194,32 @@
     });
   }
 
-  window.toggleReviewApproval = function(id, approveStatus) {
+  window.toggleReviewApproval = async function(id, approveStatus) {
+    try { await MallAPI.mutate('api/admin/reviews.php','PUT',{id,approved:approveStatus}); }
+    catch(error){showToast(error.message,'error');return;}
     const rev = reviewsCache.find(r => r.id === id);
-    if (rev) rev.approved = approveStatus;
-    localStorage.setItem('mombasa_live_reviews', JSON.stringify(reviewsCache));
+    if (rev) {rev.approved=approveStatus;rev.status=approveStatus?'approved':'rejected';}
+
     updateOverviewMetrics();
     renderReviews();
     broadcastChange('toggle_review', id);
     showToast(`Review ${approveStatus ? 'Approved' : 'Unapproved'}`, 'info');
 
-    if (window.location.protocol !== 'file:') {
-      apiFetch('../api/admin/reviews.php', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: id, approved: approveStatus })
-      }).catch(e => console.warn('SQL review approval note:', e.message));
-    }
+
   };
 
-  window.deleteReview = function(id) {
+  window.deleteReview = async function(id) {
     if (!confirm('Delete this review?')) return;
+    if (!await deleteRecord('reviews', id)) return;
     reviewsCache = reviewsCache.filter(r => r.id !== id);
-    localStorage.setItem('mombasa_live_reviews', JSON.stringify(reviewsCache));
+
     updateCountBadge('reviewsCountBadge', reviewsCache.length);
     updateOverviewMetrics();
     renderReviews();
     broadcastChange('delete_review', id);
     showToast('Review deleted', 'success');
 
-    if (window.location.protocol !== 'file:') {
-      apiFetch(`../api/admin/reviews.php?id=${encodeURIComponent(id)}`, { method: 'DELETE' })
-        .catch(e => console.warn('SQL review delete note:', e.message));
-    }
+
   };
 
   // ── 9. USERS & ROLES RENDER ────────────────────────────────
@@ -1721,6 +1319,7 @@
     document.getElementById('userDocId').value = user.id;
     document.getElementById('userNameInput').value = user.name || '';
     document.getElementById('userEmailInput').value = user.email || '';
+    document.getElementById('userPasswordInput').required = false;
     document.getElementById('userPasswordInput').value = '';
     document.getElementById('userPhoneInput').value = user.phone || '';
     document.getElementById('userRoleInput').value = user.role || 'editor';
@@ -1733,7 +1332,7 @@
     openModal(document.getElementById('userModal'));
   };
 
-  window.deleteUser = function(id) {
+  window.deleteUser = async function(id) {
     const target = usersCache.find(u => u.id === id);
     if (!target) return;
     if (target.role === 'superadmin') {
@@ -1741,18 +1340,16 @@
       return;
     }
     if (!confirm(`Are you sure you want to remove user "${target.name}" (${target.email})?`)) return;
+    if (!await deleteRecord('users', id)) return;
 
     usersCache = usersCache.filter(u => u.id !== id);
-    localStorage.setItem('mombasa_live_users', JSON.stringify(usersCache));
+
     updateCountBadge('usersCountBadge', usersCache.length);
     renderUsers();
     broadcastChange('delete_user', id);
     showToast(`User "${target.name}" removed`, 'success');
 
-    if (window.location.protocol !== 'file:') {
-      apiFetch(`../api/admin/users.php?id=${encodeURIComponent(id)}`, { method: 'DELETE' })
-        .catch(e => console.warn('SQL user delete note:', e.message));
-    }
+
   };
 
   function updateRolePermissionsHelp(role) {
@@ -1949,12 +1546,12 @@
       const file = e.target.files?.[0];
       if (file) {
         try {
-          pendingShopLogo = await readFileAsDataUrl(file);
+          pendingShopLogo = await uploadFileToStorageOrDataUrl(file);
           const logoImg = document.getElementById('shopLogoPreviewImg');
           if (logoImg) logoImg.src = pendingShopLogo;
           const logoTxt = document.getElementById('shopLogoPreviewText');
           if (logoTxt) logoTxt.textContent = `Selected: ${file.name}`;
-        } catch (err) {}
+        } catch (err) { showToast(err.message,'error'); }
       }
     });
 
@@ -1968,9 +1565,9 @@
       if (files.length === 0) return;
       for (const file of files) {
         try {
-          const dataUrl = await readFileAsDataUrl(file);
+          const dataUrl = await uploadFileToStorageOrDataUrl(file);
           currentShopPhotos.push(dataUrl);
-        } catch (err) {}
+        } catch (err) { showToast(err.message,'error'); }
       }
       shopPhotosFileInput.value = '';
       renderShopPhotosPreview();
@@ -1997,7 +1594,7 @@
       if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Saving…'; }
 
       const docId = document.getElementById('shopDocId').value.trim();
-      const logoUrl = pendingShopLogo || document.getElementById('shopLogoUrlInput').value.trim() || '../assets/Logo/Mall Logo/MOMBASA MALL 1.0.png';
+      const logoUrl = pendingShopLogo || document.getElementById('shopLogoUrlInput').value.trim() || '/assets/Logo/Mall Logo/MOMBASA MALL 1.0.png';
 
       const data = {
         name:           document.getElementById('shopNameInput').value.trim(),
@@ -2008,6 +1605,7 @@
         email:          document.getElementById('shopEmailInput').value.trim(),
         socialHandle:   document.getElementById('shopSocialInput').value.trim(),
         socialMediaUrl: document.getElementById('shopSocialMediaUrl').value.trim(),
+        website: document.getElementById('shopSocialMediaUrl').value.trim(),
         logoUrl:        logoUrl,
         logo:           logoUrl,
         photoUrls:      [...currentShopPhotos],
@@ -2017,41 +1615,32 @@
         updatedAt:      new Date().toISOString()
       };
 
+      if(!await saveRecord('stores',data,docId,shopsCache.find(row=>row.id===docId))) {
+        if(saveBtn){saveBtn.disabled=false;saveBtn.textContent='Save Store';} return;
+      }
       if (docId) {
         data.id = docId;
         const idx = shopsCache.findIndex(s => s.id === docId);
         if (idx >= 0) shopsCache[idx] = { ...shopsCache[idx], ...data };
-        showToast(`Saved "${data.name}"; synchronizing with cloud.`, 'success');
+        showToast(`Saved "${data.name}".`, 'success');
       } else {
-        data.id = (data.room ? data.room.toLowerCase().replace(/[^a-z0-9]/g, '-') : data.name.toLowerCase().replace(/[^a-z0-9]/g, '-')) || `shop-${Date.now()}`;
+        // ID assigned by the server.
         data.createdAt = new Date().toISOString();
         shopsCache.push(data);
-        showToast(`Saved store "${data.name}"; synchronizing with cloud.`, 'success');
+        showToast(`Saved store "${data.name}".`, 'success');
       }
 
       pendingShopLogo = null;
       currentShopPhotos = [];
       closeModal(shopModal);
       if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Save Store'; }
-      localStorage.setItem('mombasa_live_shops', JSON.stringify(shopsCache));
+
       updateCountBadge('shopsCountBadge', shopsCache.length);
       updateOverviewMetrics();
       renderShops();
       broadcastChange('save_shop', data.id);
 
-      if (window.location.protocol !== 'file:') {
-        apiFetch('../api/admin/stores.php', {
-          method: docId ? 'PUT' : 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        }).then(res => res.json()).then(resJson => {
-          if (resJson.store_id && !docId) {
-            data.id = String(resJson.store_id);
-            data.numeric_id = resJson.store_id;
-            localStorage.setItem('mombasa_live_shops', JSON.stringify(shopsCache));
-          }
-        }).catch(e => console.warn('SQL store save note:', e.message));
-      }
+
     });
 
     // 7. Modals - Event
@@ -2081,7 +1670,7 @@
       if (files.length === 0) return;
       for (const file of files) {
         try {
-          const dataUrl = await readFileAsDataUrl(file);
+          const dataUrl = await uploadFileToStorageOrDataUrl(file);
           currentEventPhotos.push(dataUrl);
         } catch(err) {}
       }
@@ -2133,6 +1722,7 @@
         eventTime: document.getElementById('eventTime').value.trim(),
         venue:     document.getElementById('eventVenue').value.trim(),
         type:      document.getElementById('eventType').value,
+        status:    document.getElementById('eventType').value,
         details:   document.getElementById('eventSummary').value.trim(),
         summary:   document.getElementById('eventSummary').value.trim(),
         photoUrls: [...currentEventPhotos],
@@ -2140,40 +1730,31 @@
         updatedAt: new Date().toISOString()
       };
 
+      if(!await saveRecord('events',data,editingEventId,eventsCache.find(row=>row.id===editingEventId))) {
+        if(saveBtn){saveBtn.disabled=false;saveBtn.textContent='Save Event';} return;
+      }
       if (editingEventId) {
         data.id = editingEventId;
         const idx = eventsCache.findIndex(e => e.id === editingEventId);
         if (idx >= 0) eventsCache[idx] = { ...eventsCache[idx], ...data };
-        showToast('Event saved; synchronizing with cloud.', 'success');
+        showToast('Event saved.', 'success');
       } else {
-        data.id = `evt-${Date.now()}`;
+        // ID assigned by the server.
         data.createdAt = new Date().toISOString();
         eventsCache.unshift(data);
-        showToast('Event saved; synchronizing with cloud.', 'success');
+        showToast('Event saved.', 'success');
       }
 
       editingEventId = null;
       closeModal(eventModal);
       if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Save Event'; }
-      localStorage.setItem('mombasa_live_events', JSON.stringify(eventsCache));
+
       updateCountBadge('eventsCountBadge', eventsCache.length);
       updateOverviewMetrics();
       renderEvents();
       broadcastChange('save_event', data.id);
 
-      if (window.location.protocol !== 'file:') {
-        apiFetch('../api/admin/events.php', {
-          method: editingEventId ? 'PUT' : 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        }).then(res => res.json()).then(resJson => {
-          if (resJson.event_id && !editingEventId) {
-            data.id = String(resJson.event_id);
-            data.numeric_id = resJson.event_id;
-            localStorage.setItem('mombasa_live_events', JSON.stringify(eventsCache));
-          }
-        }).catch(e => console.warn('SQL event save note:', e.message));
-      }
+
     });
 
     // 8. Modals - Blog
@@ -2204,39 +1785,30 @@
         slug,
         date:      document.getElementById('blogDateInput').value || new Date().toISOString().slice(0, 10),
         excerpt:   document.getElementById('blogExcerptInput').value.trim(),
+        status:    document.getElementById('blogStatusInput').value,
         content:   document.getElementById('blogContentInput').value.trim() || document.getElementById('blogExcerptInput').value.trim(),
         updatedAt: new Date().toISOString()
       };
 
+      if(!await saveRecord('blog',data,editingBlogId,blogCache.find(row=>row.id===editingBlogId))) return;
       if (editingBlogId) {
         const idx = blogCache.findIndex(p => p.id === editingBlogId);
         if (idx >= 0) blogCache[idx] = { ...blogCache[idx], ...data };
-        showToast('Article saved; synchronizing with cloud.', 'success');
+        showToast('Article saved.', 'success');
       } else {
-        data.id = slug;
+        // ID assigned by the server.
         blogCache.unshift(data);
-        showToast('Article saved; synchronizing with cloud.', 'success');
+        showToast('Article saved.', 'success');
       }
       const savedBlogId = editingBlogId || data.id;
       editingBlogId = null;
       closeModal(blogModal);
-      localStorage.setItem('mombasa_live_blog', JSON.stringify(blogCache));
+
       updateCountBadge('blogCountBadge', blogCache.length);
       renderBlog();
       broadcastChange('save_blog', savedBlogId);
 
-      if (window.location.protocol !== 'file:') {
-        apiFetch('../api/admin/blog.php', {
-          method: editingBlogId ? 'PUT' : 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        }).then(res => res.json()).then(resJson => {
-          if (resJson.post_id && !editingBlogId) {
-            data.numeric_id = resJson.post_id;
-            localStorage.setItem('mombasa_live_blog', JSON.stringify(blogCache));
-          }
-        }).catch(e => console.warn('SQL blog save note:', e.message));
-      }
+
     });
 
     // 9. Modals - Gallery
@@ -2274,7 +1846,8 @@
       let imageUrl = '';
       const file = galleryFile?.files?.[0];
       if (file) {
-        imageUrl = await uploadFileToStorageOrDataUrl(file, 'gallery');
+        try { imageUrl = await uploadFileToStorageOrDataUrl(file, 'gallery'); }
+        catch(error){showToast(error.message,'error');if(saveBtn){saveBtn.disabled=false;saveBtn.textContent='Upload to Gallery';}return;}
       } else {
         imageUrl = document.getElementById('galleryUrlInput')?.value.trim() || '';
       }
@@ -2293,56 +1866,37 @@
         sortOrder: parseInt(document.getElementById('galleryOrder').value) || 1,
         uploadedAt: new Date().toISOString()
       };
+      if(!await saveRecord('gallery',newDoc,null)) {
+        if(saveBtn){saveBtn.disabled=false;saveBtn.textContent='Upload to Gallery';} return;
+      }
       galleryCache.unshift(newDoc);
       updateCountBadge('galleryCountBadge', galleryCache.length);
       renderGallery();
       closeModal(galleryModal);
       if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Upload to Gallery'; }
-      localStorage.setItem('mombasa_live_gallery', JSON.stringify(galleryCache));
+
       showToast('Photo added to gallery', 'success');
       broadcastChange('save_gallery', newDoc.id);
 
-      if (window.location.protocol !== 'file:') {
-        apiFetch('../api/admin/gallery.php', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(newDoc)
-        }).then(res => res.json()).then(resJson => {
-          if (resJson.photo_id) {
-            newDoc.id = String(resJson.photo_id);
-            newDoc.numeric_id = resJson.photo_id;
-            localStorage.setItem('mombasa_live_gallery', JSON.stringify(galleryCache));
-          }
-        }).catch(e => console.warn('SQL gallery save note:', e.message));
-      }
+
     });
 
-    // Synchronize acknowledged writes rather than just refreshing browser storage.
-    document.getElementById('syncLiveSiteBtn')?.addEventListener('click', async () => {
-      const btn = document.getElementById('syncLiveSiteBtn');
-      const label = btn.innerHTML; btn.disabled = true; btn.textContent = 'Synchronizing…';
+    document.getElementById('syncLiveSiteBtn')?.addEventListener('click',()=>syncFromBackendSQL(false));
+    document.getElementById('seedDatabaseBtn')?.addEventListener('click',async()=>{
       try {
-        await flushCloudChanges();
-        syncWithFirestoreCloud();
-        showToast('Pending changes synchronized with the database.', 'success');
-      } catch (error) { showToast('Synchronization failed: ' + error.message, 'error'); }
-      finally { btn.disabled = false; btn.innerHTML = label; }
-    });
-    document.getElementById('seedDatabaseBtn')?.addEventListener('click', async () => {
-      const btn = document.getElementById('seedDatabaseBtn');
-      if (!confirm('Upload the current content to the live database? Existing records with matching IDs will be replaced.')) return;
-      btn.disabled = true;
-      const log = document.getElementById('seedProgressLog');
-      if (log) { log.style.display = 'block'; log.textContent = 'Uploading content…'; }
-      try {
-        if (!fb.auth?.currentUser) throw new Error('Sign in to Firebase first.');
-        await flushCloudChanges();
-        const { seedFirestoreDatabase } = await import('../js/seed-data.js');
-        await seedFirestoreDatabase(message => { if (log) log.textContent = message; });
-        syncWithFirestoreCloud();
-        if (log) log.textContent = 'Content successfully uploaded to the database.';
-      } catch (error) { if (log) log.textContent = 'Upload failed: ' + error.message; }
-      finally { btn.disabled = false; }
+        const data={
+          shops:(window.MOMBASA_DEFAULT_STORES?.floors||[]).flatMap(f=>f.shops.map(row=>({...row,floor:f.name}))),
+          events:[...(window.MOMBASA_DEFAULT_EVENTS?.upcoming||[]).map(row=>({...row,type:'upcoming'})),...(window.MOMBASA_DEFAULT_EVENTS?.past||[]).map(row=>({...row,type:'past'}))],
+          blog:window.MOMBASA_DEFAULT_BLOG?.posts||[],
+          gallery:window.MOMBASA_DEFAULT_GALLERY||[],
+          reviews:[...(window.MOMBASA_DEFAULT_REVIEWS?.testimonials||[]).map(row=>({...row,type:'testimonial'})),...(window.MOMBASA_DEFAULT_REVIEWS?.customerFeedback||[]).map(row=>({...row,type:'feedback'}))],
+          site:window.MOMBASA_DEFAULT_SITE_DATA
+        };
+        const result=await MallAPI.mutate('api/admin/reconcile.php','POST',{data,dry_run:true});
+        if(!confirm('Review default content import: '+JSON.stringify(result.report)+' Merge into the database? Existing records will not be deleted.'))return;
+        await MallAPI.mutate('api/admin/reconcile.php','POST',{data,dry_run:false});
+        await syncFromBackendSQL(false);
+      } catch(error){showToast(error.message,'error');}
     });
 
     // 12. Modals - User & Role Management
@@ -2355,8 +1909,8 @@
       document.getElementById('userDocId').value = '';
       document.getElementById('userRoleInput').value = 'editor';
       document.getElementById('userStatusInput').value = 'active';
-      document.getElementById('userPasswordInput').required = false;
-      document.getElementById('userPasswordHelp').textContent = 'Manage sign-in accounts in Firebase Authentication. This form saves staff profile details only.';
+      document.getElementById('userPasswordInput').required = true;
+      document.getElementById('userPasswordHelp').textContent = 'Set an initial password of at least 12 characters.';
       document.getElementById('userModalTitle').textContent = 'Add New System User';
       document.getElementById('saveUserBtn').textContent = 'Create User Account';
       updateRolePermissionsHelp('editor');
@@ -2377,7 +1931,7 @@
       updateRolePermissionsHelp(e.target.value);
     });
 
-    userForm?.addEventListener('submit', (e) => {
+    userForm?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const saveBtn = document.getElementById('saveUserBtn');
       const docId = document.getElementById('userDocId').value.trim();
@@ -2406,9 +1960,14 @@
         phone,
         role,
         status,
-        updatedAt: now
+        updatedAt: now,
+        password: document.getElementById('userPasswordInput').value
       };
 
+      if(!await saveRecord('users',userData,docId,usersCache.find(row=>row.id===docId))) {
+        if(saveBtn){saveBtn.disabled=false;saveBtn.textContent='Save User';} return;
+      }
+      delete userData.password;
       if (docId) {
         userData.id = docId;
         const idx = usersCache.findIndex(u => u.id === docId);
@@ -2418,33 +1977,21 @@
         }
         showToast(`Updated user "${name}" successfully!`, 'success');
       } else {
-        userData.id = `usr-${Date.now()}`;
+        // ID assigned by the server.
         userData.createdAt = now;
         userData.lastLogin = null;
         usersCache.unshift(userData);
-        showToast(`Saved staff profile for "${name}". Configure sign-in access in Firebase Authentication.`, 'success');
+        showToast(`Created staff account for "${name}".`, 'success');
       }
 
       closeModal(userModal);
       if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Save User'; }
-      localStorage.setItem('mombasa_live_users', JSON.stringify(usersCache));
+
       updateCountBadge('usersCountBadge', usersCache.length);
       renderUsers();
       broadcastChange('save_user', userData.id);
 
-      if (window.location.protocol !== 'file:') {
-        apiFetch('../api/admin/users.php', {
-          method: docId ? 'PUT' : 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(userData)
-        }).then(res => res.json()).then(resJson => {
-          if (resJson.user_id && !docId) {
-            userData.id = String(resJson.user_id);
-            userData.numeric_id = resJson.user_id;
-            localStorage.setItem('mombasa_live_users', JSON.stringify(usersCache));
-          }
-        }).catch(e => console.warn('SQL user save note:', e.message));
-      }
+
     });
 
     // 13. Password Modal
@@ -2456,11 +2003,10 @@
       e.preventDefault();
       const p1 = document.getElementById('newPassword').value;
       const p2 = document.getElementById('confirmPassword').value;
-      if (p1.length < 6) { showToast('Password must be at least 6 characters', 'error'); return; }
+      if (p1.length < 12) { showToast('Password must be at least 12 characters', 'error'); return; }
       if (p1 !== p2) { showToast('Passwords do not match', 'error'); return; }
       try {
-        if (!fb.auth?.currentUser) throw new Error('Please sign in first.');
-        await fb.authMod.updatePassword(fb.auth.currentUser, p1);
+        await MallAPI.mutate('api/admin/auth.php?action=password','POST',{password:p1,current_password:document.getElementById('currentPassword').value});
       } catch (error) { showToast('Password change failed: ' + error.message + '. Sign in again if required.', 'error'); return; }
       showToast('Password updated successfully', 'success');
       closeModal(changePwdModal);
@@ -2470,8 +2016,8 @@
     // 13. Logout
     document.getElementById('logoutBtn')?.addEventListener('click', async () => {
       if (confirm('Sign out of the admin portal?')) {
-        if (fb.auth) await fb.authMod.signOut(fb.auth);
-        localStorage.removeItem('mombasa_admin_session');
+        try { await MallAPI.mutate('api/admin/auth.php?action=logout','POST',{}); }
+        catch(error){showToast(error.message,'error');return;}
         window.location.replace('./login.html');
       }
     });
@@ -2529,7 +2075,7 @@
     if (syncBus) {
       syncBus.onmessage = (e) => {
         if (e.data && e.data.action) {
-          initData();
+          syncFromBackendSQL(true);
           renderCurrentTab();
           updateOverviewMetrics();
         }
@@ -2538,11 +2084,30 @@
 
     window.addEventListener('storage', (e) => {
       if (e.key && e.key.startsWith('mombasa_live_')) {
-        initData();
+        syncFromBackendSQL(true);
         renderCurrentTab();
         updateOverviewMetrics();
       }
     });
+  }
+
+  function mountPlayonBookings() {
+    const nav=document.querySelector('.admin-nav-item[data-tab="contactLeads"]');
+    if(nav){const button=nav.cloneNode(false);button.dataset.tab='playonBookings';button.title='Play-On Bookings';button.removeAttribute('aria-label');button.textContent='Play-On Bookings ';const count=document.createElement('span');count.id='playonBookingsCountBadge';button.append(count);nav.after(button);}
+    const reference=document.getElementById('tab-contactLeads');
+    if(reference){const panel=document.createElement('section');panel.id='tab-playonBookings';panel.className='tab-panel';panel.innerHTML='<h2>Play-On Booking Requests</h2><p>Requests require staff confirmation of availability. A zero estimate for a group booking means a custom quote is required.</p><div style="overflow:auto"><table class="admin-table"><thead><tr><th>Parent / Contact</th><th>Visit / Session</th><th>Guests / Estimate</th><th>Status</th><th>Staff notes</th><th>Actions</th></tr></thead><tbody id="playonBookingsTableBody"></tbody></table></div>';reference.after(panel);}
+  }
+  function renderPlayonBookings() {
+    const body=document.getElementById('playonBookingsTableBody');if(!body)return;body.replaceChildren();
+    for(const row of playonBookingsCache){
+      const tr=document.createElement('tr');
+      for(const text of [row.parent_name+' · '+row.email+' · '+row.phone,row.booking_type+' · '+row.booking_date+' · '+row.session_time,row.child_count+' children / '+row.adult_count+' adults · KES '+row.estimated_total_kes]){const td=document.createElement('td');td.textContent=text;tr.append(td);}
+      const status=document.createElement('td');const select=document.createElement('select');select.className='filter-select';
+      for(const value of ['new','contacted','confirmed','completed','cancelled','rejected']){const option=document.createElement('option');option.value=value;option.textContent=value;select.append(option);}select.value=row.status;select.addEventListener('change',()=>window.updateLeadStatus('playonBookings',row.id,select.value));status.append(select);tr.append(status);
+      const notes=document.createElement('td');const input=document.createElement('textarea');input.className='form-control';input.value=row.admin_notes||'';input.setAttribute('aria-label','Staff notes for '+row.parent_name);const save=document.createElement('button');save.className='btn-secondary btn-sm';save.textContent='Save notes';save.addEventListener('click',async()=>{try{await MallAPI.mutate('api/admin/leads.php','PUT',{type:'playon',id:row.id,admin_notes:input.value});showToast('Notes saved.','success');}catch(error){showToast(error.message,'error');}});notes.append(input,save);if(row.special_requests){const details=document.createElement('p');details.textContent=row.special_requests;notes.append(details);}tr.append(notes);
+      const actions=document.createElement('td');const remove=document.createElement('button');remove.className='btn-danger btn-sm';remove.textContent='Delete';remove.addEventListener('click',()=>window.deleteLead('playonBookings',row.id));actions.append(remove);tr.append(actions);body.append(tr);
+    }
+    if(!playonBookingsCache.length){const tr=document.createElement('tr');const td=document.createElement('td');td.colSpan=6;td.textContent='No booking requests.';tr.append(td);body.append(tr);}
   }
 
   // ── HELPERS ────────────────────────────────────────────────
@@ -2566,8 +2131,11 @@
   }
 
   // Initialize once even when the script is loaded after DOM readiness.
-  function startDashboard() {
-    checkAuth(); initData(); attachEventListeners(); renderShops(); syncFromBackendSQL(true); initCloudFirebase();
+  async function startDashboard() {
+    mountPlayonBookings();
+    if(!await checkAuth())return;
+    attachEventListeners();
+    await syncFromBackendSQL(true);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', startDashboard, { once: true });
   else startDashboard();

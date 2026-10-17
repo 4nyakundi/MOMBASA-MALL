@@ -1,0 +1,16 @@
+{
+  "images": [
+    {"imageUrl":"/assets/lifestyle/mall-night.webp","caption":"The mall after dark","category":"spaces"},
+    {"imageUrl":"/assets/lifestyle/city-night.webp","caption":"Mombasa from above","category":"spaces"},
+    {"imageUrl":"/assets/lifestyle/facade-night.webp","caption":"A brighter welcome","category":"spaces"},
+    {"imageUrl":"/assets/lifestyle/mall-day.webp","caption":"In the heart of the city","category":"spaces"},
+    {"imageUrl":"/assets/lifestyle/community.webp","caption":"Moments together","category":"people"},
+    {"imageUrl":"/assets/lifestyle/team.webp","caption":"The people behind your visit","category":"people"},
+    {"imageUrl":"/assets/lifestyle/naivas.webp","caption":"Everyday essentials at Naivas","category":"shopping"},
+    {"imageUrl":"/assets/lifestyle/rudra.webp","caption":"Discover Rudra","category":"shopping"},
+    {"imageUrl":"/assets/lifestyle/grand-computer.webp","caption":"Inside Grand Computer","category":"shopping"},
+    {"imageUrl":"/assets/lifestyle/fresh-market.webp","caption":"Fresh finds","category":"shopping"},
+    {"imageUrl":"/assets/lifestyle/west-eleven.webp","caption":"West 11 lifestyle","category":"shopping"},
+    {"imageUrl":"/assets/lifestyle/mall-wings.webp","caption":"A moment worth capturing","category":"spaces"}
+  ]
+}

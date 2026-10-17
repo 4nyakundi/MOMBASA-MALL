@@ -21,7 +21,10 @@
       "*.md",
       "scratch/**",
       "tmp/**",
-      "**/original_*"
+      "**/original_*",
+      "api/**",
+      "**/*.php",
+      "uploads/**"
     ],
     "rewrites": [
       {

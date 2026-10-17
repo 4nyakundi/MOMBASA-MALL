@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     json_response(['success' => false, 'error' => 'POST method required'], 405);
 }
 
-$input = get_json_input();
+$input = input_aliases(get_json_input(), ['package' => ['packageRequested'], 'duration' => ['durationRequested'], 'duration_code' => ['durationMonths'], 'slot_length' => ['slotLength'], 'cost' => ['estimatedCost'], 'estimated_cost_kes' => ['subtotal'], 'estimated_cost_vat' => ['vat']]);
 $businessName = trim($input['businessName'] ?? $input['business_name'] ?? '');
 $contactName = trim($input['contactName'] ?? $input['contact_name'] ?? '');
 $email = trim($input['email'] ?? '');
@@ -26,12 +26,19 @@ $packageRequested = trim($input['package'] ?? $input['package_requested'] ?? 'Fu
 $durationRequested = trim($input['duration'] ?? $input['duration_requested'] ?? '1 Month');
 $durationCode = trim($input['duration_code'] ?? '1m');
 $slotLength = trim($input['slot_length'] ?? '15s every 3m (24/7)');
-$costTotal = (float)($input['cost'] ?? $input['estimated_cost_total'] ?? 0);
-$costKes = (float)($input['estimated_cost_kes'] ?? ($costTotal / 1.16));
-$costVat = (float)($input['estimated_cost_vat'] ?? ($costTotal - $costKes));
+$packageCode = $input['package_code'] ?? '';
+$rates = ['full'=>['2w'=>80000,'1m'=>180000,'3m'=>620000], 'outdoor'=>['2w'=>70000,'1m'=>150000,'3m'=>540000], 'indoor'=>['2w'=>20000,'1m'=>40000,'3m'=>150000]];
+if (!isset($rates[$packageCode][$durationCode])) json_response(['success'=>false,'error'=>'Choose a valid campaign package and duration.'],422);
+$packageRequested = ['full'=>'Full Package (Outdoor + Indoor Network)','outdoor'=>'Outdoor Mega Screen (1280×720px)','indoor'=>'Indoor Screen Network (4 Screens)'][$packageCode];
+$durationRequested = ['2w'=>'2 Weeks Duration','1m'=>'1 Month (30 Days)','3m'=>'Quarterly (3 Months)'][$durationCode];
+$costKes = $rates[$packageCode][$durationCode];
+$costVat = round($costKes * 0.16, 2);
+$costTotal = $costKes + $costVat;
 $notes = trim($input['notes'] ?? $input['message'] ?? '');
 
-$refCode = 'LED-' . strtoupper(substr(uniqid(), -6));
+validate_email($email);
+$request = begin_submission($pdo, 'led', $input);
+$refCode = 'LED-' . strtoupper(bin2hex(random_bytes(10)));
 
 $stmt = $pdo->prepare("
     INSERT INTO led_leads (
@@ -62,9 +69,9 @@ $stmt->execute([
 
 $leadId = (int)$pdo->lastInsertId();
 
-json_response([
+finish_submission($pdo, $request, [
     'success'  => true,
     'message'  => 'Your LED campaign booking enquiry has been received. Our advertising department will reach out shortly.',
     'ref_code' => $refCode,
     'lead_id'  => $leadId
-], 201);
+]);

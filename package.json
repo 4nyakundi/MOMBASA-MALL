@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node tests/submission-dashboard.test.cjs"
+    "test": "node tests/submission-dashboard.test.cjs",
+    "test:integration": "node tests/backend-integration.test.cjs"
   },
   "keywords": [],
   "author": "",

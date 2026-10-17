@@ -10,6 +10,7 @@
 
 require_once __DIR__ . '/../config.php';
 
+authorize_resource('stores');
 $pdo = get_db_connection();
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -64,7 +65,10 @@ if ($method === 'GET') {
             'email'          => $s['email'] ?: 'info@mombasamall.co.ke',
             'website'        => $s['website'] ?: '',
             'socialMediaUrl' => $s['website'] ?: '',
-            'socialHandle'   => '@mombasamall',
+            'socialHandle'   => metadata_get($pdo, 'stores', $sId)['socialHandle'] ?? '',
+            'facebook' => metadata_get($pdo, 'stores', $sId)['facebook'] ?? '',
+            'instagram' => metadata_get($pdo, 'stores', $sId)['instagram'] ?? '',
+            'tiktok' => metadata_get($pdo, 'stores', $sId)['tiktok'] ?? '',
             'description'    => $s['description'] ?: '',
             'logoUrl'        => $s['logo_url'] ?: '/assets/Logo/Mall Logo/MOMBASA MALL 1.0.png',
             'logo_url'       => $s['logo_url'] ?: '',
@@ -87,6 +91,7 @@ if ($method === 'GET') {
 if ($method === 'POST') {
     $input = get_json_input();
     $name = trim($input['name'] ?? '');
+    if ($name === '') json_response(['success'=>false,'error'=>'Store name is required.'],422);
 
     if (empty($name)) {
         json_response(['success' => false, 'error' => 'Store name is required'], 400);
@@ -94,15 +99,18 @@ if ($method === 'POST') {
 
     $unitNumber = trim($input['room'] ?? $input['unit_number'] ?? '');
     $floor = $input['floor'] ?? 'Ground Floor';
+    $floor = ['1st Floor'=>'First Floor','2nd Floor'=>'Second Floor','3rd Floor'=>'Third Floor','Basement'=>'Basement Parking'][$floor] ?? $floor;
     $category = $input['category'] ?? 'retail';
+    if ($category === 'dining') $category = 'food';
     $phone = trim($input['phone'] ?? '+254 790 964 002');
     $email = trim($input['email'] ?? 'info@mombasamall.co.ke');
     $website = trim($input['website'] ?? $input['socialMediaUrl'] ?? '');
     $description = trim($input['description'] ?? '');
-    $logoUrl = trim($input['logoUrl'] ?? $input['logo_url'] ?? '');
+    $logoUrl = validate_media_url(trim($input['logoUrl'] ?? $input['logo_url'] ?? ''));
     $status = (!empty($input['isActive']) || ($input['status'] ?? '') === 'active') ? 'active' : 'inactive';
     $sortOrder = (int)($input['sort_order'] ?? 0);
 
+    $pdo->beginTransaction();
     $stmt = $pdo->prepare("
         INSERT INTO stores (name, unit_number, floor, category, phone, email, website, description, logo_url, status, sort_order)
         VALUES (:name, :unit_number, :floor, :category, :phone, :email, :website, :description, :logo_url, :status, :sort_order)
@@ -130,11 +138,14 @@ if ($method === 'POST') {
         $sIdx = 1;
         foreach ($photoUrls as $url) {
             if (!empty($url)) {
+                validate_media_url($url);
                 $pStmt->execute([':store_id' => $storeId, ':url' => $url, ':sort' => $sIdx++]);
             }
         }
     }
 
+    metadata_save($pdo, 'stores', $storeId, array_merge(metadata_get($pdo, 'stores', $storeId ?? $id), array_intersect_key($input, array_flip(['socialHandle','facebook','instagram','tiktok','photoFit']))));
+    $pdo->commit();
     log_activity($pdo, $_SESSION['admin_user']['id'] ?? null, 'create_store', 'store', $storeId, "Created store: {$name}");
 
     json_response([
@@ -152,19 +163,23 @@ if ($method === 'PUT') {
     if ($id <= 0) {
         json_response(['success' => false, 'error' => 'Valid store ID is required'], 400);
     }
+    require_existing($pdo, 'stores', $id);
 
     $name = trim($input['name'] ?? '');
+    if ($name === '') json_response(['success'=>false,'error'=>'Store name is required.'],422);
     $unitNumber = trim($input['room'] ?? $input['unit_number'] ?? '');
     $floor = $input['floor'] ?? 'Ground Floor';
+    $floor = ['1st Floor'=>'First Floor','2nd Floor'=>'Second Floor','3rd Floor'=>'Third Floor','Basement'=>'Basement Parking'][$floor] ?? $floor;
     $category = $input['category'] ?? 'retail';
     $phone = trim($input['phone'] ?? '+254 790 964 002');
     $email = trim($input['email'] ?? 'info@mombasamall.co.ke');
     $website = trim($input['website'] ?? $input['socialMediaUrl'] ?? '');
     $description = trim($input['description'] ?? '');
-    $logoUrl = trim($input['logoUrl'] ?? $input['logo_url'] ?? '');
+    $logoUrl = validate_media_url(trim($input['logoUrl'] ?? $input['logo_url'] ?? ''));
     $status = (!empty($input['isActive']) || ($input['status'] ?? '') === 'active') ? 'active' : 'inactive';
     $sortOrder = (int)($input['sort_order'] ?? 0);
 
+    $pdo->beginTransaction();
     $stmt = $pdo->prepare("
         UPDATE stores SET
             name = :name,
@@ -206,11 +221,14 @@ if ($method === 'PUT') {
         $sIdx = 1;
         foreach ($photoUrls as $url) {
             if (!empty($url)) {
+                validate_media_url($url);
                 $pStmt->execute([':store_id' => $id, ':url' => $url, ':sort' => $sIdx++]);
             }
         }
     }
 
+    metadata_save($pdo, 'stores', $id, ['socialHandle' => $input['socialHandle'] ?? '']);
+    $pdo->commit();
     log_activity($pdo, $_SESSION['admin_user']['id'] ?? null, 'update_store', 'store', $id, "Updated store ID: {$id}");
 
     json_response([
@@ -230,10 +248,13 @@ if ($method === 'DELETE') {
     if ($id <= 0) {
         json_response(['success' => false, 'error' => 'Valid store ID is required'], 400);
     }
+    require_existing($pdo, 'stores', $id);
 
+    $pdo->beginTransaction();
     $stmt = $pdo->prepare("DELETE FROM stores WHERE id = :id");
     $stmt->execute([':id' => $id]);
 
+    $pdo->commit();
     log_activity($pdo, $_SESSION['admin_user']['id'] ?? null, 'delete_store', 'store', $id, "Deleted store ID: {$id}");
 
     json_response([

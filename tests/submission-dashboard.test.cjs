@@ -9,34 +9,35 @@ function storage() {
   const data = new Map();
   return { getItem: key => data.get(key) ?? null, setItem: (key, value) => data.set(key, value) };
 }
-function submissions({ fail = false, protocol = 'http:' } = {}) {
-  const writes = [], cache = storage();
-  const context = { window: {}, URL, location: { protocol }, localStorage: cache, console,
-    document: { currentScript: { src: 'http://localhost/js/submissions.js' } },
-    setTimeout, clearTimeout, BroadcastChannel: class { postMessage() {} close() {} },
-    __import: async url => url.includes('firebase-config') ? { db: {} } : {
-      doc: (_db, collection, id) => ({ collection, id }),
-      setDoc: async (ref, data) => { if (fail) throw new Error('permission-denied'); writes.push({ ref, data }); }
-    }
+function submissions({ fail=false, protocol='http:', status=200 }={}) {
+  const writes=[],cache=storage();let failing=fail;
+  const context={window:{},URL,AbortController,setTimeout,clearTimeout,location:{protocol},localStorage:cache,console,crypto:require('node:crypto').webcrypto,
+    document:{currentScript:{src:'http://localhost/js/submissions.js'}},
+    BroadcastChannel:class{postMessage(){}close(){}},
+    fetch:async(url,options)=>{writes.push({url:String(url),data:JSON.parse(options.body)});return {ok:!failing&&status<400,json:async()=>failing?{success:false,error:'delivery-failed'}:{success:true,lead_id:42,ref_code:'CNT-42'}};}
   };
-  vm.runInNewContext(read('js/submissions.js').replaceAll('import(', '__import('), context);
-  return { save: context.window.saveMallSubmission, writes, cache };
+  vm.runInNewContext(read('js/submissions.js'),context);
+  return {save:context.window.saveMallSubmission,writes,cache,recover:()=>{failing=false;}};
 }
-test('confirmation delivery path writes a stable ID and caches only acknowledged submissions', async () => {
-  const { save, writes, cache } = submissions();
-  const data = { id: 'contact-1', name: '<img src=x onerror=alert(1)>', submittedAt: '2026-10-14T03:00:00Z' };
-  await save('contactLeads', data, 'contacts');
-  assert.deepEqual(writes[0].ref, { collection: 'contactLeads', id: 'contact-1' });
-  assert.equal(JSON.parse(cache.getItem('contacts'))[0].name, data.name);
+test('only acknowledged SQL submissions receive server IDs; private details are not cached',async()=>{
+  const {save,writes,cache}=submissions();const data={id:'contact-1',name:'Visitor'};
+  assert.equal(await save('contactLeads',data,'contacts'),'42');
+  assert.equal(writes[0].url,'http://localhost/api/leads/contact.php');
+  assert.equal(writes[0].data.request_id,'contact-1');assert.equal(data.numeric_id,42);assert.equal(data.ref_code,'CNT-42');assert.equal(cache.getItem('contacts'),null);
 });
-test('database failures and file previews cannot produce a saved submission', async () => {
-  const failed = submissions({ fail: true });
-  await assert.rejects(failed.save('contactLeads', { id: 'test' }, 'contacts'), /permission-denied/);
-  assert.equal(failed.cache.getItem('contacts'), null);
-  const local = submissions({ protocol: 'file:' });
-  await assert.rejects(local.save('contactLeads', { id: 'test' }, 'contacts'), /web address/);
-  assert.equal(local.writes.length, 0);
+test('database failures and file previews cannot produce successful confirmations',async()=>{
+  const failed=submissions({fail:true});await assert.rejects(failed.save('contactLeads',{id:'test'},'contacts'),/delivery-failed/);assert.equal(failed.cache.getItem('contacts'),null);
+  const local=submissions({protocol:'file:'});await assert.rejects(local.save('contactLeads',{id:'test'},'contacts'),/web address/);assert.equal(local.writes.length,0);
 });
+test('retry after uncertain delivery reuses the exact original request payload',async()=>{
+  const client=submissions({fail:true});await assert.rejects(client.save('ledLeads',{id:'first',name:'Brand',submittedAt:'first-time'}));
+  client.recover();await client.save('ledLeads',{id:'second',name:'Brand',submittedAt:'second-time'});
+  assert.deepEqual(client.writes[0].data,client.writes[1].data);
+});
+test('Play-On is routed to its dedicated endpoint',async()=>{
+  const client=submissions();await client.save('playonBookings',{id:'play-1',child_count:3});assert.equal(client.writes[0].url,'http://localhost/api/leads/playon.php');
+});
+
 test('confirmation popup renders customer details as text and supports repeat opening and dismissal', () => {
   const elements = new Map(), listeners = {};
   let activeElement;
@@ -80,56 +81,24 @@ test('confirmation popup renders customer details as text and supports repeat op
   listeners.keydown({ key: 'Escape' });
   assert.equal(overlay.classList.contains('is-visible'), false);
 });
-function dashboard({ fail = false } = {}) {
-  const writes = [], deletes = [], subscriptions = [];
-  const context = { window: {}, localStorage: storage(), console, BroadcastChannel: undefined,
-    document: { readyState: 'loading', addEventListener() {}, getElementById: () => null,
-      querySelector: () => null, querySelectorAll: () => [] },
-    setTimeout, clearTimeout, confirm: () => true };
-  const source = read('admin/admin.js').replace(/\}\)\(\);\s*$/, `window.testHooks = {
-    queueCloudChange, flushCloudChanges, syncWithFirestoreCloud, cloudCollections,
-    setFirebase: value => Object.assign(fb, value), pending: () => outbox.length,
-    setShops: rows => { shopsCache = rows; }, shops: () => shopsCache
-  }; })();`);
-  vm.runInNewContext(source, context);
-  const api = context.window.testHooks;
-  api.setFirebase({ isCloudReady: true, db: {}, auth: { currentUser: {} }, fsMod: {
-    doc: (_db, collection, id) => ({ collection, id }), collection: (_db, name) => name,
-    setDoc: async (ref, data) => { if (fail) throw new Error('permission-denied'); writes.push({ ref, data }); },
-    deleteDoc: async ref => { deletes.push(ref); },
-    onSnapshot: (collection, callback) => { subscriptions.push({ collection, callback }); return () => {}; }
-  }});
-  return { api, writes, deletes, subscriptions };
+function dashboard({fail=false}={}) {
+  const writes=[];const context={window:{},localStorage:storage(),console,confirm:()=>true,BroadcastChannel:undefined,setTimeout,clearTimeout,
+    document:{readyState:'loading',addEventListener(){},getElementById:()=>null,querySelector:()=>null,querySelectorAll:()=>[]},
+    MallAPI:{mutate:async(url,method,payload)=>{writes.push({url,method,payload});if(fail)throw Error('permission-denied');return {success:true,store_id:42};}}
+  };
+  const source=read('admin/admin.js').replace(/\}\)\(\);\s*$/, 'window.testHooks={saveRecord,setShops:rows=>{shopsCache=rows},shops:()=>shopsCache};})();');
+  vm.runInNewContext(source,context);return {api:context.window.testHooks,writes};
 }
-test('dashboard saves and deletes use the same database document ID', async () => {
-  const { api, writes, deletes } = dashboard();
-  api.setShops([{ id: 'shop-1', name: 'Store' }]);
-  api.queueCloudChange('save_shop', 'shop-1');
-  await api.flushCloudChanges();
-  assert.equal(writes[0].ref.id, 'shop-1');
-  api.queueCloudChange('delete_shop', 'shop-1');
-  await api.flushCloudChanges();
-  assert.equal(deletes[0].id, 'shop-1');
-  assert.equal(api.pending(), 0);
+test('dashboard waits for server acknowledgement and uses canonical IDs for updates',async()=>{
+  const {api,writes}=dashboard();const data={name:'Store'};assert.equal(await api.saveRecord('stores',data,null),true);assert.equal(data.id,'42');
+  assert.equal(await api.saveRecord('stores',{name:'Renamed'},'42',{photoUrls:['/assets/photo.webp']}),true);
+  assert.equal(writes[1].method,'PUT');assert.equal(writes[1].payload.id,'42');assert.equal(writes[1].payload.photoUrls[0],'/assets/photo.webp');
 });
-test('failed dashboard writes remain queued for retry', async () => {
-  const { api } = dashboard({ fail: true });
-  api.setShops([{ id: 'shop-1', name: 'Store' }]);
-  api.queueCloudChange('save_shop', 'shop-1');
-  await assert.rejects(api.flushCloudChanges(), /permission-denied/);
-  assert.equal(api.pending(), 1);
+test('failed dashboard writes cannot change cached records or assign fake IDs',async()=>{
+  const {api}=dashboard({fail:true});const rows=[{id:'42',name:'Original'}];api.setShops(rows);const data={name:'Unsaved'};
+  assert.equal(await api.saveRecord('stores',data,null),false);assert.equal(data.id,undefined);assert.equal(api.shops()[0].name,'Original');
 });
-test('dashboard subscribes to every content and inquiry collection and accepts empty snapshots', () => {
-  const { api, subscriptions } = dashboard();
-  api.setShops([{ id: 'old' }]);
-  api.syncWithFirestoreCloud();
-  assert.equal(subscriptions.length, 9);
-  for (const name of ['ledLeads', 'activationLeads', 'contactLeads', 'gallery', 'blogPosts', 'reviews']) {
-    assert.ok(subscriptions.some(item => item.collection === name));
-  }
-  subscriptions.find(item => item.collection === 'shops').callback({ docs: [] });
-  assert.equal(api.shops().length, 0);
-});
+
 test('all local JavaScript and inline page scripts parse', () => {
   for (const dir of ['js', 'admin', 'playon/js', 'led-advertising']) {
     for (const file of fs.readdirSync(path.join(root, dir)).filter(file => file.endsWith('.js'))) {

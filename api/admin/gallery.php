@@ -5,6 +5,7 @@
 
 require_once __DIR__ . '/../config.php';
 
+authorize_resource('gallery');
 $pdo = get_db_connection();
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -31,6 +32,8 @@ if ($method === 'GET') {
             'numeric_id'  => (int)$g['id'],
             'title'       => $g['title'] ?: 'Mall Photo',
             'url'         => $g['image_url'],
+            'imageUrl'    => $g['image_url'],
+            'sortOrder'   => (int)$g['sort_order'],
             'image_url'   => $g['image_url'],
             'category'    => $g['category'] ?: 'General',
             'caption'     => $g['caption'] ?: '',
@@ -49,15 +52,16 @@ if ($method === 'GET') {
 // Handle POST (Add Photo)
 if ($method === 'POST') {
     $input = get_json_input();
-    $imageUrl = trim($input['url'] ?? $input['image_url'] ?? '');
+    $imageUrl = trim($input['imageUrl'] ?? $input['url'] ?? $input['image_url'] ?? '');
     if (empty($imageUrl)) {
         json_response(['success' => false, 'error' => 'Image URL is required'], 400);
     }
 
+    validate_media_url($imageUrl);
     $title = trim($input['title'] ?? 'Mall Showcase');
     $category = trim($input['category'] ?? 'General');
     $caption = trim($input['caption'] ?? '');
-    $sortOrder = (int)($input['sort_order'] ?? 0);
+    $sortOrder = (int)($input['sortOrder'] ?? $input['sort_order'] ?? 0);
 
     $stmt = $pdo->prepare("
         INSERT INTO gallery (title, image_url, category, caption, sort_order, uploaded_by)
@@ -93,6 +97,7 @@ if ($method === 'DELETE') {
     if ($id <= 0) {
         json_response(['success' => false, 'error' => 'Valid photo ID is required'], 400);
     }
+    require_existing($pdo, 'gallery', $id);
 
     $stmt = $pdo->prepare("DELETE FROM gallery WHERE id = :id");
     $stmt->execute([':id' => $id]);

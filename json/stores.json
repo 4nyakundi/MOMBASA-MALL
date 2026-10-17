@@ -17,12 +17,16 @@
           "instagram": "https://www.instagram.com/naivas_supermarket",
           "tiktok": "https://www.tiktok.com/@naivas",
           "photo": "/assets/lifestyle/naivas.webp",
-          "photoFit": "cover"
+          "photoFit": "cover",
+          "website": "https://www.instagram.com/naivas_supermarket",
+          "photoUrls": [
+            "/assets/lifestyle/naivas.webp"
+          ]
         },
         {
           "name": "Chicken Inn",
           "room": "G-02",
-          "category": "dining",
+          "category": "food",
           "phone": "+254 790 964 002",
           "email": "info@chickeninn.co.ke",
           "description": "Famous crisp, juicy fried chicken, delicious burgers, seasoned chips and signature family meal combos.",
@@ -32,12 +36,16 @@
           "instagram": "https://www.instagram.com/chickeninnke/",
           "tiktok": "https://www.tiktok.com/@chickenin",
           "photo": "/assets/store-previews/g-02.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "https://www.instagram.com/chickeninnke/",
+          "photoUrls": [
+            "/assets/store-previews/g-02.webp"
+          ]
         },
         {
           "name": "Creamy Inn",
           "room": "G-03",
-          "category": "dining",
+          "category": "food",
           "phone": "+254 790 964 002",
           "email": "info@creamyinn.co.ke",
           "description": "Indulgent soft-serve ice creams, decadent sundaes, thick milkshakes, Belgian waffles and dessert treats.",
@@ -47,12 +55,16 @@
           "instagram": "https://www.instagram.com/CreamyInn_ke",
           "tiktok": "",
           "photo": "/assets/store-previews/g-03.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "https://www.instagram.com/CreamyInn_ke",
+          "photoUrls": [
+            "/assets/store-previews/g-03.webp"
+          ]
         },
         {
           "name": "Pizza Inn",
           "room": "G-04",
-          "category": "dining",
+          "category": "food",
           "phone": "+254 790 964 002",
           "email": "info@pizzainn.co.ke",
           "description": "Freshly rolled artisan dough pizzas, classic pepperoni, peri-peri chicken and famous Buy-One-Get-One-Free specials.",
@@ -62,12 +74,16 @@
           "instagram": "https://www.instagram.com/pizzainn_ke",
           "tiktok": "",
           "photo": "/assets/store-previews/g-04.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "https://www.instagram.com/pizzainn_ke",
+          "photoUrls": [
+            "/assets/store-previews/g-04.webp"
+          ]
         }
       ]
     },
     {
-      "name": "1st Floor",
+      "name": "First Floor",
       "slug": "floor-1",
       "shops": [
         {
@@ -83,7 +99,11 @@
           "instagram": "https://www.instagram.com/naivas_supermarket",
           "tiktok": "https://www.tiktok.com/@naivas",
           "photo": "/assets/lifestyle/naivas.webp",
-          "photoFit": "cover"
+          "photoFit": "cover",
+          "website": "https://www.instagram.com/naivas_supermarket",
+          "photoUrls": [
+            "/assets/lifestyle/naivas.webp"
+          ]
         },
         {
           "name": "Hallahulah Game Shop",
@@ -98,7 +118,11 @@
           "instagram": "",
           "tiktok": "",
           "photo": "/assets/store-previews/f-02.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "",
+          "photoUrls": [
+            "/assets/store-previews/f-02.webp"
+          ]
         },
         {
           "name": "Daliah Human Wigs",
@@ -113,7 +137,11 @@
           "instagram": "https://www.instagram.com/daliah_human_hair",
           "tiktok": "",
           "photo": "/assets/store-previews/f-03.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "https://www.instagram.com/daliah_human_hair",
+          "photoUrls": [
+            "/assets/store-previews/f-03.webp"
+          ]
         },
         {
           "name": "Payless",
@@ -128,7 +156,11 @@
           "instagram": "https://www.instagram.com/payless_001",
           "tiktok": "https://www.tiktok.com/@payless_001",
           "photo": "/assets/store-previews/f-04.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "https://www.instagram.com/payless_001",
+          "photoUrls": [
+            "/assets/store-previews/f-04.webp"
+          ]
         },
         {
           "name": "Grand Computer",
@@ -143,7 +175,11 @@
           "instagram": "https://www.instagram.com/grand_computer",
           "tiktok": "https://www.tiktok.com/@grandcomputer0",
           "photo": "/assets/lifestyle/grand-computer.webp",
-          "photoFit": "cover"
+          "photoFit": "cover",
+          "website": "https://www.instagram.com/grand_computer",
+          "photoUrls": [
+            "/assets/lifestyle/grand-computer.webp"
+          ]
         },
         {
           "name": "Tickles and Giggles",
@@ -158,7 +194,11 @@
           "instagram": "https://www.instagram.com/ticklesandgiggles_kids_kenya",
           "tiktok": "https://www.tiktok.com/@ticklesandgiggleskids",
           "photo": "/assets/store-previews/f-06.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "https://www.instagram.com/ticklesandgiggles_kids_kenya",
+          "photoUrls": [
+            "/assets/store-previews/f-06.webp"
+          ]
         },
         {
           "name": "Namada Healthcare",
@@ -173,7 +213,11 @@
           "instagram": "",
           "tiktok": "",
           "photo": "/assets/store-previews/f-07.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "",
+          "photoUrls": [
+            "/assets/store-previews/f-07.webp"
+          ]
         },
         {
           "name": "Online Holidays",
@@ -188,7 +232,11 @@
           "instagram": "",
           "tiktok": "",
           "photo": "/assets/store-previews/f-08.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "",
+          "photoUrls": [
+            "/assets/store-previews/f-08.webp"
+          ]
         },
         {
           "name": "West 11",
@@ -203,7 +251,11 @@
           "instagram": "https://www.instagram.com/west11sports",
           "tiktok": "https://www.tiktok.com/@west_.111",
           "photo": "/assets/store-previews/f-09.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "https://www.instagram.com/west11sports",
+          "photoUrls": [
+            "/assets/store-previews/f-09.webp"
+          ]
         },
         {
           "name": "7day Mensware",
@@ -218,7 +270,11 @@
           "instagram": "https://www.instagram.com/7daymenswear",
           "tiktok": "https://www.tiktok.com/@7daymenswear",
           "photo": "/assets/store-previews/f-10.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "https://www.instagram.com/7daymenswear",
+          "photoUrls": [
+            "/assets/store-previews/f-10.webp"
+          ]
         },
         {
           "name": "KG Cosmetics",
@@ -233,7 +289,11 @@
           "instagram": "https://www.instagram.com/kg_beauty_cosmetics",
           "tiktok": "https://www.tiktok.com/@kgbeauty_cosmetics",
           "photo": "/assets/store-previews/f-11.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "https://www.instagram.com/kg_beauty_cosmetics",
+          "photoUrls": [
+            "/assets/store-previews/f-11.webp"
+          ]
         },
         {
           "name": "Lovisa",
@@ -248,7 +308,11 @@
           "instagram": "https://www.instagram.com/lovisa.msa",
           "tiktok": "https://www.tiktok.com/@lovisaboutique",
           "photo": "/assets/store-previews/f-12.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "https://www.instagram.com/lovisa.msa",
+          "photoUrls": [
+            "/assets/store-previews/f-12.webp"
+          ]
         },
         {
           "name": "Fakri Timezone",
@@ -263,7 +327,11 @@
           "instagram": "",
           "tiktok": "https://www.tiktok.com/@timezone&optical",
           "photo": "/assets/store-previews/f-13.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "",
+          "photoUrls": [
+            "/assets/store-previews/f-13.webp"
+          ]
         },
         {
           "name": "Dendri",
@@ -278,7 +346,11 @@
           "instagram": "https://www.instagram.com/denri_africa",
           "tiktok": "https://www.tiktok.com/@denriafrica",
           "photo": "/assets/store-previews/f-14.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "https://www.instagram.com/denri_africa",
+          "photoUrls": [
+            "/assets/store-previews/f-14.webp"
+          ]
         },
         {
           "name": "NCBA Bank",
@@ -293,7 +365,11 @@
           "instagram": "https://www.instagram.com/ncbabankkenya",
           "tiktok": "",
           "photo": "/assets/store-previews/f-15.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "https://www.instagram.com/ncbabankkenya",
+          "photoUrls": [
+            "/assets/store-previews/f-15.webp"
+          ]
         },
         {
           "name": "Diamond Tech",
@@ -308,7 +384,11 @@
           "instagram": "https://www.instagram.com/diamondtechmsa",
           "tiktok": "https://www.tiktok.com/@diamondtechmsa",
           "photo": "/assets/store-previews/f-16.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "https://www.instagram.com/diamondtechmsa",
+          "photoUrls": [
+            "/assets/store-previews/f-16.webp"
+          ]
         },
         {
           "name": "Africa Collectives (Pop shop)",
@@ -323,18 +403,22 @@
           "instagram": "",
           "tiktok": "",
           "photo": "/assets/store-previews/f-17.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "",
+          "photoUrls": [
+            "/assets/store-previews/f-17.webp"
+          ]
         }
       ]
     },
     {
-      "name": "2nd Floor",
+      "name": "Second Floor",
       "slug": "floor-2",
       "shops": [
         {
           "name": "Play On (Game Area)",
           "room": "S-01",
-          "category": "dining",
+          "category": "food",
           "phone": "+254 790 964 002",
           "email": "play@mombasamall.co.ke",
           "description": "Mombasa's largest family fun center! Features soft play slides, ball pits, VR rollercoasters, arcade games and party rooms.",
@@ -345,12 +429,15 @@
           "tiktok": "https://www.tiktok.com/@mombasamall_",
           "photo": "/assets/store-previews/s-01.webp",
           "photoFit": "cover",
-          "website": "/playon/index.html"
+          "website": "/playon/index.html",
+          "photoUrls": [
+            "/assets/store-previews/s-01.webp"
+          ]
         },
         {
           "name": "Creamy Inn, Chicken Inn, Pizza Inn (kiosk)",
           "room": "S-02",
-          "category": "dining",
+          "category": "food",
           "phone": "+254 790 964 002",
           "email": "info@simbisa.co.ke",
           "description": "Convenient second-floor express counter serving pizza slices, fried chicken snacks, soft-serve cones and cold drinks.",
@@ -360,7 +447,11 @@
           "instagram": "https://www.instagram.com/chickeninnke/",
           "tiktok": "",
           "photo": "/assets/store-previews/s-02.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "https://www.instagram.com/chickeninnke/",
+          "photoUrls": [
+            "/assets/store-previews/s-02.webp"
+          ]
         },
         {
           "name": "Jumia / Skyve shot / Xtigi Service Center",
@@ -375,7 +466,11 @@
           "instagram": "https://www.instagram.com/jumiakenya",
           "tiktok": "https://www.tiktok.com/@skyveshots_production001",
           "photo": "/assets/store-previews/s-03.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "https://www.instagram.com/jumiakenya",
+          "photoUrls": [
+            "/assets/store-previews/s-03.webp"
+          ]
         },
         {
           "name": "World Designers",
@@ -390,7 +485,11 @@
           "instagram": "https://www.instagram.com/worlddesigners",
           "tiktok": "https://www.tiktok.com/@worlddesigners",
           "photo": "/assets/store-previews/s-04.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "https://www.instagram.com/worlddesigners",
+          "photoUrls": [
+            "/assets/store-previews/s-04.webp"
+          ]
         },
         {
           "name": "SAS Beauty",
@@ -405,7 +504,11 @@
           "instagram": "https://www.instagram.com/sasbeauty3",
           "tiktok": "https://www.tiktok.com/@sasbeautysaloon",
           "photo": "/assets/store-previews/s-05.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "https://www.instagram.com/sasbeauty3",
+          "photoUrls": [
+            "/assets/store-previews/s-05.webp"
+          ]
         },
         {
           "name": "Novum",
@@ -420,7 +523,11 @@
           "instagram": "https://www.instagram.com/novum_beauty_parlour",
           "tiktok": "https://www.tiktok.com/@novumbeautyparlour",
           "photo": "/assets/store-previews/s-06.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "https://www.instagram.com/novum_beauty_parlour",
+          "photoUrls": [
+            "/assets/store-previews/s-06.webp"
+          ]
         },
         {
           "name": "Ident Smile",
@@ -435,7 +542,11 @@
           "instagram": "https://www.instagram.com/identsmiles_dental_clinic",
           "tiktok": "",
           "photo": "/assets/store-previews/s-07.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "https://www.instagram.com/identsmiles_dental_clinic",
+          "photoUrls": [
+            "/assets/store-previews/s-07.webp"
+          ]
         },
         {
           "name": "Tawal ICT Solution",
@@ -450,7 +561,11 @@
           "instagram": "https://www.instagram.com/tawalaictsolutions",
           "tiktok": "https://www.tiktok.com/@tawalaictsolutions",
           "photo": "/assets/store-previews/s-08.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "https://www.instagram.com/tawalaictsolutions",
+          "photoUrls": [
+            "/assets/store-previews/s-08.webp"
+          ]
         },
         {
           "name": "Mintos Salon Spa Barbershop",
@@ -465,7 +580,11 @@
           "instagram": "https://www.instagram.com/mintos_salon_spa",
           "tiktok": "https://www.tiktok.com/@mintos_salon_spa",
           "photo": "/assets/store-previews/s-09.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "https://www.instagram.com/mintos_salon_spa",
+          "photoUrls": [
+            "/assets/store-previews/s-09.webp"
+          ]
         },
         {
           "name": "SSB",
@@ -480,7 +599,11 @@
           "instagram": "https://www.instagram.com/ssb.products",
           "tiktok": "https://www.tiktok.com/@samira_ssb",
           "photo": "/assets/store-previews/s-10.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "https://www.instagram.com/ssb.products",
+          "photoUrls": [
+            "/assets/store-previews/s-10.webp"
+          ]
         },
         {
           "name": "Rudra",
@@ -495,7 +618,11 @@
           "instagram": "https://www.instagram.com/rudrawear",
           "tiktok": "https://www.tiktok.com/@rudraboutique0",
           "photo": "/assets/lifestyle/rudra.webp",
-          "photoFit": "cover"
+          "photoFit": "cover",
+          "website": "https://www.instagram.com/rudrawear",
+          "photoUrls": [
+            "/assets/lifestyle/rudra.webp"
+          ]
         },
         {
           "name": "West 11 Sports",
@@ -510,7 +637,11 @@
           "instagram": "https://www.instagram.com/west11sports",
           "tiktok": "https://www.tiktok.com/@west_.111",
           "photo": "/assets/store-previews/s-12.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "https://www.instagram.com/west11sports",
+          "photoUrls": [
+            "/assets/store-previews/s-12.webp"
+          ]
         },
         {
           "name": "Osona Yarns",
@@ -525,7 +656,11 @@
           "instagram": "https://www.instagram.com/osonayarns",
           "tiktok": "https://www.tiktok.com/@osonayarns",
           "photo": "/assets/store-previews/s-13.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "https://www.instagram.com/osonayarns",
+          "photoUrls": [
+            "/assets/store-previews/s-13.webp"
+          ]
         },
         {
           "name": "Afribot Robotics",
@@ -540,7 +675,11 @@
           "instagram": "",
           "tiktok": "",
           "photo": "/assets/store-previews/s-14.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "",
+          "photoUrls": [
+            "/assets/store-previews/s-14.webp"
+          ]
         },
         {
           "name": "Luxe Kaftan",
@@ -555,7 +694,11 @@
           "instagram": "https://www.instagram.com/luxekaftanskenya",
           "tiktok": "https://www.tiktok.com/@luxekaftanskenya",
           "photo": "/assets/store-previews/s-15.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "https://www.instagram.com/luxekaftanskenya",
+          "photoUrls": [
+            "/assets/store-previews/s-15.webp"
+          ]
         },
         {
           "name": "Malkia",
@@ -570,7 +713,11 @@
           "instagram": "https://www.instagram.com/malkiaa.boutique",
           "tiktok": "https://www.tiktok.com/@malkiaaboutique",
           "photo": "/assets/store-previews/s-16.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "https://www.instagram.com/malkiaa.boutique",
+          "photoUrls": [
+            "/assets/store-previews/s-16.webp"
+          ]
         },
         {
           "name": "Michael Boutique",
@@ -585,7 +732,11 @@
           "instagram": "https://www.instagram.com/michaelsbouquet",
           "tiktok": "https://www.tiktok.com/@michaelsbouquet",
           "photo": "/assets/store-previews/s-17.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "https://www.instagram.com/michaelsbouquet",
+          "photoUrls": [
+            "/assets/store-previews/s-17.webp"
+          ]
         },
         {
           "name": "Oraimo (upcoming)",
@@ -600,7 +751,11 @@
           "instagram": "https://www.instagram.com/oraimoclub",
           "tiktok": "",
           "photo": "/assets/store-previews/s-18.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "https://www.instagram.com/oraimoclub",
+          "photoUrls": [
+            "/assets/store-previews/s-18.webp"
+          ]
         },
         {
           "name": "Keswick",
@@ -615,12 +770,16 @@
           "instagram": "https://www.instagram.com/keswickbooks",
           "tiktok": "",
           "photo": "/assets/store-previews/s-19.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "https://www.instagram.com/keswickbooks",
+          "photoUrls": [
+            "/assets/store-previews/s-19.webp"
+          ]
         }
       ]
     },
     {
-      "name": "3rd Floor",
+      "name": "Third Floor",
       "slug": "floor-3",
       "shops": [
         {
@@ -636,7 +795,11 @@
           "instagram": "https://www.instagram.com/gamersvaultke",
           "tiktok": "https://www.tiktok.com/@gamersvaultke",
           "photo": "/assets/store-previews/t-01.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "https://www.instagram.com/gamersvaultke",
+          "photoUrls": [
+            "/assets/store-previews/t-01.webp"
+          ]
         },
         {
           "name": "Legacy Gym",
@@ -651,7 +814,11 @@
           "instagram": "https://www.instagram.com/legacyfitnessclub",
           "tiktok": "https://www.tiktok.com/@legacyfitnessclub",
           "photo": "/assets/store-previews/t-02.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "https://www.instagram.com/legacyfitnessclub",
+          "photoUrls": [
+            "/assets/store-previews/t-02.webp"
+          ]
         },
         {
           "name": "Westerwelle Foundation",
@@ -666,7 +833,11 @@
           "instagram": "https://www.instagram.com/westerwellefoundation",
           "tiktok": "https://www.tiktok.com/@westerwellsfoundation",
           "photo": "/assets/store-previews/t-03.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "https://www.instagram.com/westerwellefoundation",
+          "photoUrls": [
+            "/assets/store-previews/t-03.webp"
+          ]
         },
         {
           "name": "Equity Afia CBD",
@@ -681,12 +852,16 @@
           "instagram": "https://www.instagram.com/equityafiamwembetayari",
           "tiktok": "",
           "photo": "/assets/store-previews/t-04.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "https://www.instagram.com/equityafiamwembetayari",
+          "photoUrls": [
+            "/assets/store-previews/t-04.webp"
+          ]
         }
       ]
     },
     {
-      "name": "Basement",
+      "name": "Basement Parking",
       "slug": "basement",
       "shops": [
         {
@@ -702,7 +877,11 @@
           "instagram": "https://www.instagram.com/mombasamall_/",
           "tiktok": "https://www.tiktok.com/@mombasamall_",
           "photo": "/assets/store-previews/b-01.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "https://www.instagram.com/mombasamall_/",
+          "photoUrls": [
+            "/assets/store-previews/b-01.webp"
+          ]
         },
         {
           "name": "Secure Basement Parking Deck",
@@ -717,7 +896,11 @@
           "instagram": "https://www.instagram.com/mombasamall_/",
           "tiktok": "https://www.tiktok.com/@mombasamall_",
           "photo": "/assets/store-previews/b-02.webp",
-          "photoFit": "contain"
+          "photoFit": "contain",
+          "website": "https://www.instagram.com/mombasamall_/",
+          "photoUrls": [
+            "/assets/store-previews/b-02.webp"
+          ]
         }
       ]
     }

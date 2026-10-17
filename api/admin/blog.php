@@ -5,6 +5,7 @@
 
 require_once __DIR__ . '/../config.php';
 
+authorize_resource('blog');
 $pdo = get_db_connection();
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -103,6 +104,7 @@ if ($method === 'PUT') {
     if ($id <= 0) {
         json_response(['success' => false, 'error' => 'Valid post ID is required'], 400);
     }
+    require_existing($pdo, 'blog_posts', $id);
 
     $title = trim($input['title'] ?? '');
     $slug = trim($input['slug'] ?? '');
@@ -159,6 +161,7 @@ if ($method === 'DELETE') {
     if ($id <= 0) {
         json_response(['success' => false, 'error' => 'Valid post ID is required'], 400);
     }
+    require_existing($pdo, 'blog_posts', $id);
 
     $stmt = $pdo->prepare("DELETE FROM blog_posts WHERE id = :id");
     $stmt->execute([':id' => $id]);
