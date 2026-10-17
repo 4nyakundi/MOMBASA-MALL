@@ -309,3 +309,28 @@
 }
 
 .site-confirm-card { max-height: calc(100dvh - 40px); overflow-y: auto; }
+
+/* All entry types share a readable light surface, including tel/number/date. */
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="hidden"]):not([type="submit"]):not([type="button"]):not([type="reset"]):not([type="image"]),
+select, textarea {
+  color: #003049 !important;
+  -webkit-text-fill-color: #003049 !important;
+  caret-color: #003049 !important;
+  background-color: #fff !important;
+  color-scheme: light;
+}
+input::placeholder, textarea::placeholder {
+  color: #526b7c !important;
+  -webkit-text-fill-color: #526b7c !important;
+  opacity: 1;
+}
+input::-webkit-datetime-edit {
+  color: #003049;
+  -webkit-text-fill-color: #003049;
+}
+input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus,
+textarea:-webkit-autofill, select:-webkit-autofill {
+  -webkit-text-fill-color: #003049 !important;
+  -webkit-box-shadow: 0 0 0 1000px #fff inset !important;
+  caret-color: #003049;
+}

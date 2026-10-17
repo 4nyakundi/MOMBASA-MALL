@@ -13,6 +13,8 @@ No production database has been migrated by this change.
    origin. Configure DB_HOST, DB_PORT, DB_NAME, DB_USER, and DB_PASS through the
    host's environment. PHP does not automatically load `.env` files. Rotate the
    database password previously embedded in the repository.
+   On cPanel without Terminal or environment-variable controls, use the private
+   settings file described below. Do not enter database credentials into GitHub.
 3. Apply **only** `database/migrations/001_data_alignment.sql` to the existing
    database. It adds metadata, request-deduplication, site settings, and historical
    import archives. It does not delete or renumber existing business records.
@@ -34,6 +36,28 @@ No production database has been migrated by this change.
 7. Verify forms, published pages, staff permissions, uploads, and counts from a
    separate clean browser. Keep a rollback copy of the previous application and
    SQL/media backups. Do not restore browser caches as the live database.
+
+## cPanel database connection without Terminal
+
+After pulling the latest Git update, use File Manager:
+
+1. Copy `public_html/database/cpanel-config.example.php` to your account home,
+   `/home/mombasam/`, and rename that copy to `mombasa-mall-config.php`.
+2. Edit the copy outside `public_html`. Set DB_NAME and DB_USER to the existing
+   database and assigned database user shown in cPanel's Manage My Databases.
+   Set DB_PASS to that database user's password, not the cPanel login password.
+   Keep this password private and confirm the user has privileges on that database.
+3. Save. Keep the private file readable only by your account (normally mode 0600).
+   Environment variables, if configured, take precedence over the private file.
+4. Open `/api/public/health.php` on your website. It returns `code: ready` when
+   the database connection and required tables are available. Other safe codes:
+   `database_not_configured` (missing private settings), `database_unavailable`
+   (connection or credentials), `database_driver_missing` (enable PDO MySQL), or
+   `schema_update_required` (import the existing non-destructive alignment migration).
+
+The application automatically loads the file one level above the website root.
+Git updates do not touch it. Never put the filled-in file inside the repository
+or send its contents in chat. This setup does not reset any database or password.
 
 ## Historical data reconciliation
 
@@ -98,6 +122,9 @@ Default-content import is an explicit, previewed merge. It can overwrite matchin
 content with snapshot values; it does not run automatically during deployment.
 
 ## Verification
+
+`php tests/database-config.test.php` checks private configuration loading,
+environment overrides, and safe error responses without connecting to MySQL.
 
 `npm test` checks submission acknowledgement, retries, canonical IDs, failed-save
 behavior, confirmation safety, and JavaScript parsing.

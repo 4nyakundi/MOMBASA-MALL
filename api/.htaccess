@@ -2,7 +2,7 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
     # Prevent direct access to config
-    RewriteRule ^config\.php$ - [F,L]
+    RewriteRule ^(config|bootstrap|contracts)\.php$ - [F,L]
 </IfModule>
 
 <IfModule mod_headers.c>

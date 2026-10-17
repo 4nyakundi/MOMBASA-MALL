@@ -9,6 +9,12 @@
 // Report errors in development, suppress display in production
 ini_set('display_errors', '0');
 error_reporting(E_ALL);
+require_once __DIR__ . '/bootstrap.php';
+set_exception_handler(function ($error) {
+    error_log((string)$error);
+    [$status, $body] = mall_error_response($error);
+    json_response($body, $status);
+});
 
 // API requests are same-origin; never reflect arbitrary credentialed origins.
 $secure = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
@@ -31,12 +37,15 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Database Credentials
-define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
-define('DB_PORT', getenv('DB_PORT') ?: '3306');
-define('DB_NAME', getenv('DB_NAME') ?: 'mombasam_mall');
-define('DB_USER', getenv('DB_USER') ?: 'mombasam_admall');
-define('DB_PASS', getenv('DB_PASS') !== false ? getenv('DB_PASS') : '');
+// Environment variables take precedence over the private cPanel settings file.
+$databaseSettings = load_database_settings();
+define('DB_HOST', $databaseSettings['DB_HOST']);
+define('DB_PORT', $databaseSettings['DB_PORT']);
+define('DB_NAME', $databaseSettings['DB_NAME']);
+define('DB_USER', $databaseSettings['DB_USER']);
+define('DB_PASS', $databaseSettings['DB_PASS'] ?? '');
+define('DB_CONFIGURED', $databaseSettings['DB_PASS'] !== null && !in_array($databaseSettings['DB_PASS'], ['REPLACE_WITH_DATABASE_PASSWORD', 'CHANGE_ME'], true));
+unset($databaseSettings);
 define('DB_CHARSET', 'utf8mb4');
 
 /**
@@ -49,7 +58,8 @@ function get_db_connection() {
         return $pdo;
     }
 
-    if (getenv('DB_PASS') === false) throw new RuntimeException('DB_PASS must be configured on the PHP server.');
+    if (!DB_CONFIGURED) throw new MallServiceException('database_not_configured', 'Online forms are temporarily unavailable because the website database connection is not configured. Please contact the mall team.');
+    if (!extension_loaded('pdo_mysql')) throw new MallServiceException('database_driver_missing', 'Online forms are temporarily unavailable because the server database driver needs attention. Please contact the mall team.');
     $dsn = "mysql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET;
     $options = [
         PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
@@ -63,12 +73,8 @@ function get_db_connection() {
         $pdo->exec("SET time_zone = '+03:00'");
         return $pdo;
     } catch (PDOException $e) {
-        http_response_code(500);
-        echo json_encode([
-            'success' => false,
-            'error'   => 'Database unavailable. Please try again.'
-        ]);
-        exit();
+        error_log((string)$e);
+        throw new MallServiceException('database_unavailable', 'Online forms cannot reach the website database at the moment. Please try again or contact the mall team.');
     }
 }
 
@@ -147,8 +153,3 @@ function log_activity($pdo, $adminId, $action, $entityType, $entityId, $details 
 }
 
 require_once __DIR__ . '/contracts.php';
-set_exception_handler(function ($error) {
-    error_log((string)$error);
-    $status = $error instanceof InvalidArgumentException ? 422 : ($error instanceof PDOException && $error->getCode() === '23000' ? 409 : 500);
-    json_response(['success' => false, 'error' => $status === 422 ? $error->getMessage() : ($status === 409 ? 'This record conflicts with an existing record.' : 'The server could not complete this request. Please try again.')], $status);
-});

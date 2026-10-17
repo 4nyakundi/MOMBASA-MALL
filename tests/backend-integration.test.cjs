@@ -29,6 +29,7 @@ before(async()=>{
 });
 after(()=>{server?.kill();});
 test('anonymous access is limited to filtered public content',async()=>{
+  const health=await request('api/public/health.php',{anonymous:true});assert.equal(health.status,200);assert.deepEqual(health.data,{success:true,code:'ready',forms_ready:true});
   for(const resource of ['stores','events','blog','gallery','reviews','leads','users','dashboard']){
     assert.equal((await request('api/admin/'+resource+'.php',{anonymous:true})).status,401,resource);
   }
