@@ -434,3 +434,7 @@
 @media(max-width:700px) { .directory-toolbar { top:74px; } .stores-page .store-card-category { font-size:8px; } .stores-page .store-card-arrow { font-size:15px; } .stores-page .store-card-info p span { font-size:9px; } }
 .directory-service-notice { color:#60716e; font-size:11px; line-height:1.6; margin:0 0 16px; padding:10px 14px; border:1px solid #dce3d9; border-radius:8px; }
 @media(max-width:700px) { .stores-page .floating-header .site-logo { padding:8px 10px; } .stores-page .floating-header .site-logo img { height:23px; } .category-chip { min-height:44px; } }
+/* Keep the sticky controls below the navigation without inheriting a top inset. */
+.stores-page .subpage-content { padding-top:0; }
+.discovery-hero { margin-top:122px; }
+@media(max-width:700px) { .discovery-hero { margin-top:88px; } }
