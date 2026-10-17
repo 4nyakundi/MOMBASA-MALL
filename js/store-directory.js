@@ -55,7 +55,6 @@
 
       document.getElementById('directoryTotal').textContent = allStores.length;
 
-      const search = document.getElementById('storeSearch');
       const floorFilter = document.getElementById('storeFloor');
       const reset = document.getElementById('resetStoreFilters');
       let activeCategory = 'all';
@@ -68,16 +67,14 @@
       function renderStores() {
         if (!gridContainer) return;
         if (window.cleanupStoreCardMotion) window.cleanupStoreCardMotion();
-        const query = search.value.trim().toLowerCase();
         const filtered = allStores.filter(store => (activeCategory === 'all' || categoryGroup(store) === activeCategory)
-          && (floorFilter.value === 'all' || store.floor === floorFilter.value)
-          && [store.name,store.description,store.category,categoryLabels[store.category],store.room,store.floor].join(' ').toLowerCase().includes(query));
+          && (floorFilter.value === 'all' || store.floor === floorFilter.value));
         gridContainer.replaceChildren();
-        const isFiltered = !!query || activeCategory !== 'all' || floorFilter.value !== 'all';
+        const isFiltered = activeCategory !== 'all' || floorFilter.value !== 'all';
         reset.hidden = !isFiltered;
         document.getElementById('directoryResults').textContent = `${filtered.length} ${filtered.length === 1 ? 'place' : 'places'} ${isFiltered ? 'for you to explore' : 'to discover'}`;
         if (!filtered.length) {
-          gridContainer.innerHTML = `<div class="store-empty"><span aria-hidden="true">↗</span><h3>${allStores.length ? 'Your next find is still out there.' : 'New discoveries are on the way.'}</h3><p>${allStores.length ? 'Try another name, category or floor.' : 'Our directory is being updated. Please check back soon.'}</p>${isFiltered ? '<button type="button">Explore all places</button>' : ''}</div>`;
+          gridContainer.innerHTML = `<div class="store-empty"><span aria-hidden="true">↗</span><h3>${allStores.length ? 'Your next find is still out there.' : 'New discoveries are on the way.'}</h3><p>${allStores.length ? 'Try another category or floor.' : 'Our directory is being updated. Please check back soon.'}</p>${isFiltered ? '<button type="button">Explore all places</button>' : ''}</div>`;
           gridContainer.querySelector('button')?.addEventListener('click', resetFilters);
         }
         filtered.sort((a,b) => floorMeta.findIndex(f=>f[0]===a.floor)-floorMeta.findIndex(f=>f[0]===b.floor) || a.room.localeCompare(b.room)).forEach(store => {
@@ -94,13 +91,10 @@
         });
         if (window.animateStoreCards) window.animateStoreCards();
       }
-      function resetFilters() { search.value=''; floorFilter.value='all'; activeCategory='all'; updateCategoryButtons(); renderStores(); }
+      function resetFilters() { floorFilter.value='all'; activeCategory='all'; updateCategoryButtons(); renderStores(); }
       function updateCategoryButtons() { document.querySelectorAll('.category-chip[data-category]').forEach(button => { const active=button.dataset.category===activeCategory; button.classList.toggle('active',active); button.setAttribute('aria-pressed',String(active)); }); }
       document.querySelectorAll('.category-chip[data-category]').forEach(button => button.addEventListener('click',()=>{activeCategory=button.dataset.category; updateCategoryButtons(); renderStores();}));
-      let searchTimer;
-      search.addEventListener('input',()=>{clearTimeout(searchTimer);searchTimer=setTimeout(renderStores,120);});
       floorFilter.addEventListener('change',renderStores); reset.addEventListener('click',resetFilters);
-      document.addEventListener('keydown',event=>{if(event.key==='/' && !event.ctrlKey && !event.metaKey && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName) && !document.getElementById('storeModalBackdrop').classList.contains('is-open')) {event.preventDefault();search.focus();}});
 
       // ── 4. BLUEPRINT SWITCHER ─────────────────────────────────
       const currentMapTitle = document.getElementById('currentMapFloorTitle');

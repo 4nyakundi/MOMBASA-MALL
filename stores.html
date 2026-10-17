@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Discover Shops &amp; Dining — Mombasa Mall</title>
-  <meta name="description" content="Find your next favourite at Mombasa Mall. Explore shops, dining, beauty and entertainment. Search by brand, category or floor." />
+  <meta name="description" content="Find your next favourite at Mombasa Mall. Explore shops, dining, beauty and entertainment. Browse by category or floor." />
   <link rel="icon" type="image/png" href="./assets/Logo/Mall Logo/MOMBASA MALL 1.0.png" />
   <link rel="apple-touch-icon" href="./assets/Logo/Mall Logo/MOMBASA MALL 1.0.png" />
   <link rel="manifest" href="./manifest.json" />
@@ -14,11 +14,11 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://mombasamall.co.ke/stores.html" />
   <meta property="og:title" content="Store Directory &amp; Floor Map — Mombasa Mall" />
-  <meta property="og:description" content="Find your next favourite at Mombasa Mall. Explore shops, dining, beauty and entertainment. Search by brand, category or floor." />
+  <meta property="og:description" content="Find your next favourite at Mombasa Mall. Explore shops, dining, beauty and entertainment. Browse by category or floor." />
   <meta property="og:image" content="./assets/Logo/Random pics/MOMBASA MALL.jpg" />
 
   <link rel="stylesheet" href="./css/style.css" />
-  <link rel="stylesheet" href="./css/store-directory.css?v=20261017-discover">
+  <link rel="stylesheet" href="./css/store-directory.css?v=20261017-no-search">
   <link rel="stylesheet" href="./css/site-polish.css?v=20261017-forms">
   <script defer src="./js/site-polish.js"></script>
 <script src="./js/api-client.js"></script>
@@ -149,8 +149,7 @@
               <button class="category-chip" type="button" data-category="play" aria-pressed="false">Play &amp; unwind</button>
               <button class="category-chip" type="button" data-category="services" aria-pressed="false">Everyday services</button>
             </div>
-            <div class="directory-search-row">
-              <label class="discovery-search"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><input type="search" id="storeSearch" placeholder="A brand, a craving, a good idea…" aria-label="Search stores" autocomplete="off"><kbd aria-hidden="true">/</kbd></label>
+            <div class="directory-floor-control">
               <label class="discovery-floor"><span class="sr-only">Filter by floor</span><select id="storeFloor"><option value="all">All floors</option><option>Ground Floor</option><option>1st Floor</option><option>2nd Floor</option><option>3rd Floor</option><option>Basement</option></select></label>
             </div>
           </div>
@@ -270,6 +269,6 @@
 
 
   <script src="./js/store-motion.js?v=20261017-discover"></script>
-  <script src="./js/store-directory.js?v=20261017-discover"></script>
+  <script src="./js/store-directory.js?v=20261017-no-search"></script>
 </body>
 </html>
