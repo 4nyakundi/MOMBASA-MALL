@@ -2110,3 +2110,27 @@ input[type="file"].form-control::-webkit-file-upload-button:hover {
     grid-template-columns: 1fr;
   }
 }
+/* Manual inquiry entry shares the dashboard's existing modal system. */
+.lead-entry-modal .modal-card { max-width:820px; }
+.lead-entry-modal form { display:flex; flex-direction:column; min-height:0; overflow:hidden; }
+.lead-entry-modal .modal-body { overflow-y:auto; min-height:0; }
+.lead-entry-modal .form-control { width:100%; color:#172b3a !important; -webkit-text-fill-color:#172b3a; background:#fff !important; caret-color:#172b3a; }
+.lead-entry-modal .form-grid { align-items:start; }
+.lead-entry-intro { margin:0 0 20px; color:var(--admin-text-muted); font-size:13px; line-height:1.6; }
+.lead-entry-modal small { font-size:11px; color:var(--admin-text-muted); line-height:1.6; }
+.lead-entry-error { color:#b42318; font-size:13px; line-height:1.6; white-space:pre-wrap; margin-top:14px; }
+.lead-entry-error:empty { display:none; }
+.lead-media { background:#f7fafc; border:1px solid var(--admin-border); border-radius:12px; padding:16px; }
+.lead-media-link { display:flex; gap:8px; margin-top:10px; }
+.lead-media-link input { min-width:0; }
+#leadMediaList { padding:0; list-style:none; margin:8px 0 0; }
+#leadMediaList li { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:8px 0; border-bottom:1px solid var(--admin-border); }
+#leadMediaList a, .lead-media-attachment { color:#165c88; font-size:12px; overflow-wrap:anywhere; }
+.lead-media-attachment { display:block; margin-bottom:6px; max-width:230px; }
+.lead-source-label { display:block; color:var(--admin-text-muted); font-size:11px; line-height:1.6; margin-top:4px; }
+.lead-detail-extra { margin-top:18px; padding:16px; border:1px solid var(--admin-border); border-radius:12px; }
+.lead-detail-extra h4 { font-size:13px; margin:12px 0 8px; }
+.lead-detail-extra p { font-size:12px; line-height:1.7; }
+.lead-notes { white-space:pre-wrap; overflow-wrap:anywhere; }
+#tab-ledLeads .td-actions, #tab-activationLeads .td-actions, #tab-contactLeads .td-actions { flex-wrap:wrap; }
+@media(max-width:600px) { .lead-entry-modal .modal-card { max-height:calc(100dvh - 16px); } .lead-entry-modal .form-grid { grid-template-columns:minmax(0,1fr); } .lead-entry-modal .form-group.col-2 { grid-column:auto; } .lead-media-link { flex-direction:column; } }

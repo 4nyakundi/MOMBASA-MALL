@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css" />
-  <link rel="stylesheet" href="./admin.css" />
+  <link rel="stylesheet" href="./admin.css?v=20261105-manual-inquiries" />
 <script src="../js/api-client.js"></script>
 </head>
 <body class="admin-body">
@@ -421,6 +421,7 @@
             </select>
           </div>
           <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            <button type="button" class="btn-primary" data-add-inquiry="led">+ Add LED client</button>
             <button id="exportLedCsvBtn" class="btn-secondary" style="display:inline-flex;align-items:center;gap:6px;" title="Export LED Billboard inquiries to CSV">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export CSV
             </button>
@@ -436,14 +437,15 @@
                 <th>Brand / Business</th>
                 <th>Contact Info</th>
                 <th>Screen Package</th>
-                <th>Hire Duration</th>
+                <th>Campaign Window &amp; Duration</th>
+                <th>Media &amp; Referral</th>
                 <th>Estimated Cost &amp; Notes</th>
                 <th>Status</th>
-                <th style="width:130px;">Actions</th>
+                <th style="width:210px;">Actions</th>
               </tr>
             </thead>
             <tbody id="ledLeadsTableBody">
-              <tr class="skeleton-row"><td colspan="7"><span class="skeleton skeleton-cell"></span></td></tr>
+              <tr class="skeleton-row"><td colspan="8"><span class="skeleton skeleton-cell"></span></td></tr>
             </tbody>
           </table>
         </div>
@@ -459,6 +461,7 @@
             <p style="font-size:12.5px;color:var(--admin-text-muted);margin:3px 0 0;">Interactive month calendar showing client reservation ranges and booked atrium/forecourt dates.</p>
           </div>
           <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            <button type="button" class="btn-primary" data-add-inquiry="activation">+ Add activation</button>
             <button id="exportActivationsCsvBtn" class="btn-secondary" style="display:inline-flex;align-items:center;gap:6px;" title="Export Activation bookings to CSV">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export CSV
             </button>
@@ -570,6 +573,7 @@
             </select>
           </div>
           <div style="display:flex; align-items:center; gap:8px;">
+            <button type="button" class="btn-primary" data-add-inquiry="contact">+ Add inquiry</button>
             <button id="exportContactCsvBtn" class="btn-secondary" style="display:inline-flex;align-items:center;gap:6px;" title="Export Contact inquiries to CSV">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export CSV
             </button>
@@ -1212,6 +1216,7 @@
 
   <!-- Scripts: default-data.js provides offline & file:/// fallback data, admin.js executes robustly -->
   <script src="./default-data.js"></script>
-  <script src="./admin.js"></script>
+  <script src="./lead-editor.js?v=20261105-manual-inquiries"></script>
+  <script src="./admin.js?v=20261105-manual-inquiries"></script>
 </body>
 </html>

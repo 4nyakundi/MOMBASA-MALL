@@ -3,7 +3,8 @@
  * Mombasa Mall - Unified Leads Management API
  * Supports:
  *   GET    /api/admin/leads.php?type=led|activation|contact|playon|all
- *   PUT    /api/admin/leads.php (update status or admin_notes)
+ *   POST   /api/admin/leads.php (staff-entered LED, activation or contact inquiry)
+ *   PUT    /api/admin/leads.php (edit details, status or admin_notes)
  *   DELETE /api/admin/leads.php?type=X&id=Y
  */
 
@@ -12,6 +13,31 @@ require_once __DIR__ . '/../config.php';
 authorize_resource('leads');
 $pdo = get_db_connection();
 $method = $_SERVER['REQUEST_METHOD'];
+require_once __DIR__ . '/lead-records.php';
+
+if ($method === 'POST') {
+    $input = get_json_input();
+    $type = $input['type'] ?? '';
+    if (!in_array($type,['led','activation','contact'],true)) json_response(['success'=>false,'error'=>'Choose a valid inquiry type.'],422);
+    $requestId = $input['request_id'] ?? '';
+    if (!is_string($requestId) || !preg_match('/^[A-Za-z0-9_-]{1,80}$/',$requestId)) json_response(['success'=>false,'error'=>'A valid request ID is required.'],422);
+    $input['request_id'] = 'a' . $_SESSION['admin_user']['id'] . '_' . $requestId;
+    $request = begin_submission($pdo,'admin_' . $type,$input);
+    $id = lead_write_record($pdo,$type,$input);
+    finish_submission($pdo,$request,['success'=>true,'lead_id'=>$id,'message'=>'Inquiry saved.']);
+}
+if ($method === 'PUT') {
+    $input = get_json_input();
+    $details = array_diff(array_keys($input),['type','id','numeric_id','status','admin_notes']);
+    if ($details) {
+        $id = (int)($input['numeric_id'] ?? $input['id'] ?? 0);
+        if ($id <= 0) json_response(['success'=>false,'error'=>'A valid inquiry ID is required.'],422);
+        $pdo->beginTransaction();
+        $id = lead_write_record($pdo,$input['type'] ?? '',$input,$id);
+        $pdo->commit();
+        json_response(['success'=>true,'lead_id'=>$id,'message'=>'Inquiry updated.']);
+    }
+}
 
 // Handle GET
 if ($method === 'GET') {
@@ -19,6 +45,10 @@ if ($method === 'GET') {
     $status = $_GET['status'] ?? null;
 
     $response = ['success' => true];
+    $metadata = [];
+    foreach ($pdo->query("SELECT entity_type, entity_id, payload FROM content_metadata WHERE entity_type IN ('led_lead','activation_lead','contact_lead')") as $entry) {
+        $metadata[$entry['entity_type']][$entry['entity_id']] = json_decode($entry['payload'],true) ?: [];
+    }
 
     // Helper for table querying
     $queryTable = function($table, $orderCol = 'submitted_at') use ($pdo, $status) {
@@ -38,7 +68,14 @@ if ($method === 'GET') {
         $ledRows = $queryTable('led_leads');
         $formatted = [];
         foreach ($ledRows as $r) {
+            $extra = $metadata['led_lead'][$r['id']] ?? [];
             $formatted[] = [
+                'campaignStartDate' => $extra['campaignStartDate'] ?? '',
+                'campaignEndDate' => $extra['campaignEndDate'] ?? '',
+                'durationDays' => $extra['durationDays'] ?? (['2w'=>14,'1m'=>30,'3m'=>90][$r['duration_code']] ?? null),
+                'mediaAssets' => $extra['mediaAssets'] ?? [],
+                'referralCompany' => $extra['referralCompany'] ?? '',
+                'source' => $extra['source'] ?? 'website',
                 'id'                   => (string)$r['id'],
                 'numeric_id'           => (int)$r['id'],
                 'ref_code'             => $r['ref_code'],
@@ -79,6 +116,7 @@ if ($method === 'GET') {
         $formatted = [];
         foreach ($actRows as $r) {
             $formatted[] = [
+                'source' => $metadata['activation_lead'][$r['id']]['source'] ?? 'website',
                 'id'                  => (string)$r['id'],
                 'numeric_id'          => (int)$r['id'],
                 'ref_code'            => $r['ref_code'],
@@ -101,7 +139,7 @@ if ($method === 'GET') {
                 'concept'             => $r['concept_description'],
                 'concept_description' => $r['concept_description'],
                 'message'             => $r['concept_description'],
-                'contactInfo'         => $r['phone'] . ' · ' . $r['email'],
+                'contactInfo'         => implode(' · ', array_filter([$r['phone'], $r['email']])),
                 'status'              => $r['status'] ?: 'new',
                 'admin_notes'         => $r['admin_notes'] ?: '',
                 'date'                => date('M d, Y', strtotime($r['submitted_at'])),
@@ -116,6 +154,7 @@ if ($method === 'GET') {
         $formatted = [];
         foreach ($cntRows as $r) {
             $formatted[] = [
+                'source' => $metadata['contact_lead'][$r['id']]['source'] ?? 'website',
                 'id'           => (string)$r['id'],
                 'numeric_id'   => (int)$r['id'],
                 'ref_code'     => $r['ref_code'],
@@ -234,10 +273,14 @@ if ($method === 'DELETE') {
     $tableName = $tableMap[$type];
     require_existing($pdo, $tableName, $id);
 
+    $pdo->beginTransaction();
+    $stmt = $pdo->prepare('DELETE FROM content_metadata WHERE entity_type = ? AND entity_id = ?');
+    $stmt->execute([$type . '_lead',$id]);
     $stmt = $pdo->prepare("DELETE FROM `{$tableName}` WHERE id = :id");
     $stmt->execute([':id' => $id]);
 
     log_activity($pdo, $_SESSION['admin_user']['id'] ?? null, 'delete_lead', $tableName, $id, "Deleted lead ID {$id}");
+    $pdo->commit();
 
     json_response([
         'success' => true,

@@ -227,6 +227,7 @@
       const response = await MallAPI.request('api/admin/auth.php?action=me');
       if (!response.authenticated) { window.location.replace('./login.html'); return false; }
       currentUser = response.user;
+      window.MallLeadEditor?.setUser(currentUser);
       document.getElementById('adminEmailDisplay').textContent = currentUser.email;
       document.querySelector('.admin-user-role').textContent = currentUser.role;
       const allowed = resourcesForRole();
@@ -495,6 +496,10 @@
   };
 
   // ── 3. LED LEADS RENDER ────────────────────────────────────
+  function renderLeadMedia(lead) {
+    const assets=lead.mediaAssets || [];
+    return assets.length ? assets.map(asset=>`<a class="lead-media-attachment" href="${escHtml(asset.url)}" target="_blank" rel="noopener">${escHtml(asset.name || 'Campaign media')} ↗</a>`).join('') : '<span class="lead-source-label">No media attached</span>';
+  }
   function renderLedLeads() {
     const tbody = document.getElementById('ledLeadsTableBody');
     if (!tbody) return;
@@ -516,7 +521,7 @@
     });
 
     if (list.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:48px;color:var(--admin-text-muted);">No LED inquiries match your search. Submissions from the <a href="/led-advertising/index.html" target="_blank" style="color:var(--coral);font-weight:600;">LED Advertising Estimator ↗</a> appear here.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:48px;color:var(--admin-text-muted);">No LED inquiries match your search. Submissions from the <a href="/led-advertising/index.html" target="_blank" style="color:var(--coral);font-weight:600;">LED Advertising Estimator ↗</a> appear here.</td></tr>`;
       return;
     }
 
@@ -528,29 +533,26 @@
       tr.innerHTML = `
         <td>
           <strong style="color:var(--admin-text);display:block;font-size:13.5px;">${escHtml(lead.businessName || lead.companyName || 'Brand Partner')}</strong>
-          <small style="color:var(--admin-text-muted);">${escHtml(lead.contactName || lead.applicantName || '—')}</small>
+          <small style="color:var(--admin-text-muted);">${escHtml(lead.contactName || lead.applicantName || '—')}</small><small class="lead-source-label">${lead.source==='admin'?'Added by staff':'Website inquiry'}</small>
         </td>
         <td>
           <div style="font-size:13px;font-weight:700;color:var(--admin-text);">${escHtml(lead.phone || '—')}</div>
           ${lead.email ? `<small style="color:var(--admin-text-muted);">${escHtml(lead.email)}</small>` : ''}
         </td>
         <td><span class="admin-badge">${escHtml(lead.packageRequested || lead.screenType || 'Digital Billboard')}</span></td>
-        <td><span style="display:inline-block;padding:4px 9px;border-radius:6px;background:rgba(217,119,6,0.12);color:#B45309;font-weight:700;font-size:12px;">${escHtml(dur)}</span></td>
+        <td><span style="display:inline-block;padding:4px 9px;border-radius:6px;background:rgba(217,119,6,0.12);color:#B45309;font-weight:700;font-size:12px;">${escHtml(dur)}</span>${lead.campaignStartDate ? `<small class="lead-source-label">${escHtml(lead.campaignStartDate)} → ${escHtml(lead.campaignEndDate)}</small>` : ''}</td>
+        <td>${renderLeadMedia(lead)}<small class="lead-source-label">${lead.referralCompany ? 'Referred by: ' + escHtml(lead.referralCompany) : 'Direct client'}</small></td>
         <td>
           ${lead.estimatedCost ? `<div style="font-weight:800;color:var(--coral);font-size:12.5px;">${escHtml(lead.estimatedCost)}</div>` : ''}
           <div style="max-width:240px;font-size:12.5px;color:var(--admin-text-muted);line-height:1.4;word-break:break-word;" title="${escHtml(lead.message || '')}">${escHtml(lead.message || '—')}</div>
         </td>
         <td>
-          <select class="filter-select" style="padding:6px 10px;font-size:12px;font-weight:600;" onchange="window.updateLeadStatus('ledLeads','${lead.id}',this.value)">
-            <option value="new" ${statusVal === 'new' ? 'selected' : ''}>New</option>
-            <option value="contacted" ${statusVal === 'contacted' ? 'selected' : ''}>Contacted</option>
-            <option value="won" ${statusVal === 'won' ? 'selected' : ''}>Booked</option>
-            <option value="lost" ${statusVal === 'lost' ? 'selected' : ''}>Lost</option>
-          </select>
+          <select class="filter-select" style="padding:6px 10px;font-size:12px;font-weight:600;" onchange="window.updateLeadStatus('ledLeads','${lead.id}',this.value)">${window.MallLeadEditor.statuses(lead.status || 'new')}</select>
         </td>
         <td>
           <div class="td-actions">
             <button class="btn-secondary btn-sm" onclick="window.openLedDetails('${lead.id}')">View</button>
+            <button class="btn-secondary btn-sm" onclick="window.editInquiry('led','${lead.id}')">Edit</button>
             <button class="btn-danger btn-sm" onclick="window.deleteLead('ledLeads','${lead.id}')">Delete</button>
           </div>
         </td>
@@ -602,21 +604,26 @@
           </div>
           <div class="form-group col-2">
             <label style="font-size:11px; text-transform:uppercase; color:var(--admin-text-muted);">Inquiry Status</label>
-            <select class="filter-select" style="padding:9px 12px; font-weight:700; width:100%;" onchange="window.updateLeadStatus('ledLeads','${lead.id}',this.value); closeModal(document.getElementById('ledDetailModal'));">
-              <option value="new" ${lead.status === 'new' ? 'selected' : ''}>New (Uncontacted)</option>
-              <option value="contacted" ${lead.status === 'contacted' ? 'selected' : ''}>Contacted</option>
-              <option value="won" ${lead.status === 'won' ? 'selected' : ''}>Won / Booked Campaign</option>
-              <option value="lost" ${lead.status === 'lost' ? 'selected' : ''}>Lost / Declined</option>
-            </select>
+            <select class="filter-select" style="padding:9px 12px; font-weight:700; width:100%;" onchange="window.updateLeadStatus('ledLeads','${lead.id}',this.value); closeModal(document.getElementById('ledDetailModal'));">${window.MallLeadEditor.statuses(lead.status || 'new')}</select>
           </div>
         </div>
       </div>
     `;
+    const extra = document.createElement('section'); extra.className='lead-detail-extra';
+    extra.innerHTML = `<h4>Campaign booking &amp; media</h4><p>${lead.campaignStartDate ? escHtml(lead.campaignStartDate)+' → '+escHtml(lead.campaignEndDate) : 'Start date not scheduled'}</p><p>Referred by: ${escHtml(lead.referralCompany || 'Direct client')}</p>${renderLeadMedia(lead)}<h4>Internal notes</h4><p class="lead-notes">${escHtml(lead.admin_notes || 'No internal notes.')}</p>`;
+    body.append(extra);
     openModal(modal);
   }
   window.openLedDetails = openLedDetails;
 
   // ── 4. ACTIVATIONS CALENDAR & LEADS RENDER ──────────────────
+  function activationEndDate(lead) {
+    if (/^\d{4}-\d{2}-\d{2}$/.test(lead.bookingEndDate || '')) return lead.bookingEndDate;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(lead.bookingStartDate || '')) return '';
+    const end = new Date(lead.bookingStartDate + 'T12:00:00Z');
+    end.setUTCDate(end.getUTCDate() + Math.max(1,Number(lead.durationDays)||1) - 1);
+    return end.toISOString().slice(0,10);
+  }
   function renderActivationCalendar() {
     const titleEl = document.getElementById('activationCalTitle');
     const gridEl  = document.getElementById('activationCalGrid');
@@ -655,11 +662,8 @@
 
       const matchingLeads = activLeadsCache.filter(lead => {
         if (!lead.bookingStartDate) return false;
-        const start = new Date(lead.bookingStartDate + 'T00:00:00');
-        const dur = Math.max(1, parseInt(lead.durationDays, 10) || 1);
-        const end = new Date(start.getTime() + (dur - 1) * 86400000);
-        const cur = new Date(`${dayStr}T00:00:00`);
-        return cur >= start && cur <= end;
+        if (['lost','cancelled','rejected'].includes(lead.status)) return false;
+        return dayStr >= lead.bookingStartDate && dayStr <= activationEndDate(lead);
       });
 
       let inner = `
@@ -710,8 +714,7 @@
     const dur = Math.max(1, parseInt(lead.durationDays, 10) || 1);
     let dateRangeFormatted = 'Dates to be arranged';
     if (start && !isNaN(start.getTime())) {
-      const end = new Date(start.getTime() + (dur - 1) * 86400000);
-      dateRangeFormatted = `${formatDate(lead.bookingStartDate)} &rarr; ${formatDate(end.toISOString().slice(0, 10))} (${dur} Day${dur > 1 ? 's' : ''})`;
+      dateRangeFormatted = `${formatDate(lead.bookingStartDate)} &rarr; ${formatDate(activationEndDate(lead))} (${dur} Day${dur > 1 ? 's' : ''})`;
     }
 
     body.innerHTML = `
@@ -742,12 +745,7 @@
           <div class="form-group col-2">
             <label style="font-size:11px; text-transform:uppercase; color:var(--admin-text-muted);">Booking Status</label>
             <div style="display:flex; align-items:center; gap:10px; margin-top:4px;">
-              <select class="filter-select" style="padding:8px 12px; font-weight:700; flex:1;" onchange="window.updateLeadStatus('activationLeads','${lead.id}',this.value); closeModal(document.getElementById('activationDetailModal'));">
-                <option value="new" ${lead.status === 'new' ? 'selected' : ''}>New (Awaiting Review)</option>
-                <option value="contacted" ${lead.status === 'contacted' ? 'selected' : ''}>Contacted</option>
-                <option value="won" ${lead.status === 'won' ? 'selected' : ''}>Approved &amp; Booked on Calendar</option>
-                <option value="lost" ${lead.status === 'lost' ? 'selected' : ''}>Declined / Cancelled</option>
-              </select>
+              <select class="filter-select" style="padding:8px 12px; font-weight:700; flex:1;" onchange="window.updateLeadStatus('activationLeads','${lead.id}',this.value); closeModal(document.getElementById('activationDetailModal'));">${window.MallLeadEditor.statuses(lead.status || 'new')}</select>
             </div>
           </div>
         </div>
@@ -822,21 +820,17 @@
         </td>
         <td><span class="admin-badge">${escHtml(lead.activationType || 'Pop-up')}</span></td>
         <td>
-          <strong style="color:var(--admin-text);font-size:13px;display:block;">${start}</strong>
+          <strong style="color:var(--admin-text);font-size:13px;display:block;">${escHtml(start)}${activationEndDate(lead) ? ' → ' + escHtml(formatDate(activationEndDate(lead))) : ''}</strong>
           <small style="color:var(--coral);font-weight:700;">${dur}</small>
         </td>
         <td><div style="max-width:240px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12.5px;color:var(--admin-text-muted);">${escHtml(lead.message || '—')}</div></td>
         <td>
-          <select class="filter-select" style="padding:6px 10px;font-size:12px;font-weight:600;" onchange="window.updateLeadStatus('activationLeads','${lead.id}',this.value)">
-            <option value="new" ${statusVal === 'new' ? 'selected' : ''}>New</option>
-            <option value="contacted" ${statusVal === 'contacted' ? 'selected' : ''}>Contacted</option>
-            <option value="won" ${statusVal === 'won' ? 'selected' : ''}>Approved</option>
-            <option value="lost" ${statusVal === 'lost' ? 'selected' : ''}>Declined</option>
-          </select>
+          <select class="filter-select" style="padding:6px 10px;font-size:12px;font-weight:600;" onchange="window.updateLeadStatus('activationLeads','${lead.id}',this.value)">${window.MallLeadEditor.statuses(lead.status || 'new')}</select>
         </td>
         <td>
           <div class="td-actions">
             <button class="btn-secondary btn-sm" onclick="window.openActivationBookingDetails('${lead.id}')">View</button>
+            <button class="btn-secondary btn-sm" onclick="window.editInquiry('activation','${lead.id}')">Edit</button>
             <button class="btn-danger btn-sm" onclick="window.deleteLead('activationLeads','${lead.id}')">Delete</button>
           </div>
         </td>
@@ -884,15 +878,12 @@
           <div style="max-width:280px;font-size:13px;color:var(--admin-text);line-height:1.4;word-break:break-word;" title="${escHtml(lead.message || '')}">${escHtml(lead.message || '—')}</div>
         </td>
         <td>
-          <select class="filter-select" style="padding:6px 10px;font-size:12px;font-weight:600;" onchange="window.updateLeadStatus('contactLeads','${lead.id}',this.value)">
-            <option value="new" ${statusVal === 'new' ? 'selected' : ''}>New</option>
-            <option value="contacted" ${statusVal === 'contacted' ? 'selected' : ''}>Contacted</option>
-            <option value="closed" ${statusVal === 'closed' ? 'selected' : ''}>Closed</option>
-          </select>
+          <select class="filter-select" style="padding:6px 10px;font-size:12px;font-weight:600;" onchange="window.updateLeadStatus('contactLeads','${lead.id}',this.value)">${window.MallLeadEditor.statuses(lead.status || 'new')}</select>
         </td>
         <td>
           <div class="td-actions">
             <button class="btn-secondary btn-sm" onclick="window.openContactDetails('${lead.id}')">View</button>
+            <button class="btn-secondary btn-sm" onclick="window.editInquiry('contact','${lead.id}')">Edit</button>
             <button class="btn-danger btn-sm" onclick="window.deleteLead('contactLeads','${lead.id}')">Delete</button>
           </div>
         </td>
@@ -931,11 +922,7 @@
           </div>
           <div class="form-group col-2">
             <label style="font-size:11px; text-transform:uppercase; color:var(--admin-text-muted);">Inquiry Status</label>
-            <select class="filter-select" style="padding:9px 12px; font-weight:700; width:100%;" onchange="window.updateLeadStatus('contactLeads','${lead.id}',this.value); closeModal(document.getElementById('contactDetailModal'));">
-              <option value="new" ${lead.status === 'new' ? 'selected' : ''}>New (Awaiting Response)</option>
-              <option value="contacted" ${lead.status === 'contacted' ? 'selected' : ''}>Contacted / In Progress</option>
-              <option value="closed" ${lead.status === 'closed' ? 'selected' : ''}>Resolved / Closed</option>
-            </select>
+            <select class="filter-select" style="padding:9px 12px; font-weight:700; width:100%;" onchange="window.updateLeadStatus('contactLeads','${lead.id}',this.value); closeModal(document.getElementById('contactDetailModal'));">${window.MallLeadEditor.statuses(lead.status || 'new')}</select>
           </div>
         </div>
       </div>
@@ -943,6 +930,16 @@
     openModal(modal);
   }
   window.openContactDetails = openContactDetails;
+
+  window.editInquiry = function(type,id) {
+    const rows = {led:ledLeadsCache,activation:activLeadsCache,contact:contactLeadsCache}[type] || [];
+    const record = rows.find(row=>String(row.id)===String(id));
+    if(record) window.MallLeadEditor.open(type,record);
+  };
+  window.addEventListener('mall-inquiry-saved',event=>{
+    showToast(event.detail.refreshed ? 'Inquiry saved to the database.' : 'Inquiry saved. Refresh to load the latest records.','success');
+    syncBus?.postMessage({action:'inquiry_saved'});
+  });
 
   window.updateLeadStatus = async function(collName, id, status) {
     const typeMap={ledLeads:'led',activationLeads:'activation',contactLeads:'contact',playonBookings:'playon'};
@@ -1448,7 +1445,10 @@
         Duration: l.durationRequested || (l.durationMonths ? `${l.durationMonths} Month(s)` : '1 Month'),
         EstimatedBudget: l.estimatedCost || '—',
         Status: l.status || 'new',
-        Notes: l.message || ''
+        Notes: l.message || '',
+        CampaignStart: l.campaignStartDate || '', CampaignEnd: l.campaignEndDate || '',
+        ReferredBy: l.referralCompany || '', Media: (l.mediaAssets || []).map(asset=>asset.url).join(' | '),
+        InternalNotes: l.admin_notes || '', Source: l.source || 'website'
       }));
       exportToCSV('Mombasa_Mall_LED_Leads', rows);
     });
@@ -1462,6 +1462,7 @@
         SpaceType: a.activationType,
         StartDate: a.bookingStartDate,
         DurationDays: a.durationDays,
+        EndDate: a.bookingEndDate, InternalNotes: a.admin_notes || '', Source: a.source || 'website',
         Status: a.status || 'new',
         Requirements: a.message || ''
       }));
@@ -1475,7 +1476,7 @@
         Email: c.email,
         Subject: c.subject,
         Message: c.message,
-        Status: c.status || 'new'
+        Status: c.status || 'new', InternalNotes: c.admin_notes || '', Source: c.source || 'website'
       }));
       exportToCSV('Mombasa_Mall_Contact_Inquiries', rows);
     });

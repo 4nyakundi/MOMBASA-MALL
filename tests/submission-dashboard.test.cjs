@@ -82,11 +82,11 @@ test('confirmation popup renders customer details as text and supports repeat op
   assert.equal(overlay.classList.contains('is-visible'), false);
 });
 function dashboard({fail=false}={}) {
-  const writes=[];const context={window:{},localStorage:storage(),console,confirm:()=>true,BroadcastChannel:undefined,setTimeout,clearTimeout,
+  const writes=[];const context={window:{addEventListener(){}},localStorage:storage(),console,confirm:()=>true,BroadcastChannel:undefined,setTimeout,clearTimeout,
     document:{readyState:'loading',addEventListener(){},getElementById:()=>null,querySelector:()=>null,querySelectorAll:()=>[]},
     MallAPI:{mutate:async(url,method,payload)=>{writes.push({url,method,payload});if(fail)throw Error('permission-denied');return {success:true,store_id:42};}}
   };
-  const source=read('admin/admin.js').replace(/\}\)\(\);\s*$/, 'window.testHooks={saveRecord,setShops:rows=>{shopsCache=rows},shops:()=>shopsCache};})();');
+  const source=read('admin/admin.js').replace(/\}\)\(\);\s*$/, 'window.testHooks={activationEndDate,saveRecord,setShops:rows=>{shopsCache=rows},shops:()=>shopsCache};})();');
   vm.runInNewContext(source,context);return {api:context.window.testHooks,writes};
 }
 test('dashboard waits for server acknowledgement and uses canonical IDs for updates',async()=>{
@@ -98,6 +98,8 @@ test('failed dashboard writes cannot change cached records or assign fake IDs',a
   const {api}=dashboard({fail:true});const rows=[{id:'42',name:'Original'}];api.setShops(rows);const data={name:'Unsaved'};
   assert.equal(await api.saveRecord('stores',data,null),false);assert.equal(data.id,undefined);assert.equal(api.shops()[0].name,'Original');
 });
+
+test('activation dates stay inclusive across month and year boundaries',()=>{const {api}=dashboard();assert.equal(api.activationEndDate({bookingStartDate:'2026-12-30',durationDays:4}),'2027-01-02');assert.equal(api.activationEndDate({bookingStartDate:'2026-11-15',durationDays:1}),'2026-11-15');});
 
 test('all local JavaScript and inline page scripts parse', () => {
   for (const dir of ['js', 'admin', 'playon/js', 'led-advertising']) {

@@ -141,3 +141,51 @@ function. Its existing records are not deleted. Retire legacy public content
 rules after exporting any required records; the SQL application does not need
 Firestore write permissions. The notification function now requires an operator
 Firebase ID token with an `admin` claim and is not tied to SQL staff sessions.
+
+## Staff-entered inquiries and LED clients
+
+In Leads & Inquiries, use **Add LED client**, **Add activation**, or **Add inquiry**.
+Each list also has **Edit** alongside View and Delete. Website submissions and
+staff entries share their existing tables and canonical numeric IDs:
+
+| Section | Main MySQL table | Details stored |
+| --- | --- | --- |
+| LED billboard | `led_leads` | Client, contact person, phone/email, placement, duration label, ad slot, amount/VAT, requirements, status and internal notes |
+| Activations | `activation_leads` | Company, contact, activation type, start date, inclusive day count/end date, concept, status and internal notes |
+| Contact & leasing | `contact_leads` | Sender, phone/email, subject, message, status and internal notes |
+
+LED start/end dates, exact duration in days, introducing/referral company, and
+media references use `content_metadata` under `led_lead` + the same inquiry ID.
+Staff provenance uses `led_lead`, `activation_lead`, or `contact_lead` metadata.
+The existing metadata table is required by the alignment migration already;
+this feature requires no additional schema migration or database rebuild.
+
+The browser sends authenticated POST/PUT requests to `api/admin/leads.php`.
+The API validates fields, checks the staff session/CSRF token and lead permission,
+then saves the inquiry and its metadata together in one transaction. POST uses a
+request ID in `submission_requests`; retrying an uncertain save returns the same
+record instead of inserting another client. Edits retain the ID and reference.
+Only after acknowledgement does the dashboard reload the lists, counts and
+activation calendar. Failed saves keep the form details for correction/retry.
+No customer data is written to browser local storage.
+
+For LED clients, start dates are optional until scheduled. End dates include the
+start day: 14 days starting 15 November ends 28 November. Activations require a
+start date. The server calculates the end date and 16% VAT; administrators enter
+the amount before VAT. A phone number or valid email is required for manual
+records, allowing phone-only walk-ins without invented email addresses.
+
+Use campaign media uploads (JPG/PNG/WebP/GIF/MP4/MOV, at most 20 MB per file), or
+attach an HTTP(S) media link for larger creative. File contents are stored in
+`uploads/`; MySQL stores references and display names, not base64 blobs. Save the
+inquiry after uploading. Removing an attachment unlinks it from that inquiry;
+it does not delete a file that another record may use. Uploaded media follows
+the site's existing public media delivery model. Keep private contracts outside
+this campaign-artwork field. Back up both MySQL (including metadata) and uploads.
+Administrators/superadmins can upload; lead moderators keep their existing lead
+permissions and can attach links without receiving new upload privileges.
+
+CSV exports include campaign dates, introducing company, media URLs, provenance
+and internal notes. Full JSON exports contain the API lead records; SQL plus
+uploaded files remains the complete recovery backup. The historical importer
+should be previewed and reviewed before merging any older export.

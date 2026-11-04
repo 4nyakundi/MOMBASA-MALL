@@ -90,6 +90,59 @@ test('uploads use validated media files and reject executable content',async()=>
   const local=path.join(root,uploaded.data.url);assert.ok(fs.existsSync(local));fs.unlinkSync(local);
   const rejected=await send(new Blob(['<?php echo "unsafe"; ?>'],{type:'image/png'}),'fake.png');assert.equal(rejected.status,422);
 });
+test('staff can create, retry, edit and reload all three manual inquiry types',async()=>{
+  const contact={type:'contact',request_id:'manual-contact',name:'Walk-in tenant',phone:'0700123000',email:'',subject:'Leasing',message:'Needs a shop on level one.',status:'contacted',admin_notes:'Visit arranged'};
+  assert.equal((await request('api/admin/leads.php',{method:'POST',body:contact,anonymous:true})).status,401);
+  assert.equal((await request('api/admin/leads.php',{method:'POST',body:contact,csrf:false})).status,403);
+  const created=await request('api/admin/leads.php',{method:'POST',body:contact});assert.equal(created.status,201,JSON.stringify(created.data));
+  const retry=await request('api/admin/leads.php',{method:'POST',body:contact});assert.equal(retry.data.lead_id,created.data.lead_id);
+  assert.equal((await request('api/admin/leads.php',{method:'POST',body:{...contact,message:'Different inquiry'}})).status,409);
+  const activation={type:'activation',request_id:'manual-activation',companyName:'Walk-in Events',contactName:'Event planner',email:'planner@example.test',phone:'',activationType:'Forecourt roadshow',bookingStartDate:'2026-12-30',durationDays:4,concept:'Power and two gazebos',status:'won'};
+  const act=await request('api/admin/leads.php',{method:'POST',body:activation});assert.equal(act.status,201,JSON.stringify(act.data));
+  const led={type:'led',request_id:'manual-led',businessName:'Billboard client',contactName:'Campaign contact',email:'campaign@example.test',phone:'0700123001',packageRequested:'Outdoor + indoor',campaignStartDate:'2026-12-28',durationDays:14,slotLength:'30 seconds',cost:10000,notes:'Evening campaign',referralCompany:'Introducing Agency',mediaAssets:[{url:'https://example.test/approved-creative.mp4',name:'Approved creative'}],status:'won',admin_notes:'Approved by client'};
+  const ad=await request('api/admin/leads.php',{method:'POST',body:led});assert.equal(ad.status,201,JSON.stringify(ad.data));
+  let all=(await request('api/admin/leads.php')).data;
+  const savedAd=all.ledLeads.find(row=>row.id===String(ad.data.lead_id));assert.equal(savedAd.campaignEndDate,'2027-01-10');assert.equal(savedAd.referralCompany,'Introducing Agency');assert.equal(savedAd.mediaAssets[0].url,led.mediaAssets[0].url);assert.equal(savedAd.estimated_cost_total,11600);assert.equal(savedAd.source,'admin');
+  const savedAct=all.activationLeads.find(row=>row.id===String(act.data.lead_id));assert.equal(savedAct.bookingEndDate,'2027-01-02');assert.equal(savedAct.message,activation.concept);assert.equal(savedAct.source,'admin');
+  const savedContact=all.contactLeads.find(row=>row.id===String(created.data.lead_id));assert.equal(savedContact.email,'');assert.equal(savedContact.admin_notes,'Visit arranged');
+  assert.equal((await request('api/admin/leads.php',{method:'PUT',body:{...led,id:ad.data.lead_id,request_id:undefined,durationDays:3,referralCompany:'Updated Agency'}})).status,200);
+  assert.equal((await request('api/admin/leads.php',{method:'PUT',body:{...activation,id:act.data.lead_id,request_id:undefined,durationDays:2,concept:'Revised requirements'}})).status,200);
+  assert.equal((await request('api/admin/leads.php',{method:'PUT',body:{...contact,id:created.data.lead_id,request_id:undefined,message:'Updated message'}})).status,200);
+  assert.equal((await request('api/admin/leads.php',{method:'PUT',body:{type:'led',id:ad.data.lead_id,status:'completed'}})).status,200);
+  all=(await request('api/admin/leads.php')).data;
+  assert.equal(all.ledLeads.find(row=>row.id===String(ad.data.lead_id)).campaignEndDate,'2026-12-30');
+  assert.equal(all.ledLeads.find(row=>row.id===String(ad.data.lead_id)).mediaAssets.length,1);
+  assert.equal(all.activationLeads.find(row=>row.id===String(act.data.lead_id)).bookingEndDate,'2026-12-31');
+  assert.equal(all.contactLeads.find(row=>row.id===String(created.data.lead_id)).message,'Updated message');
+  const metrics=(await request('api/admin/dashboard.php')).data.metrics;assert.ok(Number(metrics.total_led_leads)>=2);assert.ok(Number(metrics.total_activation_leads)>=2);assert.ok(Number(metrics.total_contact_leads)>=2);
+  assert.equal((await request('api/public/content.php?resource=leads',{anonymous:true})).status,404);
+});
+test('uploaded artwork remains attached after reload and can be unlinked without deleting the file',async()=>{
+  const bytes=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/l9sAAAAASUVORK5CYII=','base64');
+  const body=new FormData();body.append('file',new Blob([bytes],{type:'image/png'}),'campaign.png');
+  const uploaded=await fetch(base+'api/admin/upload.php',{method:'POST',headers:{Cookie:cookie,'X-CSRF-Token':token},body});assert.equal(uploaded.status,201);const media=await uploaded.json();
+  try {
+    const input={type:'led',request_id:'manual-uploaded-artwork',businessName:'Artwork test',contactName:'Contact',email:'art@example.test',packageRequested:'Indoor',durationDays:7,mediaAssets:[{url:media.url,name:'Campaign artwork'}]};
+    const created=await request('api/admin/leads.php',{method:'POST',body:input});assert.equal(created.status,201,JSON.stringify(created.data));
+    const id=String(created.data.lead_id);let rows=(await request('api/admin/leads.php?type=led')).data.ledLeads;assert.equal(rows.find(row=>row.id===id).mediaAssets[0].url,media.url);
+    assert.equal((await request('api/admin/leads.php',{method:'PUT',body:{type:'led',id,mediaAssets:[]}})).status,200);
+    rows=(await request('api/admin/leads.php?type=led')).data.ledLeads;assert.equal(rows.find(row=>row.id===id).mediaAssets.length,0);assert.ok(fs.existsSync(path.join(root,media.url)));
+    assert.equal((await request('api/admin/leads.php?type=led&id='+id,{method:'DELETE'})).status,200);
+  } finally {fs.unlinkSync(path.join(root,media.url));}
+});
+
+test('manual inquiry validation rejects bad dates, contacts and media without inserting records',async()=>{
+  const valid={type:'activation',request_id:'invalid-manual',companyName:'Validation test',contactName:'Person',phone:'0700123002',activationType:'Pop-up',bookingStartDate:'2026-11-30',durationDays:2,concept:'Sample'};
+  const before=(await request('api/admin/leads.php?type=activation')).data.activationLeads.length;
+  for(const patch of [{durationDays:0},{durationDays:2.5},{bookingStartDate:'2026-02-30'},{email:'invalid'},{phone:'',email:''},{type:'unknown'}])assert.equal((await request('api/admin/leads.php',{method:'POST',body:{...valid,...patch}})).status,422,JSON.stringify(patch));
+  assert.equal((await request('api/admin/leads.php?type=activation')).data.activationLeads.length,before);
+  const led={type:'led',request_id:'invalid-led',businessName:'Validation client',contactName:'Contact',phone:'0700123002',packageRequested:'Outdoor',durationDays:2};
+  for(const mediaAssets of [[{url:'javascript:alert(1)'}],[{url:'/uploads/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.mp4'}]])assert.equal((await request('api/admin/leads.php',{method:'POST',body:{...led,mediaAssets}})).status,422);
+  const fixed=await request('api/admin/leads.php',{method:'POST',body:valid});assert.equal(fixed.status,201,'Invalid attempt must roll back its request ID.');
+  const removed=await request('api/admin/leads.php?type=activation&id='+fixed.data.lead_id,{method:'DELETE'});assert.equal(removed.status,200);
+  assert.equal((await request('api/admin/leads.php',{method:'PUT',body:{...valid,id:fixed.data.lead_id}})).status,404);
+});
+
 test('legacy imports preview without writes and repeated merges preserve IDs',async()=>{
   const data={shops:[{name:'Imported Shop',room:'IMPORT-1',floor:'2nd Floor',category:'dining',logo:'/assets/import.webp'}],events:[{title:'Imported Event',date:'2026-12-01',summary:'Imported description',type:'upcoming',photoUrls:['/assets/import-event.webp']}],blog:[{title:'Imported Article',slug:'imported-article',content:'Import body',status:'published'}]};
   const preview=await request('api/admin/reconcile.php',{method:'POST',body:{data,dry_run:true}});assert.equal(preview.status,200);assert.equal(preview.data.report.shops.inserted,1);
@@ -114,7 +167,7 @@ test('staff authorization, password change, and logout apply to SQL sessions',as
   await request('api/admin/auth.php?action=logout',{method:'POST',body:{}});
   assert.equal((await request('api/admin/leads.php')).status,401);
   await request('api/admin/auth.php',{method:'POST',body:{email:'events@mombasamall.co.ke',password}});
-  assert.equal((await request('api/admin/users.php')).status,403);assert.equal((await request('api/admin/leads.php')).status,403);
+  assert.equal((await request('api/admin/users.php')).status,403);assert.equal((await request('api/admin/leads.php')).status,403);assert.equal((await request('api/admin/leads.php',{method:'POST',body:{type:'contact',request_id:'editor-forbidden',name:'Denied',phone:'0700',subject:'Denied',message:'Denied'}})).status,403);
   assert.deepEqual((await request('api/admin/dashboard.php')).data.recent_leads,[]);
   assert.equal((await request('api/admin/stores.php')).status,200);
   const changed=await request('api/admin/auth.php?action=password',{method:'POST',body:{current_password:password,password:password+'changed'}});assert.equal(changed.status,200);
