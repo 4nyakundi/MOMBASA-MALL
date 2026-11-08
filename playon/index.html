@@ -31,7 +31,7 @@
 
   <link href="https://api.fontshare.com/v2/css?f[]=clash-display@700&amp;f[]=satoshi@400,600,700&amp;display=swap" rel="stylesheet">
   <!-- Custom Stylesheet -->
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style.css?v=20261109-polish" />
 
   <!-- LocalBusiness Schema for Google Rich Results -->
   <script type="application/ld+json">
@@ -77,9 +77,9 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="../css/site-polish.css?v=20261017-forms">
+  <link rel="stylesheet" href="../css/site-polish.css?v=20261109-polish">
   <script src="../js/submissions.js"></script>
-  <script defer src="../js/site-polish.js"></script>
+  <script defer src="../js/site-polish.js?v=20261109-polish"></script>
 </head>
 
 <body id="top" class="mall-public playon-page">
@@ -890,7 +890,7 @@
       <div class="gallery-grid">
 
         <!-- Photo 1: Big Hero Wall / Party -->
-        <div class="gallery-item span-2-col span-2-row" onclick="openLightbox('images/gallery-party.jpg', 'Karibu Play-On Green Balloon Celebration Wall')">
+        <div class="gallery-item span-2-col span-2-row" role="button" tabindex="0" aria-label="Enlarge photo" onclick="openLightbox('images/gallery-party.jpg', 'Karibu Play-On Green Balloon Celebration Wall', this)">
           <img src="images/gallery-party.jpg" alt="Play-On Balloon Wall" loading="lazy" />
           <div class="gallery-overlay">
             <span class="gallery-caption"><i class="fas fa-expand"></i> Karibu Play-On Wall</span>
@@ -898,7 +898,7 @@
         </div>
 
         <!-- Photo 2: Spiral Slide Fun -->
-        <div class="gallery-item" onclick="openLightbox('images/gallery-slide.jpg', 'High-Speed Spiral Slide into Rainbow Ball Pit')">
+        <div class="gallery-item" role="button" tabindex="0" aria-label="Enlarge photo" onclick="openLightbox('images/gallery-slide.jpg', 'High-Speed Spiral Slide into Rainbow Ball Pit', this)">
           <img src="images/gallery-slide.jpg" alt="Play-On Slide" loading="lazy" />
           <div class="gallery-overlay">
             <span class="gallery-caption"><i class="fas fa-expand"></i> Rainbow Spiral Slide</span>
@@ -906,7 +906,7 @@
         </div>
 
         <!-- Photo 3: Go Kart Racing -->
-        <div class="gallery-item" onclick="openLightbox('images/activity-karting.jpg', 'Kids Go-Karting Track at Mombasa Mall')">
+        <div class="gallery-item" role="button" tabindex="0" aria-label="Enlarge photo" onclick="openLightbox('images/activity-karting.jpg', 'Kids Go-Karting Track at Mombasa Mall', this)">
           <img src="images/activity-karting.jpg" alt="Go Karting" loading="lazy" />
           <div class="gallery-overlay">
             <span class="gallery-caption"><i class="fas fa-expand"></i> Go-Kart Speed Racing</span>
@@ -914,7 +914,7 @@
         </div>
 
         <!-- Photo 4: Trampoline Action -->
-        <div class="gallery-item span-2-row" onclick="openLightbox('images/activity-trampoline.jpg', 'Freestyle Trampoline Jumping Arena')">
+        <div class="gallery-item span-2-row" role="button" tabindex="0" aria-label="Enlarge photo" onclick="openLightbox('images/activity-trampoline.jpg', 'Freestyle Trampoline Jumping Arena', this)">
           <img src="images/activity-trampoline.jpg" alt="Trampoline Jumps" loading="lazy" />
           <div class="gallery-overlay">
             <span class="gallery-caption"><i class="fas fa-expand"></i> Trampoline Arena</span>
@@ -922,7 +922,7 @@
         </div>
 
         <!-- Photo 5: Toddler Soft Play Sandbox -->
-        <div class="gallery-item" onclick="openLightbox('images/gallery-sandbox.jpg', 'Sensory Soft Play Zone for Toddlers')">
+        <div class="gallery-item" role="button" tabindex="0" aria-label="Enlarge photo" onclick="openLightbox('images/gallery-sandbox.jpg', 'Sensory Soft Play Zone for Toddlers', this)">
           <img src="images/gallery-sandbox.jpg" alt="Toddler Area" loading="lazy" />
           <div class="gallery-overlay">
             <span class="gallery-caption"><i class="fas fa-expand"></i> Sensory Soft Play</span>
@@ -930,7 +930,7 @@
         </div>
 
         <!-- Photo 6: Pure Joy Moments -->
-        <div class="gallery-item" onclick="openLightbox('images/gallery-fun.jpg', 'Smiles and Laughter with Play-On Marshals')">
+        <div class="gallery-item" role="button" tabindex="0" aria-label="Enlarge photo" onclick="openLightbox('images/gallery-fun.jpg', 'Smiles and Laughter with Play-On Marshals', this)">
           <img src="images/gallery-fun.jpg" alt="Fun Times" loading="lazy" />
           <div class="gallery-overlay">
             <span class="gallery-caption"><i class="fas fa-expand"></i> Pure Smiles & Laughs</span>
@@ -938,7 +938,7 @@
         </div>
 
         <!-- Photo 7: Ninja Obstacles -->
-        <div class="gallery-item" onclick="openLightbox('images/activity-ninjacourse.jpg', 'Ninja Warrior Obstacle Course')">
+        <div class="gallery-item" role="button" tabindex="0" aria-label="Enlarge photo" onclick="openLightbox('images/activity-ninjacourse.jpg', 'Ninja Warrior Obstacle Course', this)">
           <img src="images/activity-ninjacourse.jpg" alt="Ninja Course" loading="lazy" />
           <div class="gallery-overlay">
             <span class="gallery-caption"><i class="fas fa-expand"></i> Ninja Obstacle Course</span>
@@ -946,7 +946,7 @@
         </div>
 
         <!-- Photo 8: Spider Wall -->
-        <div class="gallery-item" onclick="openLightbox('images/activity-spiderwall.jpg', 'Spider Velcro Sticky Wall Jump')">
+        <div class="gallery-item" role="button" tabindex="0" aria-label="Enlarge photo" onclick="openLightbox('images/activity-spiderwall.jpg', 'Spider Velcro Sticky Wall Jump', this)">
           <img src="images/activity-spiderwall.jpg" alt="Spider Wall" loading="lazy" />
           <div class="gallery-overlay">
             <span class="gallery-caption"><i class="fas fa-expand"></i> Spider Sticky Wall</span>
@@ -958,7 +958,7 @@
   </section>
 
   <!-- Interactive Lightbox Modal -->
-  <div class="lightbox-modal" id="lightboxModal">
+  <div class="lightbox-modal" id="lightboxModal" role="dialog" aria-modal="true" aria-labelledby="lightboxCaption" aria-hidden="true">
     <div class="lightbox-content">
       <button class="lightbox-close-btn" id="lightboxCloseBtn" aria-label="Close Lightbox">
         <i class="fas fa-times"></i>
@@ -1134,7 +1134,7 @@
           <i class="fas fa-calendar-check"></i> Instant Online Booking
         </span>
         <h2 class="section-title">Book Your <span class="highlight">Play-On Visit</span></h2>
-        <p class="section-subtitle">Reserve your preferred session in seconds! On submission, you'll receive instant WhatsApp (+254 780 611 074) & Email confirmation.</p>
+        <p class="section-subtitle">Request your preferred session in seconds. Our team will confirm availability. After submitting, you can also follow up via WhatsApp (+254 780 611 074) or email.</p>
       </div>
 
       <div class="booking-container-box">
@@ -1365,7 +1365,7 @@
 
           <!-- Newsletter Signup -->
           <form class="footer-newsletter-form">
-            <input type="email" placeholder="Enter parent email for discounts..." required />
+            <input type="email" aria-label="Parent email for updates" placeholder="Enter parent email for discounts..." required />
             <button type="submit" class="btn btn-sm btn-yellow">Join</button>
           </form>
         </div>
@@ -1424,6 +1424,6 @@
   <script src="../assets/vendor/ScrollTrigger.min.js"></script>
   <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-  <script src="js/main.js"></script>
+  <script src="js/main.js?v=20261109-polish"></script>
 </body>
 </html>

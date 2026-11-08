@@ -1751,6 +1751,7 @@ nav.desktop-nav a.active {
 
 /* Lightbox Modal */
 .lightbox-modal {
+  visibility: hidden;
   position: fixed;
   inset: 0;
   background: rgba(11, 30, 21, 0.95);
@@ -1766,6 +1767,7 @@ nav.desktop-nav a.active {
 }
 
 .lightbox-modal.is-open {
+  visibility: visible;
   opacity: 1;
   pointer-events: auto;
 }
@@ -2440,6 +2442,10 @@ footer {
 }
 
 .modal-card {
+  max-height: calc(100dvh - 3rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  overflow-wrap: anywhere;
   background-color: #FFFFFF;
   border: 4px solid var(--text-dark);
   border-radius: var(--radius-xl);
@@ -3294,3 +3300,5 @@ footer {
     display: none !important;
   }
 }
+
+.gallery-item[role="button"]:focus-visible { outline: 3px solid var(--brand-green); outline-offset: 4px; }

@@ -102,8 +102,8 @@
 .svg-store-zone { cursor:pointer; }
 .svg-store-zone:hover rect,.svg-store-zone.is-spotlight rect { fill:#367385; stroke:#f4d9a1; stroke-width:2px; }
 .store-scroll-progress { position:fixed; top:0; left:0; height:3px; width:100%; background:#b95032; z-index:10000; transform:scaleX(0); transform-origin:left; pointer-events:none; }
-.stores-page .mall-signature-footer { margin-inline:calc(-1 * clamp(20px,5vw,84px)); }
-@media(min-width:1600px) { .stores-page .subpage-content { padding-inline:max(60px,calc((100vw - 1420px)/2)); } .stores-page .mall-signature-footer { margin-inline:calc(-1 * max(60px,calc((100vw - 1420px)/2))); } }
+
+@media(min-width:1600px) { .stores-page .subpage-content { padding-inline:max(60px,calc((100vw - 1420px)/2)); } }
 @media(max-width:1050px) { .discovery-hero { gap:28px; } .discovery-visual { height:340px; } #storesGridContainer { grid-template-columns:repeat(3,minmax(0,1fr)); } .quick-picks { grid-template-columns:repeat(3,1fr); } .quick-picks-label { grid-column:1/-1; } .quick-picks a:first-of-type { border:0; padding-left:0; } .discovery-copy h1 { font-size:clamp(42px,6vw,64px); } }
 @media(max-width:700px) {
   .stores-page .subpage-content { padding:88px 20px 0; scroll-padding-top:90px; }
@@ -150,9 +150,9 @@
   .map-summary-action { font-size:0; gap:0; } .map-summary-action b { font-size:24px; }
   .floor-map-section > div:last-child { flex-wrap:wrap; gap:10px; }
   .blueprint-stage { padding:0; } .blueprint-svg { min-height:210px; }
-  .stores-page .mall-signature-footer { margin-inline:-20px; }
+
 }
-@media(max-width:360px) { .stores-page .subpage-content { padding-inline:16px; } .discovery-copy h1 { font-size:43px; } .directory-heading h2 { font-size:26px; } .store-card-info p span { margin:0 1px; } .stores-page .mall-signature-footer { margin-inline:-16px; } }
+@media(max-width:360px) { .stores-page .subpage-content { padding-inline:16px; } .discovery-copy h1 { font-size:43px; } .directory-heading h2 { font-size:26px; } .store-card-info p span { margin:0 1px; } }
 @media(prefers-reduced-motion:reduce) { .stores-page *, .stores-page *::before, .stores-page *::after { animation:none !important; transition:none !important; scroll-behavior:auto !important; } }
     .store-modal-backdrop {
       position: fixed;

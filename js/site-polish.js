@@ -92,11 +92,11 @@
     new MutationObserver(records => records.forEach(record => record.addedNodes.forEach(node => {
       if (node.nodeType===1 && !node.closest('svg,.mall-icon-slot')) replaceEmoji(node);
     }))).observe(document.body,{childList:true,subtree:true});
-    const content=document.querySelector('main,.subpage-content,#page-stage');
+    const content=document.querySelector('.subpage-content') || document.querySelector('main') || document.getElementById('page-stage');
     if(content) {
       if(!content.id)content.id='main-content';
       content.setAttribute('tabindex','-1');
-      const skip=document.createElement('a');skip.className='mall-skip-link';skip.href='#'+content.id;skip.textContent='Skip to content';document.body.prepend(skip);
+      const skip=document.createElement('a');skip.className='mall-skip-link';skip.href=location.pathname+location.search+'#'+content.id;skip.textContent='Skip to content';document.body.prepend(skip);
     }
     // Keep touch interaction native; hover animation runs only with a fine pointer.
     if(window.gsap&&window.ScrollTrigger&&document.body.classList.contains('activation-page')) {

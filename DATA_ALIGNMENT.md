@@ -189,3 +189,44 @@ CSV exports include campaign dates, introducing company, media URLs, provenance
 and internal notes. Full JSON exports contain the API lead records; SQL plus
 uploaded files remains the complete recovery backup. The historical importer
 should be previewed and reviewed before merging any older export.
+
+
+## Page polish audit — November 2026
+
+This pass preserves the existing page designs. The shared footer now paints
+through the content gutters without creating horizontal scrolling. Its content
+keeps the same readable maximum width. The activation footer now sits inside the
+page's scrolling content, and the shops footer no longer has negative margins
+that leave an empty strip on the right.
+
+Public form entry text uses a dark foreground on white, including phone, number,
+date and autofill values. Mobile forms use 16px entry text. The shared skip link
+selects the scrollable content and stays on the current route, including
+`stores/index.html`, whose base URL previously redirected fragment-only links.
+
+Play-On photos support Enter/Space, Escape and returning focus to the opened
+photo. The closed lightbox is hidden from keyboard and assistive navigation.
+The booking confirmation scrolls within the screen so its close and follow-up
+buttons remain reachable with long requests. Booking copy describes staff
+confirmation accurately; it does not promise automatic WhatsApp/email delivery.
+
+Validation scope:
+
+- All 15 tracked HTML routes were checked for missing local linked files,
+  duplicate IDs, label targets and static fragment targets: zero issues.
+- The nine public destination routes (including both shops URLs) were inspected
+  at desktop and phone widths. Phone-sized checks found no horizontal overflow;
+  form input text was verified dark on white at 16px.
+- Local browser submissions succeeded for contact, activation, LED, Play-On and
+  the Play-On newsletter, with acknowledgements shown only after server saves.
+- Interactive checks covered the shared menu and floor links, shops category and
+  floor filters/reset/details/map, gallery filters/carousel/viewer, events
+  carousel, LED pricing, and Play-On package choice, guest count and reviews.
+- Media playback and third-party maps depend on browser/network support. The
+  embedded audit browser did not confirm Play-On MP4 playback, so playback is
+  not certified by these checks. External WhatsApp/email actions were inspected
+  without sending messages.
+
+The audit uses a separate local database; production customer records and private
+server configuration are outside these test writes. No SQL migration is needed
+for this polish release. Shared CSS/JavaScript URLs carry a new cache version.

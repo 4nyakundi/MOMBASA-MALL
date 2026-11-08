@@ -944,29 +944,44 @@ ${phone}`;
   const lightboxCaption = document.getElementById('lightboxCaption');
   const lightboxCloseBtn = document.getElementById('lightboxCloseBtn');
 
-  window.openLightbox = function(src, caption) {
+  let lightboxTrigger;
+  function closeLightbox() {
+    lightboxModal.classList.remove('is-open');
+    lightboxModal.setAttribute('aria-hidden', 'true');
+    if (lightboxTrigger?.isConnected) lightboxTrigger.focus({ preventScroll: true });
+  }
+
+  window.openLightbox = function(src, caption, trigger) {
     if (lightboxModal && lightboxImg) {
+      lightboxTrigger = trigger || document.activeElement;
       lightboxImg.src = src;
+      lightboxImg.alt = caption || 'Play-On Mombasa Fun Moment';
       if (lightboxCaption) lightboxCaption.textContent = caption || 'Play-On Mombasa Fun Moment';
+      lightboxModal.setAttribute('aria-hidden', 'false');
       lightboxModal.classList.add('is-open');
+      lightboxCloseBtn?.focus();
     }
   };
 
+  document.querySelectorAll('.gallery-item[role="button"]').forEach(item => {
+    const description = item.querySelector('img')?.alt;
+    if (description) item.setAttribute('aria-label', 'Enlarge ' + description);
+    item.addEventListener('keydown', event => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault(); item.click();
+      }
+    });
+  });
+
   if (lightboxCloseBtn && lightboxModal) {
-    lightboxCloseBtn.addEventListener('click', () => {
-      lightboxModal.classList.remove('is-open');
+    lightboxCloseBtn.addEventListener('click', closeLightbox);
+    lightboxModal.addEventListener('click', event => {
+      if (event.target === lightboxModal) closeLightbox();
     });
-
-    lightboxModal.addEventListener('click', (e) => {
-      if (e.target === lightboxModal) {
-        lightboxModal.classList.remove('is-open');
-      }
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && lightboxModal.classList.contains('is-open')) {
-        lightboxModal.classList.remove('is-open');
-      }
+    document.addEventListener('keydown', event => {
+      if (!lightboxModal.classList.contains('is-open')) return;
+      if (event.key === 'Escape') closeLightbox();
+      if (event.key === 'Tab') { event.preventDefault(); lightboxCloseBtn.focus(); }
     });
   }
 
