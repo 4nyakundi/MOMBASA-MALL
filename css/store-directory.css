@@ -433,3 +433,93 @@
 .discovery-categories { flex:1; min-width:0; padding-bottom:0; }
 .directory-floor-control { flex-shrink:0; }
 @media(max-width:700px) { .directory-toolbar { gap:8px; } .discovery-categories { margin-right:0; padding-right:0; padding-bottom:0; } }
+
+/* Floating glass controls stay within the directory's scrolling area. */
+.stores-page .directory-toolbar {
+  top: 84px;
+  isolation: isolate;
+  gap: 12px;
+  padding: 12px;
+  margin: 10px 0 28px;
+  border: 1px solid rgba(255, 255, 255, .88);
+  border-radius: 28px;
+  background: #eef3ef;
+  box-shadow: 0 12px 34px rgba(16, 59, 67, .12),
+    0 3px 8px rgba(16, 59, 67, .05),
+    inset 0 1px 0 rgba(255, 255, 255, .95),
+    inset 0 -1px 0 rgba(16, 59, 67, .06);
+}
+.stores-page .directory-toolbar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255, 255, 255, .6), transparent 48%, rgba(198, 224, 216, .2));
+  pointer-events: none;
+}
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .stores-page .directory-toolbar {
+    background: rgba(243, 249, 245, .68);
+    -webkit-backdrop-filter: blur(24px) saturate(165%);
+    backdrop-filter: blur(24px) saturate(165%);
+  }
+}
+.stores-page .directory-toolbar .discovery-categories {
+  gap: 6px;
+  padding: 4px;
+}
+.stores-page .directory-toolbar .category-chip {
+  min-height: 44px;
+  padding: 10px 16px;
+  border-color: rgba(255, 255, 255, .78);
+  background: rgba(255, 255, 255, .36);
+  color: #244d4b;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .75);
+  transition: background .22s ease, border-color .22s ease, box-shadow .22s ease, color .22s ease;
+}
+.stores-page .directory-toolbar .category-chip.active {
+  border-color: rgba(255, 255, 255, .36);
+  background: linear-gradient(145deg, #24565b, #103b43);
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(16, 59, 67, .18), inset 0 1px 0 rgba(255, 255, 255, .2);
+}
+@media (hover: hover) {
+  .stores-page .directory-toolbar .category-chip:hover:not(.active) {
+    background: rgba(255, 255, 255, .78);
+    border-color: #fff;
+    box-shadow: 0 3px 10px rgba(16, 59, 67, .06), inset 0 1px 0 #fff;
+  }
+}
+.stores-page .directory-toolbar .discovery-floor select {
+  min-width: 140px;
+  border-color: rgba(255, 255, 255, .9) !important;
+  border-radius: 18px;
+  background-color: rgba(255, 255, 255, .62) !important;
+  box-shadow: inset 0 1px 0 #fff;
+}
+@media (max-width: 700px) {
+  .stores-page .directory-toolbar {
+    top: 74px;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px;
+    border-radius: 24px;
+    margin-bottom: 24px;
+  }
+  .stores-page .directory-toolbar .discovery-categories {
+    flex-basis: 100%;
+    width: 100%;
+  }
+  .stores-page .directory-toolbar .directory-floor-control {
+    width: 100%;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255, 255, 255, .72);
+  }
+  .stores-page .directory-toolbar .discovery-floor { display: block; }
+  .stores-page .directory-toolbar .discovery-floor select {
+    width: 100%;
+    max-width: none;
+    font-size: 16px;
+  }
+}
